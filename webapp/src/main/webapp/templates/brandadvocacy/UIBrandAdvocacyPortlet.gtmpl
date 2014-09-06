@@ -1,5 +1,5 @@
 <div class="UIBrandAdvocacyPortlet" id="$uicomponent.id">
-
+  hi, i am brand advocacy portlet
 	<%
 	    def rcontext = _ctx.getRequestContext() ;
 	    def jsManager = rcontext.getJavascriptManager();

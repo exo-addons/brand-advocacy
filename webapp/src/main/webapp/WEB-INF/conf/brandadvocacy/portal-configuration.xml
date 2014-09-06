@@ -32,7 +32,7 @@
               <string>portal</string>
             </field>
             <field name="templateLocation">
-              <string>war:/conf/addon/</string>
+              <string>war:/conf/brandadvocacy/</string>
             </field>
             <field name="importMode"><string>insert</string></field>
           </object>

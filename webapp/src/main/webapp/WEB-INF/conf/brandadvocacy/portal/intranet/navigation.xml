@@ -8,9 +8,9 @@
     <node>
 	  <uri>brand-advocacy</uri>
 	  <name>brand-advocacy</name>
-	  <label>#{addon.navigation.search.node}</label>
+	  <label>#{addon.navigation.brandadvocacy.node}</label>
 	  <visibility>HIDDEN</visibility>
-	  <page-reference>portal::intranet::search-addon</page-reference>
+	  <page-reference>portal::intranet::brand-advocacy</page-reference>
     </node>
   </page-nodes>
 </node-navigation>

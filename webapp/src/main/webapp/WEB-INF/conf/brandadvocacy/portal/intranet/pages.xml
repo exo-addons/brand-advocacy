@@ -14,7 +14,7 @@
       <portlet-application>
          <portlet>
             <application-ref>brand-advocacy-webapp</application-ref>
-            <portlet-ref>AddonSearchPortlet</portlet-ref>
+            <portlet-ref>BrandAdvocacyPortlet</portlet-ref>
          </portlet>
          <access-permissions>Everyone</access-permissions>
          <show-info-bar>false</show-info-bar>

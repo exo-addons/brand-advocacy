@@ -45,7 +45,7 @@
                         <value>
                           <object type="org.exoplatform.services.cms.templates.impl.TemplateConfig$Template">
                             <field name="templateFile">
-                              <string>/BrandAdvocacy/view.gtmpl</string>
+                              <string>/brandadvocacy/view.gtmpl</string>
                             </field>
                             <field name="roles">
                               <string>*</string>
@@ -58,7 +58,7 @@
                    	  <collection type="java.util.ArrayList">
 					   <value>
 						<object type="org.exoplatform.services.cms.templates.impl.TemplateConfig$Template">             
-						  <field name="templateFile"><string>/BrandAdvocacy/dialog.gtmpl</string></field>
+						  <field name="templateFile"><string>/brandadvocacy/dialog.gtmpl</string></field>
 						  <field name="roles"><string>*</string></field>                
 						</object>                                                   
 					   </value>  
