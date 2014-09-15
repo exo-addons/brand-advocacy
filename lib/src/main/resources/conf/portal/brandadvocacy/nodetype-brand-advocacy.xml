@@ -1,0 +1,99 @@
+
+<nodeTypes xmlns:nt="http://www.jcp.org/jcr/nt/1.0" xmlns:mix="http://www.jcp.org/jcr/mix/1.0" xmlns:jcr="http://www.jcp.org/jcr/1.0">
+    <nodeType name="exo:brandadvocacy-mission" isMixin="false" hasOrderableChildNodes="false" primaryItemName="">
+      <supertypes>
+        <supertype>nt:base</supertype>
+      </supertypes>
+      <propertyDefinitions>
+        <propertyDefinition name="exo:id" requiredType="String" autoCreated="false" mandatory="true" onParentVersion="COPY" protected="false" multiple="false">
+          <valueConstraints/>
+        </propertyDefinition>        
+        <propertyDefinition name="exo:title" requiredType="String" autoCreated="false" mandatory="true" onParentVersion="COPY" protected="false" multiple="false">
+          <valueConstraints/>
+        </propertyDefinition>
+        <propertyDefinition name="exo:third_party_link" requiredType="String" autoCreated="false" mandatory="true" onParentVersion="COPY" protected="false" multiple="false">
+          <valueConstraints/>
+        </propertyDefinition>        
+        <propertyDefinition name="exo:priority" requiredType="String" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="false">
+          <valueConstraints/>
+        </propertyDefinition>                        
+        <propertyDefinition name="exo:active" requiredType="Boolean" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="false">
+          <valueConstraints/>
+        </propertyDefinition>                        
+        <propertyDefinition name="exo:dateCreated" requiredType="Long" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="false">
+          <valueConstraints/>
+        </propertyDefinition>        
+        <propertyDefinition name="exo:modifiedDate" requiredType="Long" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="false">
+          <valueConstraints/>
+        </propertyDefinition>                
+      </propertyDefinitions>
+      <childNodeDefinitions>
+        <childNodeDefinition name="*" defaultPrimaryType="" autoCreated="false" mandatory="false"
+          onParentVersion="COPY" protected="false" sameNameSiblings="false">
+          <requiredPrimaryTypes>
+            <requiredPrimaryType>exo:brandadvocacy-proposition</requiredPrimaryType>
+          </requiredPrimaryTypes>
+        </childNodeDefinition>
+        <childNodeDefinition name="*" defaultPrimaryType="" autoCreated="false" mandatory="false"
+          onParentVersion="COPY" protected="false" sameNameSiblings="false">
+          <requiredPrimaryTypes>
+            <requiredPrimaryType>exo:brandadvocacy-user</requiredPrimaryType>
+          </requiredPrimaryTypes>
+        </childNodeDefinition>        
+      </childNodeDefinitions>
+    </nodeType>     
+      
+    <nodeType name="exo:brandadvocacy-proposition" isMixin="true" hasOrderableChildNodes="false" primaryItemName="">
+      <supertypes>
+        <supertype>nt:base</supertype>
+      </supertypes>
+      <propertyDefinitions>
+        <propertyDefinition name="exo:id" requiredType="String" autoCreated="false" mandatory="true" onParentVersion="COPY" protected="false" multiple="false">
+          <valueConstraints/>
+        </propertyDefinition>        
+        <propertyDefinition name="exo:content" requiredType="String" autoCreated="false" mandatory="true" onParentVersion="COPY" protected="false" multiple="false">
+          <valueConstraints/>
+        </propertyDefinition>                        
+        <propertyDefinition name="exo:active" requiredType="Boolean" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="false">
+          <valueConstraints/>
+        </propertyDefinition>                        
+        <propertyDefinition name="exo:numberUsed" requiredType="Integer" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="false">
+          <valueConstraints/>
+        </propertyDefinition>                        
+      </propertyDefinitions>
+    </nodeType>     
+
+    <nodeType name="exo:brandadvocacy-user" isMixin="true" hasOrderableChildNodes="false" primaryItemName="">
+      <supertypes>
+        <supertype>nt:base</supertype>
+      </supertypes>
+      <propertyDefinitions>
+        <propertyDefinition name="exo:username" requiredType="String" autoCreated="false" mandatory="true" onParentVersion="COPY" protected="false" multiple="false">
+          <valueConstraints/>
+        </propertyDefinition>        
+        <propertyDefinition name="exo:role" requiredType="Integer" autoCreated="false" mandatory="true" onParentVersion="COPY" protected="false" multiple="false">
+            <valueConstraints>
+				<valueConstraint>1</valueConstraint>
+				<valueConstraint>2</valueConstraint>
+				<valueConstraint>3</valueConstraint>
+				<valueConstraint>4</valueConstraint>
+			</valueConstraints>
+        </propertyDefinition>                        
+        <propertyDefinition name="exo:notification" requiredType="Boolean" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="false">
+          <valueConstraints/>
+        </propertyDefinition>                        
+      </propertyDefinitions>
+     
+    </nodeType>     
+    
+    <nodeType  name="exo:brandadvocacy-participant-mission" isMixin="true" hasOrderableChildNodes="false" primaryItemName="">
+      <supertypes>
+        <supertype>nt:base</supertype>
+      </supertypes>
+      <propertyDefinitions>
+        <propertyDefinition name="exo:id" requiredType="String" autoCreated="false" mandatory="true" onParentVersion="COPY" protected="false" multiple="false">
+          <valueConstraints/>
+        </propertyDefinition>
+      </propertyDefinitions>
+    </nodeType>
+</nodeTypes>

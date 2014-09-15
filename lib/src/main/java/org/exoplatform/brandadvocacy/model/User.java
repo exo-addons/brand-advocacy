@@ -25,11 +25,18 @@ package org.exoplatform.brandadvocacy.model;
 public class User{
   
   private String userName;
+  private Role role = Role.Admin;
   
   public String getUserName(){
     return userName;
   }
   public void setUserName(String username){
     this.userName = username;
+  }
+  public Role getRole(){
+    return this.role;
+  }
+  public void setRole(Role role){
+    this.role = role;
   }
 }

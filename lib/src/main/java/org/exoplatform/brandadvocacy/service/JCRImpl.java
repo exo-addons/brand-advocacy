@@ -51,6 +51,7 @@ public class JCRImpl implements IService {
   private DataDistributionManager dataDistributionManager;  
   public String workspace = "brandadvocacy";
   
+  
   private static final Log log = ExoLogger.getLogger(JCRImpl.class);
   
   public JCRImpl(InitParams params, OrganizationService orgService, SessionProviderService sessionService, RepositoryService repositoryService, DataDistributionManager dataDistributionManager){
@@ -64,8 +65,9 @@ public class JCRImpl implements IService {
     
   }
   public Session getSession() throws RepositoryException {
-
-    return null;
+    ManageableRepository repo = repositoryService.getCurrentRepository();
+    SessionProvider sessionProvider = sessionService.getSystemSessionProvider(null); 
+    return sessionProvider.getSession(workspace, repo);
   }
 
   @Override

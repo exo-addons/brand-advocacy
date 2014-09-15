@@ -24,19 +24,12 @@ package org.exoplatform.brandadvocacy.model;
  */
 public class Manager extends User{
   
-  private Role role = Role.Admin;
-  private int notif;
+  private Boolean notif;
   
-  public Role getRole(){
-    return this.role;
-  }
-  public void setRole(Role role){
-    this.role = role;
-  }
-  public int getNotif(){
+  public Boolean getNotif(){
     return notif;
   }
-  public void setNotif(int notif){
+  public void setNotif(Boolean notif){
     this.notif = notif;
   }
   

@@ -14,53 +14,14 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.exoplatform.brandadvocacy.model;
-
+package org.exoplatform.brandadvocacy.jcr;
 
 /**
  * Created by The eXo Platform SAS
  * Author : eXoPlatform
  *          exo@exoplatform.com
- * Sep 9, 2014  
+ * Sep 15, 2014  
  */
-public enum Role {
-  
-  Admin(1),
-  Validator(2),
-  Shipping_Manager(3),
-  Participant(4);
+public class PropositionDAO {
 
-  private final int role;
-
-  Role(int role) {
-      this.role = role;
-  }
-
-  public int role() {
-      return this.role;
-  }
-
-  public String getLabel() {
-      switch (this.role) {
-          case 3:
-              return "Shipping Manager";
-          case 2:
-              return "Validator";
-          case 1:
-              return "Admin";
-          default:
-              return "Participant";
-      }
-  }
-
-  public static Role getRole(int role) {
-      for (Role type : Role.values()) {
-          if (type.role() == role) {
-              return type;
-          }
-      }
-
-      return Participant;
-  }
 }
-
