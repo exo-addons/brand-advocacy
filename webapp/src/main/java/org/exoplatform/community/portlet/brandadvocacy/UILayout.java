@@ -17,8 +17,10 @@
 package org.exoplatform.community.portlet.brandadvocacy;
 
 import org.exoplatform.webui.config.annotation.ComponentConfig;
-import org.exoplatform.webui.core.UIPortletApplication;
-import org.exoplatform.webui.core.lifecycle.UIApplicationLifecycle;
+import org.exoplatform.webui.core.UIContainer;
+import org.exoplatform.webui.core.lifecycle.Lifecycle;
+import org.exoplatform.webui.core.lifecycle.UIContainerLifecycle;
+
 
 /**
  * Created by The eXo Platform SAS
@@ -27,12 +29,9 @@ import org.exoplatform.webui.core.lifecycle.UIApplicationLifecycle;
  * Sep 6, 2014  
  */
 @ComponentConfig(
-                 lifecycle = UIApplicationLifecycle.class, 
-                 template = "app:/templates/brandadvocacy/UIBrandAdvocacyPortlet.gtmpl")
-public class UIBrandAdvocacyPortlet extends UIPortletApplication {
-
-  public UIBrandAdvocacyPortlet() throws Exception {
-    addChild(UILayout.class,null,null);
-  }
+                 lifecycle = UIContainerLifecycle.class,
+                 template = "app:/templates/brandadvocacy/UILayout.gtmpl"
+                 )
+public class UILayout extends UIContainer{
 
 }

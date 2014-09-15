@@ -14,25 +14,44 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.exoplatform.community.portlet.brandadvocacy;
-
-import org.exoplatform.webui.config.annotation.ComponentConfig;
-import org.exoplatform.webui.core.UIPortletApplication;
-import org.exoplatform.webui.core.lifecycle.UIApplicationLifecycle;
+package org.exoplatform.brandadvocacy.model;
 
 /**
  * Created by The eXo Platform SAS
  * Author : eXoPlatform
  *          exo@exoplatform.com
- * Sep 6, 2014  
+ * Sep 9, 2014  
  */
-@ComponentConfig(
-                 lifecycle = UIApplicationLifecycle.class, 
-                 template = "app:/templates/brandadvocacy/UIBrandAdvocacyPortlet.gtmpl")
-public class UIBrandAdvocacyPortlet extends UIPortletApplication {
-
-  public UIBrandAdvocacyPortlet() throws Exception {
-    addChild(UILayout.class,null,null);
+public class Proposition {
+  
+  private String id;
+  private String content;
+  private int active;
+  private int numberUsed;
+  
+  public String getId(){
+    return this.id;
   }
-
+  public void setId(String id){
+    this.id = id;
+  }
+  public String getContent(){
+    return this.content;
+  }
+  public void setContent(String content){
+    this.content =content;
+  }
+  public int getActive(){
+    return this.active;
+  }
+  public void setActive(int active){
+    this.active = active;
+  }
+  public int getNumberUsed(){
+    return this.numberUsed;
+  }
+  public void setNumberUsed(int nb){
+    this.numberUsed = nb;
+  }
+  
 }

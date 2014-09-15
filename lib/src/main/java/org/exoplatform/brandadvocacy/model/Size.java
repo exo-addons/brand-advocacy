@@ -14,25 +14,51 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.exoplatform.community.portlet.brandadvocacy;
-
-import org.exoplatform.webui.config.annotation.ComponentConfig;
-import org.exoplatform.webui.core.UIPortletApplication;
-import org.exoplatform.webui.core.lifecycle.UIApplicationLifecycle;
+package org.exoplatform.brandadvocacy.model;
 
 /**
  * Created by The eXo Platform SAS
  * Author : eXoPlatform
  *          exo@exoplatform.com
- * Sep 6, 2014  
+ * Sep 11, 2014  
  */
-@ComponentConfig(
-                 lifecycle = UIApplicationLifecycle.class, 
-                 template = "app:/templates/brandadvocacy/UIBrandAdvocacyPortlet.gtmpl")
-public class UIBrandAdvocacyPortlet extends UIPortletApplication {
+public enum Size {
+  
+  Large(1),
+  Medium(2),
+  Small(3);
 
-  public UIBrandAdvocacyPortlet() throws Exception {
-    addChild(UILayout.class,null,null);
+  private final int size;
+
+  Size(int size) {
+      this.size = size;
   }
 
+  public int size() {
+      return this.size;
+  }
+
+  public String getLabel() {
+      switch (this.size) {
+          case 3:
+              return "S";
+          case 2:
+              return "M";
+          case 1:
+              return "L";
+          default:
+              return "No size";
+      }
+  }
+
+  public static Size getSize(int size) {
+      for (Size type : Size.values()) {
+          if (type.size() == size) {
+              return type;
+          }
+      }
+
+      return Large;
+  }
 }
+

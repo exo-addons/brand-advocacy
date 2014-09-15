@@ -14,25 +14,53 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.exoplatform.community.portlet.brandadvocacy;
+package org.exoplatform.brandadvocacy.model;
 
-import org.exoplatform.webui.config.annotation.ComponentConfig;
-import org.exoplatform.webui.core.UIPortletApplication;
-import org.exoplatform.webui.core.lifecycle.UIApplicationLifecycle;
 
 /**
  * Created by The eXo Platform SAS
  * Author : eXoPlatform
  *          exo@exoplatform.com
- * Sep 6, 2014  
+ * Sep 9, 2014  
  */
-@ComponentConfig(
-                 lifecycle = UIApplicationLifecycle.class, 
-                 template = "app:/templates/brandadvocacy/UIBrandAdvocacyPortlet.gtmpl")
-public class UIBrandAdvocacyPortlet extends UIPortletApplication {
+public enum Role {
+  
+  Admin(1),
+  Validator(2),
+  Shipping_Manager(3),
+  Normal(4);
 
-  public UIBrandAdvocacyPortlet() throws Exception {
-    addChild(UILayout.class,null,null);
+  private final int role;
+
+  Role(int role) {
+      this.role = role;
   }
 
+  public int role() {
+      return this.role;
+  }
+
+  public String getLabel() {
+      switch (this.role) {
+          case 3:
+              return "Shipping Manager";
+          case 2:
+              return "Validator";
+          case 1:
+              return "Admin";
+          default:
+              return "No name";
+      }
+  }
+
+  public static Role getRole(int role) {
+      for (Role type : Role.values()) {
+          if (type.role() == role) {
+              return type;
+          }
+      }
+
+      return Normal;
+  }
 }
+

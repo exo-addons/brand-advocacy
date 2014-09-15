@@ -14,11 +14,11 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.exoplatform.community.portlet.brandadvocacy;
+package org.exoplatform.community.portlet.brandadvocacy.backend;
 
 import org.exoplatform.webui.config.annotation.ComponentConfig;
-import org.exoplatform.webui.core.UIPortletApplication;
-import org.exoplatform.webui.core.lifecycle.UIApplicationLifecycle;
+import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
+import org.exoplatform.webui.form.UIForm;
 
 /**
  * Created by The eXo Platform SAS
@@ -27,12 +27,9 @@ import org.exoplatform.webui.core.lifecycle.UIApplicationLifecycle;
  * Sep 6, 2014  
  */
 @ComponentConfig(
-                 lifecycle = UIApplicationLifecycle.class, 
-                 template = "app:/templates/brandadvocacy/UIBrandAdvocacyPortlet.gtmpl")
-public class UIBrandAdvocacyPortlet extends UIPortletApplication {
-
-  public UIBrandAdvocacyPortlet() throws Exception {
-    addChild(UILayout.class,null,null);
-  }
+                 lifecycle = UIFormLifecycle.class,
+                 template = "app:/templates/brandadvocacy/backend/UIAddMission.gtmpl"
+               )
+public class UIAddMission extends UIForm {
 
 }

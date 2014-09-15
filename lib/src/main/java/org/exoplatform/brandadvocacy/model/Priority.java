@@ -14,25 +14,49 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.exoplatform.community.portlet.brandadvocacy;
-
-import org.exoplatform.webui.config.annotation.ComponentConfig;
-import org.exoplatform.webui.core.UIPortletApplication;
-import org.exoplatform.webui.core.lifecycle.UIApplicationLifecycle;
+package org.exoplatform.brandadvocacy.model;
 
 /**
  * Created by The eXo Platform SAS
  * Author : eXoPlatform
  *          exo@exoplatform.com
- * Sep 6, 2014  
+ * Sep 9, 2014  
  */
-@ComponentConfig(
-                 lifecycle = UIApplicationLifecycle.class, 
-                 template = "app:/templates/brandadvocacy/UIBrandAdvocacyPortlet.gtmpl")
-public class UIBrandAdvocacyPortlet extends UIPortletApplication {
+public enum Priority {
 
-  public UIBrandAdvocacyPortlet() throws Exception {
-    addChild(UILayout.class,null,null);
+  PRIORITY_1(1),
+  PRIORITY_2(2),  
+  PRIORITY_3(3);  
+
+  private final int priority;
+
+  Priority(int priority) {
+      this.priority = priority;
   }
 
+  public int priority() {
+      return this.priority;
+  }
+
+  public static Priority getPriority(int priority) {
+      for (Priority type : Priority.values()) {
+          if (type.priority() == priority) {
+              return type;
+          }
+      }
+
+      return PRIORITY_1;
+  }
+
+  public String getLabel() {
+      switch (this.priority) {
+          case 3:
+              return "3";
+          case 2:
+              return "2";
+          case 1:
+          default:
+              return "1";
+      }
+  }
 }

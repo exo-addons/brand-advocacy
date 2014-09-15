@@ -14,25 +14,33 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.exoplatform.community.portlet.brandadvocacy;
+package org.exoplatform.brandadvocacy.model;
 
-import org.exoplatform.webui.config.annotation.ComponentConfig;
-import org.exoplatform.webui.core.UIPortletApplication;
-import org.exoplatform.webui.core.lifecycle.UIApplicationLifecycle;
+import java.util.List;
 
 /**
  * Created by The eXo Platform SAS
  * Author : eXoPlatform
  *          exo@exoplatform.com
- * Sep 6, 2014  
+ * Sep 9, 2014  
  */
-@ComponentConfig(
-                 lifecycle = UIApplicationLifecycle.class, 
-                 template = "app:/templates/brandadvocacy/UIBrandAdvocacyPortlet.gtmpl")
-public class UIBrandAdvocacyPortlet extends UIPortletApplication {
+public class Participant extends User {
 
-  public UIBrandAdvocacyPortlet() throws Exception {
-    addChild(UILayout.class,null,null);
+  private List<Address> addresses;
+  private List<ParticipantMission> missions;
+  
+  public List<Address> getAddresses(){
+    return this.addresses;
   }
-
+  public void setAddresses(List<Address> addresses){
+    this.addresses = addresses;
+  }
+  public List<ParticipantMission> getMissions(){
+    return this.missions;
+  }
+  public void setMissions(List<ParticipantMission> missions){
+    this.missions = missions;
+  }
+ 
+  
 }
