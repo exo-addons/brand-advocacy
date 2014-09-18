@@ -16,12 +16,22 @@
  */
 package org.exoplatform.brandadvocacy.jcr;
 
+import org.exoplatform.brandadvocacy.service.JCRImpl;
+import org.exoplatform.services.log.ExoLogger;
+import org.exoplatform.services.log.Log;
+
 /**
  * Created by The eXo Platform SAS
  * Author : eXoPlatform
  *          exo@exoplatform.com
  * Sep 9, 2014  
  */
-public class MissionDAO {
+public class MissionDAO extends DAO {
+  
+  private static final Log log = ExoLogger.getLogger(MissionDAO.class);
+  public MissionDAO(JCRImpl jcrImpl) {
+    super(jcrImpl);
+  }
 
+  
 }

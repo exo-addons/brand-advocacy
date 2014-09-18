@@ -30,7 +30,6 @@ public class Address {
   private String city;
   private String Phone;
   private String country;
-  private Size size;
   public String getId() {
     return id;
   }
@@ -72,13 +71,5 @@ public class Address {
   }
   public void setCountry(String country) {
     this.country = country;
-  }
-  public Size getSize() {
-    return size;
-  }
-  public void setSize(Size size) {
-    this.size = size;
-  }
-  
-  
+  }  
 }

@@ -26,21 +26,26 @@ import java.util.List;
  */
 public class Participant extends User {
 
+  private String mission_id;
   private List<Address> addresses;
-  private List<ParticipantMission> missions;
+  private List<String> mission_ids;
   
+  public List<String> getMission_ids() {
+    return mission_ids;
+  }
+  public void setMission_ids(List<String> mission_ids) {
+    this.mission_ids = mission_ids;
+  }
+  public String getMission_id() {
+    return mission_id;
+  }
+  public void setMission_id(String mission_id) {
+    this.mission_id = mission_id;
+  }
   public List<Address> getAddresses(){
     return this.addresses;
   }
   public void setAddresses(List<Address> addresses){
     this.addresses = addresses;
   }
-  public List<ParticipantMission> getMissions(){
-    return this.missions;
-  }
-  public void setMissions(List<ParticipantMission> missions){
-    this.missions = missions;
-  }
- 
-  
 }

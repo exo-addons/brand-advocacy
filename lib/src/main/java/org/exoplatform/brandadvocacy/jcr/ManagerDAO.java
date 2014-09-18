@@ -24,13 +24,13 @@ import org.exoplatform.services.log.Log;
  * Created by The eXo Platform SAS
  * Author : eXoPlatform
  *          exo@exoplatform.com
- * Sep 9, 2014  
+ * Sep 18, 2014  
  */
-public class ParticipantDAO extends DAO {
-  
-  private static final Log log = ExoLogger.getLogger(ParticipantDAO.class);
-  public ParticipantDAO(JCRImpl jcrImpl) {
+public class ManagerDAO extends DAO{
+
+  private static final Log log = ExoLogger.getLogger(ManagerDAO.class);
+  public ManagerDAO(JCRImpl jcrImpl) {
     super(jcrImpl);
-  }
+  }  
 
 }

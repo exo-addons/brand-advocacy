@@ -21,6 +21,11 @@ import java.util.List;
 import javax.jcr.RepositoryException;
 import javax.jcr.Session;
 
+import org.exoplatform.brandadvocacy.jcr.ManagerDAO;
+import org.exoplatform.brandadvocacy.jcr.MissionDAO;
+import org.exoplatform.brandadvocacy.jcr.ParticipantDAO;
+import org.exoplatform.brandadvocacy.jcr.ParticipantMissionDAO;
+import org.exoplatform.brandadvocacy.jcr.PropositionDAO;
 import org.exoplatform.brandadvocacy.model.Mission;
 import org.exoplatform.brandadvocacy.model.Participant;
 import org.exoplatform.brandadvocacy.model.ParticipantMission;
@@ -46,11 +51,17 @@ import org.exoplatform.services.organization.OrganizationService;
  */
 public class JCRImpl implements IService {
 
+  
   private RepositoryService repositoryService;
   private SessionProviderService sessionService;
   private DataDistributionManager dataDistributionManager;  
   public String workspace = "brandadvocacy";
-  
+  private MissionDAO missionDAO;
+  private ManagerDAO managerDAO;
+
+  private ParticipantDAO participantDAO;
+  private ParticipantMissionDAO participantMissionDAO;
+  private PropositionDAO propositionDAO;
   
   private static final Log log = ExoLogger.getLogger(JCRImpl.class);
   
@@ -62,6 +73,11 @@ public class JCRImpl implements IService {
         workspace = param.getValue();
       }
     }
+    this.setMissionDAO(new MissionDAO(this));
+    this.setManagerDAO(new ManagerDAO(this));
+    this.setParticipantDAO(new ParticipantDAO(this));
+    this.setParticipantMissionDAO(new ParticipantMissionDAO(this));
+    this.setPropositionDAO(new PropositionDAO(this));
     
   }
   public Session getSession() throws RepositoryException {
@@ -70,6 +86,38 @@ public class JCRImpl implements IService {
     return sessionProvider.getSession(workspace, repo);
   }
 
+  public MissionDAO getMissionDAO() {
+    return missionDAO;
+  }
+  public void setMissionDAO(MissionDAO missionDAO) {
+    this.missionDAO = missionDAO;
+  }
+  public ManagerDAO getManagerDAO() {
+    return managerDAO;
+  }
+  public void setManagerDAO(ManagerDAO managerDAO) {
+    this.managerDAO = managerDAO;
+  }
+  public ParticipantDAO getParticipantDAO() {
+    return participantDAO;
+  }
+  public void setParticipantDAO(ParticipantDAO participantDAO) {
+    this.participantDAO = participantDAO;
+  }
+  public ParticipantMissionDAO getParticipantMissionDAO() {
+    return participantMissionDAO;
+  }
+  public void setParticipantMissionDAO(ParticipantMissionDAO participantMissionDAO) {
+    this.participantMissionDAO = participantMissionDAO;
+  }
+  public PropositionDAO getPropositionDAO() {
+    return propositionDAO;
+  }
+  public void setPropositionDAO(PropositionDAO propositionDAO) {
+    this.propositionDAO = propositionDAO;
+  }
+
+  
   @Override
   public void addMission(Mission m) {
     // TODO Auto-generated method stub

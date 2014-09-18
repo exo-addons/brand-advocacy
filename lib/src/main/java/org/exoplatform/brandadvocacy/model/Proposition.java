@@ -25,6 +25,7 @@ package org.exoplatform.brandadvocacy.model;
 public class Proposition {
   
   private String id;
+  private String mission_id;
   private String content;
   private int active;
   private int numberUsed;
@@ -34,6 +35,12 @@ public class Proposition {
   }
   public void setId(String id){
     this.id = id;
+  }
+  public String getMission_id() {
+    return mission_id;
+  }
+  public void setMission_id(String mission_id) {
+    this.mission_id = mission_id;
   }
   public String getContent(){
     return this.content;

@@ -25,25 +25,26 @@ package org.exoplatform.brandadvocacy.model;
 public class ParticipantMission {
 
   private String id;
-  private String mission_title;
+  private String proposition_id;
   private String participant_username;
-  private Address address;
+  private long address_id;
   private String url_submitted;
-  private Status status;
+  private long status;
   private long createdDate;
   private long modifedDate;
+  private long size;
   
   public String getId() {
     return id;
   }
+  public String getProposition_id() {
+    return proposition_id;
+  }
+  public void setProposition_id(String proposition_id) {
+    this.proposition_id = proposition_id;
+  }
   public void setId(String id) {
     this.id = id;
-  }
-  public String getMission_title() {
-    return mission_title;
-  }
-  public void setMission_title(String mission_title) {
-    this.mission_title = mission_title;
   }
   public String getParticipant_username() {
     return participant_username;
@@ -51,11 +52,11 @@ public class ParticipantMission {
   public void setParticipant_username(String participant_username) {
     this.participant_username = participant_username;
   }
-  public Address getAddress() {
-    return address;
+  public long getAddress() {
+    return address_id;
   }
-  public void setAddress(Address address) {
-    this.address = address;
+  public void setAddress(long address_id) {
+    this.address_id = address_id;
   }
   public String getUrl_submitted() {
     return url_submitted;
@@ -63,10 +64,10 @@ public class ParticipantMission {
   public void setUrl_submitted(String url_submitted) {
     this.url_submitted = url_submitted;
   }
-  public Status getStatus() {
+  public long getStatus() {
     return status;
   }
-  public void setStatus(Status status) {
+  public void setStatus(int status) {
     this.status = status;
   }
   public long getCreatedDate() {
@@ -81,6 +82,11 @@ public class ParticipantMission {
   public void setModifedDate(long modifedDate) {
     this.modifedDate = modifedDate;
   }
-  
+  public long getSize() {
+    return size;
+  }
+  public void setSize(long size) {
+    this.size = size;
+  }  
 
 }

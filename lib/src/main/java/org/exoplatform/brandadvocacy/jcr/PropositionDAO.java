@@ -16,12 +16,21 @@
  */
 package org.exoplatform.brandadvocacy.jcr;
 
+import org.exoplatform.brandadvocacy.service.JCRImpl;
+import org.exoplatform.services.log.ExoLogger;
+import org.exoplatform.services.log.Log;
+
 /**
  * Created by The eXo Platform SAS
  * Author : eXoPlatform
  *          exo@exoplatform.com
  * Sep 15, 2014  
  */
-public class PropositionDAO {
-
+public class PropositionDAO extends DAO {
+  
+  private static final Log log = ExoLogger.getLogger(PropositionDAO.class);
+  public PropositionDAO(JCRImpl jcrImpl) {
+    super(jcrImpl);
+    // TODO Auto-generated constructor stub
+  }
 }
