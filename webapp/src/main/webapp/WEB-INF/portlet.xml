@@ -36,7 +36,7 @@
       <mime-type>text/html</mime-type>
     </supports>
     <supported-locale>en</supported-locale>
-    <resource-bundle>locale.portlet.brandadvocacy.BrandAdvocacyPortlet</resource-bundle>
+    <resource-bundle>locale.portlet.brandadvocacy.UIBrandAdvocacyPortlet</resource-bundle>
     <portlet-info>
       <title>Brand Advocacy Portlet</title>
       <short-title>Brand Advocacy Portlet</short-title>  

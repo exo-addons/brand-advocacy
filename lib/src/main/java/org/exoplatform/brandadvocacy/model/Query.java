@@ -14,34 +14,41 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.exoplatform.brandadvocacy.jcr;
-
-import javax.jcr.Node;
-
-import org.exoplatform.brandadvocacy.model.Mission;
-import org.exoplatform.brandadvocacy.service.JCRImpl;
-import org.exoplatform.services.log.ExoLogger;
-import org.exoplatform.services.log.Log;
+package org.exoplatform.brandadvocacy.model;
 
 /**
  * Created by The eXo Platform SAS
  * Author : eXoPlatform
  *          exo@exoplatform.com
- * Sep 9, 2014  
+ * Sep 19, 2014  
  */
-public class MissionDAO extends DAO {
+public class Query {
+
+  private String id;
+  private String from;
+  private String where;
   
-  private static final Log log = ExoLogger.getLogger(MissionDAO.class);
-  public MissionDAO(JCRImpl jcrImpl) {
-    super(jcrImpl);
+  public String getId() {
+    return id;
   }
 
-  public Node getMissionNode(String id){
-    return null;
+  public void setId(String id) {
+    this.id = id;
   }
-  public Mission getMissionById(String id){
-    
-    return null; 
+  public String getFrom() {
+    return from;
   }
-  
+
+  public void setFrom(String from) {
+    this.from = from;
+  }
+
+  public String getWhere() {
+    return where;
+  }
+
+  public void setWhere(String where) {
+    this.where = where;
+  }
+
 }

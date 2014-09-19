@@ -16,7 +16,15 @@
  */
 package org.exoplatform.brandadvocacy.jcr;
 
+import java.util.LinkedList;
+import java.util.List;
+
+import javax.jcr.Node;
+import javax.jcr.NodeIterator;
+import javax.jcr.RepositoryException;
+import javax.jcr.Session;
 import org.exoplatform.brandadvocacy.service.JCRImpl;
+import org.exoplatform.services.jcr.impl.core.query.QueryImpl;
 
 /**
  * Created by The eXo Platform SAS

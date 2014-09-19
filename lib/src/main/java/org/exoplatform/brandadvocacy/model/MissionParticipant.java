@@ -22,7 +22,7 @@ package org.exoplatform.brandadvocacy.model;
  *          exo@exoplatform.com
  * Sep 9, 2014  
  */
-public class ParticipantMission {
+public class MissionParticipant {
 
   private String id;
   private String proposition_id;

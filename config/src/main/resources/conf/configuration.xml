@@ -24,9 +24,6 @@
 						<!-- The list of name of the dependencies to add -->
 						<field name="dependencies">
 							<collection type="java.util.ArrayList">
-	            			    <value>
-							      <string>acme-intranet</string>
-							    </value>
 				              	<value>
 				                 	<string>brand-advocacy-webapp</string>
 				              	</value>							

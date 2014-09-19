@@ -16,6 +16,8 @@
  */
 package org.exoplatform.brandadvocacy.jcr;
 
+import org.exoplatform.brandadvocacy.model.Manager;
+import org.exoplatform.brandadvocacy.service.BrandAdvocacyServiceException;
 import org.exoplatform.brandadvocacy.service.JCRImpl;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
@@ -31,6 +33,10 @@ public class ManagerDAO extends DAO{
   private static final Log log = ExoLogger.getLogger(ManagerDAO.class);
   public ManagerDAO(JCRImpl jcrImpl) {
     super(jcrImpl);
-  }  
+  }
+  public void addManager(Manager m) throws BrandAdvocacyServiceException{
+    
+    
+  }
 
 }

@@ -19,6 +19,8 @@ package org.exoplatform.brandadvocacy.model;
 import java.util.Date;
 import java.util.List;
 
+import org.exoplatform.brandadvocacy.service.BrandAdvocacyServiceException;
+
 /**
  * Created by The eXo Platform SAS
  * Author : eXoPlatform
@@ -91,6 +93,9 @@ public class Mission {
   public void setManagers(List<Manager> managers) {
     this.managers = managers;
   }
-
+  public BrandAdvocacyServiceException checkValid(){
+    if(null == this.getTitle())
+      return new BrandAdvocacyServiceException(code, message);
+  }
   
 }

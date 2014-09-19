@@ -20,7 +20,7 @@ import java.util.List;
 
 import org.exoplatform.brandadvocacy.model.Mission;
 import org.exoplatform.brandadvocacy.model.Participant;
-import org.exoplatform.brandadvocacy.model.ParticipantMission;
+import org.exoplatform.brandadvocacy.model.MissionParticipant;
 import org.exoplatform.brandadvocacy.model.Proposition;
 
 /**
@@ -43,10 +43,10 @@ public interface IService {
   public List<Participant> getAllParticipants();
   public List<Participant> getParticipantsByMissionId(String mid);
 
-  public void addParticipantMission(ParticipantMission pm);
-  public ParticipantMission getParticipantMissionById(String id);
-  public List<ParticipantMission> getParticipantMissionsByParticipantId(String pid);
-  public void updateParticipantMission(ParticipantMission pm);
+  public void addParticipantMission(MissionParticipant pm);
+  public MissionParticipant getParticipantMissionById(String id);
+  public List<MissionParticipant> getParticipantMissionsByParticipantId(String pid);
+  public void updateParticipantMission(MissionParticipant pm);
   
   public void addProposition(Proposition p);
   public void removeProposition(String id);

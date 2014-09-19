@@ -16,8 +16,11 @@
  */
 package org.exoplatform.brandadvocacy.service;
 
+import java.util.LinkedList;
 import java.util.List;
 
+import javax.jcr.Node;
+import javax.jcr.NodeIterator;
 import javax.jcr.RepositoryException;
 import javax.jcr.Session;
 
@@ -28,7 +31,7 @@ import org.exoplatform.brandadvocacy.jcr.ParticipantMissionDAO;
 import org.exoplatform.brandadvocacy.jcr.PropositionDAO;
 import org.exoplatform.brandadvocacy.model.Mission;
 import org.exoplatform.brandadvocacy.model.Participant;
-import org.exoplatform.brandadvocacy.model.ParticipantMission;
+import org.exoplatform.brandadvocacy.model.MissionParticipant;
 import org.exoplatform.brandadvocacy.model.Proposition;
 import org.exoplatform.container.xml.InitParams;
 import org.exoplatform.container.xml.ValueParam;
@@ -37,6 +40,9 @@ import org.exoplatform.services.jcr.core.ManageableRepository;
 import org.exoplatform.services.jcr.ext.app.SessionProviderService;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.services.jcr.ext.distribution.DataDistributionManager;
+import org.exoplatform.services.jcr.ext.distribution.DataDistributionMode;
+import org.exoplatform.services.jcr.ext.distribution.DataDistributionType;
+import org.exoplatform.services.jcr.impl.core.query.QueryImpl;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 import org.exoplatform.services.organization.OrganizationService;
@@ -55,7 +61,6 @@ public class JCRImpl implements IService {
   private RepositoryService repositoryService;
   private SessionProviderService sessionService;
   private DataDistributionManager dataDistributionManager;  
-  public String workspace = "brandadvocacy";
   private MissionDAO missionDAO;
   private ManagerDAO managerDAO;
 
@@ -64,8 +69,26 @@ public class JCRImpl implements IService {
   private PropositionDAO propositionDAO;
   
   private static final Log log = ExoLogger.getLogger(JCRImpl.class);
+
+  public String workspace = "brandadvocacy";
+  public static final String MISSIONS_PATH = "/Missions";
+  public static final String PROPOSITIONS_PATH = "/Propositions";
+  public static final String MANAGERS_PATH = "/Managers";  
+  public static final String PARTICIPANTS_PATH = "/Participants";
+  public static final String PARTICIPANT_ADDRESSES_PATH = "/Addresses";  
+  public static final String MISSION_PARTICIPANTS_PATH = "/Mission_Participants";
+  
+  public static final String MISSION_NODE_TYPE = "brad:mission";
+  public static final String MANAGER_NODE_TYPE = "brad:manager";
+  public static final String PROPOSITION_NODE_TYPE = "brad:propostion";
+  public static final String PARTICIPANT_NODE_TYPE = "brad:participant";
+  public static final String ADDRESS_NODE_TYPE = "brad:address";
+  public static final String MISSION_PARTICIPANT_NODE_TYPE = "brad:mission-participant";
+  
+  public static final String EXTENSION_PATH = "ApplicationData/brandAdvocacyExtension";
   
   public JCRImpl(InitParams params, OrganizationService orgService, SessionProviderService sessionService, RepositoryService repositoryService, DataDistributionManager dataDistributionManager){
+    
     
     if(params != null){
       ValueParam param = params.getValueParam("workspace");
@@ -78,6 +101,7 @@ public class JCRImpl implements IService {
     this.setParticipantDAO(new ParticipantDAO(this));
     this.setParticipantMissionDAO(new ParticipantMissionDAO(this));
     this.setPropositionDAO(new PropositionDAO(this));
+    this.dataDistributionManager = dataDistributionManager;
     
   }
   public Session getSession() throws RepositoryException {
@@ -85,7 +109,38 @@ public class JCRImpl implements IService {
     SessionProvider sessionProvider = sessionService.getSystemSessionProvider(null); 
     return sessionProvider.getSession(workspace, repo);
   }
+  public Node getOrCreateNode(String path) {
+    try {
+        Session session = getSession();
+        
+        DataDistributionType type = dataDistributionManager.getDataDistributionType(DataDistributionMode.NONE);
+        return type.getOrCreateDataNode(session.getRootNode(), path);
+    } catch (Exception e) {
+        log.error(e.getMessage(), e);
+        throw new RuntimeException(e);
+    }
+  }
+  public Node getOrCreateMissionHome(String username) {
+    String path = String.format("%s/%s/%s", MISSIONS_PATH, username, EXTENSION_PATH);
+    return getOrCreateNode(path);
+  }
+  public List<Node> getNodeByQuery(String strQuery, int offset, int limit) throws RepositoryException {
+    StringBuilder sql = new StringBuilder(strQuery);
+    Session session = this.getSession();
+    QueryImpl jcrQuery = (QueryImpl) session.getWorkspace().getQueryManager().createQuery(sql.toString(), javax.jcr.query.Query.SQL);
+    if (limit >= 0) {
+        jcrQuery.setOffset(offset);
+        jcrQuery.setLimit(limit);
+    }
+    NodeIterator results = jcrQuery.execute().getNodes();
 
+    List<Node> nodes = new LinkedList<Node>();
+    while (results.hasNext()) {
+        nodes.add(results.nextNode());
+    }
+    return nodes;
+  }  
+  
   public MissionDAO getMissionDAO() {
     return missionDAO;
   }
@@ -120,7 +175,6 @@ public class JCRImpl implements IService {
   
   @Override
   public void addMission(Mission m) {
-    // TODO Auto-generated method stub
     
   }
 
@@ -179,25 +233,25 @@ public class JCRImpl implements IService {
   }
 
   @Override
-  public void addParticipantMission(ParticipantMission pm) {
+  public void addParticipantMission(MissionParticipant pm) {
     // TODO Auto-generated method stub
     
   }
 
   @Override
-  public ParticipantMission getParticipantMissionById(String id) {
+  public MissionParticipant getParticipantMissionById(String id) {
     // TODO Auto-generated method stub
     return null;
   }
 
   @Override
-  public List<ParticipantMission> getParticipantMissionsByParticipantId(String pid) {
+  public List<MissionParticipant> getParticipantMissionsByParticipantId(String pid) {
     // TODO Auto-generated method stub
     return null;
   }
 
   @Override
-  public void updateParticipantMission(ParticipantMission pm) {
+  public void updateParticipantMission(MissionParticipant pm) {
     // TODO Auto-generated method stub
     
   }

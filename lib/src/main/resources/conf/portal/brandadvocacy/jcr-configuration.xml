@@ -40,7 +40,7 @@
         <values-param>
           <name>autoCreatedInNewRepository</name>
           <description>Node types configuration file</description>
-          <value>jar:/conf/portal/brandadvocacy/nodetypes-brand-advocacy.xml</value>
+          <value>jar:/conf/portal/brandadvocacy/nodetype-brand-advocacy.xml</value>
         </values-param>
       </init-params>
     </component-plugin>

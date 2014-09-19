@@ -25,5 +25,16 @@
    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
    xsi:schemaLocation="http://www.exoplatform.org/xml/ns/kernel_1_2.xsd http://www.exoplatform.org/xml/ns/kernel_1_2.xsd"
    xmlns="http://www.exoplatform.org/xml/ns/kernel_1_2.xsd">
-  
+  <component>
+    <key>org.exoplatform.brandadvocacy.service.IService</key>
+    <type>org.exoplatform.brandadvocacy.service.JCRImpl</type>
+    <init-params>
+      <value-param>
+        <name>workspace</name>
+        <value>${org.exoplatform.addons.codefest.team_e.workspace:team_e}</value>
+      </value-param>
+    </init-params>
+  </component>
+
+  <import>jar:/conf/portal/brandadvocacy/jcr-configuration.xml</import>   
 </configuration>
