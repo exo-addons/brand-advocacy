@@ -27,7 +27,7 @@ public enum Status {
   
   OPEN(1),
   INPROGRESS(2),
-  WAITIING_FOR_VALIDATE(3),
+  WAITING_FOR_VALIDATE(3),
   VALIDATED(4),
   SHIPPED(5),
   REJECTED(6);

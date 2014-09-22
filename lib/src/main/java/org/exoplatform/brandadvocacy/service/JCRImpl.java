@@ -16,22 +16,10 @@
  */
 package org.exoplatform.brandadvocacy.service;
 
-import java.util.LinkedList;
-import java.util.List;
-
-import javax.jcr.Node;
-import javax.jcr.NodeIterator;
-import javax.jcr.RepositoryException;
-import javax.jcr.Session;
-
-import org.exoplatform.brandadvocacy.jcr.ManagerDAO;
-import org.exoplatform.brandadvocacy.jcr.MissionDAO;
-import org.exoplatform.brandadvocacy.jcr.ParticipantDAO;
-import org.exoplatform.brandadvocacy.jcr.ParticipantMissionDAO;
-import org.exoplatform.brandadvocacy.jcr.PropositionDAO;
+import org.exoplatform.brandadvocacy.jcr.*;
 import org.exoplatform.brandadvocacy.model.Mission;
-import org.exoplatform.brandadvocacy.model.Participant;
 import org.exoplatform.brandadvocacy.model.MissionParticipant;
+import org.exoplatform.brandadvocacy.model.Participant;
 import org.exoplatform.brandadvocacy.model.Proposition;
 import org.exoplatform.container.xml.InitParams;
 import org.exoplatform.container.xml.ValueParam;
@@ -46,6 +34,13 @@ import org.exoplatform.services.jcr.impl.core.query.QueryImpl;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 import org.exoplatform.services.organization.OrganizationService;
+
+import javax.jcr.Node;
+import javax.jcr.NodeIterator;
+import javax.jcr.RepositoryException;
+import javax.jcr.Session;
+import java.util.LinkedList;
+import java.util.List;
 
 
 
@@ -70,7 +65,7 @@ public class JCRImpl implements IService {
   
   private static final Log log = ExoLogger.getLogger(JCRImpl.class);
 
-  public String workspace = "brandadvocacy";
+  public static String workspace = "brandadvocacy";
   public static final String MISSIONS_PATH = "/Missions";
   public static final String PROPOSITIONS_PATH = "/Propositions";
   public static final String MANAGERS_PATH = "/Managers";  
@@ -174,8 +169,8 @@ public class JCRImpl implements IService {
 
   
   @Override
-  public void addMission(Mission m) {
-    
+  public Mission addMission(Mission m) throws BrandAdvocacyServiceException{
+      return this.getMissionDAO().createMission(m);
   }
 
   @Override

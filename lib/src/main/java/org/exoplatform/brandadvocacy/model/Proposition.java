@@ -16,6 +16,8 @@
  */
 package org.exoplatform.brandadvocacy.model;
 
+import org.exoplatform.brandadvocacy.service.BrandAdvocacyServiceException;
+
 /**
  * Created by The eXo Platform SAS
  * Author : eXoPlatform
@@ -60,5 +62,8 @@ public class Proposition {
   public void setNumberUsed(int nb){
     this.numberUsed = nb;
   }
-  
+  public void checkValid() throws BrandAdvocacyServiceException{
+      if(null == this.getContent() || "".equals(this.getContent()))
+          throw new BrandAdvocacyServiceException(BrandAdvocacyServiceException.PROPOSITION_INVALID,"proposition cannot have empty content");
+  }
 }

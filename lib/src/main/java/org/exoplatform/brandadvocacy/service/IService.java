@@ -16,12 +16,12 @@
  */
 package org.exoplatform.brandadvocacy.service;
 
-import java.util.List;
-
 import org.exoplatform.brandadvocacy.model.Mission;
-import org.exoplatform.brandadvocacy.model.Participant;
 import org.exoplatform.brandadvocacy.model.MissionParticipant;
+import org.exoplatform.brandadvocacy.model.Participant;
 import org.exoplatform.brandadvocacy.model.Proposition;
+
+import java.util.List;
 
 /**
  * Created by The eXo Platform SAS
@@ -31,7 +31,7 @@ import org.exoplatform.brandadvocacy.model.Proposition;
  */
 public interface IService {
  
-  public void addMission(Mission m);
+  public Mission addMission(Mission m) throws BrandAdvocacyServiceException;
   public void removeMission(String id);
   public Mission getMissionById(String id);
   public List<Mission> getAllMissions();

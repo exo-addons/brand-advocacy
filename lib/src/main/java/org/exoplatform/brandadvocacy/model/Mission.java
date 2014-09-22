@@ -16,10 +16,10 @@
  */
 package org.exoplatform.brandadvocacy.model;
 
-import java.util.Date;
-import java.util.List;
-
 import org.exoplatform.brandadvocacy.service.BrandAdvocacyServiceException;
+
+import java.util.List;
+import java.util.UUID;
 
 /**
  * Created by The eXo Platform SAS
@@ -36,9 +36,13 @@ public class Mission {
   private int active;
   List<Proposition> propositions;
   private long createdDate;
-  private long modifedDate;
+  private long modifiedDate;
   private List<Manager> managers;
 
+  public Mission(String title){
+   this.title = title;
+   this.id = UUID.randomUUID().toString();
+  }
   public String getId() {
     return id;
   }
@@ -81,11 +85,11 @@ public class Mission {
   public void setCreatedDate(long createdDate) {
     this.createdDate = createdDate;
   }
-  public long getModifedDate() {
-    return modifedDate;
+  public long getModifiedDate() {
+    return modifiedDate;
   }
-  public void setModifedDate(long modifedDate) {
-    this.modifedDate = modifedDate;
+  public void setModifiedDate(long modifiedDate) {
+    this.modifiedDate = modifiedDate;
   }
   public List<Manager> getManagers() {
     return managers;
@@ -93,9 +97,11 @@ public class Mission {
   public void setManagers(List<Manager> managers) {
     this.managers = managers;
   }
-  public BrandAdvocacyServiceException checkValid(){
-    if(null == this.getTitle())
-      return new BrandAdvocacyServiceException(code, message);
+  public void checkValid() throws BrandAdvocacyServiceException {
+   if (null == this.getTitle() || "".equals(this.getTitle()) || this.getTitle().trim().isEmpty()) {
+    throw new IllegalArgumentException("Mission title is invalid");
+
+   }
   }
   
 }

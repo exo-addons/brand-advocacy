@@ -16,6 +16,8 @@
  */
 package org.exoplatform.brandadvocacy.model;
 
+import org.exoplatform.brandadvocacy.service.BrandAdvocacyServiceException;
+
 /**
  * Created by The eXo Platform SAS
  * Author : eXoPlatform
@@ -72,4 +74,8 @@ public class Address {
   public void setCountry(String country) {
     this.country = country;
   }  
+  public void checkValid() throws BrandAdvocacyServiceException{
+  }
+
+
 }

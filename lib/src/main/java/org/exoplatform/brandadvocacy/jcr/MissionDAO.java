@@ -16,12 +16,13 @@
  */
 package org.exoplatform.brandadvocacy.jcr;
 
-import javax.jcr.Node;
-
 import org.exoplatform.brandadvocacy.model.Mission;
+import org.exoplatform.brandadvocacy.service.BrandAdvocacyServiceException;
 import org.exoplatform.brandadvocacy.service.JCRImpl;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
+
+import javax.jcr.Node;
 
 /**
  * Created by The eXo Platform SAS
@@ -35,7 +36,18 @@ public class MissionDAO extends DAO {
   public MissionDAO(JCRImpl jcrImpl) {
     super(jcrImpl);
   }
-
+  public Mission createMission(Mission m){
+    try{
+     m.checkValid();
+     m = this.getJcrImplService().addMission(m);
+     return m;
+    }catch (BrandAdvocacyServiceException brade){
+     log.error("cannot create mission with null title");
+    }catch (Exception e){
+     log.error("cannot create mission");
+    }
+    return null;
+  }
   public Node getMissionNode(String id){
     return null;
   }

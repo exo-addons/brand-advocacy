@@ -31,7 +31,7 @@ public class MissionParticipant {
   private String url_submitted;
   private long status;
   private long createdDate;
-  private long modifedDate;
+  private long modifiedDate;
   private long size;
   
   public String getId() {
@@ -76,11 +76,11 @@ public class MissionParticipant {
   public void setCreatedDate(long createdDate) {
     this.createdDate = createdDate;
   }
-  public long getModifedDate() {
-    return modifedDate;
+  public long getModifiedDate() {
+    return modifiedDate;
   }
-  public void setModifedDate(long modifedDate) {
-    this.modifedDate = modifedDate;
+  public void setModifiedDate(long modifiedDate) {
+    this.modifiedDate = modifiedDate;
   }
   public long getSize() {
     return size;
