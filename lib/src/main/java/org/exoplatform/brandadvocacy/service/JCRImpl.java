@@ -52,7 +52,7 @@ import java.util.List;
  */
 public class JCRImpl implements IService {
 
-  
+  private OrganizationService orgService;
   private RepositoryService repositoryService;
   private SessionProviderService sessionService;
   private DataDistributionManager dataDistributionManager;  
@@ -65,8 +65,9 @@ public class JCRImpl implements IService {
   
   private static final Log log = ExoLogger.getLogger(JCRImpl.class);
 
-  public static String workspace = "brandadvocacy";
-  public static final String MISSIONS_PATH = "/Missions";
+  public static String workspace = "collaboration";
+  
+  public static final String EXTENSION_PATH = "/BrandAdvocacys";
   public static final String PROPOSITIONS_PATH = "/Propositions";
   public static final String MANAGERS_PATH = "/Managers";  
   public static final String PARTICIPANTS_PATH = "/Participants";
@@ -80,11 +81,10 @@ public class JCRImpl implements IService {
   public static final String ADDRESS_NODE_TYPE = "brad:address";
   public static final String MISSION_PARTICIPANT_NODE_TYPE = "brad:mission-participant";
   
-  public static final String EXTENSION_PATH = "ApplicationData/brandAdvocacyExtension";
+  public static final String APP_PATH = "ApplicationData/brandAdvocacyExtension";
   
   public JCRImpl(InitParams params, OrganizationService orgService, SessionProviderService sessionService, RepositoryService repositoryService, DataDistributionManager dataDistributionManager){
-    
-    
+
     if(params != null){
       ValueParam param = params.getValueParam("workspace");
       if(param != null){
@@ -96,8 +96,12 @@ public class JCRImpl implements IService {
     this.setParticipantDAO(new ParticipantDAO(this));
     this.setParticipantMissionDAO(new ParticipantMissionDAO(this));
     this.setPropositionDAO(new PropositionDAO(this));
+    this.orgService = orgService;
+    this.sessionService = sessionService;
     this.dataDistributionManager = dataDistributionManager;
+    this.repositoryService = repositoryService;
     
+    this.getOrCreateExtensionHome();
   }
   public Session getSession() throws RepositoryException {
     ManageableRepository repo = repositoryService.getCurrentRepository();
@@ -106,18 +110,13 @@ public class JCRImpl implements IService {
   }
   public Node getOrCreateNode(String path) {
     try {
-        Session session = getSession();
-        
-        DataDistributionType type = dataDistributionManager.getDataDistributionType(DataDistributionMode.NONE);
-        return type.getOrCreateDataNode(session.getRootNode(), path);
+      Session session = getSession();    
+      DataDistributionType type = dataDistributionManager.getDataDistributionType(DataDistributionMode.NONE);
+      return type.getOrCreateDataNode(session.getRootNode(), path);
     } catch (Exception e) {
-        log.error(e.getMessage(), e);
-        throw new RuntimeException(e);
+      log.error(e.getMessage(), e);
+      throw new RuntimeException(e);
     }
-  }
-  public Node getOrCreateMissionHome(String username) {
-    String path = String.format("%s/%s/%s", MISSIONS_PATH, username, EXTENSION_PATH);
-    return getOrCreateNode(path);
   }
   public List<Node> getNodeByQuery(String strQuery, int offset, int limit) throws RepositoryException {
     StringBuilder sql = new StringBuilder(strQuery);
@@ -135,7 +134,10 @@ public class JCRImpl implements IService {
     }
     return nodes;
   }  
-  
+  public Node getOrCreateExtensionHome(){
+    String path = String.format("%s", EXTENSION_PATH);
+    return this.getOrCreateNode(path);
+  }
   public MissionDAO getMissionDAO() {
     return missionDAO;
   }
@@ -187,8 +189,7 @@ public class JCRImpl implements IService {
 
   @Override
   public List<Mission> getAllMissions() {
-    // TODO Auto-generated method stub
-    return null;
+    return this.getMissionDAO().getAllMissions();
   }
 
   @Override

@@ -107,7 +107,7 @@
         <propertyDefinition name="exo:third_party_link" requiredType="String" autoCreated="false" mandatory="true" onParentVersion="COPY" protected="false" multiple="false">
           <valueConstraints/>
         </propertyDefinition>        
-        <propertyDefinition name="exo:priority" requiredType="String" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="false">
+        <propertyDefinition name="exo:priority" requiredType="Long" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="false">
           <valueConstraints>
 			<valueConstraint>[1,3]</valueConstraint>          
           </valueConstraints>

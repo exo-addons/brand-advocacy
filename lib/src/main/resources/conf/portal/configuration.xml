@@ -31,7 +31,7 @@
     <init-params>
       <value-param>
         <name>workspace</name>
-        <value>${org.exoplatform.addons.codefest.team_e.workspace:team_e}</value>
+        <value>${org.exoplatform.addons.brandadvocacy.workspace:collaboration}</value>
       </value-param>
     </init-params>
   </component>

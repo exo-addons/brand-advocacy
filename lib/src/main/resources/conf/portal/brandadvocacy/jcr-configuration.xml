@@ -3,7 +3,7 @@
 	xsi:schemaLocation="http://www.exoplatform.org/xml/ns/kernel_1_2.xsd http://www.exoplatform.org/xml/ns/kernel_1_2.xsd"
   xmlns="http://www.exoplatform.org/xml/ns/kernel_1_2.xsd">
 
-  <!-- external-component-plugins>
+  <external-component-plugins>
     <target-component>org.exoplatform.services.jcr.config.RepositoryServiceConfiguration</target-component>
     <component-plugin>
       <name>Sample RepositoryServiceConfiguration Plugin</name>
@@ -17,7 +17,7 @@
         </value-param>
       </init-params>
     </component-plugin>
-  </external-component-plugins-->
+  </external-component-plugins>
   
   <external-component-plugins>
     <target-component>org.exoplatform.services.jcr.RepositoryService</target-component>

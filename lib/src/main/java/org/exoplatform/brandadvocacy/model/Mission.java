@@ -32,16 +32,19 @@ public class Mission {
   private String id;
   private String title;
   private String third_party_link;
-  private Priority priority;
-  private int active;
+  private Long priority;
+  private Boolean active;
   List<Proposition> propositions;
   private long createdDate;
   private long modifiedDate;
   private List<Manager> managers;
-
+  
+  public Mission(){
+  }
   public Mission(String title){
-   this.title = title;
-   this.id = UUID.randomUUID().toString();
+   this.setTitle(title);
+   this.setId(UUID.randomUUID().toString());
+   this.setCreatedDate(System.currentTimeMillis());
   }
   public String getId() {
     return id;
@@ -61,16 +64,16 @@ public class Mission {
   public void setThird_party_link(String third_party_link) {
     this.third_party_link = third_party_link;
   }
-  public Priority getPriority() {
+  public Long getPriority() {
     return priority;
   }
-  public void setPriority(Priority priority) {
+  public void setPriority(Long priority) {
     this.priority = priority;
   }
-  public int getActive() {
+  public Boolean getActive() {
     return active;
   }
-  public void setActive(int active) {
+  public void setActive(Boolean active) {
     this.active = active;
   }
   public List<Proposition> getPropositions() {

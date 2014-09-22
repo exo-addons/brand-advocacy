@@ -31,6 +31,12 @@
   <component>
     <key>org.exoplatform.brandadvocacy.service.IService</key>
     <type>org.exoplatform.brandadvocacy.service.JCRImpl</type>
+    <init-params>
+      <value-param>
+        <name>workspace</name>
+        <value>${org.exoplatform.addons.brandadvocacy.workspace:collaboration}</value>
+      </value-param>
+    </init-params>
   </component>
   <component>
     <key>org.exoplatform.services.organization.OrganizationService</key>

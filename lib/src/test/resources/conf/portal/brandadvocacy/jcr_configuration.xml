@@ -41,7 +41,7 @@
         <value-param>
           <name>conf-path</name>
           <description>JCR configuration file</description>
-          <value>jar:/conf/portal/team_e/repository-configuration.xml</value>
+          <value>jar:/conf/portal/brandadvocacy/repository-configuration.xml</value>
         </value-param>
       </init-params>
     </component-plugin>
@@ -57,7 +57,7 @@
         <values-param>
           <name>autoCreatedInNewRepository</name>
           <description>Node types configuration file</description>
-          <value>jar:/conf/portal/team_e/task-nodetypes.xml</value>
+          <value>jar:/conf/portal/brandadvocacy/nodetype-brand-advocacy.xml</value>
         </values-param>
       </init-params>
     </component-plugin>
