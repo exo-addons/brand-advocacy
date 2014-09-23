@@ -17,11 +17,15 @@
 package org.exoplatform.brandadvocacy.jcr;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
+import org.exoplatform.brandadvocacy.model.Manager;
 import org.exoplatform.brandadvocacy.model.Mission;
+import org.exoplatform.brandadvocacy.model.Proposition;
 import org.exoplatform.brandadvocacy.service.BrandAdvocacyServiceException;
 import org.exoplatform.brandadvocacy.service.JCRImpl;
+import org.exoplatform.brandadvocacy.service.Utils;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 
@@ -32,9 +36,13 @@ import javax.jcr.PathNotFoundException;
 import javax.jcr.Property;
 import javax.jcr.PropertyIterator;
 import javax.jcr.RepositoryException;
+import javax.jcr.Session;
+import javax.jcr.Value;
 import javax.jcr.lock.LockException;
 import javax.jcr.nodetype.ConstraintViolationException;
 import javax.jcr.nodetype.NoSuchNodeTypeException;
+import javax.jcr.query.Query;
+import javax.jcr.query.QueryResult;
 import javax.jcr.version.VersionException;
 
 /**
@@ -148,13 +156,98 @@ public class MissionDAO extends DAO {
     }
     return null;
   }
-  public Node getMissionNode(String id) {
-    return null;
+  public Node getNodeById(String id) {
+    StringBuilder sql = new StringBuilder("select * from "+ MissionDAO.NodeType +" where jcr:path like '");
+    sql.append(JCRImpl.EXTENSION_PATH).append("/%/").append(MISSIONS_PATH);
+    sql.append("/").append(Utils.queryEscape(id)).append("'");
+    Session session;
+    try {
+      session = this.getJcrImplService().getSession();
+      Query query = session.getWorkspace().getQueryManager().createQuery(sql.toString(), Query.SQL);
+
+      QueryResult result = query.execute();
+      NodeIterator nodes = result.getNodes();
+      if (nodes.hasNext()) {
+        return nodes.nextNode();
+      }   
+    } catch (RepositoryException e) {
+      log.error("ERROR get mission id "+id +" Exeption "+e.getMessage());
+    }
+    return null;        
   }
 
-  public Mission getMissionById(String id) {
-
+  public Mission getMissionById(String id) throws RepositoryException {
+    Node aNode = this.getNodeById(id);
+    if(aNode != null)
+      return this.transferNode2Mission(aNode);
     return null;
   }
+  public void UpdateMission(Mission m){
+    try {
+      m.checkValid();      
+      Node missionHome = this.getOrCreateMissionHome();
+      if (!missionHome.hasNode(m.getId())) {
+      
+        throw new BrandAdvocacyServiceException(BrandAdvocacyServiceException.MISSION_NOT_EXISTS, "cannot update mission not exist "+m.getId());
+        
+      }
+      Node aNode = missionHome.getNode(m.getId());
+      if ( m.getId().equals( aNode.getProperty(node_prop_id).getString()) ) {
+        this.setPropertiesNode(aNode, m);        
+        aNode.save();
+      }
 
+    } catch (BrandAdvocacyServiceException e) {
+      log.error("ERROR cannot update mission with empty title");
+    } catch (RepositoryException e) {
+      log.error("ERROR update mission "+e.getMessage());
+    }              
+  }
+  public void removeMissionById(String id){
+      try {
+          Node aNode = this.getNodeById(id);
+          if (aNode != null) {
+              Session session = aNode.getSession();
+              aNode.remove();
+              session.save();
+          }
+      } catch (RepositoryException e) {
+          log.error(" ERROR remove mission "+id+" === Exception "+e.getMessage());
+      }
+  }
+  
+  public void setActiveMission(String id,Boolean isActive){
+    try{
+      if(null == id || "".equals(id))
+        throw new BrandAdvocacyServiceException(BrandAdvocacyServiceException.ID_INVALID,"cannot set active for invalid id "+id);
+      Node aNode = this.getNodeById(id);
+      if(null == aNode)
+        throw new BrandAdvocacyServiceException(BrandAdvocacyServiceException.MISSION_NOT_EXISTS,"cannot set active for mission not exist "+id);
+      aNode.setProperty(node_prop_active, isActive);
+    }catch(BrandAdvocacyServiceException brade){
+      log.error(brade.getMessage());
+    }catch(RepositoryException re){
+      log.error(" ERROR set active mission "+re.getMessage());
+    }
+  }
+  public void addManager2Mission(String id,List<Manager> managers){
+    try {
+      if(null == id || "".equals(id))
+        throw new BrandAdvocacyServiceException(BrandAdvocacyServiceException.ID_INVALID,"cannot add manager for invalid id "+id);    
+      Node aNode = this.getNodeById(id);
+      if(null == aNode)
+        throw new BrandAdvocacyServiceException(BrandAdvocacyServiceException.MISSION_NOT_EXISTS, "cannot add manager to mission not exists "+id);
+      List<Value> nodeManagers = new LinkedList<Value>();
+      Node missionHome = this.getOrCreateMissionHome();
+      for(int i = 0;i<managers.size();i++){
+
+      }
+    } catch (BrandAdvocacyServiceException brade) {
+      log.error("ERROR cannot add manager "+brade.getMessage());
+    }
+
+  }
+  public void addProposition2Mission(Mission m,List<Proposition> propositions){
+    
+  }
 }
