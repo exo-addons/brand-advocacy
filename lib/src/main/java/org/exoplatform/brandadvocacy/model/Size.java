@@ -16,6 +16,8 @@
  */
 package org.exoplatform.brandadvocacy.model;
 
+import org.exoplatform.web.url.MimeType;
+
 /**
  * Created by The eXo Platform SAS
  * Author : eXoPlatform
@@ -58,7 +60,7 @@ public enum Size {
           }
       }
 
-      return Large;
+      return Medium;
   }
 }
 

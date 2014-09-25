@@ -68,8 +68,6 @@ public class JCRImpl implements IService {
   public static String workspace = "collaboration";
   
   public static final String EXTENSION_PATH = "/BrandAdvocacys";
-  public static final String PROPOSITIONS_PATH = "/Propositions";
-  public static final String MANAGERS_PATH = "/Managers";  
   public static final String PARTICIPANTS_PATH = "/Participants";
   public static final String PARTICIPANT_ADDRESSES_PATH = "/Addresses";  
   public static final String MISSION_PARTICIPANTS_PATH = "/Mission_Participants";

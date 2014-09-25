@@ -44,7 +44,9 @@ public class Mission {
   public Mission(String title){
    this.setTitle(title);
    this.setId(UUID.randomUUID().toString());
+   this.setPriority((long) Priority.PRIORITY_2.priority());
    this.setCreatedDate(System.currentTimeMillis());
+   
   }
   public String getId() {
     return id;
@@ -101,9 +103,11 @@ public class Mission {
     this.managers = managers;
   }
   public void checkValid() throws BrandAdvocacyServiceException {
-   if (null == this.getTitle() || "".equals(this.getTitle()) || this.getTitle().trim().isEmpty()) {
-    throw new IllegalArgumentException("Mission title is invalid");
-
+    if(null == this.getId() || "".equals(this.getId()))
+      throw new IllegalArgumentException("mission id is invalid ");
+    
+    if (null == this.getTitle() || "".equals(this.getTitle()) || this.getTitle().trim().isEmpty()) {
+      throw new IllegalArgumentException("Mission title is invalid");    
    }
   }
   

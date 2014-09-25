@@ -16,6 +16,8 @@
  */
 package org.exoplatform.brandadvocacy.model;
 
+import javax.jcr.Value;
+
 /**
  * Created by The eXo Platform SAS
  * Author : eXoPlatform
@@ -24,13 +26,18 @@ package org.exoplatform.brandadvocacy.model;
  */
 public class Manager extends User{
   
-  private Role role = Role.Admin;  
+  private int role;  
   private Boolean notif;
 
-  public Role getRole(){
+  public Manager(String username){
+    this.setUserName(username);
+    this.setRole(Role.Admin.role());
+    this.setNotif(true);
+  }
+  public int getRole(){
     return this.role;
   }
-  public void setRole(Role role){
+  public void setRole(int role){
     this.role = role;
   }
   public Boolean getNotif(){
@@ -39,6 +46,7 @@ public class Manager extends User{
   public void setNotif(Boolean notif){
     this.notif = notif;
   }
+  
   
   
   
