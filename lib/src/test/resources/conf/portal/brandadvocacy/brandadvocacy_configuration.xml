@@ -33,7 +33,7 @@
     <init-params>
       <value-param>
         <name>workspace</name>
-        <value>${org.exoplatform.addons.brandadvocacy.workspace:brand}</value>
+        <value>${org.exoplatform.addons.brandadvocacy.workspace:brandadvocacy}</value>
       </value-param>
     </init-params>
   </component>

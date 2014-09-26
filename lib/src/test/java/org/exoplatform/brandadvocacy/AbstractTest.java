@@ -4,14 +4,15 @@ import org.exoplatform.brandadvocacy.model.Mission;
 import org.exoplatform.brandadvocacy.model.Proposition;
 import org.exoplatform.brandadvocacy.service.IService;
 import org.exoplatform.brandadvocacy.service.JCRImpl;
+import org.exoplatform.component.test.AbstractKernelTest;
+import org.exoplatform.component.test.ConfigurationUnit;
+import org.exoplatform.component.test.ConfiguredBy;
+import org.exoplatform.component.test.ContainerScope;
 import org.exoplatform.services.jcr.RepositoryService;
 import org.exoplatform.services.jcr.core.ManageableRepository;
 import org.exoplatform.services.jcr.ext.app.SessionProviderService;
+
 import javax.jcr.Session;
-import org.exoplatform.component.test.AbstractKernelTest;
-import org.exoplatform.component.test.ConfiguredBy;
-import org.exoplatform.component.test.ConfigurationUnit;
-import org.exoplatform.component.test.ContainerScope;
 @ConfiguredBy({
     @ConfigurationUnit(scope = ContainerScope.PORTAL, path = "conf/portal/brandadvocacy/brandadvocacy_configuration.xml"),
     @ConfigurationUnit(scope = ContainerScope.PORTAL, path = "conf/portal-configuration.xml"),
@@ -25,13 +26,12 @@ public abstract class AbstractTest extends AbstractKernelTest {
     protected IService service;
     protected Mission testMission;
     protected Proposition proposition;
+    protected String username = "anhvt";
 
     @Override
     protected void setUp() throws Exception {        
         super.setUp();
         this.service = getService(IService.class);
-        Mission m = new Mission("my first mission");
-        m = this.service.addMission(m);
     }
 
     protected Session getSession() throws Exception {

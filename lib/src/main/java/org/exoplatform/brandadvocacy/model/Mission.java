@@ -43,10 +43,15 @@ public class Mission {
   }
   public Mission(String title){
    this.setTitle(title);
-   this.setId(UUID.randomUUID().toString());
-   this.setPriority((long) Priority.PRIORITY_2.priority());
-   this.setCreatedDate(System.currentTimeMillis());
+   this.init();
    
+  }
+  public void init(){
+
+      this.setId(UUID.randomUUID().toString());
+      this.setPriority((long) Priority.PRIORITY_2.priority());
+      this.setCreatedDate(System.currentTimeMillis());
+      this.setActive(true);
   }
   public String getId() {
     return id;

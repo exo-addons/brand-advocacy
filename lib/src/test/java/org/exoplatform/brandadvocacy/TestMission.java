@@ -16,7 +16,11 @@
  */
 package org.exoplatform.brandadvocacy;
 
+import org.exoplatform.brandadvocacy.model.Manager;
 import org.exoplatform.brandadvocacy.model.Mission;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by The eXo Platform SAS
@@ -29,7 +33,11 @@ public class TestMission extends AbstractTest {
   public void testCreate(){
     int nb = this.service.getAllMissions().size();
     Mission m = new Mission("my second mission");
+    List<Manager> managers = new ArrayList<Manager>();
+    Manager manager = new Manager(this.username);
+    managers.add(manager);
+    m.setManagers(managers);
     m = this.service.addMission(m);
-    assertEquals("should have 1 more missions ", nb+1, this.service.getAllMissions());
+    assertEquals("should have 1 more missions ", nb+1, this.service.getAllMissions().size());
   }
 }

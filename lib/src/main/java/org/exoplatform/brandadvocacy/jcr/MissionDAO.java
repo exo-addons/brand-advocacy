@@ -16,10 +16,6 @@
  */
 package org.exoplatform.brandadvocacy.jcr;
 
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-
 import org.exoplatform.brandadvocacy.model.Manager;
 import org.exoplatform.brandadvocacy.model.Mission;
 import org.exoplatform.brandadvocacy.model.Proposition;
@@ -29,22 +25,16 @@ import org.exoplatform.brandadvocacy.service.Utils;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 
-import javax.jcr.ItemExistsException;
-import javax.jcr.Node;
-import javax.jcr.NodeIterator;
-import javax.jcr.PathNotFoundException;
-import javax.jcr.Property;
-import javax.jcr.PropertyIterator;
-import javax.jcr.RepositoryException;
-import javax.jcr.Session;
-import javax.jcr.UnsupportedRepositoryOperationException;
-import javax.jcr.Value;
+import javax.jcr.*;
 import javax.jcr.lock.LockException;
 import javax.jcr.nodetype.ConstraintViolationException;
 import javax.jcr.nodetype.NoSuchNodeTypeException;
 import javax.jcr.query.Query;
 import javax.jcr.query.QueryResult;
 import javax.jcr.version.VersionException;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  * Created by The eXo Platform SAS Author : eXoPlatform exo@exoplatform.com Sep
@@ -54,9 +44,9 @@ public class MissionDAO extends DAO {
 
   private static final Log   log             = ExoLogger.getLogger(MissionDAO.class);
 
-  public static final String MISSIONS_PATH   = "/Missions/";
-  public static final String MANAGERS_PATH = "/Managers";  
-  public static final String PROPOSITIONS_PATH = "/Propositions";
+  public static final String MISSIONS_PATH   = "Missions";
+  public static final String MANAGERS_PATH = "Managers";
+  public static final String PROPOSITIONS_PATH = "Propositions";
   
   public static final String node_prop_id = "exo:id";
   public static final String node_prop_title = "exo:title";  
@@ -70,16 +60,13 @@ public class MissionDAO extends DAO {
   public MissionDAO(JCRImpl jcrImpl) {
     super(jcrImpl);
   }
-  
-  private String getMissionHomePath(){
-    return JCRImpl.EXTENSION_PATH+MISSIONS_PATH;
-  }
+
   public Node getOrCreateMissionHome() {
-    String path = String.format("%s",this.getMissionHomePath());
+    String path = String.format("%s/%s",JCRImpl.EXTENSION_PATH,MISSIONS_PATH);
     return this.getJcrImplService().getOrCreateNode(path);
   }
   public Node getOrCreateManagerHome(String mid){
-    String path = String.format("%s/%s/%s",this.getMissionHomePath(),mid,MANAGERS_PATH);
+    String path = String.format("%s/%s/%s/%s",JCRImpl.EXTENSION_PATH,MISSIONS_PATH,mid,MANAGERS_PATH);
     return this.getJcrImplService().getOrCreateNode(path);
   }
   private void setPropertiesNode(Node missionNode, Mission m) throws RepositoryException {
@@ -115,12 +102,14 @@ public class MissionDAO extends DAO {
   public Mission createMission(Mission m) {
     try {
       m.checkValid();
+      System.out.print(" mission "+m.toString());
       //Node extensionNode = this.getJcrImplService().getOrCreateExtensionHome();
       try {
         Node homeMissionNode = this.getOrCreateMissionHome();//extensionNode.addNode(MISSIONS_PATH+m.getId(),NodeType);
         Node missionNode = homeMissionNode.addNode(m.getId(),JCRImpl.MISSION_NODE_TYPE);
-        this.setPropertiesNode(missionNode, m);
+        this.setPropertiesNode(missionNode,m);
         homeMissionNode.getSession().save();
+        this.addManager2Mission(missionNode,m.getManagers());
         return this.transferNode2Object(missionNode);
       } catch (ItemExistsException e) {
         // TODO Auto-generated catch block
@@ -249,12 +238,16 @@ public class MissionDAO extends DAO {
           List<Value> nodeManagers = new LinkedList<Value>();
           Manager manager;
           Node managerNode;
-          for(int i = 0;i<managers.size();i++){
+          int i = 0;
+          for(i = 0;i<managers.size();i++){
             manager = managers.get(i);
-            managerNode = managerHomeNode.addNode(manager.getUserName(), JCRImpl.MANAGER_NODE_TYPE);
-            this.getJcrImplService().getManagerDAO().setProperties(managerNode, manager);
-          }        
-          managerHomeNode.getSession().save();
+         //   managerNode = managerHomeNode.addNode(manager.getUserName(), JCRImpl.MANAGER_NODE_TYPE);
+         //   this.getJcrImplService().getManagerDAO().setProperties(managerNode, manager);
+          }
+          if(i != 0){
+          //  managerHomeNode.getSession().save();
+          //  missionNode.getSession().save();
+          }
         } catch (UnsupportedRepositoryOperationException e) {
           log.error("=== ERROR add manager to mission "+e.getMessage());
         } catch (RepositoryException e) {
