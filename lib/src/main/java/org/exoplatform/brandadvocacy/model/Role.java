@@ -36,7 +36,7 @@ public enum Role {
       this.role = role;
   }
 
-  public int role() {
+  public int getValue() {
       return this.role;
   }
 
@@ -55,7 +55,7 @@ public enum Role {
 
   public static Role getRole(int role) {
       for (Role type : Role.values()) {
-          if (type.role() == role) {
+          if (type.getValue() == role) {
               return type;
           }
       }

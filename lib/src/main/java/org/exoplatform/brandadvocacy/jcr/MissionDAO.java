@@ -65,9 +65,13 @@ public class MissionDAO extends DAO {
     String path = String.format("%s/%s",JCRImpl.EXTENSION_PATH,MISSIONS_PATH);
     return this.getJcrImplService().getOrCreateNode(path);
   }
-  public Node getOrCreateManagerHome(String mid){
-    String path = String.format("%s/%s/%s/%s",JCRImpl.EXTENSION_PATH,MISSIONS_PATH,mid,MANAGERS_PATH);
-    return this.getJcrImplService().getOrCreateNode(path);
+  public Node getOrCreateManagerHome(Node missionNode) throws RepositoryException {  
+    String path = missionNode.getPath()+MANAGERS_PATH;
+    Node managerHome = missionNode.getNode(path);
+    if(null == managerHome)
+      managerHome = missionNode.addNode(path);
+    return managerHome;
+  
   }
   private void setPropertiesNode(Node missionNode, Mission m) throws RepositoryException {
     missionNode.setProperty(node_prop_id, m.getId());
@@ -102,14 +106,13 @@ public class MissionDAO extends DAO {
   public Mission createMission(Mission m) {
     try {
       m.checkValid();
-      System.out.print(" mission "+m.toString());
       //Node extensionNode = this.getJcrImplService().getOrCreateExtensionHome();
       try {
         Node homeMissionNode = this.getOrCreateMissionHome();//extensionNode.addNode(MISSIONS_PATH+m.getId(),NodeType);
         Node missionNode = homeMissionNode.addNode(m.getId(),JCRImpl.MISSION_NODE_TYPE);
         this.setPropertiesNode(missionNode,m);
         homeMissionNode.getSession().save();
-        this.addManager2Mission(missionNode,m.getManagers());
+        this.getJcrImplService().getManagerDAO().addManager2Mission(m.getId(), m.getManagers());
         return this.transferNode2Object(missionNode);
       } catch (ItemExistsException e) {
         // TODO Auto-generated catch block
@@ -229,36 +232,6 @@ public class MissionDAO extends DAO {
     }catch(RepositoryException re){
       log.error(" ERROR set active mission "+re.getMessage());
     }
-  }
-  public void addManager2Mission(Node missionNode,List<Manager> managers){
-    try {
-      if(null != missionNode){
-        try {
-          Node managerHomeNode = this.getOrCreateManagerHome(missionNode.getUUID());
-          List<Value> nodeManagers = new LinkedList<Value>();
-          Manager manager;
-          Node managerNode;
-          int i = 0;
-          for(i = 0;i<managers.size();i++){
-            manager = managers.get(i);
-         //   managerNode = managerHomeNode.addNode(manager.getUserName(), JCRImpl.MANAGER_NODE_TYPE);
-         //   this.getJcrImplService().getManagerDAO().setProperties(managerNode, manager);
-          }
-          if(i != 0){
-          //  managerHomeNode.getSession().save();
-          //  missionNode.getSession().save();
-          }
-        } catch (UnsupportedRepositoryOperationException e) {
-          log.error("=== ERROR add manager to mission "+e.getMessage());
-        } catch (RepositoryException e) {
-          log.error("=== ERROR add manager to mission "+e.getMessage());
-        }
-      }
-
-    } catch (BrandAdvocacyServiceException brade) {
-      log.error("ERROR cannot add manager "+brade.getMessage());
-    }
-
   }
   public void addProposition2Mission(Mission m,List<Proposition> propositions){
     

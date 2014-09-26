@@ -26,18 +26,21 @@ import javax.jcr.Value;
  */
 public class Manager extends User{
   
-  private int role;  
+  private Role role;  
   private Boolean notif;
 
+  public Manager(){
+    
+  }
   public Manager(String username){
     this.setUserName(username);
-    this.setRole(Role.Admin.role());
+    this.setRole(Role.Admin);
     this.setNotif(true);
   }
-  public int getRole(){
+  public Role getRole(){
     return this.role;
   }
-  public void setRole(int role){
+  public void setRole(Role role){
     this.role = role;
   }
   public Boolean getNotif(){
@@ -46,8 +49,9 @@ public class Manager extends User{
   public void setNotif(Boolean notif){
     this.notif = notif;
   }
-  
-  
-  
-  
+  public Boolean checkValid(){
+    if(null == this.getUserName() || "".equals(this.getUserName()) )
+      return false;
+    return true;
+  }
 }

@@ -123,13 +123,13 @@
         </propertyDefinition>                
       </propertyDefinitions>
       <childNodeDefinitions>
-        <childNodeDefinition name="*" defaultPrimaryType="" autoCreated="false" mandatory="false"
+        <childNodeDefinition name="*" defaultPrimaryType="brad:proposition" autoCreated="false" mandatory="false"
           onParentVersion="COPY" protected="false" sameNameSiblings="false">
           <requiredPrimaryTypes>
             <requiredPrimaryType>brad:proposition</requiredPrimaryType>
           </requiredPrimaryTypes>
         </childNodeDefinition>
-        <childNodeDefinition name="*" defaultPrimaryType="" autoCreated="false" mandatory="false"
+        <childNodeDefinition name="*" defaultPrimaryType="brad:manager" autoCreated="false" mandatory="false"
           onParentVersion="COPY" protected="false" sameNameSiblings="false">
           <requiredPrimaryTypes>
             <requiredPrimaryType>brad:manager</requiredPrimaryType>
