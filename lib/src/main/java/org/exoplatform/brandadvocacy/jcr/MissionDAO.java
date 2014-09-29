@@ -29,6 +29,7 @@ import javax.jcr.*;
 import javax.jcr.lock.LockException;
 import javax.jcr.nodetype.ConstraintViolationException;
 import javax.jcr.nodetype.NoSuchNodeTypeException;
+import javax.jcr.nodetype.NodeType;
 import javax.jcr.query.Query;
 import javax.jcr.query.QueryResult;
 import javax.jcr.version.VersionException;
@@ -55,7 +56,8 @@ public class MissionDAO extends DAO {
   public static final String node_prop_active = "exo:active";
   public static final String node_prop_dateCreated = "exo:dateCreated";
   public static final String node_prop_modifiedDate = "exo:modifiedDate";
-  public static final String node_prop_manager_notif = "";
+  public static final String node_prop_managers = "exo:managerslist";
+  public static final String node_prop_propositions = "exo:propositionslist";
   
   public MissionDAO(JCRImpl jcrImpl) {
     super(jcrImpl);
@@ -65,15 +67,43 @@ public class MissionDAO extends DAO {
     String path = String.format("%s/%s",JCRImpl.EXTENSION_PATH,MISSIONS_PATH);
     return this.getJcrImplService().getOrCreateNode(path);
   }
-  public Node getOrCreateManagerHome(Node missionNode) throws RepositoryException {  
-    String path = missionNode.getPath()+MANAGERS_PATH;
-    Node managerHome = missionNode.getNode(path);
-    if(null == managerHome)
-      managerHome = missionNode.addNode(path);
+  public Node getOrCreateManagerHome(Node missionNode) throws RepositoryException {
+
+    Node managerHome = null;
+    try {
+      managerHome = missionNode.getNode(node_prop_managers);
+    } catch (RepositoryException e) {
+      log.error("managers list node not exists");
+    }
+    if(null == managerHome){
+      try {
+        managerHome = missionNode.addNode(node_prop_managers,JCRImpl.MANAGER_LIST_NODE_TYPE);
+      } catch (RepositoryException e) {
+        e.printStackTrace();
+      }
+    }
     return managerHome;
-  
   }
-  private void setPropertiesNode(Node missionNode, Mission m) throws RepositoryException {
+
+  public Node getOrCreatePropositionHome(Node missionNode) throws RepositoryException {
+
+    Node propostionHome = null;
+    try {
+      propostionHome = missionNode.getNode(node_prop_propositions);
+    } catch (RepositoryException e) {
+      log.error("prositions list node not exists");
+    }
+    if(null == propostionHome){
+      try {
+        propostionHome = missionNode.addNode(node_prop_propositions,JCRImpl.PROPOSITION_LIST_NODE_TYPE);
+      } catch (RepositoryException e) {
+        e.printStackTrace();
+      }
+    }
+    return propostionHome;
+  }
+
+  public void setPropertiesNode(Node missionNode, Mission m) throws RepositoryException {
     missionNode.setProperty(node_prop_id, m.getId());
     missionNode.setProperty(node_prop_title, m.getTitle());
     missionNode.setProperty(node_prop_third_party_link, m.getThird_party_link());
@@ -81,64 +111,44 @@ public class MissionDAO extends DAO {
     missionNode.setProperty(node_prop_active, m.getActive());
     missionNode.setProperty(node_prop_dateCreated, m.getCreatedDate());
   }
-  private Mission transferNode2Object(Node node) throws RepositoryException {
+  public Mission transferNode2Object(Node node) throws RepositoryException {
     Mission m = new Mission();
     PropertyIterator iter = node.getProperties("exo:*");
+    Property p;
+    String name;
     while (iter.hasNext()) {
-        Property p = iter.nextProperty();
-        String name = p.getName();
-        if (name.equals(node_prop_id)) {
-          m.setId(p.getString());
-        } else if (name.equals(node_prop_title)) {
-          m.setTitle(p.getString());
-        } else if (name.equals(node_prop_third_party_link)) {
-          m.setThird_party_link(p.getString());
-        } else if(name.equals(node_prop_priority)){
-          m.setPriority(p.getLong());
-        } else if(name.equals(node_prop_active)){
-          m.setActive(p.getBoolean());
-        } else if (name.equals(node_prop_dateCreated)) {
-          m.setCreatedDate(p.getLong());
-        }
+      p = iter.nextProperty();
+      name = p.getName();
+      if (name.equals(node_prop_id)) {
+        m.setId(p.getString());
+      } else if (name.equals(node_prop_title)) {
+        m.setTitle(p.getString());
+      } else if (name.equals(node_prop_third_party_link)) {
+        m.setThird_party_link(p.getString());
+      } else if(name.equals(node_prop_priority)){
+        m.setPriority(p.getLong());
+      } else if(name.equals(node_prop_active)){
+        m.setActive(p.getBoolean());
+      } else if (name.equals(node_prop_dateCreated)) {
+        m.setCreatedDate(p.getLong());
+      }
     }
     return m;
   }
   public Mission createMission(Mission m) {
     try {
       m.checkValid();
-      //Node extensionNode = this.getJcrImplService().getOrCreateExtensionHome();
       try {
-        Node homeMissionNode = this.getOrCreateMissionHome();//extensionNode.addNode(MISSIONS_PATH+m.getId(),NodeType);
+        Node homeMissionNode = this.getOrCreateMissionHome();
         Node missionNode = homeMissionNode.addNode(m.getId(),JCRImpl.MISSION_NODE_TYPE);
         this.setPropertiesNode(missionNode,m);
         homeMissionNode.getSession().save();
-        this.getJcrImplService().getManagerDAO().addManager2Mission(m.getId(), m.getManagers());
+        if(null != m.getManagers() && m.getManagers().size() > 0)
+          this.getJcrImplService().getManagerDAO().addManager2Mission(m.getId(), m.getManagers());
         return this.transferNode2Object(missionNode);
-      } catch (ItemExistsException e) {
-        // TODO Auto-generated catch block
-        e.printStackTrace();
-      } catch (PathNotFoundException e) {
-        // TODO Auto-generated catch block
-        e.printStackTrace();
-      } catch (NoSuchNodeTypeException e) {
-        // TODO Auto-generated catch block
-        e.printStackTrace();
-      } catch (LockException e) {
-        // TODO Auto-generated catch block
-        e.printStackTrace();
-      } catch (VersionException e) {
-        // TODO Auto-generated catch block
-        e.printStackTrace();
-      } catch (ConstraintViolationException e) {
-        // TODO Auto-generated catch block
-        e.printStackTrace();
       } catch (RepositoryException e) {
         log.error(" repo exception "+e.getMessage());
-        // TODO Auto-generated catch block
-//        e.printStackTrace();
       }
-      
-      return m;
     } catch (BrandAdvocacyServiceException brade) {
       log.error("cannot create mission with null title");
     }
@@ -161,7 +171,7 @@ public class MissionDAO extends DAO {
   }
   public Node getNodeById(String id) {
     StringBuilder sql = new StringBuilder("select * from "+ JCRImpl.MISSION_NODE_TYPE +" where jcr:path like '");
-    sql.append(JCRImpl.EXTENSION_PATH).append("/%/").append(MISSIONS_PATH);
+    sql.append(JCRImpl.EXTENSION_PATH).append("/").append(MISSIONS_PATH);
     sql.append("/").append(Utils.queryEscape(id)).append("'");
     Session session;
     try {
@@ -233,7 +243,5 @@ public class MissionDAO extends DAO {
       log.error(" ERROR set active mission "+re.getMessage());
     }
   }
-  public void addProposition2Mission(Mission m,List<Proposition> propositions){
-    
-  }
+
 }

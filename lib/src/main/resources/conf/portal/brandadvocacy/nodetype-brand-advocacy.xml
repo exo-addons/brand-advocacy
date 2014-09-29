@@ -7,10 +7,13 @@
         <supertype>mix:referenceable</supertype>
       </supertypes>
       <propertyDefinitions>
+        <propertyDefinition name="exo:id" requiredType="String" autoCreated="false" mandatory="true" onParentVersion="COPY" protected="false" multiple="false">
+          <valueConstraints/>
+        </propertyDefinition> 
         <propertyDefinition name="exo:mission_id" requiredType="String" autoCreated="false" mandatory="true" onParentVersion="COPY" protected="false" multiple="false">
           <valueConstraints/>
         </propertyDefinition>              
-        <propertyDefinition name="exo:content" requiredType="String" autoCreated="false" mandatory="true" onParentVersion="COPY" protected="false" multiple="false">
+        <propertyDefinition name="exo:content" requiredType="String" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="false">
           <valueConstraints/>
         </propertyDefinition>                        
         <propertyDefinition name="exo:active" requiredType="Boolean" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="false">
@@ -28,6 +31,9 @@
         <supertype>mix:referenceable</supertype>
       </supertypes>
       <propertyDefinitions>
+        <propertyDefinition name="exo:id" requiredType="String" autoCreated="false" mandatory="true" onParentVersion="COPY" protected="false" multiple="false">
+          <valueConstraints/>
+        </propertyDefinition> 
       	<propertyDefinition name="exo:fname" requiredType="String" autoCreated="false" mandatory="true" onParentVersion="COPY" protected="false" multiple="false">
           <valueConstraints/>
         </propertyDefinition>        
@@ -48,14 +54,17 @@
         </propertyDefinition>        		
       </propertyDefinitions>     
     </nodeType>     
-	
+
     <nodeType name="brad:manager" isMixin="false" hasOrderableChildNodes="false" primaryItemName="">
       <supertypes>
         <supertype>nt:base</supertype>
         <supertype>mix:referenceable</supertype>
       </supertypes>
       <propertyDefinitions>
-        <propertyDefinition name="exo:username" requiredType="String" autoCreated="false" mandatory="true" onParentVersion="COPY" protected="false" multiple="false">
+          <propertyDefinition name="exo:mission_id" requiredType="String" autoCreated="false" mandatory="true" onParentVersion="COPY" protected="false" multiple="false">
+              <valueConstraints/>
+          </propertyDefinition>
+          <propertyDefinition name="exo:username" requiredType="String" autoCreated="false" mandatory="true" onParentVersion="COPY" protected="false" multiple="false">
           <valueConstraints/>
         </propertyDefinition>        
         <propertyDefinition name="exo:role" requiredType="Long" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="false">
@@ -90,7 +99,41 @@
           </requiredPrimaryTypes>
         </childNodeDefinition>
       </childNodeDefinitions>      
-    </nodeType>     
+    </nodeType>
+    <nodeType name="brad:managerslist" isMixin="false" hasOrderableChildNodes="true" primaryItemName="">
+        <supertypes>
+            <supertype>nt:base</supertype>
+            <supertype>mix:referenceable</supertype>
+        </supertypes>
+        <propertyDefinitions>
+        </propertyDefinitions>
+        <childNodeDefinitions>
+            <childNodeDefinition name="*" defaultPrimaryType="brad:manager" autoCreated="false" mandatory="false"
+                                 onParentVersion="COPY" protected="false" sameNameSiblings="false">
+                <requiredPrimaryTypes>
+                    <requiredPrimaryType>brad:manager</requiredPrimaryType>
+                </requiredPrimaryTypes>
+            </childNodeDefinition>
+        </childNodeDefinitions>
+    </nodeType>
+
+    <nodeType name="brad:propositionslist" isMixin="false" hasOrderableChildNodes="true" primaryItemName="">
+        <supertypes>
+            <supertype>nt:base</supertype>
+            <supertype>mix:referenceable</supertype>
+        </supertypes>
+        <propertyDefinitions>
+        </propertyDefinitions>
+        <childNodeDefinitions>
+            <childNodeDefinition name="*" defaultPrimaryType="brad:proposition" autoCreated="false" mandatory="false"
+                                 onParentVersion="COPY" protected="false" sameNameSiblings="false">
+                <requiredPrimaryTypes>
+                    <requiredPrimaryType>brad:proposition</requiredPrimaryType>
+                </requiredPrimaryTypes>
+            </childNodeDefinition>
+        </childNodeDefinitions>
+    </nodeType>
+
 
     <nodeType name="brad:mission" isMixin="false" hasOrderableChildNodes="false" primaryItemName="">
       <supertypes>
@@ -123,16 +166,16 @@
         </propertyDefinition>                
       </propertyDefinitions>
       <childNodeDefinitions>
-        <childNodeDefinition name="*" defaultPrimaryType="brad:proposition" autoCreated="false" mandatory="false"
+        <childNodeDefinition name="exo:propositionslist" defaultPrimaryType="brad:propositionslist" autoCreated="true" mandatory="false"
           onParentVersion="COPY" protected="false" sameNameSiblings="false">
           <requiredPrimaryTypes>
-            <requiredPrimaryType>brad:proposition</requiredPrimaryType>
+            <requiredPrimaryType>brad:propositionslist</requiredPrimaryType>
           </requiredPrimaryTypes>
         </childNodeDefinition>
-        <childNodeDefinition name="*" defaultPrimaryType="brad:manager" autoCreated="false" mandatory="false"
+        <childNodeDefinition name="exo:managerslist" defaultPrimaryType="brad:managerslist" autoCreated="true" mandatory="false"
           onParentVersion="COPY" protected="false" sameNameSiblings="false">
           <requiredPrimaryTypes>
-            <requiredPrimaryType>brad:manager</requiredPrimaryType>
+            <requiredPrimaryType>brad:managerslist</requiredPrimaryType>
           </requiredPrimaryTypes>
         </childNodeDefinition>        
       </childNodeDefinitions>

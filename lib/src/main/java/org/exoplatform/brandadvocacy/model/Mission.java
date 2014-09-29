@@ -115,5 +115,7 @@ public class Mission {
       throw new IllegalArgumentException("Mission title is invalid");    
    }
   }
-  
+  public String toString(){
+    return this.getTitle()+" - "+this.getThird_party_link();
+  }
 }

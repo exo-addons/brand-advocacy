@@ -18,6 +18,8 @@ package org.exoplatform.brandadvocacy.model;
 
 import org.exoplatform.brandadvocacy.service.BrandAdvocacyServiceException;
 
+import java.util.UUID;
+
 /**
  * Created by The eXo Platform SAS
  * Author : eXoPlatform
@@ -29,9 +31,14 @@ public class Proposition {
   private String id;
   private String mission_id;
   private String content;
-  private int active;
+  private Boolean active;
   private int numberUsed;
-  
+
+  public Proposition(){
+    this.setId(UUID.randomUUID().toString());
+    this.setNumberUsed(0);
+    this.setActive(true);
+  }
   public String getId(){
     return this.id;
   }
@@ -50,10 +57,10 @@ public class Proposition {
   public void setContent(String content){
     this.content =content;
   }
-  public int getActive(){
+  public Boolean getActive(){
     return this.active;
   }
-  public void setActive(int active){
+  public void setActive(Boolean active){
     this.active = active;
   }
   public int getNumberUsed(){
@@ -62,8 +69,17 @@ public class Proposition {
   public void setNumberUsed(int nb){
     this.numberUsed = nb;
   }
-  public void checkValid() throws BrandAdvocacyServiceException{
-      if(null == this.getContent() || "".equals(this.getContent()))
-          throw new BrandAdvocacyServiceException(BrandAdvocacyServiceException.PROPOSITION_INVALID,"proposition cannot have empty content");
+  public Boolean checkValid(){
+
+    if(null == this.getContent() || "".equals(this.getContent())){
+      return false;
+    }else if(null == this.getMission_id() || "".equals(this.getMission_id())){
+      return false;
+    }
+    return true;
+
+  }
+  public String toString(){
+    return this.getMission_id()+" - "+this.getContent();
   }
 }

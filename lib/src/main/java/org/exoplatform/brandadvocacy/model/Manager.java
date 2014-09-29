@@ -25,9 +25,11 @@ import javax.jcr.Value;
  * Sep 9, 2014  
  */
 public class Manager extends User{
-  
+
+  private String mission_id;
   private Role role;  
   private Boolean notif;
+
 
   public Manager(){
     
@@ -36,6 +38,14 @@ public class Manager extends User{
     this.setUserName(username);
     this.setRole(Role.Admin);
     this.setNotif(true);
+  }
+  public void setMission_id(String mission_id) {
+    this.mission_id = mission_id;
+  }
+
+  public String getMission_id() {
+
+    return mission_id;
   }
   public Role getRole(){
     return this.role;
@@ -49,9 +59,16 @@ public class Manager extends User{
   public void setNotif(Boolean notif){
     this.notif = notif;
   }
+  public String getRoleLabel(){
+    return this.getRole().getLabel();
+  }
   public Boolean checkValid(){
-    if(null == this.getUserName() || "".equals(this.getUserName()) )
+    if(null == this.getUserName() || "".equals(this.getUserName()) || null == this.getMission_id() || "".equals(this.getMission_id()) )
       return false;
     return true;
+  }
+
+  public String toString(){
+    return this.getUserName()+" - "+this.getRole()+" - "+this.getNotif();
   }
 }

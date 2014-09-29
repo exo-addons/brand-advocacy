@@ -16,9 +16,21 @@
  */
 package org.exoplatform.brandadvocacy.jcr;
 
+import org.exoplatform.brandadvocacy.model.Manager;
+import org.exoplatform.brandadvocacy.model.Mission;
+import org.exoplatform.brandadvocacy.model.Proposition;
+import org.exoplatform.brandadvocacy.service.BrandAdvocacyServiceException;
 import org.exoplatform.brandadvocacy.service.JCRImpl;
+import org.exoplatform.brandadvocacy.service.Utils;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
+
+import javax.jcr.*;
+import javax.jcr.query.Query;
+import javax.jcr.query.QueryResult;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  * Created by The eXo Platform SAS
@@ -27,10 +39,166 @@ import org.exoplatform.services.log.Log;
  * Sep 15, 2014  
  */
 public class PropositionDAO extends DAO {
-  
+
+  public static final String node_prop_id = "exo:id";
+  public static final String node_prop_mission_id = "exo:mission_id";
+  public static final String node_prop_content = "exo:content";
+  public static final String node_prop_active = "exo:active";
+  public static final String node_prop_numberUsed = "exo:numberUsed";
   private static final Log log = ExoLogger.getLogger(PropositionDAO.class);
+
   public PropositionDAO(JCRImpl jcrImpl) {
     super(jcrImpl);
     // TODO Auto-generated constructor stub
   }
+
+  public void setProperties(Node aNode, Proposition p) throws RepositoryException {
+    aNode.setProperty(node_prop_id, p.getId());
+    aNode.setProperty(node_prop_mission_id, p.getMission_id());
+    aNode.setProperty(node_prop_content, p.getContent());
+    aNode.setProperty(node_prop_active, p.getActive());
+    aNode.setProperty(node_prop_numberUsed, p.getNumberUsed());
+  }
+
+  public Proposition transferNode2Object(Node node) throws RepositoryException {
+    Proposition proposition = new Proposition();
+    PropertyIterator iter = node.getProperties("exo:*");
+    Property p;
+    String name;
+    while (iter.hasNext()) {
+      p = iter.nextProperty();
+      name = p.getName();
+      if (name.equals(node_prop_id)) {
+        proposition.setId(p.getString());
+      } else if (name.equals(node_prop_mission_id)) {
+        proposition.setMission_id(p.getString());
+      } else if (name.equals(node_prop_content)) {
+        proposition.setContent(p.getString());
+      } else if (name.equals(node_prop_active)) {
+        proposition.setActive(p.getBoolean());
+      } else if (name.equals(node_prop_numberUsed)) {
+        proposition.setNumberUsed((int) p.getLong());
+      }
+    }
+    return proposition;
+  }
+  public Node getPropositionNode(String mid,String pid){
+    StringBuilder sql = new StringBuilder("select * from "+ JCRImpl.PROPOSITION_NODE_TYPE +" where jcr:path like '");
+    sql.append(JCRImpl.EXTENSION_PATH).append("/").append(MissionDAO.MISSIONS_PATH);
+    sql.append("/").append(Utils.queryEscape(mid)).append("/").append(MissionDAO.node_prop_propositions);
+    sql.append("/").append(Utils.queryEscape(pid));
+    sql.append("'");
+    Session session;
+    try {
+      session = this.getJcrImplService().getSession();
+      Query query = session.getWorkspace().getQueryManager().createQuery(sql.toString(), Query.SQL);
+      QueryResult result = query.execute();
+      NodeIterator nodes = result.getNodes();
+      if (nodes.hasNext()) {
+        return nodes.nextNode();
+      }
+    } catch (RepositoryException e) {
+      log.error("ERROR cannot get proposition  "+pid +" from mission "+mid+" Exeption "+e.getMessage());
+    }
+    return null;
+  }
+
+  public Mission addProposition2Mission(String mid,List<Proposition> propositions){
+    try {
+      if(null == mid || "".equals(mid))
+        throw new BrandAdvocacyServiceException(BrandAdvocacyServiceException.ID_INVALID, "cannot add proposition to mission id null");
+
+      Node missionNode = this.getJcrImplService().getMissionDAO().getNodeById(mid);
+      if(null != missionNode){
+        try {
+          Node propositionHomeNode = this.getJcrImplService().getMissionDAO().getOrCreatePropositionHome(missionNode);
+          if(null != propositionHomeNode){
+            Proposition proposition;
+            Node propositionNode;
+            int i = 0;
+            for(i = 0;i<propositions.size();i++){
+              proposition = propositions.get(i);
+              proposition.setMission_id(mid);
+              if(proposition.checkValid()) {
+                propositionNode = propositionHomeNode.addNode(proposition.getId(), JCRImpl.PROPOSITION_NODE_TYPE);
+                this.setProperties(propositionNode, proposition);
+              }
+            }
+            if(0 != i) {
+              propositionHomeNode.save();
+              return this.getJcrImplService().getMissionDAO().transferNode2Object(missionNode);
+            }
+          }
+        } catch (UnsupportedRepositoryOperationException e) {
+          log.error("=== ERROR cannot add proposition to mission "+e.getMessage());
+        } catch (RepositoryException e) {
+          log.error("=== ERROR cannot add proposition to mission "+e.getMessage());
+        }
+      }
+
+    } catch (BrandAdvocacyServiceException brade) {
+      log.error("=== ERROR cannot add proposition "+brade.getMessage());
+    }
+    return null;
+  }
+  public List<Proposition> getAllPropositions(String mid){
+    List<Proposition> propositions = new ArrayList<Proposition>();
+
+    if(null == mid || "".equals(mid))
+      throw new BrandAdvocacyServiceException(BrandAdvocacyServiceException.ID_INVALID, "cannot get all propositions from mission id null");
+    try {
+      Node missionNode = this.getJcrImplService().getMissionDAO().getNodeById(mid);
+      if(null != missionNode){
+        Node propositionHomeNode = this.getJcrImplService().getMissionDAO().getOrCreatePropositionHome(missionNode);
+        NodeIterator nodes = propositionHomeNode.getNodes();
+        Node propositionNode = null;
+        Proposition aProposition = null;
+        while (nodes.hasNext()) {
+          propositionNode = (Node) nodes.next();
+          aProposition = this.transferNode2Object(propositionNode);
+          if(aProposition.checkValid())
+            propositions.add(aProposition);
+          else
+            log.error("cannot get invalid proposition "+propositionNode.toString());
+        }
+        return propositions;
+      }
+    } catch (RepositoryException e) {
+      log.error("==== ERROR get all propositions "+e.getMessage() );
+    }
+    return propositions;
+  }
+  public Proposition updateProposition(Proposition proposition){
+    if(!proposition.checkValid())
+      return null;
+    try {
+      Node propositionNode = this.getPropositionNode(proposition.getMission_id(),proposition.getId());
+      if(null != propositionNode){
+        this.setProperties(propositionNode,proposition);
+        propositionNode.getSession().save();
+        return proposition;
+      }
+    } catch (RepositoryException e) {
+      log.error("==== ERROR cannot update proposition "+e.getMessage() );
+    }
+    return null;
+  }
+  public Proposition removeProposition(Proposition proposition){
+    if(!proposition.checkValid())
+      return null;
+    try {
+      Node propositionNode = this.getPropositionNode(proposition.getMission_id(),proposition.getId());
+      if(null != propositionNode){
+        Session session = propositionNode.getSession();
+        propositionNode.remove();
+        session.save();
+        return proposition;
+      }
+    } catch (RepositoryException e) {
+      log.error("==== ERROR cannot remove proposition "+e.getMessage() );
+    }
+
+    return null;
+  }
 }
+

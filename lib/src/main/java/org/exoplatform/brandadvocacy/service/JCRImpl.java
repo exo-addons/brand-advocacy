@@ -17,10 +17,7 @@
 package org.exoplatform.brandadvocacy.service;
 
 import org.exoplatform.brandadvocacy.jcr.*;
-import org.exoplatform.brandadvocacy.model.Mission;
-import org.exoplatform.brandadvocacy.model.MissionParticipant;
-import org.exoplatform.brandadvocacy.model.Participant;
-import org.exoplatform.brandadvocacy.model.Proposition;
+import org.exoplatform.brandadvocacy.model.*;
 import org.exoplatform.container.xml.InitParams;
 import org.exoplatform.container.xml.ValueParam;
 import org.exoplatform.services.jcr.RepositoryService;
@@ -73,8 +70,10 @@ public class JCRImpl implements IService {
   public static final String MISSION_PARTICIPANTS_PATH = "/Mission_Participants";
   
   public static final String MISSION_NODE_TYPE = "brad:mission";
+  public static final String MANAGER_LIST_NODE_TYPE = "brad:managerslist";
+  public static final String PROPOSITION_LIST_NODE_TYPE = "brad:propositionslist";
   public static final String MANAGER_NODE_TYPE = "brad:manager";
-  public static final String PROPOSITION_NODE_TYPE = "brad:propostion";
+  public static final String PROPOSITION_NODE_TYPE = "brad:proposition";
   public static final String PARTICIPANT_NODE_TYPE = "brad:participant";
   public static final String ADDRESS_NODE_TYPE = "brad:address";
   public static final String MISSION_PARTICIPANT_NODE_TYPE = "brad:mission-participant";
@@ -197,6 +196,21 @@ public class JCRImpl implements IService {
   }
 
   @Override
+  public Mission addManagers2Mission(String mid, List<Manager> managers) {
+    return this.getManagerDAO().addManager2Mission(mid,managers);
+  }
+
+  @Override
+  public Mission addProposition2Mission(String mid, List<Proposition> propositions) {
+    return this.getPropositionDAO().addProposition2Mission(mid,propositions);
+  }
+
+  @Override
+  public Proposition removeProposition(Proposition proposition) {
+    return this.propositionDAO.removeProposition(proposition);
+  }
+
+  @Override
   public void addParticipant(Participant p) {
     // TODO Auto-generated method stub
     
@@ -257,12 +271,6 @@ public class JCRImpl implements IService {
   }
 
   @Override
-  public void removeProposition(String id) {
-    // TODO Auto-generated method stub
-    
-  }
-
-  @Override
   public Proposition getPropositionById(String id) {
     // TODO Auto-generated method stub
     return null;
@@ -272,6 +280,31 @@ public class JCRImpl implements IService {
   public List<Proposition> getPropositionsByMissionId(String mid) {
     // TODO Auto-generated method stub
     return null;
+  }
+
+  @Override
+  public Manager updateManager(Manager manager) {
+    return this.getManagerDAO().updateManager(manager);
+  }
+
+  @Override
+  public List<Manager> getAllManagers(String mid){
+    return this.getManagerDAO().getAllManagers(mid);
+  }
+
+  @Override
+  public Manager removeManager(Manager manager) {
+    return this.getManagerDAO().removeManager(manager);
+  }
+
+  @Override
+  public Proposition updateProposition(Proposition proposition) {
+    return this.getPropositionDAO().updateProposition(proposition);
+  }
+
+  @Override
+  public List<Proposition> getAllPropositions(String mid) {
+    return this.getPropositionDAO().getAllPropositions(mid);
   }
 
 }

@@ -16,10 +16,7 @@
  */
 package org.exoplatform.brandadvocacy.service;
 
-import org.exoplatform.brandadvocacy.model.Mission;
-import org.exoplatform.brandadvocacy.model.MissionParticipant;
-import org.exoplatform.brandadvocacy.model.Participant;
-import org.exoplatform.brandadvocacy.model.Proposition;
+import org.exoplatform.brandadvocacy.model.*;
 
 import java.util.List;
 
@@ -36,7 +33,7 @@ public interface IService {
   public Mission getMissionById(String id);
   public List<Mission> getAllMissions();
   public void updateMission(Mission m);
-  
+
   public void addParticipant(Participant p);
   public void removeParticipant(String id);
   public Participant getParticipantById(String id);
@@ -49,7 +46,16 @@ public interface IService {
   public void updateParticipantMission(MissionParticipant pm);
   
   public void addProposition(Proposition p);
-  public void removeProposition(String id);
   public Proposition getPropositionById(String id);
   public List<Proposition> getPropositionsByMissionId(String mid);
+
+  public Mission addManagers2Mission(String mid,List<Manager> managers);
+  public Manager updateManager(Manager manager);
+  public List<Manager> getAllManagers(String mid);
+  public Manager removeManager(Manager manager);
+
+  public Proposition updateProposition(Proposition proposition);
+  public List<Proposition> getAllPropositions(String mid);
+  public Mission addProposition2Mission(String mid,List<Proposition> propositions);
+  public Proposition removeProposition(Proposition proposition);
 }
