@@ -18,6 +18,7 @@ package org.exoplatform.brandadvocacy.service;
 
 import org.exoplatform.brandadvocacy.model.*;
 
+import javax.jcr.RepositoryException;
 import java.util.List;
 
 /**
@@ -30,7 +31,7 @@ public interface IService {
  
   public Mission addMission(Mission m) throws BrandAdvocacyServiceException;
   public void removeMission(String id);
-  public Mission getMissionById(String id);
+  public Mission getMissionById(String id) throws RepositoryException;
   public List<Mission> getAllMissions();
   public void updateMission(Mission m);
 
@@ -40,11 +41,6 @@ public interface IService {
   public List<Participant> getAllParticipants();
   public List<Participant> getParticipantsByMissionId(String mid);
 
-  public void addParticipantMission(MissionParticipant pm);
-  public MissionParticipant getParticipantMissionById(String id);
-  public List<MissionParticipant> getParticipantMissionsByParticipantId(String pid);
-  public void updateParticipantMission(MissionParticipant pm);
-  
   public void addProposition(Proposition p);
   public Proposition getPropositionById(String id);
   public List<Proposition> getPropositionsByMissionId(String mid);
@@ -58,4 +54,9 @@ public interface IService {
   public List<Proposition> getAllPropositions(String mid);
   public Mission addProposition2Mission(String mid,List<Proposition> propositions);
   public Proposition removeProposition(Proposition proposition);
+
+  public MissionParticipant addMissionParticipant(MissionParticipant missionParticipant) throws RepositoryException;
+  public MissionParticipant updateMissionParticipant(MissionParticipant missionParticipant) throws RepositoryException;
+  public List<MissionParticipant> getAllMissionParticipants() throws RepositoryException;
+  public List<MissionParticipant> getMissionParticipantsByParticipant(String username) throws RepositoryException;
 }

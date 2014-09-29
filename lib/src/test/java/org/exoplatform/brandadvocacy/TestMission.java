@@ -16,12 +16,10 @@
  */
 package org.exoplatform.brandadvocacy;
 
-import org.exoplatform.brandadvocacy.model.Manager;
-import org.exoplatform.brandadvocacy.model.Mission;
-import org.exoplatform.brandadvocacy.model.Proposition;
-import org.exoplatform.brandadvocacy.model.Role;
+import org.exoplatform.brandadvocacy.model.*;
 import org.junit.Test;
 
+import javax.jcr.RepositoryException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -86,6 +84,25 @@ public class TestMission extends AbstractTest {
     this.service.removeProposition(proposition);
     assertEquals("should have no propostion after removing",0,this.service.getAllPropositions(proposition.getMission_id()).size());
   }
+  public void testMissionParticipant() throws RepositoryException {
+    Mission m = new Mission("mission twitter");
+    m.setThird_party_link("http:google.com");
+    m = this.service.addMission(m);
+    Manager manager = new Manager(this.username);
+    List<Manager> managers = new ArrayList<Manager>();
+    managers.add(manager);
+    this.service.addManagers2Mission(m.getId(),managers);
+    Proposition proposition = new Proposition("twitte it !!! ");
+    List<Proposition> propositions = new ArrayList<Proposition>();
+    propositions.add(proposition);
+    this.service.addProposition2Mission(m.getId(),propositions);
+    ShowMissionInfo();
+    MissionParticipant missionParticipant = new MissionParticipant();
+    missionParticipant.setParticipant_username("participant 1");
+    missionParticipant.setMission_id(m.getId());
+    this.service.addMissionParticipant(missionParticipant);
+    showMissionParticipantInfo();
+  }
   public void ShowMissionInfo(){
     List<Mission> missions = this.service.getAllMissions();
     for (Mission m:missions){
@@ -100,4 +117,26 @@ public class TestMission extends AbstractTest {
       }
     }
   }
+  public void showMissionParticipantInfo(){
+    try {
+      List<MissionParticipant> missionParticipants = this.service.getAllMissionParticipants();
+      for (MissionParticipant missionParticipant:missionParticipants){
+        debug(missionParticipant.toString());
+      }
+    } catch (RepositoryException e) {
+      log.error("cannot get all mission participants");
+    }
+  }
+  public void testDuplicateManager(){
+    Mission mission = new Mission("mission for manager");
+    List<Manager> managers = new ArrayList<Manager>();
+    Manager manager = new Manager(this.username);
+    managers.add(manager);
+    manager = new Manager(this.username);
+    managers.add(manager);
+    mission.setManagers(managers);
+    mission = this.service.addMission(mission);
+    ShowMissionInfo();
+  }
+
 }

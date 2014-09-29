@@ -38,7 +38,7 @@ public enum Status {
       this.status = status;
   }
 
-  public int status() {
+  public int getValue() {
       return this.status;
   }
 
@@ -64,7 +64,7 @@ public enum Status {
 
   public static Status getStatus(int status) {
       for (Status type : Status.values()) {
-          if (type.status() == status) {
+          if (type.getValue() == status) {
               return type;
           }
       }

@@ -32,7 +32,7 @@ import org.exoplatform.services.jcr.impl.core.query.QueryImpl;
  *          exo@exoplatform.com
  * Sep 18, 2014  
  */
-public class DAO {
+public abstract class DAO {
 
   private JCRImpl jcrImplService;
   
@@ -47,4 +47,5 @@ public class DAO {
   public DAO(JCRImpl jcrImpl){
     this.jcrImplService = jcrImpl;
   }
+
 }

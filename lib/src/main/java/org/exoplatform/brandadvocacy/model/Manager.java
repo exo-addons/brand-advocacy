@@ -69,6 +69,6 @@ public class Manager extends User{
   }
 
   public String toString(){
-    return this.getUserName()+" - "+this.getRole()+" - "+this.getNotif();
+    return getClass().getName()+" - " + this.getUserName()+" - "+this.getRole()+" - "+this.getNotif();
   }
 }

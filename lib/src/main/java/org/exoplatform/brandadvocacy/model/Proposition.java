@@ -35,9 +35,18 @@ public class Proposition {
   private int numberUsed;
 
   public Proposition(){
+    this.init();
+  }
+  public Proposition(String content){
+    this.setContent(content);
+    this.init();
+
+  }
+  private void init(){
     this.setId(UUID.randomUUID().toString());
     this.setNumberUsed(0);
     this.setActive(true);
+
   }
   public String getId(){
     return this.id;
@@ -80,6 +89,6 @@ public class Proposition {
 
   }
   public String toString(){
-    return this.getMission_id()+" - "+this.getContent();
+    return getClass().getName()+" - id = "+this.getMission_id()+" - content= "+this.getContent();
   }
 }

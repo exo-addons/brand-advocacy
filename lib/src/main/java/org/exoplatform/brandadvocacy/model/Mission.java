@@ -116,6 +116,6 @@ public class Mission {
    }
   }
   public String toString(){
-    return this.getTitle()+" - "+this.getThird_party_link();
+    return getClass().getName()+" - " +this.getTitle()+" - "+this.getThird_party_link();
   }
 }

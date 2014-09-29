@@ -113,16 +113,19 @@ public class ManagerDAO extends DAO{
             for(i = 0;i<managers.size();i++){
               manager = managers.get(i);
               manager.setMission_id(mid);
-              managerNode = managerHomeNode.addNode(manager.getUserName(), JCRImpl.MANAGER_NODE_TYPE);
-              this.setProperties(managerNode, manager);
+              if (!managerHomeNode.hasNode(manager.getUserName())){
+                managerNode = managerHomeNode.addNode(manager.getUserName(), JCRImpl.MANAGER_NODE_TYPE);
+                this.setProperties(managerNode, manager);
+              }
+
             }
             if(0 != i) {
               managerHomeNode.save();
               return this.getJcrImplService().getMissionDAO().transferNode2Object(missionNode);
             }
           }
-        } catch (UnsupportedRepositoryOperationException e) {
-          log.error("=== ERROR add manager to mission "+e.getMessage());
+        } catch (ItemExistsException ie){
+          log.error(" === ERROR cannot add existing item "+ie.getMessage());
         } catch (RepositoryException e) {
           log.error("=== ERROR add manager to mission "+e.getMessage());
         }
@@ -164,13 +167,16 @@ public class ManagerDAO extends DAO{
       return null;
     try {
       Node managerNode = this.getManagerNode(manager.getMission_id(),manager.getUserName());
-      if(null != managerNode){
+      if(null != managerNode && manager.getUserName().equals(managerNode.getProperty(node_prop_username).getString())){
         this.setProperties(managerNode,manager);
         managerNode.getSession().save();
         return manager;
-      }
+      }else
+        throw new BrandAdvocacyServiceException(BrandAdvocacyServiceException.MANAGER_NOT_EXISTS," cannot update manager not exists");
     } catch (RepositoryException e) {
       log.error("==== ERROR cannot update manager "+e.getMessage() );
+    } catch (BrandAdvocacyServiceException brade){
+      log.error(brade.getMessage());
     }
     return null;
   }
@@ -184,9 +190,12 @@ public class ManagerDAO extends DAO{
         managerNode.remove();
         session.save();
         return manager;
-      }
+      }else
+        throw new BrandAdvocacyServiceException(BrandAdvocacyServiceException.MANAGER_NOT_EXISTS," cannot remove manager not exists");
     } catch (RepositoryException e) {
       log.error("==== ERROR cannot remove manager "+e.getMessage() );
+    } catch (BrandAdvocacyServiceException brade){
+      log.error(brade.getMessage());
     }
 
     return null;

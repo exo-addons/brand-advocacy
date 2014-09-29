@@ -146,7 +146,10 @@ public class MissionDAO extends DAO {
         if(null != m.getManagers() && m.getManagers().size() > 0)
           this.getJcrImplService().getManagerDAO().addManager2Mission(m.getId(), m.getManagers());
         return this.transferNode2Object(missionNode);
-      } catch (RepositoryException e) {
+      }catch (ItemExistsException ie){
+        log.error(" === ERROR cannot add existing item "+ie.getMessage());
+      }
+      catch (RepositoryException e) {
         log.error(" repo exception "+e.getMessage());
       }
     } catch (BrandAdvocacyServiceException brade) {

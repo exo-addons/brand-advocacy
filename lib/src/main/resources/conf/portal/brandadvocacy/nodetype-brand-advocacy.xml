@@ -187,22 +187,28 @@
         <supertype>mix:referenceable</supertype>
       </supertypes>
       <propertyDefinitions>
-        <propertyDefinition name="exo:proposition_id" requiredType="String" autoCreated="false" mandatory="true" onParentVersion="COPY" protected="false" multiple="false">
+          <propertyDefinition name="exo:id" requiredType="String" autoCreated="false" mandatory="true" onParentVersion="COPY" protected="false" multiple="false">
+              <valueConstraints/>
+          </propertyDefinition>
+          <propertyDefinition name="exo:mission_id" requiredType="String" autoCreated="false" mandatory="true" onParentVersion="COPY" protected="false" multiple="false">
+              <valueConstraints/>
+          </propertyDefinition>
+          <propertyDefinition name="exo:proposition_id" requiredType="String" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="false">
           <valueConstraints/>
         </propertyDefinition>        
         <propertyDefinition name="exo:participant_username" requiredType="String" autoCreated="false" mandatory="true" onParentVersion="COPY" protected="false" multiple="false">
           <valueConstraints/>
         </propertyDefinition>
-        <propertyDefinition name="exo:url_submitted" requiredType="String" autoCreated="false" mandatory="true" onParentVersion="COPY" protected="false" multiple="false">
+        <propertyDefinition name="exo:url_submitted" requiredType="String" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="false">
           <valueConstraints/>
         </propertyDefinition>
-        <propertyDefinition name="exo:address_id" requiredType="String" autoCreated="false" mandatory="true" onParentVersion="COPY" protected="false" multiple="false">
+        <propertyDefinition name="exo:address_id" requiredType="String" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="false">
           <valueConstraints/>
         </propertyDefinition>
-        <propertyDefinition name="exo:size" requiredType="String" autoCreated="false" mandatory="true" onParentVersion="COPY" protected="false" multiple="false">
+        <propertyDefinition name="exo:size" requiredType="String" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="false">
           <valueConstraints/>
         </propertyDefinition>        
-        <propertyDefinition name="exo:status" requiredType="Long" autoCreated="false" mandatory="true" onParentVersion="COPY" protected="false" multiple="false">
+        <propertyDefinition name="exo:status" requiredType="Long" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="false">
             <valueConstraints>
 				<valueConstraint>[1,6]</valueConstraint>            
 			</valueConstraints>

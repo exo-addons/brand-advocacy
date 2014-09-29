@@ -48,4 +48,8 @@ public class Participant extends User {
   public void setAddresses(List<Address> addresses){
     this.addresses = addresses;
   }
+  public String toString(){
+    return getClass().getName();
+  }
+
 }

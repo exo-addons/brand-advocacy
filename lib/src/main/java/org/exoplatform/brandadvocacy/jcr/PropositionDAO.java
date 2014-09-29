@@ -129,7 +129,11 @@ public class PropositionDAO extends DAO {
               return this.getJcrImplService().getMissionDAO().transferNode2Object(missionNode);
             }
           }
-        } catch (UnsupportedRepositoryOperationException e) {
+        }
+        catch (ItemExistsException ie){
+          log.error(" === ERROR cannot add existing item "+ie.getMessage());
+        }
+        catch (UnsupportedRepositoryOperationException e) {
           log.error("=== ERROR cannot add proposition to mission "+e.getMessage());
         } catch (RepositoryException e) {
           log.error("=== ERROR cannot add proposition to mission "+e.getMessage());
@@ -173,13 +177,16 @@ public class PropositionDAO extends DAO {
       return null;
     try {
       Node propositionNode = this.getPropositionNode(proposition.getMission_id(),proposition.getId());
-      if(null != propositionNode){
+      if(null != propositionNode && proposition.getId().equals(propositionNode.getProperty(node_prop_id).getString())){
         this.setProperties(propositionNode,proposition);
         propositionNode.getSession().save();
         return proposition;
-      }
+      }else
+        throw new BrandAdvocacyServiceException(BrandAdvocacyServiceException.PROPOSITION_NOT_EXISTS," cannot update proposition not exists");
     } catch (RepositoryException e) {
       log.error("==== ERROR cannot update proposition "+e.getMessage() );
+    } catch (BrandAdvocacyServiceException brade){
+      log.error(brade.getMessage());
     }
     return null;
   }
@@ -188,14 +195,17 @@ public class PropositionDAO extends DAO {
       return null;
     try {
       Node propositionNode = this.getPropositionNode(proposition.getMission_id(),proposition.getId());
-      if(null != propositionNode){
+      if(null != propositionNode && proposition.getId().equals(propositionNode.getProperty(node_prop_id).getString())){
         Session session = propositionNode.getSession();
         propositionNode.remove();
         session.save();
         return proposition;
-      }
+      }else
+        throw new BrandAdvocacyServiceException(BrandAdvocacyServiceException.PROPOSITION_NOT_EXISTS," cannot remove proposition not exists");
     } catch (RepositoryException e) {
       log.error("==== ERROR cannot remove proposition "+e.getMessage() );
+    } catch (BrandAdvocacyServiceException brade){
+      log.error(brade.getMessage());
     }
 
     return null;

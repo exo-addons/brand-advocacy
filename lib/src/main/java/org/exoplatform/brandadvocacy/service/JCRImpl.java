@@ -57,7 +57,7 @@ public class JCRImpl implements IService {
   private ManagerDAO managerDAO;
 
   private ParticipantDAO participantDAO;
-  private ParticipantMissionDAO participantMissionDAO;
+  private MissionParticipantDAO missionParticipantDAO;
   private PropositionDAO propositionDAO;
   
   private static final Log log = ExoLogger.getLogger(JCRImpl.class);
@@ -91,7 +91,7 @@ public class JCRImpl implements IService {
     this.setMissionDAO(new MissionDAO(this));
     this.setManagerDAO(new ManagerDAO(this));
     this.setParticipantDAO(new ParticipantDAO(this));
-    this.setParticipantMissionDAO(new ParticipantMissionDAO(this));
+    this.setMissionParticipantDAO(new MissionParticipantDAO(this));
     this.setPropositionDAO(new PropositionDAO(this));
     this.orgService = orgService;
     this.sessionService = sessionService;
@@ -153,11 +153,11 @@ public class JCRImpl implements IService {
   public void setParticipantDAO(ParticipantDAO participantDAO) {
     this.participantDAO = participantDAO;
   }
-  public ParticipantMissionDAO getParticipantMissionDAO() {
-    return participantMissionDAO;
+  public MissionParticipantDAO getMissionParticipantDAO() {
+    return missionParticipantDAO;
   }
-  public void setParticipantMissionDAO(ParticipantMissionDAO participantMissionDAO) {
-    this.participantMissionDAO = participantMissionDAO;
+  public void setMissionParticipantDAO(MissionParticipantDAO missionParticipantDAO) {
+    this.missionParticipantDAO = missionParticipantDAO;
   }
   public PropositionDAO getPropositionDAO() {
     return propositionDAO;
@@ -174,14 +174,14 @@ public class JCRImpl implements IService {
 
   @Override
   public void removeMission(String id) {
-    // TODO Auto-generated method stub
+
+    this.getMissionDAO().removeMissionById(id);
     
   }
 
   @Override
-  public Mission getMissionById(String id) {
-    // TODO Auto-generated method stub
-    return null;
+  public Mission getMissionById(String id) throws RepositoryException{
+    return this.getMissionDAO().getMissionById(id);
   }
 
   @Override
@@ -191,8 +191,7 @@ public class JCRImpl implements IService {
 
   @Override
   public void updateMission(Mission m) {
-    // TODO Auto-generated method stub
-    
+
   }
 
   @Override
@@ -207,7 +206,27 @@ public class JCRImpl implements IService {
 
   @Override
   public Proposition removeProposition(Proposition proposition) {
-    return this.propositionDAO.removeProposition(proposition);
+    return this.getPropositionDAO().removeProposition(proposition);
+  }
+
+  @Override
+  public MissionParticipant addMissionParticipant(MissionParticipant missionParticipant) throws RepositoryException {
+    return this.getMissionParticipantDAO().addMissionParticipant(missionParticipant);
+  }
+
+  @Override
+  public MissionParticipant updateMissionParticipant(MissionParticipant missionParticipant) throws RepositoryException {
+    return this.getMissionParticipantDAO().updateMissionParticipant(missionParticipant);
+  }
+
+  @Override
+  public List<MissionParticipant> getAllMissionParticipants() throws RepositoryException {
+    return this.getMissionParticipantDAO().getAllMissionParticipants();
+  }
+
+  @Override
+  public List<MissionParticipant> getMissionParticipantsByParticipant(String username) throws RepositoryException {
+    return null;
   }
 
   @Override
@@ -238,30 +257,6 @@ public class JCRImpl implements IService {
   public List<Participant> getParticipantsByMissionId(String mid) {
     // TODO Auto-generated method stub
     return null;
-  }
-
-  @Override
-  public void addParticipantMission(MissionParticipant pm) {
-    // TODO Auto-generated method stub
-    
-  }
-
-  @Override
-  public MissionParticipant getParticipantMissionById(String id) {
-    // TODO Auto-generated method stub
-    return null;
-  }
-
-  @Override
-  public List<MissionParticipant> getParticipantMissionsByParticipantId(String pid) {
-    // TODO Auto-generated method stub
-    return null;
-  }
-
-  @Override
-  public void updateParticipantMission(MissionParticipant pm) {
-    // TODO Auto-generated method stub
-    
   }
 
   @Override

@@ -36,7 +36,7 @@ public enum Size {
       this.size = size;
   }
 
-  public int size() {
+  public int getValue() {
       return this.size;
   }
 
@@ -55,7 +55,7 @@ public enum Size {
 
   public static Size getSize(int size) {
       for (Size type : Size.values()) {
-          if (type.size() == size) {
+          if (type.getValue() == size) {
               return type;
           }
       }
