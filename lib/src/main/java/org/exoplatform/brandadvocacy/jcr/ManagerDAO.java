@@ -100,36 +100,35 @@ public class ManagerDAO extends DAO{
     try {
       if(null == mid || "".equals(mid))
         throw new BrandAdvocacyServiceException(BrandAdvocacyServiceException.ID_INVALID, "cannot add managers to mission id null");
-   
-      Node missionNode = this.getJcrImplService().getMissionDAO().getNodeById(mid);
-      if(null != missionNode){
-        try {
-          Node managerHomeNode = this.getJcrImplService().getMissionDAO().getOrCreateManagerHome(missionNode);
-          if(null != managerHomeNode){
-            List<Value> nodeManagers = new LinkedList<Value>();
-            Manager manager;
-            Node managerNode;
-            int i = 0;
-            for(i = 0;i<managers.size();i++){
-              manager = managers.get(i);
-              manager.setMission_id(mid);
-              if (!managerHomeNode.hasNode(manager.getUserName())){
-                managerNode = managerHomeNode.addNode(manager.getUserName(), JCRImpl.MANAGER_NODE_TYPE);
-                this.setProperties(managerNode, manager);
-              }
 
+      try {
+        Node missionNode = this.getJcrImplService().getMissionDAO().getNodeById(mid);
+        Node managerHomeNode = this.getJcrImplService().getMissionDAO().getOrCreateManagerHome(missionNode);
+        if(null != managerHomeNode){
+          int nb = (int) managerHomeNode.getNodes().getSize();
+          Manager manager;
+          Node managerNode;
+          int i = 0;
+          for(i = 0;i<managers.size();i++){
+            manager = managers.get(i);
+            manager.setMission_id(mid);
+            if (!managerHomeNode.hasNode(manager.getUserName())){
+              managerNode = managerHomeNode.addNode(manager.getUserName(), JCRImpl.MANAGER_NODE_TYPE);
+              this.setProperties(managerNode, manager);
             }
-            if(0 != i) {
-              managerHomeNode.save();
-              return this.getJcrImplService().getMissionDAO().transferNode2Object(missionNode);
-            }
+
           }
-        } catch (ItemExistsException ie){
-          log.error(" === ERROR cannot add existing item "+ie.getMessage());
-        } catch (RepositoryException e) {
-          log.error("=== ERROR add manager to mission "+e.getMessage());
+          if(0 != i) {
+            managerHomeNode.getSession().save();
+            return this.getJcrImplService().getMissionDAO().transferNode2Object(missionNode);
+          }
         }
+      } catch (ItemExistsException ie){
+        log.error(" === ERROR cannot add existing item "+ie.getMessage());
+      } catch (RepositoryException e) {
+        log.error("=== ERROR add manager to mission "+e.getMessage());
       }
+
 
     } catch (BrandAdvocacyServiceException brade) {
       log.error("ERROR cannot add manager "+brade.getMessage());
@@ -169,8 +168,8 @@ public class ManagerDAO extends DAO{
       Node managerNode = this.getManagerNode(manager.getMission_id(),manager.getUserName());
       if(null != managerNode && manager.getUserName().equals(managerNode.getProperty(node_prop_username).getString())){
         this.setProperties(managerNode,manager);
-        managerNode.getSession().save();
-        return manager;
+        managerNode.save();
+        return this.transferNode2Object(managerNode);
       }else
         throw new BrandAdvocacyServiceException(BrandAdvocacyServiceException.MANAGER_NOT_EXISTS," cannot update manager not exists");
     } catch (RepositoryException e) {

@@ -16,9 +16,7 @@
  */
 package org.exoplatform.brandadvocacy.jcr;
 
-import org.exoplatform.brandadvocacy.model.Manager;
 import org.exoplatform.brandadvocacy.model.Mission;
-import org.exoplatform.brandadvocacy.model.Proposition;
 import org.exoplatform.brandadvocacy.service.BrandAdvocacyServiceException;
 import org.exoplatform.brandadvocacy.service.JCRImpl;
 import org.exoplatform.brandadvocacy.service.Utils;
@@ -26,15 +24,9 @@ import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 
 import javax.jcr.*;
-import javax.jcr.lock.LockException;
-import javax.jcr.nodetype.ConstraintViolationException;
-import javax.jcr.nodetype.NoSuchNodeTypeException;
-import javax.jcr.nodetype.NodeType;
 import javax.jcr.query.Query;
 import javax.jcr.query.QueryResult;
-import javax.jcr.version.VersionException;
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -46,8 +38,6 @@ public class MissionDAO extends DAO {
   private static final Log   log             = ExoLogger.getLogger(MissionDAO.class);
 
   public static final String MISSIONS_PATH   = "Missions";
-  public static final String MANAGERS_PATH = "Managers";
-  public static final String PROPOSITIONS_PATH = "Propositions";
 
   public static final String node_prop_labelID = "exo:labelID";
   public static final String node_prop_title = "exo:title";  
@@ -145,7 +135,7 @@ public class MissionDAO extends DAO {
         this.setPropertiesNode(missionNode,m);
         homeMissionNode.getSession().save();
         if(null != m.getManagers() && m.getManagers().size() > 0)
-          this.getJcrImplService().getManagerDAO().addManager2Mission(m.getId(), m.getManagers());
+          this.getJcrImplService().getManagerDAO().addManager2Mission(missionNode.getUUID(), m.getManagers());
         return this.transferNode2Object(missionNode);
       }catch (ItemExistsException ie){
         log.error(" === ERROR cannot add existing item "+ie.getMessage());
@@ -173,10 +163,10 @@ public class MissionDAO extends DAO {
     }
     return null;
   }
-  public Node getNodeById(String id) {
+  public Node getNodeByLabelID(String labelID){
     StringBuilder sql = new StringBuilder("select * from "+ JCRImpl.MISSION_NODE_TYPE +" where jcr:path like '");
     sql.append(JCRImpl.EXTENSION_PATH).append("/").append(MISSIONS_PATH);
-    sql.append("/").append(Utils.queryEscape(id)).append("'");
+    sql.append("/").append(Utils.queryEscape(labelID)).append("'");
     Session session;
     try {
       session = this.getJcrImplService().getSession();
@@ -186,11 +176,16 @@ public class MissionDAO extends DAO {
       NodeIterator nodes = result.getNodes();
       if (nodes.hasNext()) {
         return nodes.nextNode();
-      }   
+      }
     } catch (RepositoryException e) {
-      log.error("ERROR get mission id "+id +" Exeption "+e.getMessage());
+      log.error("ERROR get mission id "+labelID +" Exeption "+e.getMessage());
     }
-    return null;        
+    return null;
+  }
+  public Node getNodeById(String id) throws RepositoryException {
+
+    return this.getJcrImplService().getSession().getNodeByUUID(id);
+
   }
 
   public Mission getMissionById(String id) throws RepositoryException {
@@ -199,26 +194,28 @@ public class MissionDAO extends DAO {
       return this.transferNode2Object(aNode);
     return null;
   }
-  public void UpdateMission(Mission m){
+  public Mission updateMission(Mission m){
     try {
       m.checkValid();      
       Node missionHome = this.getOrCreateMissionHome();
       if (!missionHome.hasNode(m.getLabelID())) {
       
-        throw new BrandAdvocacyServiceException(BrandAdvocacyServiceException.MISSION_NOT_EXISTS, "cannot update mission not exist "+m.getId());
+        throw new BrandAdvocacyServiceException(BrandAdvocacyServiceException.MISSION_NOT_EXISTS, "cannot update mission not exist "+m.getLabelID());
         
       }
-      Node aNode = missionHome.getNode(m.getId());
-      if (null != aNode && m.getId().equals( aNode.getUUID()) ) {
+      Node aNode = missionHome.getNode(m.getLabelID());
+      if (null != aNode && m.getLabelID().equals( aNode.getProperty(node_prop_labelID).getString()) ) {
         this.setPropertiesNode(aNode, m);        
         aNode.save();
+        return this.transferNode2Object(aNode);
       }
 
     } catch (BrandAdvocacyServiceException e) {
       log.error("ERROR cannot update mission with empty title");
     } catch (RepositoryException e) {
       log.error("ERROR update mission "+e.getMessage());
-    }              
+    }
+    return null;
   }
   public void removeMissionById(String id){
       try {

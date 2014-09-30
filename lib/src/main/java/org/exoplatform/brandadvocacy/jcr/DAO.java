@@ -16,6 +16,7 @@
  */
 package org.exoplatform.brandadvocacy.jcr;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -23,8 +24,13 @@ import javax.jcr.Node;
 import javax.jcr.NodeIterator;
 import javax.jcr.RepositoryException;
 import javax.jcr.Session;
+import javax.jcr.query.Query;
+import javax.jcr.query.QueryResult;
+
 import org.exoplatform.brandadvocacy.service.JCRImpl;
 import org.exoplatform.services.jcr.impl.core.query.QueryImpl;
+import org.exoplatform.services.log.ExoLogger;
+import org.exoplatform.services.log.Log;
 
 /**
  * Created by The eXo Platform SAS
@@ -33,7 +39,7 @@ import org.exoplatform.services.jcr.impl.core.query.QueryImpl;
  * Sep 18, 2014  
  */
 public abstract class DAO {
-
+  private static final Log log = ExoLogger.getLogger(DAO.class);
   private JCRImpl jcrImplService;
   
   public JCRImpl getJcrImplService() {
@@ -48,4 +54,21 @@ public abstract class DAO {
     this.jcrImplService = jcrImpl;
   }
 
+  public List<Node> getNodesByQuery(String sql){
+
+    List<Node> list = new ArrayList<Node>();
+    try {
+      Session session = this.getJcrImplService().getSession();
+      Query query = session.getWorkspace().getQueryManager().createQuery(sql, Query.SQL);
+      QueryResult result = query.execute();
+      NodeIterator nodes = result.getNodes();
+      if (nodes.hasNext()) {
+        list.add(nodes.nextNode()) ;
+      }
+    } catch (RepositoryException e) {
+      log.error("ERROR cannot get nodes by query  "+sql);
+      e.printStackTrace();
+    }
+    return list;
+  }
 }

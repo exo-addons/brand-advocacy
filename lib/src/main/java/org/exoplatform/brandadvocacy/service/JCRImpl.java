@@ -55,7 +55,7 @@ public class JCRImpl implements IService {
   private DataDistributionManager dataDistributionManager;  
   private MissionDAO missionDAO;
   private ManagerDAO managerDAO;
-
+  private AddressDAO addressDAO;
   private ParticipantDAO participantDAO;
   private MissionParticipantDAO missionParticipantDAO;
   private PropositionDAO propositionDAO;
@@ -75,6 +75,7 @@ public class JCRImpl implements IService {
   public static final String MANAGER_NODE_TYPE = "brad:manager";
   public static final String PROPOSITION_NODE_TYPE = "brad:proposition";
   public static final String PARTICIPANT_NODE_TYPE = "brad:participant";
+  public static final String ADDRESS_LIST_NODE_TYPE = "brad:addresseslist";
   public static final String ADDRESS_NODE_TYPE = "brad:address";
   public static final String MISSION_PARTICIPANT_NODE_TYPE = "brad:mission-participant";
   
@@ -93,6 +94,7 @@ public class JCRImpl implements IService {
     this.setParticipantDAO(new ParticipantDAO(this));
     this.setMissionParticipantDAO(new MissionParticipantDAO(this));
     this.setPropositionDAO(new PropositionDAO(this));
+    this.setAddressDAO(new AddressDAO(this));
     this.orgService = orgService;
     this.sessionService = sessionService;
     this.dataDistributionManager = dataDistributionManager;
@@ -153,6 +155,13 @@ public class JCRImpl implements IService {
   public void setParticipantDAO(ParticipantDAO participantDAO) {
     this.participantDAO = participantDAO;
   }
+  public AddressDAO getAddressDAO() {
+    return addressDAO;
+  }
+
+  public void setAddressDAO(AddressDAO addressDAO) {
+    this.addressDAO = addressDAO;
+  }
   public MissionParticipantDAO getMissionParticipantDAO() {
     return missionParticipantDAO;
   }
@@ -190,8 +199,8 @@ public class JCRImpl implements IService {
   }
 
   @Override
-  public void updateMission(Mission m) {
-
+  public Mission updateMission(Mission m) {
+    return this.getMissionDAO().updateMission(m);
   }
 
   @Override
@@ -260,21 +269,23 @@ public class JCRImpl implements IService {
   }
 
   @Override
-  public void addProposition(Proposition p) {
-    // TODO Auto-generated method stub
-    
+  public Address addAddress(String username, Address address) {
+    return this.getAddressDAO().addAddress2Participant(username,address);
   }
 
   @Override
-  public Proposition getPropositionById(String id) {
-    // TODO Auto-generated method stub
-    return null;
+  public Address updateAddress(Address address) {
+    return this.getAddressDAO().updateAddress(address);
   }
 
   @Override
-  public List<Proposition> getPropositionsByMissionId(String mid) {
-    // TODO Auto-generated method stub
-    return null;
+  public Address removeAddress(Address address) {
+    return this.getAddressDAO().removeAddress(address);
+  }
+
+  @Override
+  public List<Address> getAllAddressesByParticipant(String username) {
+    return this.getAddressDAO().getAllAddressesByParticipant(username);
   }
 
   @Override
@@ -298,8 +309,13 @@ public class JCRImpl implements IService {
   }
 
   @Override
-  public List<Proposition> getAllPropositions(String mid) {
+  public List<Proposition> getPropositionsByMissionId(String mid) {
     return this.getPropositionDAO().getAllPropositions(mid);
+  }
+
+  @Override
+  public List<Proposition> searchPropositions(String sql){
+    return this.getPropositionDAO().searchPropositions(sql);
   }
 
 }

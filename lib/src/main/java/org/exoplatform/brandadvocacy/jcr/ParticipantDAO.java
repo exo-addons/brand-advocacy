@@ -36,8 +36,9 @@ import java.util.*;
  */
 public class ParticipantDAO extends DAO {
 
-  public static final String node_prop_username = "exo:username";
-  public static final String node_prop_mission_participant_ids = "exo:mission_participant_ids";
+  private static final String node_prop_username = "exo:username";
+  private static final String node_prop_mission_participant_ids = "exo:mission_participant_ids";
+  public static final String node_prop_addresses = "exo:addresseslist";
   private static final Log log = ExoLogger.getLogger(ParticipantDAO.class);
   public ParticipantDAO(JCRImpl jcrImpl) {
     super(jcrImpl);
@@ -71,6 +72,23 @@ public class ParticipantDAO extends DAO {
   public Node getOrCreateParticipantHome() {
     String path = String.format("%s/%s",JCRImpl.EXTENSION_PATH,JCRImpl.PARTICIPANT_PATH);
     return this.getJcrImplService().getOrCreateNode(path);
+  }
+  public Node getOrCreateAddressHome(Node participantNode) throws RepositoryException {
+
+    Node addressHome = null;
+    try {
+      addressHome = participantNode.getNode(node_prop_addresses);
+    } catch (RepositoryException e) {
+      log.error("address list node not exists");
+    }
+    if(null == addressHome){
+      try {
+        addressHome = participantNode.addNode(node_prop_addresses,JCRImpl.ADDRESS_LIST_NODE_TYPE);
+      } catch (RepositoryException e) {
+        e.printStackTrace();
+      }
+    }
+    return addressHome;
   }
   public Node getNodeByUserName(String username){
     StringBuilder sql = new StringBuilder("select * from "+ JCRImpl.PARTICIPANT_NODE_TYPE);

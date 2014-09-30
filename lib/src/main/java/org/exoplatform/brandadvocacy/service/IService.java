@@ -33,7 +33,7 @@ public interface IService {
   public void removeMission(String id);
   public Mission getMissionById(String id) throws RepositoryException;
   public List<Mission> getAllMissions();
-  public void updateMission(Mission m);
+  public Mission updateMission(Mission m);
 
   public Participant addParticipant(Participant p) throws RepositoryException;
   public void removeParticipant(String id);
@@ -41,9 +41,10 @@ public interface IService {
   public List<Participant> getAllParticipants();
   public List<Participant> getParticipantsByMissionId(String mid);
 
-  public void addProposition(Proposition p);
-  public Proposition getPropositionById(String id);
-  public List<Proposition> getPropositionsByMissionId(String mid);
+  public Address addAddress(String username,Address address);
+  public Address updateAddress(Address address);
+  public Address removeAddress(Address address);
+  public List<Address> getAllAddressesByParticipant(String username);
 
   public Mission addManagers2Mission(String mid,List<Manager> managers);
   public Manager updateManager(Manager manager);
@@ -51,12 +52,15 @@ public interface IService {
   public Manager removeManager(Manager manager);
 
   public Proposition updateProposition(Proposition proposition);
-  public List<Proposition> getAllPropositions(String mid);
+  public List<Proposition> getPropositionsByMissionId(String mid);
   public Mission addProposition2Mission(String mid,List<Proposition> propositions);
   public Proposition removeProposition(Proposition proposition);
+  public List<Proposition> searchPropositions(String sql);
 
   public MissionParticipant addMissionParticipant(MissionParticipant missionParticipant) throws RepositoryException;
   public MissionParticipant updateMissionParticipant(MissionParticipant missionParticipant) throws RepositoryException;
   public List<MissionParticipant> getAllMissionParticipants() throws RepositoryException;
   public List<MissionParticipant> getMissionParticipantsByParticipant(String username) throws RepositoryException;
+
+
 }

@@ -4,6 +4,7 @@
 	<nodeType name="brad:proposition" isMixin="false" hasOrderableChildNodes="false" primaryItemName="">
       <supertypes>
         <supertype>nt:base</supertype>
+        <supertype>mix:referenceable</supertype>
       </supertypes>
       <propertyDefinitions>
         <propertyDefinition name="exo:labelID" requiredType="String" autoCreated="false" mandatory="true" onParentVersion="COPY" protected="false" multiple="false">
@@ -74,7 +75,23 @@
           <valueConstraints/>
         </propertyDefinition>                        
       </propertyDefinitions>     
-    </nodeType>     
+    </nodeType>
+
+    <nodeType name="brad:addresseslist" isMixin="false" hasOrderableChildNodes="true" primaryItemName="">
+        <supertypes>
+            <supertype>nt:unstructured</supertype>
+        </supertypes>
+        <propertyDefinitions>
+        </propertyDefinitions>
+        <childNodeDefinitions>
+            <childNodeDefinition name="*" defaultPrimaryType="brad:address" autoCreated="false" mandatory="false"
+                                 onParentVersion="COPY" protected="false" sameNameSiblings="false">
+                <requiredPrimaryTypes>
+                    <requiredPrimaryType>brad:address</requiredPrimaryType>
+                </requiredPrimaryTypes>
+            </childNodeDefinition>
+        </childNodeDefinitions>
+    </nodeType>
 
     <nodeType name="brad:participant" isMixin="false" hasOrderableChildNodes="false" primaryItemName="">
       <supertypes>
@@ -90,14 +107,15 @@
         </propertyDefinition>        
       </propertyDefinitions>
       <childNodeDefinitions>
-        <childNodeDefinition name="*" defaultPrimaryType="" autoCreated="false" mandatory="false"
+        <childNodeDefinition name="exo:addresseslist" defaultPrimaryType="brad:addresseslist" autoCreated="true" mandatory="false"
           onParentVersion="COPY" protected="false" sameNameSiblings="false">
           <requiredPrimaryTypes>
-            <requiredPrimaryType>brad:address</requiredPrimaryType>
+            <requiredPrimaryType>brad:addresseslist</requiredPrimaryType>
           </requiredPrimaryTypes>
         </childNodeDefinition>
       </childNodeDefinitions>      
     </nodeType>
+
     <nodeType name="brad:managerslist" isMixin="false" hasOrderableChildNodes="true" primaryItemName="">
         <supertypes>
             <supertype>nt:unstructured</supertype>

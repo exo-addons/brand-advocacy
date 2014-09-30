@@ -99,6 +99,6 @@ public class Proposition {
 
   }
   public String toString(){
-    return getClass().getName()+" - id = "+this.getMission_id()+" - content= "+this.getContent();
+    return getClass().getName()+" - "+this.getId()+" - mission id = "+this.getMission_id()+" - content= "+this.getContent();
   }
 }

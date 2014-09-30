@@ -16,7 +16,6 @@
  */
 package org.exoplatform.brandadvocacy.jcr;
 
-import EDU.oswego.cs.dl.util.concurrent.FJTask;
 import org.exoplatform.brandadvocacy.model.*;
 import org.exoplatform.brandadvocacy.service.BrandAdvocacyServiceException;
 import org.exoplatform.brandadvocacy.service.JCRImpl;
@@ -25,12 +24,8 @@ import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 
 import javax.jcr.*;
-import javax.jcr.lock.LockException;
-import javax.jcr.nodetype.ConstraintViolationException;
-import javax.jcr.nodetype.NoSuchNodeTypeException;
 import javax.jcr.query.Query;
 import javax.jcr.query.QueryResult;
-import javax.jcr.version.VersionException;
 import java.util.*;
 
 /**
@@ -42,6 +37,8 @@ import java.util.*;
 public class MissionParticipantDAO extends DAO {
 
   private static final Log log = ExoLogger.getLogger(MissionParticipantDAO.class);
+
+  public static final String node_prop_labelID = "exo:labelID";
   public static final String node_prop_mission_id = "exo:mission_id";
   public static final String node_prop_proposition_id = "exo:proposition_id";
   public static final String node_prop_participant_username = "exo:participant_username";
@@ -55,8 +52,8 @@ public class MissionParticipantDAO extends DAO {
   public MissionParticipantDAO(JCRImpl jcrImpl) {
     super(jcrImpl);
   }
-  public void setProperties(Node aNode,MissionParticipant missionParticipant) throws RepositoryException {
-
+  private void setProperties(Node aNode,MissionParticipant missionParticipant) throws RepositoryException {
+    aNode.setProperty(node_prop_labelID,missionParticipant.getLabelID());
     aNode.setProperty(node_prop_mission_id,missionParticipant.getMission_id());
     aNode.setProperty(node_prop_proposition_id, missionParticipant.getProposition_id());
     aNode.setProperty(node_prop_participant_username,missionParticipant.getParticipant_username());
@@ -67,14 +64,17 @@ public class MissionParticipantDAO extends DAO {
     aNode.setProperty(node_prop_dateCreated,missionParticipant.getCreatedDate());
     aNode.setProperty(node_prop_modifiedDate,missionParticipant.getModifiedDate());
   }
-  public MissionParticipant transferNode2Object(Node node) throws RepositoryException{
+  private MissionParticipant transferNode2Object(Node node) throws RepositoryException{
     MissionParticipant missionParticipant = new MissionParticipant();
     missionParticipant.setId(node.getUUID());
     PropertyIterator iter = node.getProperties("exo:*");
     while (iter.hasNext()) {
       Property p = (Property) iter.next();
       String name = p.getName();
-      if(name.equals(node_prop_mission_id)){
+      if (name.equals(node_prop_labelID)){
+        missionParticipant.setLabelID(p.getString());
+      }
+      else if(name.equals(node_prop_mission_id)){
         missionParticipant.setMission_id(p.getString());
       } else if(name.equals(node_prop_mission_id)){
         missionParticipant.setMission_id(p.getString());
@@ -87,9 +87,9 @@ public class MissionParticipantDAO extends DAO {
       } else if (name.equals(node_prop_address_id)){
         missionParticipant.setAddress_id(p.getString());
       } else if (name.equals(node_prop_size)){
-        missionParticipant.setSize(Size.getSize((int)p.getLong()));
+        missionParticipant.setSize(Size.getSize((int) p.getLong()));
       } else if (name.equals(node_prop_status)){
-        missionParticipant.setStatus(Status.getStatus((int)p.getLong()));
+        missionParticipant.setStatus(Status.getStatus((int) p.getLong()));
       } else if (name.equals(node_prop_dateCreated)){
         missionParticipant.setCreatedDate(p.getLong());
       } else if(name.equals(node_prop_modifiedDate)){
@@ -98,14 +98,31 @@ public class MissionParticipantDAO extends DAO {
     }
     return missionParticipant;
   }
+  private List<MissionParticipant> transferNodes2Objects(List<Node> nodes){
+    List<MissionParticipant> missionParticipants = new ArrayList<MissionParticipant>();
+    MissionParticipant missionParticipant;
+    for (Node node:nodes){
+      try {
+        missionParticipant = this.transferNode2Object(node);
+        missionParticipant.checkValid();
+        missionParticipants.add(missionParticipant);
+      } catch (RepositoryException e) {
+        e.printStackTrace();
+      }
+    }
+    return missionParticipants;
+  }
   public Node getOrCreateMissionParticipantHome() {
     String path = String.format("%s/%s",JCRImpl.EXTENSION_PATH,JCRImpl.MISSION_PARTICIPANT_PATH);
     return this.getJcrImplService().getOrCreateNode(path);
   }
-  public Node getMissionParticipantNode(String mpid){
+  public Node getNodeById(String id) throws RepositoryException{
+    return this.getJcrImplService().getSession().getNodeByUUID(id);
+  }
+  public Node getMissionParticipantNodeByLabelID(String labelID){
     StringBuilder sql = new StringBuilder("select * from "+ JCRImpl.MISSION_PARTICIPANT_NODE_TYPE +" where jcr:path like '");
     sql.append(JCRImpl.EXTENSION_PATH).append("/").append(JCRImpl.MISSION_PARTICIPANT_PATH);
-    sql.append("/").append(Utils.queryEscape(mpid));
+    sql.append("/").append(Utils.queryEscape(labelID));
     sql.append("'");
     Session session;
     try {
@@ -117,9 +134,16 @@ public class MissionParticipantDAO extends DAO {
         return nodes.nextNode();
       }
     } catch (RepositoryException e) {
-      log.error("ERROR cannot get mission participant node  "+ mpid +" Exception "+e.getMessage());
+      log.error("ERROR cannot get mission participant node  "+ labelID +" Exception "+e.getMessage());
     }
     return null;
+  }
+  public List<MissionParticipant> searchMissionParticipants(String keyword){
+    StringBuilder sql = new StringBuilder("select * from "+ JCRImpl.MISSION_PARTICIPANT_NODE_TYPE +" where ");
+    sql.append(node_prop_labelID).append(" like '%"+keyword+"%'");
+    sql.append(" OR "+node_prop_participant_username).append(" like '%"+keyword+"%'");
+    List<Node> nodes =  this.getNodesByQuery(sql.toString());
+    return this.transferNodes2Objects(nodes);
   }
 
   public MissionParticipant addMissionParticipant(MissionParticipant missionParticipant){
@@ -127,8 +151,9 @@ public class MissionParticipantDAO extends DAO {
       missionParticipant.checkValid();
       Node missionParticipantHome = this.getOrCreateMissionParticipantHome();
       if (null != missionParticipantHome){
-        Node missionParticipantNode =  missionParticipantHome.addNode(missionParticipant.getId(),JCRImpl.MISSION_PARTICIPANT_NODE_TYPE);
+        Node missionParticipantNode =  missionParticipantHome.addNode(missionParticipant.getLabelID(),JCRImpl.MISSION_PARTICIPANT_NODE_TYPE);
         this.setProperties(missionParticipantNode,missionParticipant);
+        missionParticipantHome.getSession().save();
         return this.transferNode2Object(missionParticipantNode);
       }
     }
@@ -148,8 +173,8 @@ public class MissionParticipantDAO extends DAO {
 
       missionParticipant.checkValid();
       Node missionParticipantHome = this.getOrCreateMissionParticipantHome();
-      if (null != missionParticipantHome && missionParticipantHome.hasNode(missionParticipant.getId())){
-        Node missionParticipantNode = missionParticipantHome.getNode(missionParticipant.getId());
+      if (null != missionParticipantHome && missionParticipantHome.hasNode(missionParticipant.getLabelID())){
+        Node missionParticipantNode = missionParticipantHome.getNode(missionParticipant.getLabelID());
         if(null != missionParticipantNode && missionParticipant.getId().equals(missionParticipantNode.getUUID()) ){
           this.setProperties(missionParticipantNode,missionParticipant);
            missionParticipantNode.save();

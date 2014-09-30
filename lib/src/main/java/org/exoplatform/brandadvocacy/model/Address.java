@@ -18,6 +18,8 @@ package org.exoplatform.brandadvocacy.model;
 
 import org.exoplatform.brandadvocacy.service.BrandAdvocacyServiceException;
 
+import java.util.UUID;
+
 /**
  * Created by The eXo Platform SAS
  * Author : eXoPlatform
@@ -25,7 +27,7 @@ import org.exoplatform.brandadvocacy.service.BrandAdvocacyServiceException;
  * Sep 11, 2014  
  */
 public class Address {
-  private String owner_id;
+
   private String id;
   private String fName;
   private String lName;
@@ -33,12 +35,26 @@ public class Address {
   private String city;
   private String Phone;
   private String country;
-  public String getOwner_id() {
-    return owner_id;
+  private String labelID;
+
+  public Address(){
+    this.setLabelID(UUID.randomUUID().toString());
+  }
+  public Address(String fName, String lName, String address, String city, String country, String phone){
+    this.setLabelID(UUID.randomUUID().toString());
+    this.setfName(fName);
+    this.setlName(lName);
+    this.setAddress(address);
+    this.setCity(city);
+    this.setCountry(country);
+    this.setPhone(phone);
+  }
+  public String getLabelID() {
+    return labelID;
   }
 
-  public void setOwner_id(String owner_id) {
-    this.owner_id = owner_id;
+  public void setLabelID(String labelID) {
+    this.labelID = labelID;
   }
   public String getId() {
     return id;
@@ -83,6 +99,10 @@ public class Address {
     this.country = country;
   }  
   public void checkValid() throws BrandAdvocacyServiceException{
+    if (null == this.getLabelID() || "".equals(this.getLabelID()))
+      throw new BrandAdvocacyServiceException(BrandAdvocacyServiceException.ID_INVALID,"label address invalid");
+    if (null == this.getlName() || null == this.getlName() || null == this.getAddress() || null == this.getCity() || null == this.getCountry() || null == this.getPhone())
+      throw new BrandAdvocacyServiceException(BrandAdvocacyServiceException.MISSION_NOT_EXISTS," address invalid");
   }
 
 
