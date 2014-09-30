@@ -20,8 +20,7 @@ import org.exoplatform.brandadvocacy.model.*;
 import org.junit.Test;
 
 import javax.jcr.RepositoryException;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 /**
  * Created by The eXo Platform SAS
@@ -31,6 +30,7 @@ import java.util.List;
  */
 public class TestMission extends AbstractTest {
 
+/*
   public void testCreate(){
     int nb = this.service.getAllMissions().size();
     Mission m = new Mission("my second mission");
@@ -45,7 +45,6 @@ public class TestMission extends AbstractTest {
 
     assertEquals("should have 1 more missions ", nb+1, this.service.getAllMissions().size());
     assertEquals("should have 1 managers ",1, this.service.getAllManagers(m.getId()).size());
-    ShowMissionInfo();
 
     managers = new ArrayList<Manager>();
     manager = new Manager("toto");
@@ -58,26 +57,20 @@ public class TestMission extends AbstractTest {
     Proposition proposition = new Proposition();
     proposition.setContent("proposition 1");
     propositions.add(proposition);
-    this.service.addProposition2Mission(m.getId(),propositions);
-    assertEquals("should have 1 proposition ",1, this.service.getAllPropositions(m.getId()).size());
-    ShowMissionInfo();
-    proposition.setMission_id(m.getId());
-    this.testProposition(proposition);
-    this.testManager(m);
-    ShowMissionInfo();
+    this.service.addProposition2Mission(m.getId(), propositions);
+    assertEquals("should have 1 proposition ", 1, this.service.getAllPropositions(m.getId()).size());
   }
   public void testManager(Mission m){
-    debug("test manager");
+    debug(" ============ test manager =================");
     Manager manager = new Manager(this.username);
     manager.setRole(Role.Validator);
     manager.setMission_id(m.getId());
     this.service.updateManager(manager);
-    ShowMissionInfo();
     this.service.removeManager(manager);
     assertEquals("should have 1 manager after removing 1",1,this.service.getAllManagers(m.getId()).size());
   }
   public void testProposition(Proposition proposition){
-    debug("test proposition");
+    debug("================ test proposition");
     proposition.setContent("new content");
     this.service.updateProposition(proposition);
     ShowMissionInfo();
@@ -137,6 +130,107 @@ public class TestMission extends AbstractTest {
     mission.setManagers(managers);
     mission = this.service.addMission(mission);
     ShowMissionInfo();
+  }
+*/
+  public void testAll(){
+    Mission m = new Mission("facebook !!!!");
+    List<Manager> managers = new ArrayList<Manager>();
+    Manager manager = new Manager(this.username);
+    managers.add(manager);
+    m.setManagers(managers);
+    m = this.service.addMission(m);
+
+    Mission m2 = new Mission("twitter !!!!");
+    managers = new ArrayList<Manager>();
+    manager = new Manager("manager2");
+    managers.add(manager);
+    m2.setManagers(managers);
+    m2 = this.service.addMission(m2);
+
+
+    Participant participant = new Participant("participant_1");
+
+    MissionParticipant missionParticipant = new MissionParticipant();
+    missionParticipant.setParticipant_username(participant.getUserName());
+    missionParticipant.setMission_id(m.getId());
+    try {
+      missionParticipant = this.service.addMissionParticipant(missionParticipant);
+      Set<String> missionParticipantIds = new HashSet<String>();
+      missionParticipantIds.add(missionParticipant.getId());
+      participant.setMission_participant_ids(missionParticipantIds);
+      this.service.addParticipant(participant);
+    } catch (RepositoryException e) {
+      e.printStackTrace();
+    }
+
+    missionParticipant = new MissionParticipant();
+    missionParticipant.setParticipant_username(participant.getUserName());
+    missionParticipant.setMission_id(m2.getId());
+    try {
+      missionParticipant = this.service.addMissionParticipant(missionParticipant);
+      Set<String> missionParticipantIds = new HashSet<String>();
+      missionParticipantIds.add(missionParticipant.getId());
+      participant.setMission_participant_ids(missionParticipantIds);
+      this.service.addParticipant(participant);
+    } catch (RepositoryException e) {
+      e.printStackTrace();
+    }
+
+    participant = new Participant("participant_2");
+
+    missionParticipant = new MissionParticipant();
+    missionParticipant.setParticipant_username(participant.getUserName());
+    missionParticipant.setMission_id(m.getId());
+    try {
+      missionParticipant = this.service.addMissionParticipant(missionParticipant);
+      Set<String> missionParticipantIds = new HashSet<String>();
+      missionParticipantIds.add(missionParticipant.getId());
+      participant.setMission_participant_ids(missionParticipantIds);
+      this.service.addParticipant(participant);
+    } catch (RepositoryException e) {
+      e.printStackTrace();
+    }
+    showInfo();
+  }
+  public void showInfo(){
+    List<Mission> missions = this.service.getAllMissions();
+    debug("========= list missions ================");
+    for (Mission m:missions){
+      debug("========== info ================="+m.toString());
+      List<Manager> managers = this.service.getAllManagers(m.getId());
+      debug("========= list managers  ================");
+      for (Manager manager:managers){
+        debug(manager.toString());
+      }
+      debug("========= list propositions  ================");
+      List<Proposition> propositions = this.service.getAllPropositions(m.getId());
+      for (Proposition proposition:propositions){
+        debug(proposition.toString());
+      }
+    }
+    debug("========= list participants ================");
+    List<Participant> participants = this.service.getAllParticipants();
+    for (Participant participant:participants){
+      debug(participant.toString());
+      debug(" ================== list mission/participant ==================== for "+participant.getUserName());
+      try {
+        for (MissionParticipant mp : this.service.getMissionParticipantsByParticipant(participant.getUserName())){
+          debug( mp.toString());
+        }
+      } catch (RepositoryException e) {
+        e.printStackTrace();
+      }
+    }
+    try {
+      List<MissionParticipant> missionParticipants = this.service.getAllMissionParticipants();
+      debug("========= list mission participants ================");
+      for (MissionParticipant missionParticipant:missionParticipants){
+        debug(missionParticipant.toString());
+      }
+    } catch (RepositoryException e) {
+      log.error("cannot get all mission participants");
+    }
+
   }
 
 }

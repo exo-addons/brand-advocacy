@@ -16,10 +16,8 @@
  */
 package org.exoplatform.brandadvocacy.jcr;
 
-import org.exoplatform.brandadvocacy.model.Mission;
-import org.exoplatform.brandadvocacy.model.MissionParticipant;
-import org.exoplatform.brandadvocacy.model.Size;
-import org.exoplatform.brandadvocacy.model.Status;
+import EDU.oswego.cs.dl.util.concurrent.FJTask;
+import org.exoplatform.brandadvocacy.model.*;
 import org.exoplatform.brandadvocacy.service.BrandAdvocacyServiceException;
 import org.exoplatform.brandadvocacy.service.JCRImpl;
 import org.exoplatform.brandadvocacy.service.Utils;
@@ -44,7 +42,6 @@ import java.util.*;
 public class MissionParticipantDAO extends DAO {
 
   private static final Log log = ExoLogger.getLogger(MissionParticipantDAO.class);
-  public static final String node_prop_id = "exo:id";
   public static final String node_prop_mission_id = "exo:mission_id";
   public static final String node_prop_proposition_id = "exo:proposition_id";
   public static final String node_prop_participant_username = "exo:participant_username";
@@ -54,15 +51,12 @@ public class MissionParticipantDAO extends DAO {
   public static final String node_prop_status = "exo:status";
   public static final String node_prop_dateCreated = "exo:dateCreated";
   public static final String node_prop_modifiedDate = "exo:modifiedDate";
-  public static final String MISSION_PARTICIPANT_PATH = "MissionParticipants";
-  public static final String MISSION_PARTICIPANT_NODE_TYPE = "brad:mission-participant";
 
   public MissionParticipantDAO(JCRImpl jcrImpl) {
     super(jcrImpl);
   }
   public void setProperties(Node aNode,MissionParticipant missionParticipant) throws RepositoryException {
 
-    aNode.setProperty(node_prop_id,missionParticipant.getId());
     aNode.setProperty(node_prop_mission_id,missionParticipant.getMission_id());
     aNode.setProperty(node_prop_proposition_id, missionParticipant.getProposition_id());
     aNode.setProperty(node_prop_participant_username,missionParticipant.getParticipant_username());
@@ -75,6 +69,7 @@ public class MissionParticipantDAO extends DAO {
   }
   public MissionParticipant transferNode2Object(Node node) throws RepositoryException{
     MissionParticipant missionParticipant = new MissionParticipant();
+    missionParticipant.setId(node.getUUID());
     PropertyIterator iter = node.getProperties("exo:*");
     while (iter.hasNext()) {
       Property p = (Property) iter.next();
@@ -104,12 +99,12 @@ public class MissionParticipantDAO extends DAO {
     return missionParticipant;
   }
   public Node getOrCreateMissionParticipantHome() {
-    String path = String.format("%s/%s",JCRImpl.EXTENSION_PATH,MISSION_PARTICIPANT_PATH);
+    String path = String.format("%s/%s",JCRImpl.EXTENSION_PATH,JCRImpl.MISSION_PARTICIPANT_PATH);
     return this.getJcrImplService().getOrCreateNode(path);
   }
   public Node getMissionParticipantNode(String mpid){
     StringBuilder sql = new StringBuilder("select * from "+ JCRImpl.MISSION_PARTICIPANT_NODE_TYPE +" where jcr:path like '");
-    sql.append(JCRImpl.EXTENSION_PATH).append("/").append(MISSION_PARTICIPANT_PATH);
+    sql.append(JCRImpl.EXTENSION_PATH).append("/").append(JCRImpl.MISSION_PARTICIPANT_PATH);
     sql.append("/").append(Utils.queryEscape(mpid));
     sql.append("'");
     Session session;
@@ -155,7 +150,7 @@ public class MissionParticipantDAO extends DAO {
       Node missionParticipantHome = this.getOrCreateMissionParticipantHome();
       if (null != missionParticipantHome && missionParticipantHome.hasNode(missionParticipant.getId())){
         Node missionParticipantNode = missionParticipantHome.getNode(missionParticipant.getId());
-        if(missionParticipant.getId().equals(missionParticipantNode.getProperty(node_prop_id).getString()) && null != missionParticipantNode){
+        if(null != missionParticipantNode && missionParticipant.getId().equals(missionParticipantNode.getUUID()) ){
           this.setProperties(missionParticipantNode,missionParticipant);
            missionParticipantNode.save();
           return this.transferNode2Object(missionParticipantNode);
@@ -202,31 +197,28 @@ public class MissionParticipantDAO extends DAO {
   }
   public List<MissionParticipant> getAllMissionParticipantsByParticipant(String username){
 
-    Set<MissionParticipant> missionParticipants = new HashSet<MissionParticipant>();
-    try{
-      Node missionParticipantHome = this.getOrCreateMissionParticipantHome();
-      NodeIterator nodes =  missionParticipantHome.getNodes();
-      while (nodes.hasNext()){
-        try{
-          missionParticipants.add(this.transferNode2Object(nodes.nextNode()));
-        }catch (RepositoryException re){
-          log.error(" === ERROR cannot get mission participant node list ");
+    List<MissionParticipant> missionParticipants = new ArrayList<MissionParticipant>();
+    ParticipantDAO participantDAO = this.getJcrImplService().getParticipantDAO();
+    Node participantNode = participantDAO.getNodeByUserName(username);
+    if (null != participantNode){
+      Participant participant = null;
+      try {
+        participant = participantDAO.transferNode2Object(participantNode);
+        Set<String> mpids = participant.getMission_participant_ids();
+        Session session = this.getJcrImplService().getSession();
+        MissionParticipant missionParticipant;
+        for (String mpid:mpids){
+          missionParticipant = this.transferNode2Object(session.getNodeByUUID(mpid));
+          missionParticipant.checkValid();
+          missionParticipants.add(missionParticipant);
         }
+      } catch (RepositoryException e) {
+        log.error("=== ERROR getAllMissionParticipantsByParticipant: cannot transfer node to object "+username);
+        e.printStackTrace();
       }
-      List<MissionParticipant> result = new LinkedList<MissionParticipant>();
-      result.addAll(missionParticipants);
-      Collections.sort(result,new Comparator<MissionParticipant>() {
-        @Override
-        public int compare(MissionParticipant o1, MissionParticipant o2) {
-          return (int)(o2.getCreatedDate() - o1.getCreatedDate());
-        }
-      });
-      return result;
-    }catch (RepositoryException re){
-      log.error("=== ERROR cannot find all mission participants");
-    }
-    return null;
 
+    }
+    return missionParticipants;
   }
 
 }

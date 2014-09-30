@@ -48,8 +48,8 @@ public class MissionDAO extends DAO {
   public static final String MISSIONS_PATH   = "Missions";
   public static final String MANAGERS_PATH = "Managers";
   public static final String PROPOSITIONS_PATH = "Propositions";
-  
-  public static final String node_prop_id = "exo:id";
+
+  public static final String node_prop_labelID = "exo:labelID";
   public static final String node_prop_title = "exo:title";  
   public static final String node_prop_third_party_link = "exo:third_party_link";
   public static final String node_prop_priority = "exo:priority";
@@ -104,7 +104,7 @@ public class MissionDAO extends DAO {
   }
 
   public void setPropertiesNode(Node missionNode, Mission m) throws RepositoryException {
-    missionNode.setProperty(node_prop_id, m.getId());
+    missionNode.setProperty(node_prop_labelID,m.getLabelID());
     missionNode.setProperty(node_prop_title, m.getTitle());
     missionNode.setProperty(node_prop_third_party_link, m.getThird_party_link());
     missionNode.setProperty(node_prop_priority, m.getPriority());
@@ -113,14 +113,15 @@ public class MissionDAO extends DAO {
   }
   public Mission transferNode2Object(Node node) throws RepositoryException {
     Mission m = new Mission();
+    m.setId(node.getUUID());
     PropertyIterator iter = node.getProperties("exo:*");
     Property p;
     String name;
     while (iter.hasNext()) {
       p = iter.nextProperty();
       name = p.getName();
-      if (name.equals(node_prop_id)) {
-        m.setId(p.getString());
+      if (name.equals(node_prop_labelID)) {
+        m.setLabelID(p.getString());
       } else if (name.equals(node_prop_title)) {
         m.setTitle(p.getString());
       } else if (name.equals(node_prop_third_party_link)) {
@@ -140,7 +141,7 @@ public class MissionDAO extends DAO {
       m.checkValid();
       try {
         Node homeMissionNode = this.getOrCreateMissionHome();
-        Node missionNode = homeMissionNode.addNode(m.getId(),JCRImpl.MISSION_NODE_TYPE);
+        Node missionNode = homeMissionNode.addNode(m.getLabelID(),JCRImpl.MISSION_NODE_TYPE);
         this.setPropertiesNode(missionNode,m);
         homeMissionNode.getSession().save();
         if(null != m.getManagers() && m.getManagers().size() > 0)
@@ -202,13 +203,13 @@ public class MissionDAO extends DAO {
     try {
       m.checkValid();      
       Node missionHome = this.getOrCreateMissionHome();
-      if (!missionHome.hasNode(m.getId())) {
+      if (!missionHome.hasNode(m.getLabelID())) {
       
         throw new BrandAdvocacyServiceException(BrandAdvocacyServiceException.MISSION_NOT_EXISTS, "cannot update mission not exist "+m.getId());
         
       }
       Node aNode = missionHome.getNode(m.getId());
-      if ( m.getId().equals( aNode.getProperty(node_prop_id).getString()) ) {
+      if (null != aNode && m.getId().equals( aNode.getUUID()) ) {
         this.setPropertiesNode(aNode, m);        
         aNode.save();
       }

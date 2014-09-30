@@ -16,7 +16,9 @@
  */
 package org.exoplatform.brandadvocacy.model;
 
-import java.util.List;
+import org.exoplatform.brandadvocacy.service.BrandAdvocacyServiceException;
+
+import java.util.*;
 
 /**
  * Created by The eXo Platform SAS
@@ -26,30 +28,38 @@ import java.util.List;
  */
 public class Participant extends User {
 
-  private String mission_id;
   private List<Address> addresses;
-  private List<String> mission_ids;
-  
-  public List<String> getMission_ids() {
-    return mission_ids;
+  private Set<String> mission_participant_ids = new HashSet<String>();
+  public Participant(){
+
   }
-  public void setMission_ids(List<String> mission_ids) {
-    this.mission_ids = mission_ids;
+
+  public Participant(String username){
+    this.setUserName(username);
   }
-  public String getMission_id() {
-    return mission_id;
+
+  public Set<String> getMission_participant_ids() {
+    return this.mission_participant_ids;
   }
-  public void setMission_id(String mission_id) {
-    this.mission_id = mission_id;
+
+  public void setMission_participant_ids(Set<String> mission_participant_ids) {
+    this.mission_participant_ids = mission_participant_ids;
   }
+
   public List<Address> getAddresses(){
     return this.addresses;
   }
   public void setAddresses(List<Address> addresses){
     this.addresses = addresses;
   }
+  public void checkValid() throws BrandAdvocacyServiceException{
+    if(null == this.getUserName() || "".equals(this.getUserName()))
+      throw new BrandAdvocacyServiceException(BrandAdvocacyServiceException.PARTICIPANT_INVALID,"participant must have username");
+    if (0 == this.getMission_participant_ids().size())
+      throw new BrandAdvocacyServiceException(BrandAdvocacyServiceException.PARTICIPANT_INVALID,"participant must participate to 1 mission");
+  }
   public String toString(){
-    return getClass().getName();
+    return getClass().getName()+" - username = "+this.getUserName()+" - number missions "+this.getMission_participant_ids().size();
   }
 
 }

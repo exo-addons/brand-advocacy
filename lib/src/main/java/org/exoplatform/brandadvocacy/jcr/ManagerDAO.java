@@ -78,7 +78,7 @@ public class ManagerDAO extends DAO{
   }
   public Node getManagerNode(String mid,String username){
     StringBuilder sql = new StringBuilder("select * from "+ JCRImpl.MANAGER_NODE_TYPE +" where jcr:path like '");
-    sql.append(JCRImpl.EXTENSION_PATH).append("/").append(MissionDAO.MISSIONS_PATH);
+    sql.append(JCRImpl.EXTENSION_PATH).append("/").append(JCRImpl.MISSIONS_PATH);
     sql.append("/").append(Utils.queryEscape(mid)).append("/").append(MissionDAO.node_prop_managers);
     sql.append("/").append(Utils.queryEscape(username));
     sql.append("'");

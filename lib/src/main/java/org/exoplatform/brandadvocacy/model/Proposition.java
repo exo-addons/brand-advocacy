@@ -33,6 +33,7 @@ public class Proposition {
   private String content;
   private Boolean active;
   private int numberUsed;
+  private String labelID;
 
   public Proposition(){
     this.init();
@@ -43,11 +44,19 @@ public class Proposition {
 
   }
   private void init(){
-    this.setId(UUID.randomUUID().toString());
+    this.setLabelID(UUID.randomUUID().toString());
     this.setNumberUsed(0);
     this.setActive(true);
 
   }
+  public String getLabelID() {
+    return labelID;
+  }
+
+  public void setLabelID(String labelID) {
+    this.labelID = labelID;
+  }
+
   public String getId(){
     return this.id;
   }
@@ -79,6 +88,7 @@ public class Proposition {
     this.numberUsed = nb;
   }
   public Boolean checkValid(){
+
 
     if(null == this.getContent() || "".equals(this.getContent())){
       return false;

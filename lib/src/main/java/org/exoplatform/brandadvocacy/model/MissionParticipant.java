@@ -38,14 +38,23 @@ public class MissionParticipant {
   private long createdDate;
   private long modifiedDate;
   private Size size;
+  private String labelID;
 
   public MissionParticipant(){
-    this.setId(UUID.randomUUID().toString());
+    this.setLabelID(UUID.randomUUID().toString());
     this.setStatus(Status.OPEN);
     this.setSize(Size.Medium);
     this.setCreatedDate(System.currentTimeMillis());
 
   }
+  public String getLabelID() {
+    return labelID;
+  }
+
+  public void setLabelID(String labelID) {
+    this.labelID = labelID;
+  }
+
   public String getId() {
     return id;
   }
@@ -114,6 +123,8 @@ public class MissionParticipant {
     this.size = size;
   }
   public void checkValid() throws BrandAdvocacyServiceException{
+    if(null == this.getLabelID() || "".equals(this.getLabelID()))
+      throw new BrandAdvocacyServiceException(BrandAdvocacyServiceException.ID_INVALID,"mission participant must have label ID");
     if(null == this.getParticipant_username() || "".equals(this.getParticipant_username()))
       throw new BrandAdvocacyServiceException(BrandAdvocacyServiceException.MISSION_PARTICIPANT_INVALID,"mission participant must be assigned to a participant");
     if (null == this.getMission_id() || "".equals(this.getMission_id()))

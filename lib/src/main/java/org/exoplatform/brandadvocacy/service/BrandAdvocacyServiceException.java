@@ -37,7 +37,7 @@ public class BrandAdvocacyServiceException extends RuntimeException {
   public static final int MISSION_PARTICIPANT_INVALID = 9;
   public static final int MANAGER_NOT_EXISTS = 10;
   public static final int PROPOSITION_NOT_EXISTS = 11;
-
+  public static final int PARTICIPANT_INVALID = 12;
   public BrandAdvocacyServiceException(String message, Throwable throwable) {
       this(0, message, throwable);
   }

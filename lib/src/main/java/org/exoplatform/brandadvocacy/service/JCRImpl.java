@@ -65,10 +65,10 @@ public class JCRImpl implements IService {
   public static String workspace = "collaboration";
   
   public static final String EXTENSION_PATH = "/BrandAdvocacys";
-  public static final String PARTICIPANTS_PATH = "/Participants";
-  public static final String PARTICIPANT_ADDRESSES_PATH = "/Addresses";  
-  public static final String MISSION_PARTICIPANTS_PATH = "/Mission_Participants";
-  
+  public static final String MISSIONS_PATH   = "Missions";
+  public static final String MISSION_PARTICIPANT_PATH = "MissionParticipants";
+  public static final String PARTICIPANT_PATH = "Participants";
+
   public static final String MISSION_NODE_TYPE = "brad:mission";
   public static final String MANAGER_LIST_NODE_TYPE = "brad:managerslist";
   public static final String PROPOSITION_LIST_NODE_TYPE = "brad:propositionslist";
@@ -226,12 +226,13 @@ public class JCRImpl implements IService {
 
   @Override
   public List<MissionParticipant> getMissionParticipantsByParticipant(String username) throws RepositoryException {
-    return null;
+    return this.getMissionParticipantDAO().getAllMissionParticipantsByParticipant(username);
   }
 
   @Override
-  public void addParticipant(Participant p) {
-    // TODO Auto-generated method stub
+  public Participant addParticipant(Participant p) throws RepositoryException{
+
+    return this.getParticipantDAO().addParticipant(p);
     
   }
 
@@ -249,8 +250,7 @@ public class JCRImpl implements IService {
 
   @Override
   public List<Participant> getAllParticipants() {
-    // TODO Auto-generated method stub
-    return null;
+    return this.getParticipantDAO().getAllParticipants();
   }
 
   @Override

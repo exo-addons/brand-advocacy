@@ -25,6 +25,7 @@ import org.exoplatform.brandadvocacy.service.BrandAdvocacyServiceException;
  * Sep 11, 2014  
  */
 public class Address {
+  private String owner_id;
   private String id;
   private String fName;
   private String lName;
@@ -32,6 +33,13 @@ public class Address {
   private String city;
   private String Phone;
   private String country;
+  public String getOwner_id() {
+    return owner_id;
+  }
+
+  public void setOwner_id(String owner_id) {
+    this.owner_id = owner_id;
+  }
   public String getId() {
     return id;
   }

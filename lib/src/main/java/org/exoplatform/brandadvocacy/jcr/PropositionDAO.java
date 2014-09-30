@@ -40,7 +40,6 @@ import java.util.List;
  */
 public class PropositionDAO extends DAO {
 
-  public static final String node_prop_id = "exo:id";
   public static final String node_prop_mission_id = "exo:mission_id";
   public static final String node_prop_content = "exo:content";
   public static final String node_prop_active = "exo:active";
@@ -53,7 +52,7 @@ public class PropositionDAO extends DAO {
   }
 
   public void setProperties(Node aNode, Proposition p) throws RepositoryException {
-    aNode.setProperty(node_prop_id, p.getId());
+
     aNode.setProperty(node_prop_mission_id, p.getMission_id());
     aNode.setProperty(node_prop_content, p.getContent());
     aNode.setProperty(node_prop_active, p.getActive());
@@ -62,15 +61,14 @@ public class PropositionDAO extends DAO {
 
   public Proposition transferNode2Object(Node node) throws RepositoryException {
     Proposition proposition = new Proposition();
+    proposition.setId(node.getUUID());
     PropertyIterator iter = node.getProperties("exo:*");
     Property p;
     String name;
     while (iter.hasNext()) {
       p = iter.nextProperty();
       name = p.getName();
-      if (name.equals(node_prop_id)) {
-        proposition.setId(p.getString());
-      } else if (name.equals(node_prop_mission_id)) {
+      if (name.equals(node_prop_mission_id)) {
         proposition.setMission_id(p.getString());
       } else if (name.equals(node_prop_content)) {
         proposition.setContent(p.getString());
@@ -84,7 +82,7 @@ public class PropositionDAO extends DAO {
   }
   public Node getPropositionNode(String mid,String pid){
     StringBuilder sql = new StringBuilder("select * from "+ JCRImpl.PROPOSITION_NODE_TYPE +" where jcr:path like '");
-    sql.append(JCRImpl.EXTENSION_PATH).append("/").append(MissionDAO.MISSIONS_PATH);
+    sql.append(JCRImpl.EXTENSION_PATH).append("/").append(JCRImpl.MISSIONS_PATH);
     sql.append("/").append(Utils.queryEscape(mid)).append("/").append(MissionDAO.node_prop_propositions);
     sql.append("/").append(Utils.queryEscape(pid));
     sql.append("'");
@@ -177,7 +175,7 @@ public class PropositionDAO extends DAO {
       return null;
     try {
       Node propositionNode = this.getPropositionNode(proposition.getMission_id(),proposition.getId());
-      if(null != propositionNode && proposition.getId().equals(propositionNode.getProperty(node_prop_id).getString())){
+      if(null != propositionNode && proposition.getId().equals(propositionNode.getUUID())){
         this.setProperties(propositionNode,proposition);
         propositionNode.getSession().save();
         return proposition;
@@ -195,7 +193,7 @@ public class PropositionDAO extends DAO {
       return null;
     try {
       Node propositionNode = this.getPropositionNode(proposition.getMission_id(),proposition.getId());
-      if(null != propositionNode && proposition.getId().equals(propositionNode.getProperty(node_prop_id).getString())){
+      if(null != propositionNode && proposition.getId().equals(propositionNode.getUUID())){
         Session session = propositionNode.getSession();
         propositionNode.remove();
         session.save();
