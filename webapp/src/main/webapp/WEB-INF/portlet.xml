@@ -26,7 +26,7 @@
     <description xml:lang="EN">Brand Advocacy Portlet</description>
     <portlet-name>BrandAdvocacyPortlet</portlet-name>
     <display-name xml:lang="EN">Brand Advocacy Portlet</display-name>
-    <portlet-class>org.exoplatform.webui.application.portlet.PortletApplicationController</portlet-class>    
+    <portlet-class>juzu.bridge.portlet.JuzuPortlet</portlet-class>
     <init-param>
       <name>webui.configuration</name>
       <value>/WEB-INF/conf/portlet/brandadvocacy/configuration.xml</value>
