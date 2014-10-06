@@ -17,10 +17,23 @@
 
     <!-- Application dependencies-->
     <dependency>
+      <groupId>javax.portlet</groupId>
+      <artifactId>portlet-api</artifactId>
+      <scope>provided</scope>
+    </dependency>
+
+    <dependency>
       <groupId>org.juzu</groupId>
       <artifactId>juzu-core</artifactId>
       <version>1.0.0-cr2-SNAPSHOT</version>
     </dependency>
+
+    <dependency>
+      <groupId>org.juzu</groupId>
+      <artifactId>juzu-plugins-portlet</artifactId>
+      <version>1.0.0-cr2-SNAPSHOT</version>
+    </dependency>
+
     <dependency>
       <groupId>org.juzu</groupId>
       <artifactId>juzu-plugins-servlet</artifactId>
@@ -57,6 +70,12 @@
       <scope>provided</scope>
     </dependency>
 
+    <dependency>
+      <groupId>javax.enterprise</groupId>
+      <artifactId>cdi-api</artifactId>
+      <version>1.0-SP4</version>
+    </dependency>
+
     <!-- Junit for testing -->
     <dependency>
       <groupId>junit</groupId>
@@ -83,15 +102,6 @@
       <version>${project.version}</version>
       <scope>provided</scope>
     </dependency>
-      <dependency>
-          <groupId>org.juzu</groupId>
-          <artifactId>juzu-plugins-portlet</artifactId>
-          <version>1.0.0-cr2-SNAPSHOT</version>
-      </dependency>
-      <dependency>
-          <groupId>org.juzu</groupId>
-          <artifactId>juzu-plugins-portlet</artifactId>
-          <version>1.0.0-cr2-SNAPSHOT</version>
-      </dependency>
+
   </dependencies>
 </project>
