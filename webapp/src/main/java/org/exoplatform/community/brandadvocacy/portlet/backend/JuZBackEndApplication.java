@@ -2,8 +2,6 @@ package org.exoplatform.community.brandadvocacy.portlet.backend;
 
 import juzu.*;
 import juzu.template.Template;
-import org.exoplatform.community.brandadvocacy.portlet.backend.JuZBrandAdvocacyApplication_;
-
 import javax.inject.Inject;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -14,7 +12,7 @@ import java.util.Set;
  * Created by exoplatform on 01/10/14.
  */
 
-public class JuZBrandAdvocacyApplication {
+public class JuZBackEndApplication {
 
   static Set<String> locations = new HashSet<String>();
 
@@ -50,6 +48,6 @@ public class JuZBrandAdvocacyApplication {
   @Route("/add")
   public Response.View add(String location){
     locations.add(location);
-    return JuZBrandAdvocacyApplication_.index(location);
+    return JuZBackEndApplication_.index(location);
   }
 }

@@ -1,7 +1,7 @@
 /**
  * Created by exoplatform on 01/10/14.
  */
-@Application(defaultController = JuZBrandAdvocacyApplication.class)
+@Application(defaultController = JuZBackEndApplication.class)
 @Portlet(name="BackendPortlet")
 @Servlet("/portlet/")
 package org.exoplatform.community.brandadvocacy.portlet.backend;
