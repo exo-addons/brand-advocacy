@@ -46,6 +46,11 @@
     <supports>
         <mime-type>text/html</mime-type>
     </supports>
+    <portlet-info>
+      <title>Brand Advocacy Backend Portlet</title>
+      <short-title>Brand Advocacy Backend Portlet</short-title>
+      <keywords>brand-advocacy-webapp</keywords>
+    </portlet-info>
   </portlet>
   <portlet>
     <description xml:lang="EN">Brand Advocacy Frontend Portlet</description>
@@ -55,6 +60,11 @@
     <supports>
       <mime-type>text/html</mime-type>
     </supports>
+    <portlet-info>
+      <title>Brand Advocacy Frontend Portlet</title>
+      <short-title>Brand Advocacy Frontend Portlet</short-title>
+      <keywords>brand-advocacy-webapp</keywords>
+    </portlet-info>
   </portlet>
 
 </portlet-app>

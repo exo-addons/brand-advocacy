@@ -10,9 +10,6 @@
   <packaging>war</packaging>
   <name>brand-advocacy - Webapp</name>
   <description>Brand Advocacy - portlet webapp</description>
-  <build>
-    <finalName>brand-advocacy-webapp</finalName>
-  </build>
   <dependencies>
 
     <!-- Application dependencies-->
@@ -40,13 +37,6 @@
       <version>1.0.0-cr2-SNAPSHOT</version>
     </dependency>
 
-    <!-- Groovy is shipped with GateIn -->
-    <dependency>
-      <groupId>org.codehaus.groovy</groupId>
-      <artifactId>groovy-all</artifactId>
-      <version>1.8.9</version>
-      <scope>provided</scope>
-    </dependency>
     <!-- exo -->
     <dependency>
       <groupId>org.exoplatform.core</groupId>
@@ -74,6 +64,14 @@
       <scope>provided</scope>
     </dependency>
 
+    <!-- Groovy is shipped with GateIn -->
+    <dependency>
+      <groupId>org.codehaus.groovy</groupId>
+      <artifactId>groovy-all</artifactId>
+      <version>1.8.9</version>
+      <scope>provided</scope>
+    </dependency>
+
     <!-- Dependencies for Guice in GateIn portal -->
     <dependency>
       <groupId>javax.inject</groupId>
@@ -94,6 +92,17 @@
       <version>1.0-SP4</version>
     </dependency>
 
+    <!-- resources -->
+    <dependency>
+      <groupId>org.juzu</groupId>
+      <artifactId>juzu-plugins-webjars</artifactId>
+      <version>1.0.0-cr2-SNAPSHOT</version>
+    </dependency>
+    <dependency>
+      <groupId>org.webjars</groupId>
+      <artifactId>jquery</artifactId>
+      <version>1.10.2</version>
+    </dependency>
     <!-- Junit for testing -->
     <dependency>
       <groupId>junit</groupId>
@@ -120,6 +129,60 @@
       <version>${project.version}</version>
       <scope>provided</scope>
     </dependency>
+    <dependency>
+      <groupId>org.juzu</groupId>
+      <artifactId>juzu-plugins-webjars</artifactId>
+      <version>1.0.0-cr2-SNAPSHOT</version>
+    </dependency>
+    <dependency>
+      <groupId>org.juzu</groupId>
+      <artifactId>juzu-plugins-webjars</artifactId>
+      <version>1.0.0-cr2-SNAPSHOT</version>
+    </dependency>
+    <dependency>
+      <groupId>org.juzu</groupId>
+      <artifactId>juzu-plugins-webjars</artifactId>
+      <version>1.0.0-cr2-SNAPSHOT</version>
+    </dependency>
+    <dependency>
+      <groupId>org.juzu</groupId>
+      <artifactId>juzu-plugins-webjars</artifactId>
+      <version>1.0.0-cr2-SNAPSHOT</version>
+    </dependency>
+    <dependency>
+      <groupId>org.juzu</groupId>
+      <artifactId>juzu-plugins-webjars</artifactId>
+      <version>1.0.0-cr2-SNAPSHOT</version>
+    </dependency>
 
   </dependencies>
+  <build>
+    <finalName>brand-advocacy-webapp</finalName>
+    <plugins>
+      <!-- Precompile the template class in maven (this is optional) -->
+      <plugin>
+        <groupId>org.codehaus.gmaven</groupId>
+        <artifactId>gmaven-plugin</artifactId>
+        <version>1.5</version>
+        <executions>
+          <execution>
+            <goals>
+              <goal>compile</goal>
+            </goals>
+            <configuration>
+              <sources>
+                <fileset>
+                  <directory>${project.build.outputDirectory}</directory>
+                  <includes>
+                    <include>**/*.groovy</include>
+                  </includes>
+                </fileset>
+              </sources>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
+
 </project>

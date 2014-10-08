@@ -1,0 +1,9 @@
+#{param name=missions/}
+
+<ul>
+    <% missions.each { mission -> %>
+        <li>
+            ${mission.getTitle()}
+        </li>
+    <% } %>
+</ul
