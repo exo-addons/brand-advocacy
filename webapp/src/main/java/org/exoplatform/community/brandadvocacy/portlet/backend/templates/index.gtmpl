@@ -1,16 +1,6 @@
-i am brad addons
-${urlParams}
-${serviceResult}
-<a href="@{index(location = 'paris')}">Paris</a>
+i am brad bkend
 
-The weather temperature in ${location} is ${temperature} degrees.
-
-<ul><% locations.each() { location -> %>
-<li><a href="@{index(location = location)}">${location}</a></li>
-<% } %>
-</ul>
-
-<form action="@{add()}" method="post">
-   <input type="text" name="location" value=""/>
+<form action="@{addMission()}" method="post">
+   <input type="text" name="title" value=""/>
    <input type="submit"/>
 </form>

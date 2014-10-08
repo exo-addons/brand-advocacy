@@ -16,6 +16,15 @@
 			<scope>provided</scope>
 			<outputFileNameMapping>brand-advocacy-webapp.war</outputFileNameMapping>
 		</dependencySet>
+    <dependencySet>
+      <useProjectArtifact>false</useProjectArtifact>
+      <outputDirectory>/</outputDirectory>
+      <includes>
+        <include>${project.groupId}:brand-advocacy-extension:war</include>
+      </includes>
+      <scope>provided</scope>
+      <outputFileNameMapping>brand-advocacy-extension.war</outputFileNameMapping>
+    </dependencySet>
 		<!-- Libraries -->
 		<dependencySet>
 			<useProjectArtifact>false</useProjectArtifact>
