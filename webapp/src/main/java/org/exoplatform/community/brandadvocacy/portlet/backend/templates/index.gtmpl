@@ -1,6 +1,2 @@
-i am brad bkend
-
-<form action="@{addMission()}" method="post">
-   <input type="text" name="title" value=""/>
-   <input type="submit"/>
-</form>
+<a href="@{JuZBackEndApplication.missionsList()}" role="button">list missions</a>
+<a href="@{JuZBackEndApplication.addMissionFrm()}" role="button">create a missions</a>

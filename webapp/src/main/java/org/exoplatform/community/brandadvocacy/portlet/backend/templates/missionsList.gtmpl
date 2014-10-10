@@ -4,6 +4,11 @@
     <% missions.each { mission -> %>
         <li>
             ${mission.getTitle()}
+            <%
+            mid =mission.getId();
+            %>
+                <a href="@{JuZBackEndApplication.editMission(id=mid)}" role="button">edit a missions</a>
         </li>
     <% } %>
-</ul
+</ul>
+<a href="@{JuZBackEndApplication.index()}" role="button">Home</a>

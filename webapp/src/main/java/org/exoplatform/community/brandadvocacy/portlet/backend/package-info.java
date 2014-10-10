@@ -4,23 +4,23 @@
 @Application(defaultController = JuZBackEndApplication.class)
 @WebJars(@WebJar("jquery"))
 @Portlet(name="BackendPortlet")
-
 @Bindings(
   {
     @Binding(value = org.exoplatform.services.organization.OrganizationService.class),
     @Binding(value = org.exoplatform.brandadvocacy.service.IService.class)
   }
 )
-@Servlet("/")
-
 @Scripts({
-  @Script(id = "jquery", value = "javascripts/jquery.1.7.2.min.js"),
+ // @Script(id = "jquery", value = "javascripts/jquery.1.7.2.min.js"),
   @Script(
-    id = "bradJS", value = "javascripts/brandadvocacy.js",
-    depends = {"jquery"}
+    id = "bradJS", value = "js/test.js",location = AssetLocation.SERVER
+         // ,   depends = {"jquery"}
   )
 })
 package org.exoplatform.community.brandadvocacy.portlet.backend;
+import juzu.Route;
+import juzu.asset.AssetLocation;
+import juzu.plugin.asset.Assets;
 import juzu.plugin.asset.Script;
 import juzu.plugin.asset.Scripts;
 import juzu.plugin.webjars.WebJar;
