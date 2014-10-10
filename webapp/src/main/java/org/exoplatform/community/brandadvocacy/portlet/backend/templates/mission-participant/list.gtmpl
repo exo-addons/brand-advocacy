@@ -1,0 +1,9 @@
+#{param name=missionParticipants/}
+
+<ul>
+    <% missionParticipants.each { missionParticipant -> %>
+        <li>
+        </li>
+    <% } %>
+</ul>
+<a href="@{JuZBackEndApplication.index()}" role="button">Home</a>

@@ -41,6 +41,7 @@ public class Mission {
   private String labelID;
 
   public Mission(){
+    this.init();
   }
   public Mission(String title){
    this.setTitle(title);

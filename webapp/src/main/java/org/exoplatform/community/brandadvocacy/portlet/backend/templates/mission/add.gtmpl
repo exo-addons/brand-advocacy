@@ -1,0 +1,10 @@
+<form action="@{MissionController.add()}" method="POST" role="form">
+    <h5>Add a mission</h5>
+    Title
+    <input type="text" name="title" value=""/>
+    <br/>
+    Third part link
+    <input type="text" name="third_party_link" value=""/>
+    <br/>
+    <button type="submit">Add</button>
+</form>

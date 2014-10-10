@@ -1,0 +1,20 @@
+#{param name=mission/}
+<%
+def title = "";
+def link = "";
+if(mission != null){
+    title = mission.getTitle();
+    link = mission.getThird_party_link();
+}
+%>
+<form action="@{MissionController.update()}" method="POST" role="form">
+    <h5>Update a mission</h5>
+    Title
+    <input type="text" name="title" value="<%= title %>"/>
+    <br/>
+    Third part link
+    <input type="text" name="third_party_link" value="<%= link %>"/>
+    <br/>
+    <button type="submit">Update</button>
+</form>
+<a href="@{MissionController.index()}" role="button">Home</a>

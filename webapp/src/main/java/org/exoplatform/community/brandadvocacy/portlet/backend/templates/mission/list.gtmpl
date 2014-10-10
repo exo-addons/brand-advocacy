@@ -1,0 +1,14 @@
+#{param name=missions/}
+
+<ul>
+    <% missions.each { mission -> %>
+        <li>
+            ${mission.getTitle()}
+            <%
+            def mid =mission.getId();
+            %>
+                <a href="@{MissionController.editForm(id=mid)}" role="button">edit a missions</a>
+        </li>
+    <% } %>
+</ul>
+<a href="@{MissionController.index()}" role="button">Home</a>

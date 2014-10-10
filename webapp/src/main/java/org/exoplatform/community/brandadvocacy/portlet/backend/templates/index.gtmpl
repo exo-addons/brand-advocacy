@@ -1,2 +1,1 @@
-<a href="@{JuZBackEndApplication.missionsList()}" role="button">list missions</a>
-<a href="@{JuZBackEndApplication.addMissionFrm()}" role="button">create a missions</a>
+i am index in app

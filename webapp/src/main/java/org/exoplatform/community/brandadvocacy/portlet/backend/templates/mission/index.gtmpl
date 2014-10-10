@@ -1,0 +1,2 @@
+<a href="@{MissionController.list()}" role="button">list missions</a>
+<a href="@{MissionController.addForm()}" role="button">create a missions</a>
