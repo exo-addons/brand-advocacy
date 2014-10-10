@@ -1,20 +1,21 @@
 #{param name=mission/}
 <%
-def title = "";
-def link = "";
-if(mission != null){
-    title = mission.getTitle();
-    link = mission.getThird_party_link();
-}
+if(mission != null){ %>
+    <form action="@{MissionController.update()}" method="POST" role="form">
+        <input type ="hidden" name="id" id="id"  value="<%= mission.getId()%>" />
+        <input type ="hidden" name="labelID" id="labelID" value="<%= mission.getLabelID()%>" />
+        <h5>Update a mission</h5>
+        Title
+        <input type="text" name="title" id="title" value="<%= mission.getTitle() %>"/>
+        <br/>
+        Third part link
+        <input type="text" name="third_party_link" id="third_party_link" value="<%= mission.getThird_party_link() %>"/>
+        <br/>
+        <button type="submit">Update</button>
+    </form>
+<%
+} else{
 %>
-<form action="@{MissionController.update()}" method="POST" role="form">
-    <h5>Update a mission</h5>
-    Title
-    <input type="text" name="title" value="<%= title %>"/>
-    <br/>
-    Third part link
-    <input type="text" name="third_party_link" value="<%= link %>"/>
-    <br/>
-    <button type="submit">Update</button>
-</form>
+<p> mission not found </p>
+<% } %>
 <a href="@{MissionController.index()}" role="button">Home</a>

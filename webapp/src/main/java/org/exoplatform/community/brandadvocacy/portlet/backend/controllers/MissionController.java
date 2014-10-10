@@ -18,6 +18,7 @@ public class MissionController {
 
   IService missionService;
 
+  @Inject
   public MissionController(IService missionService){
     this.missionService = missionService;
   }
