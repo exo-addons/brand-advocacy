@@ -1,0 +1,58 @@
+<!-- Step 2 -->
+<div class="tweetStepContent step-2">
+    <h5 class="titleStep">
+        <span class="numb">2</span><span class="textStep">Submit your personal address</span>
+    </h5>
+    <form class="tweetAddrForm" action="">
+        <div class="control-group">
+            <div class="controls">
+                <input type="text" placeholder="First Name ">
+            </div>
+        </div>
+        <div class="control-group">
+            <div class="controls">
+                <input type="text" placeholder="Last Name">
+            </div>
+        </div>
+        <div class="control-group">
+            <div class="controls">
+                <input type="text" placeholder="Address">
+            </div>
+        </div>
+        <div class="control-group">
+            <div class="controls">
+                <input type="text" placeholder="City">
+            </div>
+        </div>
+        <div class="control-group">
+            <div class="controls">
+                <input type="text" placeholder="Phone">
+            </div>
+        </div>
+
+        <div class="control-group">
+            <label class="control-label" for="tweetCountry">Country</label>
+            <div class="controls">
+                <select name="tweetCountry" id="tweetCountry">
+                    <option value="vn">Vietnam</option>
+                    <option value="vn">Laos</option>
+                    <option value="vn">Campuchia</option>
+                </select>
+            </div>
+        </div>
+        <div class="control-group">
+            <label class="control-label" for="tweetSize">How would you like it:</label>
+            <div class="controls">
+                <select name="tweetSize" id="tweetSize">
+                    <option value="vn">Size L</option>
+                    <option value="vn">Size M</option>
+                    <option value="vn">Size S</option>
+                </select>
+            </div>
+        </div>
+        <div class="action">
+            <button class="btn">Submit</button>
+        </div>
+    </form>
+</div>
+<!-- /.step-2 -->

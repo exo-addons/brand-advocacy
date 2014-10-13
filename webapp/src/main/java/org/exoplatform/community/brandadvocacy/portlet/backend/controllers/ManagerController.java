@@ -23,6 +23,8 @@ public class ManagerController {
 
   IService managerService;
   OrganizationService organizationService;
+  @Inject
+  MissionController missionController;
 
   @Inject
   @Path("manager/list.gtmpl")
@@ -84,7 +86,7 @@ public class ManagerController {
         } catch (RepositoryException e) {
           e.printStackTrace();
         }
-        return MissionController_.view(mid);
+        return missionController.view(mid);
       }
       else
         return Response.ok("cannot find this user");
