@@ -1,19 +1,5 @@
-<div class="uiBox custom-tweet-button">
-    <a class="twitter popup" href="#"><span>&nbsp;</span></a>
-</div>
-
-<div class="LightBoxContainer tweetPopup" style="display: block!important">
-    <div class="BgContent">
-        <div class="LightBoxContent">
-            <a class="closepopup" href="#">&nbsp;</a>
-            <div class="introBox">
-                <img src="/rest/jcr/repository/collaboration/sites/intranet/web%20contents/notification/exo-tweet/medias/images/bg-comminity.png" alt="Image">
-                <h3 class="fix-step-3">Win a free eXo tshirt !</h3>
-            </div>
-            <!-- step content here -->
-            <div id="step-content">
-
-            </div>
-        </div>
+<div id="brad-ft-container">
+    <div class="uiBox custom-tweet-button" id="brad-ft-discovery">
+        <a class="twitter popup" href="#"><span>&nbsp;</span></a>
     </div>
 </div>

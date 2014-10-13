@@ -35,6 +35,8 @@ public interface IService {
   public List<Mission> getAllMissions();
   public Mission updateMission(Mission m);
 
+  public Mission getMissionRandom();
+
   public Participant addParticipant(Participant p) throws RepositoryException;
   public void removeParticipant(String id);
   public Participant getParticipantById(String id);

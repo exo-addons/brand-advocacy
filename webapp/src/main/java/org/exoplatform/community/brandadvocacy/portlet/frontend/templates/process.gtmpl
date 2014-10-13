@@ -1,15 +1,26 @@
-<!-- Step 1 -->
-<div class="tweetStepContent step-1 hide">
-    <h5 class="titleStep">
-        <span class="numb">1</span><span class="textStep">Here is your mission</span>
-    </h5>
-    <p class="write-review">Write a review of eXo Platform<br>on <a href="#">GetApp.com</a></p>
-    <div class="quote-popup">
-        I’ve been using eXo Platform since few years now. What I like the most with eXo is...
+#{param name=mission/}
+<%
+if(null != mission) {
+    def propositions = mission.getPropositions();
+%>
+
+    <!-- Step 1 -->
+    <div class="tweetStepContent step-1">
+        <h5 class="titleStep">
+            <span class="numb">1</span><span class="textStep">Here is your mission</span>
+        </h5>
+        <p class="write-review"><%= mission.getTitle()%></p>
+        <div class="quote-popup">
+            <% propositions.each{ proposition -> %>
+                <%= proposition.getContent() %>
+            <% } %>
+        </div>
+        <button class="button-flat-balck">Let’s do it</button>
+        <div class="action">
+            <button class="btn btn-brad-done">Done</button>
+        </div>
     </div>
-    <button class="button-flat-balck">Let’s do it</button>
-    <div class="action">
-        <button class="btn">Done</button>
-    </div>
-</div>
-<!-- /.step-1 -->
+    <!-- /.step-1 -->
+
+<% } %>
+

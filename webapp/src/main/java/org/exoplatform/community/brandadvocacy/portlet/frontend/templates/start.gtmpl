@@ -1,5 +1,5 @@
 <!-- Start Step -->
-<div class="tweetStepContent start-step hide">
+<div class="tweetStepContent start-step">
     <h5 class="titleStep">
         <span class="numb">1</span><span class="textStep">Get your mission</span>
     </h5>
@@ -9,6 +9,6 @@
     <div class="action">
         <button class="btn btn-large btn-start">Start!</button>
     </div>
-    <img class="tshirt-img" src="/rest/jcr/repository/collaboration/sites/intranet/web%20contents/notification/exo-tweet/medias/images/t-shirt.png" alt="T-Shirt">
+    <img class="tshirt-img" src="/brand-advocacy-webapp/img/t-shirt.png" alt="T-Shirt">
 </div>
 <!-- /.start-step -->

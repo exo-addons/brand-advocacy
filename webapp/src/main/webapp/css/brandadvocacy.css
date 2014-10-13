@@ -2,7 +2,7 @@
   display: block;
   width: 283px;
   height: 265px;
-  background: url("/rest/jcr/repository/collaboration/sites/intranet/web%20contents/notification/exo-tweet/medias/images/banner.jpg") no-repeat 0 0 transparent;
+  background: url("/brand-advocacy-webapp/img/banner.jpg") no-repeat 0 0 transparent;
 }
 /* Fix z-index */
 .UIWorkingWorkspace {
@@ -31,7 +31,7 @@
   width: 42px;
   height: 42px;
   line-height: 40px;
-  background: url("/rest/jcr/repository/collaboration/sites/intranet/web%20contents/notification/exo-tweet/medias/images/icon-cancel.png") no-repeat center center #474747;
+  background: url("/brand-advocacy-webapp/img/icon-cancel.png") no-repeat center center #474747;
   text-align: center;
 }
 .LightBoxContainer.tweetPopup .closepopup:before {
@@ -212,7 +212,7 @@
   display: inline-block;
   width: 17px;
   height: 15px;
-  background: url("/rest/jcr/repository/collaboration/sites/intranet/web%20contents/notification/exo-tweet/medias/images/bird.png") no-repeat 0 0 transparent;
+  background: url("/brand-advocacy-webapp/img/bird.png") no-repeat 0 0 transparent;
   position: relative;
   top: 3px;
   left: -3px;

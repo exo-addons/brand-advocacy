@@ -17,6 +17,11 @@
                 id = "bradFTJS", value = "js/brad-frontend.js",location = AssetLocation.SERVER,depends = {"jquery"}
         )
 })
+@Stylesheets(
+        {
+                @Stylesheet(value = "css/brandadvocacy.css",location = AssetLocation.SERVER)
+        }
+)
 
 @Assets("*")
 
@@ -24,11 +29,9 @@ package org.exoplatform.community.brandadvocacy.portlet.frontend;
 
 import juzu.Application;
 import juzu.asset.AssetLocation;
-import juzu.plugin.asset.Assets;
-import juzu.plugin.asset.Script;
-import juzu.plugin.asset.Scripts;
+import juzu.plugin.asset.*;
 import juzu.plugin.binding.Binding;
 import juzu.plugin.binding.Bindings;
 import juzu.plugin.portlet.Portlet;
 import juzu.plugin.webjars.WebJar;
-import juzu.plugin.webjars.WebJars;;
+import juzu.plugin.webjars.WebJars;

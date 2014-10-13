@@ -204,6 +204,11 @@ public class JCRImpl implements IService {
   }
 
   @Override
+  public Mission getMissionRandom() {
+    return null;
+  }
+
+  @Override
   public Mission addManagers2Mission(String mid, List<Manager> managers) {
     return this.getManagerDAO().addManager2Mission(mid,managers);
   }

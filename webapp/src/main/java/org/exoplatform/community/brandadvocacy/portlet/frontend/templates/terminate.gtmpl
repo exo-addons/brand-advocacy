@@ -51,7 +51,7 @@
             </div>
         </div>
         <div class="action">
-            <button class="btn">Submit</button>
+            <button class="btn btn-brad-terminate" >Submit</button>
         </div>
     </form>
 </div>
