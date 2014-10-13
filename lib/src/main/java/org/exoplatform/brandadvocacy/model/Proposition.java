@@ -98,6 +98,13 @@ public class Proposition {
     return true;
 
   }
+  public String getShortContent(int length){
+    int maxLeng = this.getContent().length();
+    if(maxLeng < length)
+      return this.getContent();
+    return this.getContent().substring(0,length);
+
+  }
   public String toString(){
     return getClass().getName()+" - "+this.getId()+" - mission id = "+this.getMission_id()+" - content= "+this.getContent();
   }

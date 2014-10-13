@@ -7,7 +7,9 @@
             <%
             def mid =mission.getId();
             %>
-                <a href="@{MissionController.editForm(id=mid)}" role="button">edit a missions</a>
+                <a href="@{MissionController.editForm(id=mid)}" role="button">edit</a>
+                <a href="@{MissionController.view(id=mid)}" role="button">View</a>
+                <a href="@{MissionController.delete(id=mid)}" role="button">Delete</a>
         </li>
     <% } %>
 </ul>

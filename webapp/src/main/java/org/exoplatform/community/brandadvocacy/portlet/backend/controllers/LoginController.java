@@ -12,11 +12,13 @@ public class LoginController implements Serializable {
 
 
   private String currentUserName;
+  OrganizationService organizationService;
 
   @Inject
   public LoginController(OrganizationService organizationService){
 
-//    organizationService.get
+    this.organizationService = organizationService;
+    this.setCurrentUserName("init");
 
   }
 

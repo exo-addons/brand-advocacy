@@ -1,0 +1,27 @@
+#{param name=proposition/}
+<%
+if(proposition != null){
+    def missionId = proposition.getMission_id();
+    def strActiveChkbox = "";
+    if(proposition.getActive())
+        strActiveChkbox = "checked";
+%>
+    <form action="@{PropositionController.update()}" method="POST" role="form">
+        <input type ="hidden" name="id" id="id"  value="<%= proposition.getId()%>" />
+        <input type ="hidden" name="labelID" id="labelID" value="<%= proposition.getLabelID()%>" />
+        <h5>Update a proposition</h5>
+        <br/>
+        Content
+        <textarea rows="3" name="content" id="content"  placeholder="Write proposition here"><%= proposition.getContent()%></textarea>
+        <br/>
+        Active <input type="checkbox" name="active" id="active" <%= strActiveChkbox %> value="1" />
+        <br/>
+        <button type="submit">Update</button>
+    </form>
+    <a href="@{MissionController.view(id=missionId)}" role="button">Back</a>
+<%
+} else{
+%>
+<p> proposition not found </p>
+    <a href="@{MissionController.index()}" role="button">Home</a>
+<% } %>

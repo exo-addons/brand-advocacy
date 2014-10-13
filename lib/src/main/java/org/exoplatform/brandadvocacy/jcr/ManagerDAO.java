@@ -17,7 +17,6 @@
 package org.exoplatform.brandadvocacy.jcr;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 
 import javax.jcr.*;
@@ -76,10 +75,10 @@ public class ManagerDAO extends DAO{
     }
     return manager;
   }
-  public Node getManagerNode(String mid,String username){
+  public Node getManagerNode(String missionLabelId,String username){
     StringBuilder sql = new StringBuilder("select * from "+ JCRImpl.MANAGER_NODE_TYPE +" where jcr:path like '");
     sql.append(JCRImpl.EXTENSION_PATH).append("/").append(JCRImpl.MISSIONS_PATH);
-    sql.append("/").append(Utils.queryEscape(mid)).append("/").append(MissionDAO.node_prop_managers);
+    sql.append("/").append(Utils.queryEscape(missionLabelId)).append("/").append(MissionDAO.node_prop_managers);
     sql.append("/").append(Utils.queryEscape(username));
     sql.append("'");
     Session session;
@@ -92,7 +91,7 @@ public class ManagerDAO extends DAO{
         return nodes.nextNode();
       }
     } catch (RepositoryException e) {
-      log.error("ERROR cannot get manager  "+username +" from mission "+mid+" Exeption "+e.getMessage());
+      log.error("ERROR cannot get manager  "+username +" from mission "+missionLabelId+" Exeption "+e.getMessage());
     }
     return null;
   }
@@ -165,7 +164,7 @@ public class ManagerDAO extends DAO{
     if(!manager.checkValid())
       return null;
     try {
-      Node managerNode = this.getManagerNode(manager.getMission_id(),manager.getUserName());
+      Node managerNode = this.getManagerNode(manager.getMissionLabelId(),manager.getUserName());
       if(null != managerNode && manager.getUserName().equals(managerNode.getProperty(node_prop_username).getString())){
         this.setProperties(managerNode,manager);
         managerNode.save();
@@ -179,16 +178,13 @@ public class ManagerDAO extends DAO{
     }
     return null;
   }
-  public Manager removeManager(Manager manager){
-    if(!manager.checkValid())
-      return null;
+  public void removeManager(String missionLabelId,String username){
     try {
-      Node managerNode = this.getManagerNode(manager.getMission_id(),manager.getUserName());
+      Node managerNode = this.getManagerNode(missionLabelId,username);
       if(null != managerNode){
         Session session = managerNode.getSession();
         managerNode.remove();
         session.save();
-        return manager;
       }else
         throw new BrandAdvocacyServiceException(BrandAdvocacyServiceException.MANAGER_NOT_EXISTS," cannot remove manager not exists");
     } catch (RepositoryException e) {
@@ -197,6 +193,17 @@ public class ManagerDAO extends DAO{
       log.error(brade.getMessage());
     }
 
+  }
+  public Manager getManager(String missionLabelId,String username){
+    if(null == username || null == missionLabelId || "".equals(missionLabelId) || "".equals(username))
+      return null;
+    try {
+      return this.transferNode2Object(this.getManagerNode(missionLabelId,username));
+    } catch (RepositoryException e) {
+      log.error(" ERROR cannot get manager from mission");
+    }
+
     return null;
+
   }
 }

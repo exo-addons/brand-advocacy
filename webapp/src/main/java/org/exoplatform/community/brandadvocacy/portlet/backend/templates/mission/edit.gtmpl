@@ -1,15 +1,31 @@
 #{param name=mission/}
+#{param name=priorities/}
 <%
-if(mission != null){ %>
+if(mission != null){
+    def strActiveChkbox = "";
+    if(mission.getActive())
+        strActiveChkbox = "checked";
+%>
     <form action="@{MissionController.update()}" method="POST" role="form">
         <input type ="hidden" name="id" id="id"  value="<%= mission.getId()%>" />
         <input type ="hidden" name="labelID" id="labelID" value="<%= mission.getLabelID()%>" />
         <h5>Update a mission</h5>
+        <br/>
         Title
         <input type="text" name="title" id="title" value="<%= mission.getTitle() %>"/>
         <br/>
         Third part link
         <input type="text" name="third_party_link" id="third_party_link" value="<%= mission.getThird_party_link() %>"/>
+        <br/>
+        Priority
+        <select name="priority">
+            <% priorities.each { priority -> %>
+            <option value="<%= priority.getValue() %>" <% if(mission.getPriority().getValue() == priority.getValue()){ %> selected  <%}%> ><%= priority.getValue() %></option>
+            <% } %>
+        </select>
+
+        <br/>
+        Active <input type="checkbox" name="active" id="active" <%= strActiveChkbox %> value="1" />
         <br/>
         <button type="submit">Update</button>
     </form>

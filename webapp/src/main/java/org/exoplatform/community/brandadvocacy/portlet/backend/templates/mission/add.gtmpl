@@ -1,3 +1,4 @@
+#{param name=priorities/}
 <form action="@{MissionController.add()}" method="POST" role="form">
     <h5>Add a mission</h5>
     Title
@@ -5,6 +6,15 @@
     <br/>
     Third part link
     <input type="text" name="third_party_link" value=""/>
+    <br/>
+    Priority
+    <select name="priority">
+        <% priorities.each { priority -> %>
+        <option value="<%= priority.getValue() %>"><%= priority.getValue() %></option>
+        <% } %>
+    </select>
+    <br/>
+    Active <input type="checkbox" name="active" id="active" value="1" />
     <br/>
     <button type="submit">Add</button>
 </form>

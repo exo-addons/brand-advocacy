@@ -32,7 +32,7 @@ public class Mission {
   private String id;
   private String title;
   private String third_party_link;
-  private Long priority;
+  private Priority priority;
   private Boolean active;
   List<Proposition> propositions;
   private long createdDate;
@@ -49,11 +49,11 @@ public class Mission {
    
   }
   public void init(){
-
-      this.setLabelID(UUID.randomUUID().toString());
-      this.setPriority((long) Priority.PRIORITY_2.priority());
-      this.setCreatedDate(System.currentTimeMillis());
-      this.setActive(true);
+    this.setPriority(Priority.PRIORITY_2);
+    this.setLabelID(UUID.randomUUID().toString());
+    this.setCreatedDate(System.currentTimeMillis());
+    this.setModifiedDate(System.currentTimeMillis());
+    this.setActive(false);
   }
 
   public String getLabelID() {
@@ -82,10 +82,11 @@ public class Mission {
   public void setThird_party_link(String third_party_link) {
     this.third_party_link = third_party_link;
   }
-  public Long getPriority() {
+  public Priority getPriority() {
     return priority;
   }
-  public void setPriority(Long priority) {
+
+  public void setPriority(Priority priority) {
     this.priority = priority;
   }
   public Boolean getActive() {
@@ -120,7 +121,7 @@ public class Mission {
   }
   public void checkValid() throws BrandAdvocacyServiceException {
     if(null == this.getLabelID() || "".equals(this.getLabelID()))
-      throw new IllegalArgumentException("mission label is invalid ");
+     throw new IllegalArgumentException("mission label is invalid ");
 
     if (null == this.getTitle() || "".equals(this.getTitle()) || this.getTitle().trim().isEmpty()) {
       throw new IllegalArgumentException("Mission title is invalid");    
@@ -129,4 +130,6 @@ public class Mission {
   public String toString(){
     return getClass().getName()+" - " +this.getTitle()+" - "+this.getThird_party_link();
   }
+
+
 }

@@ -3,6 +3,7 @@ package org.exoplatform.community.brandadvocacy.portlet.backend;
 import juzu.*;
 import juzu.template.Template;
 import org.exoplatform.brandadvocacy.service.IService;
+import org.exoplatform.community.brandadvocacy.portlet.backend.controllers.LoginController;
 import org.exoplatform.community.brandadvocacy.portlet.backend.controllers.MissionController;
 import org.exoplatform.services.organization.OrganizationService;
 
@@ -23,16 +24,19 @@ public class JuZBackEndApplication {
 
   @Inject
   MissionController missionController;
+  @Inject
+  LoginController loginController;
 
   @Inject
   public JuZBackEndApplication(OrganizationService organizationService,IService brandAdvocacyService){
     this.organizationService = organizationService;
     this.brandAdvocacyService = brandAdvocacyService;
+
   }
 
   @View
   public Response.Content index(){
-    return index.ok();
+    return index.with().set("remoteUserName",loginController.getCurrentUserName()).ok();
   }
 
 }

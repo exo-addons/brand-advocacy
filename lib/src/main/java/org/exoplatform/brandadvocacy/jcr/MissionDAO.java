@@ -17,6 +17,7 @@
 package org.exoplatform.brandadvocacy.jcr;
 
 import org.exoplatform.brandadvocacy.model.Mission;
+import org.exoplatform.brandadvocacy.model.Priority;
 import org.exoplatform.brandadvocacy.service.BrandAdvocacyServiceException;
 import org.exoplatform.brandadvocacy.service.JCRImpl;
 import org.exoplatform.brandadvocacy.service.Utils;
@@ -94,12 +95,16 @@ public class MissionDAO extends DAO {
   }
 
   public void setPropertiesNode(Node missionNode, Mission m) throws RepositoryException {
-    missionNode.setProperty(node_prop_labelID,m.getLabelID());
+    if(null != m.getLabelID() && !"".equals(m.getLabelID()))
+      missionNode.setProperty(node_prop_labelID,m.getLabelID());
     missionNode.setProperty(node_prop_title, m.getTitle());
     missionNode.setProperty(node_prop_third_party_link, m.getThird_party_link());
-    missionNode.setProperty(node_prop_priority, m.getPriority());
+    missionNode.setProperty(node_prop_priority, m.getPriority().getValue());
     missionNode.setProperty(node_prop_active, m.getActive());
-    missionNode.setProperty(node_prop_dateCreated, m.getCreatedDate());
+    if (0 != m.getCreatedDate())
+      missionNode.setProperty(node_prop_dateCreated, m.getCreatedDate());
+    if (0 != m.getModifiedDate())
+      missionNode.setProperty(node_prop_modifiedDate,m.getModifiedDate());
   }
   public Mission transferNode2Object(Node node) throws RepositoryException {
     Mission m = new Mission();
@@ -117,7 +122,7 @@ public class MissionDAO extends DAO {
       } else if (name.equals(node_prop_third_party_link)) {
         m.setThird_party_link(p.getString());
       } else if(name.equals(node_prop_priority)){
-        m.setPriority(p.getLong());
+        m.setPriority(Priority.getPriority((int) p.getLong()));
       } else if(name.equals(node_prop_active)){
         m.setActive(p.getBoolean());
       } else if (name.equals(node_prop_dateCreated)) {
@@ -197,17 +202,16 @@ public class MissionDAO extends DAO {
   public Mission updateMission(Mission m){
     try {
       m.checkValid();      
-      Node missionHome = this.getOrCreateMissionHome();
-      if (!missionHome.hasNode(m.getLabelID())) {
+      Node missiondeNode = this.getNodeById(m.getId());
+      if (null == missiondeNode) {
       
         throw new BrandAdvocacyServiceException(BrandAdvocacyServiceException.MISSION_NOT_EXISTS, "cannot update mission not exist "+m.getLabelID());
         
       }
-      Node aNode = missionHome.getNode(m.getLabelID());
-      if (null != aNode && m.getLabelID().equals( aNode.getProperty(node_prop_labelID).getString()) ) {
-        this.setPropertiesNode(aNode, m);        
-        aNode.save();
-        return this.transferNode2Object(aNode);
+      if (null != missiondeNode && m.getLabelID().equals( missiondeNode.getProperty(node_prop_labelID).getString()) ) {
+        this.setPropertiesNode(missiondeNode, m);
+        missiondeNode.save();
+        return this.transferNode2Object(missiondeNode);
       }
 
     } catch (BrandAdvocacyServiceException e) {

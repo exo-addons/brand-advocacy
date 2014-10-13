@@ -1,1 +1,50 @@
-i am mission view
+#{param name=mission/}
+#{param name=priorities/}
+<%
+    if(null != mission){
+    def mid = mission.getId();
+    def strActiveChkbox = "";
+    if(mission.getActive())
+        strActiveChkbox = "checked";
+%>
+<form action="@{MissionController.update()}" method="POST" role="form">
+    <div>
+        <input type ="hidden" name="id" id="id"  value="<%= mission.getId()%>" />
+        <input type ="hidden" name="labelID" id="labelID" value="<%= mission.getLabelID()%>" />
+        title:
+        <input type="text" name="title" id="title" value="<%= mission.getTitle() %>"/>
+        <br/>
+        List propositions:
+        <ul>
+            <% def propositions = mission.getPropositions()%>
+            <% propositions.each { proposition -> %>
+            <% def pid = proposition.getId()%>
+            <li>
+                <%= proposition.getShortContent(50)%>
+                <%= proposition.getNumberUsed()%>
+                <a href="@{PropositionController.editForm(id=pid)}" role="button">edit</a>
+                <a href="@{PropositionController.delete(id=pid)}" role="button">Del</a>
+            </li>
+            <% } %>
+        </ul>
+        <br/>
+        <a href="@{PropositionController.addForm(mid=mid)}" role="button">Add Proposition</a>
+        <br/>
+        Link: <input type="text" name="third_party_link" id="third_party_link" value="<%= mission.getThird_party_link()%>">
+        <br/>
+        Priority
+        <select name="priority">
+            <% priorities.each { priority -> %>
+            <option value="<%= priority.getValue() %>" <% if(mission.getPriority().getValue() == priority.getValue()){ %> selected  <% } %> ><%= priority.getValue() %></option>
+            <% } %>
+        </select>
+        <br/>
+        Active <input type="checkbox" name="active" id="active" <%= strActiveChkbox %> value="1" />
+        <br/>
+        <button type="submit">Update</button>
+        <a href="@{MissionController.list()}" role="button">Cancel</a>
+    </div>
+</form>
+<a href="@{ManagerController.list(mid=mid)}" role="button">View Managers</a>
+<% } %>
+<a href="@{MissionController.index()}" role="button">Home</a>

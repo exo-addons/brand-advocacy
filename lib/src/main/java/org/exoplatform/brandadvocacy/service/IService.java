@@ -49,12 +49,14 @@ public interface IService {
   public Mission addManagers2Mission(String mid,List<Manager> managers);
   public Manager updateManager(Manager manager);
   public List<Manager> getAllManagers(String mid);
-  public Manager removeManager(Manager manager);
+  public void removeManager(String missionLabelId, String username);
+  public Manager getManager(String missionLabelId,String username);
 
   public Proposition updateProposition(Proposition proposition);
   public List<Proposition> getPropositionsByMissionId(String mid);
+  public Proposition getPropositionById(String id);
   public Mission addProposition2Mission(String mid,List<Proposition> propositions);
-  public Proposition removeProposition(Proposition proposition);
+  public void removeProposition(String id);
   public List<Proposition> searchPropositions(String sql);
 
   public MissionParticipant addMissionParticipant(MissionParticipant missionParticipant) throws RepositoryException;

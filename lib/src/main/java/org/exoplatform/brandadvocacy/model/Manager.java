@@ -27,6 +27,7 @@ import javax.jcr.Value;
 public class Manager extends User{
 
   private String mission_id;
+  private String missionLabelId;
   private Role role;  
   private Boolean notif;
 
@@ -70,5 +71,13 @@ public class Manager extends User{
 
   public String toString(){
     return getClass().getName()+" - " + this.getUserName()+" - "+this.getRole()+" - "+this.getNotif();
+  }
+
+  public String getMissionLabelId() {
+    return missionLabelId;
+  }
+
+  public void setMissionLabelId(String missionLabelId) {
+    this.missionLabelId = missionLabelId;
   }
 }

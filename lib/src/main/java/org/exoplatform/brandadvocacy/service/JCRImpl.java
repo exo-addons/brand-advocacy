@@ -214,8 +214,8 @@ public class JCRImpl implements IService {
   }
 
   @Override
-  public Proposition removeProposition(Proposition proposition) {
-    return this.getPropositionDAO().removeProposition(proposition);
+  public void removeProposition(String id) {
+    this.getPropositionDAO().removeProposition(id);
   }
 
   @Override
@@ -299,8 +299,13 @@ public class JCRImpl implements IService {
   }
 
   @Override
-  public Manager removeManager(Manager manager) {
-    return this.getManagerDAO().removeManager(manager);
+  public void removeManager(String missionLabelId, String username) {
+    this.getManagerDAO().removeManager(missionLabelId,username);
+  }
+
+  @Override
+  public Manager getManager(String missionLabelId, String username) {
+    return this.getManagerDAO().getManager(missionLabelId,username);
   }
 
   @Override
@@ -308,6 +313,10 @@ public class JCRImpl implements IService {
     return this.getPropositionDAO().updateProposition(proposition);
   }
 
+  @Override
+  public Proposition getPropositionById(String id){
+    return this.getPropositionDAO().getPropositionById(id);
+  }
   @Override
   public List<Proposition> getPropositionsByMissionId(String mid) {
     return this.getPropositionDAO().getAllPropositions(mid);

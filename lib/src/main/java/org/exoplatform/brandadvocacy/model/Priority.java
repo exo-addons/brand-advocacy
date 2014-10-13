@@ -34,13 +34,13 @@ public enum Priority {
       this.priority = priority;
   }
 
-  public int priority() {
+  public int getValue() {
       return this.priority;
   }
 
   public static Priority getPriority(int priority) {
       for (Priority type : Priority.values()) {
-          if (type.priority() == priority) {
+          if (type.getValue() == priority) {
               return type;
           }
       }

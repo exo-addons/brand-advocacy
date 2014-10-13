@@ -5,10 +5,15 @@ import juzu.Path;
 import juzu.Response;
 import juzu.View;
 import juzu.template.Template;
+import org.exoplatform.brandadvocacy.model.Manager;
 import org.exoplatform.brandadvocacy.model.Mission;
+import org.exoplatform.brandadvocacy.model.Priority;
+import org.exoplatform.brandadvocacy.model.Proposition;
 import org.exoplatform.brandadvocacy.service.IService;
 
 import javax.inject.Inject;
+import javax.jcr.RepositoryException;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -17,6 +22,14 @@ import java.util.List;
 public class MissionController {
 
   IService missionService;
+  @Inject
+  LoginController loginController;
+
+  @Inject
+  PropositionController propositionController;
+
+  @Inject
+  ManagerController managerController;
 
   @Inject
   public MissionController(IService missionService){
@@ -50,7 +63,7 @@ public class MissionController {
 
   @View
   public Response.Content addForm(){
-    return addTpl.ok();
+    return addTpl.with().set("priorities", Priority.values()).ok();
   }
 
   @View
@@ -59,7 +72,7 @@ public class MissionController {
     try {
       Mission mission =  this.missionService.getMissionById(id);
       if(null != mission){
-        return editTpl.with().mission(mission).ok();
+        return editTpl.with().set("priorities", Priority.values()).set("mission",mission).ok();
       }
     } catch (javax.jcr.RepositoryException e) {
       e.printStackTrace();
@@ -75,23 +88,67 @@ public class MissionController {
     return listTpl.with().missions(this.missionService.getAllMissions()).ok();
   }
 
-  @Action
-  public Response add(String title,String third_party_link){
-    Mission mission = new Mission(title);
-    mission.setThird_party_link(third_party_link);
-    this.missionService.addMission(mission);
-    return index();
+  @View
+  public Response.Content view(String id){
+    try {
+      Mission mission = this.missionService.getMissionById(id);
+      if(null != mission){
+        List<Proposition> propositions = this.missionService.getPropositionsByMissionId(id);
+        mission.setPropositions(propositions);
+        return viewTpl.with().set("priorities", Priority.values()).set("mission",mission).ok();
+      }
+    } catch (RepositoryException e) {
+      e.printStackTrace();
+    }
+    return Response.ok("something went wrong");
   }
 
   @Action
-  public Response update(String id, String labelID, String title, String link){
-    Mission mission = new Mission();
-    mission.setId(id);
-    mission.setLabelID(labelID);
-    mission.setTitle(title);
-    mission.setThird_party_link(link);
-    this.missionService.updateMission(mission);
-    return index();
+  public Response add(String title,String third_party_link,String priority,String active){
+    Boolean mActive = false;
+    if (null != active)
+      mActive = active.equals("1") ? true:false;
+    Mission mission = new Mission(title);
+    mission.setThird_party_link(third_party_link);
+    mission.setActive(mActive);
+    mission.setPriority(Priority.getPriority(Integer.parseInt(priority)));
+    List<Manager> managers = new ArrayList<Manager>();
+    Manager manager = new Manager(loginController.getCurrentUserName());
+    managers.add(manager);
+    mission.setManagers(managers);
+    this.missionService.addMission(mission);
+    return MissionController_.list("",null,null);
+  }
+
+  @Action
+  public Response update(String id, String labelID, String title, String third_party_link, String priority, String active){
+    Mission mission = null;
+    try {
+      mission = this.missionService.getMissionById(id);
+      mission.setLabelID(labelID);
+      mission.setTitle(title);
+      mission.setThird_party_link(third_party_link);
+      mission.setCreatedDate(0);
+      mission.setPriority(Priority.getPriority(Integer.parseInt(priority)));
+      Boolean mActive = false;
+      if (null != active)
+        mActive = active.equals("1") ? true:false;
+      mission.setActive(mActive);
+      this.missionService.updateMission(mission);
+      return MissionController_.index();
+    } catch (RepositoryException e) {
+      e.printStackTrace();
+    }
+
+    return Response.ok("something went wrong, cannot update mission not existing");
+
+
+  }
+
+  @Action
+  public Response delete(String id){
+    this.missionService.removeMission(id);
+    return MissionController_.list(null,null,null);
   }
 
 

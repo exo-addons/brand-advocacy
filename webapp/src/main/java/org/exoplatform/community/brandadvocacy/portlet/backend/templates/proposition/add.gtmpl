@@ -1,0 +1,12 @@
+#{param name=missionId/}
+<form action="@{PropositionController.add()}" method="POST" role="form">
+    <input type="hidden" name="missionId" id="missionId" value="<%= missionId%>">
+    <h5>Add a new proposition</h5>
+    Content
+    <textarea rows="3" name="content" id="content"  placeholder="Write proposition here"></textarea>
+    <br/>
+    Active
+    <input type="checkbox" name="active" id="active" value="1" />
+    <br/>
+    <button type="submit">Add</button>
+</form>

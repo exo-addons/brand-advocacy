@@ -1,1 +1,2 @@
+welcome ${remoteUserName}
 <a href="@{MissionController.index()}" role="button"> missions part</a>

@@ -1,0 +1,15 @@
+#{param name=propositions/}
+#{param name=missionId/}
+
+<ul>
+    <% propositions.each { proposition -> %>
+        <% def pid = proposition.getId()%>
+        <li>
+            <%= proposition.getShortContent(50)%>
+            <%= proposition.getNumberUsed()%>
+            <a href="@{PropositionController.editForm(id=pid)}" role="button">edit</a>
+            <a href="@{PropositionController.delete(mid=missionId,id=pid)}" role="button">Del</a>
+        </li>
+    <% } %>
+</ul>
+<a href="@{MissionController.view(id=missionId)}" role="button">Back to mission</a>
