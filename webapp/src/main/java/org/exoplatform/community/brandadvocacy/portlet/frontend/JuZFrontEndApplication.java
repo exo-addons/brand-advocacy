@@ -2,24 +2,30 @@ package org.exoplatform.community.brandadvocacy.portlet.frontend;
 
 import juzu.*;
 import juzu.plugin.ajax.Ajax;
+import juzu.request.SecurityContext;
 import juzu.template.Template;
-import org.exoplatform.brandadvocacy.model.Mission;
-import org.exoplatform.brandadvocacy.model.Proposition;
+import org.exoplatform.brandadvocacy.model.*;
 import org.exoplatform.brandadvocacy.service.IService;
 import org.exoplatform.services.organization.OrganizationService;
 
 import javax.inject.Inject;
+import javax.jcr.RepositoryException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Created by exoplatform on 07/10/14.
  */
+@SessionScoped
 public class JuZFrontEndApplication {
 
   OrganizationService organizationService;
   IService jcrService;
 
+  String remoteUserName;
+  String currentMissionParticipantId;
   @Inject
   @Path("index.gtmpl")
   org.exoplatform.community.brandadvocacy.portlet.frontend.templates.index indexTpl;
@@ -51,7 +57,9 @@ public class JuZFrontEndApplication {
   }
 
   @View
-  public Response.Content index(){
+  public Response.Content index(SecurityContext securityContext){
+    this.remoteUserName = securityContext.getUserPrincipal().getName();
+    this.currentMissionParticipantId = null;
     return indexTpl.ok();
   }
 
@@ -76,25 +84,68 @@ public class JuZFrontEndApplication {
   @Ajax
   @Resource
   public Response.Content loadProcessView(){
-    String title = "Write a review of eXo Platform<br>on <a href=\"#\">GetApp.com</a>";
-    Mission mission = new Mission(title);
-    List<Proposition> propositions = new ArrayList<Proposition>(1);
-    String content = "I’ve been using eXo Platform since few years now. What I like the most with eXo is...";
-    Proposition proposition = new Proposition(content);
-    propositions.add(proposition);
-    mission.setPropositions(propositions);
-    return processTpl.with().set("mission",mission).ok();
+    Mission missionRandom = this.jcrService.getMissionRandom("Write a review of eXo","been using eXo Platform");
+    return processTpl.with().set("mission",missionRandom).set("status", Status.INPROGRESS).ok();
   }
 
   @Ajax
   @Resource
   public Response.Content loadTerminateView(){
-    return terminateTpl.ok();
+    if(null != this.currentMissionParticipantId){
+      return terminateTpl.with().set("sizes", Size.values()).ok();
+    }
+    return Response.ok("nok");
   }
 
   @Ajax
   @Resource
-  public Response.Content loadThankyouView(){
-    return thankyouTpl.ok();
+  public Response.Content loadThankyouView(String fname, String lname, String address, String city, String phone,String country,String size ){
+    if(null != this.currentMissionParticipantId){
+      MissionParticipant missionParticipant = this.jcrService.getMissionParticipantById(this.currentMissionParticipantId);
+      if(null != missionParticipant){
+        Address addressObj = new Address(fname,lname,address,city,country,phone);
+        addressObj = this.jcrService.addAddress(this.remoteUserName,addressObj);
+        if(null != addressObj ){
+          missionParticipant.setStatus(Status.WAITING_FOR_VALIDATE);
+          missionParticipant.setAddress_id(addressObj.getId());
+          missionParticipant.setSize(Size.getSize(Integer.parseInt(size)));
+          if (null != this.jcrService.updateMissionParticipant(missionParticipant) ){
+            this.currentMissionParticipantId = null;
+            return thankyouTpl.ok();
+          }
+        }
+      }
+    }
+    return Response.ok("nok");
+
   }
+
+  @Ajax
+  @Resource
+  public Response addMissionParticipant(String missionId, String propositionId, String status){
+
+    MissionParticipant missionParticipant = new MissionParticipant();
+    missionParticipant.setMission_id(missionId);
+    missionParticipant.setProposition_id(propositionId);
+    missionParticipant.setParticipant_username(this.remoteUserName);
+    if(null != status)
+      missionParticipant.setStatus(Status.getStatus(Integer.parseInt(status)));
+
+    try {
+      missionParticipant = this.jcrService.addMissionParticipant(missionParticipant);
+      if(null != missionParticipant){
+        this.currentMissionParticipantId = missionParticipant.getId();
+        Participant participant = new Participant(this.remoteUserName);
+        Set<String> missionParticipantIds = new HashSet<String>();
+        missionParticipantIds.add(this.currentMissionParticipantId);
+        participant.setMission_participant_ids(missionParticipantIds);
+        if (null != this.jcrService.addParticipant(participant));
+          return Response.ok("ok");
+      }
+    } catch (RepositoryException e) {
+      e.printStackTrace();
+    }
+    return Response.ok("nok");
+  }
+
 }

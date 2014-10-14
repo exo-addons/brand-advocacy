@@ -103,6 +103,8 @@ public class Address {
       throw new BrandAdvocacyServiceException(BrandAdvocacyServiceException.ID_INVALID,"label address invalid");
     if (null == this.getlName() || null == this.getlName() || null == this.getAddress() || null == this.getCity() || null == this.getCountry() || null == this.getPhone())
       throw new BrandAdvocacyServiceException(BrandAdvocacyServiceException.MISSION_NOT_EXISTS," address invalid");
+    if ("".equals( this.getlName() ) || "".equals( this.getlName() ) || "".equals( this.getAddress() ) || "".equals( this.getCity() ) || "".equals( this.getCountry() )|| "".equals( this.getPhone()) )
+      throw new BrandAdvocacyServiceException(BrandAdvocacyServiceException.MISSION_NOT_EXISTS," address invalid");
   }
 
 

@@ -34,8 +34,7 @@ public interface IService {
   public Mission getMissionById(String id) throws RepositoryException;
   public List<Mission> getAllMissions();
   public Mission updateMission(Mission m);
-
-  public Mission getMissionRandom();
+  public Mission getMissionRandom(String missionKeyWord, String propositionKeyWord);
 
   public Participant addParticipant(Participant p) throws RepositoryException;
   public void removeParticipant(String id);
@@ -62,9 +61,9 @@ public interface IService {
   public List<Proposition> searchPropositions(String sql);
 
   public MissionParticipant addMissionParticipant(MissionParticipant missionParticipant) throws RepositoryException;
-  public MissionParticipant updateMissionParticipant(MissionParticipant missionParticipant) throws RepositoryException;
-  public List<MissionParticipant> getAllMissionParticipants() throws RepositoryException;
+  public MissionParticipant updateMissionParticipant(MissionParticipant missionParticipant);
+  public List<MissionParticipant> getAllMissionParticipants();
   public List<MissionParticipant> getMissionParticipantsByParticipant(String username) throws RepositoryException;
-
+  public MissionParticipant getMissionParticipantById(String mpId);
 
 }

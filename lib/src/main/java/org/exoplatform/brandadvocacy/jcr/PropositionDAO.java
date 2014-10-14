@@ -82,7 +82,7 @@ public class PropositionDAO extends DAO {
     return proposition;
   }
   private List<Proposition> transferNodes2Objects(List<Node> nodes){
-    List<Proposition> propositions = new ArrayList<Proposition>();
+    List<Proposition> propositions = new ArrayList<Proposition>(nodes.size());
     Proposition aPropostion;
     for (Node node:nodes){
       try {
@@ -124,7 +124,7 @@ public class PropositionDAO extends DAO {
     StringBuilder sql = new StringBuilder("select * from "+ JCRImpl.PROPOSITION_NODE_TYPE +" where ");
     sql.append(node_prop_labelID).append(" like '%"+keyword+"%'");
     sql.append(" OR "+node_prop_content).append(" like '%"+keyword+"%'");
-    List<Node> nodes =  this.getNodesByQuery(sql.toString());
+    List<Node> nodes =  this.getNodesByQuery(sql.toString(),0,0);
     return this.transferNodes2Objects(nodes);
   }
 
@@ -235,5 +235,16 @@ public class PropositionDAO extends DAO {
     }
     return null;
   }
+
+  public List<Proposition> getPropositionsRandom(String mid, String keyword){
+    StringBuilder sql = new StringBuilder("select * from "+ JCRImpl.PROPOSITION_NODE_TYPE +" where ");
+    sql.append(node_prop_mission_id).append(" like '"+mid+"'").append(" AND ( ");
+    sql.append(node_prop_labelID).append(" like '%"+keyword+"%'");
+    sql.append(" OR "+node_prop_content).append(" like '%"+keyword+"%'");
+    sql.append(" ) ");
+    List<Node> nodes =  this.getNodesByQuery(sql.toString(),0,1);
+    return this.transferNodes2Objects(nodes);
+  }
+
 }
 

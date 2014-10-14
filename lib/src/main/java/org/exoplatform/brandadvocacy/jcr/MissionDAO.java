@@ -131,6 +131,20 @@ public class MissionDAO extends DAO {
     }
     return m;
   }
+  public List<Mission> transferNodes2Objects(List<Node> nodes) {
+    List<Mission> missions = new ArrayList<Mission>(nodes.size());
+    Mission mission;
+    for (Node node:nodes){
+      try {
+        mission = this.transferNode2Object(node);
+        mission.checkValid();
+        missions.add(mission);
+      } catch (RepositoryException e) {
+        e.printStackTrace();
+      }
+    }
+    return missions;
+  }
   public Mission createMission(Mission m) {
     try {
       m.checkValid();
@@ -172,18 +186,9 @@ public class MissionDAO extends DAO {
     StringBuilder sql = new StringBuilder("select * from "+ JCRImpl.MISSION_NODE_TYPE +" where jcr:path like '");
     sql.append(JCRImpl.EXTENSION_PATH).append("/").append(MISSIONS_PATH);
     sql.append("/").append(Utils.queryEscape(labelID)).append("'");
-    Session session;
-    try {
-      session = this.getJcrImplService().getSession();
-      Query query = session.getWorkspace().getQueryManager().createQuery(sql.toString(), Query.SQL);
-
-      QueryResult result = query.execute();
-      NodeIterator nodes = result.getNodes();
-      if (nodes.hasNext()) {
-        return nodes.nextNode();
-      }
-    } catch (RepositoryException e) {
-      log.error("ERROR get mission id "+labelID +" Exeption "+e.getMessage());
+    List<Node> nodes =  this.getNodesByQuery(sql.toString(),0,1);
+    if (nodes.size() > 0) {
+      return nodes.get(0);
     }
     return null;
   }
@@ -247,6 +252,14 @@ public class MissionDAO extends DAO {
     }catch(RepositoryException re){
       log.error(" ERROR set active mission "+re.getMessage());
     }
+  }
+
+  public List<Mission> getMissionsRandom(String keyword){
+    StringBuilder sql = new StringBuilder("select * from "+ JCRImpl.MISSION_NODE_TYPE +" where ");
+    sql.append(node_prop_labelID).append(" like '%"+keyword+"%'");
+    sql.append(" OR "+node_prop_title).append(" like '%"+keyword+"%'");
+    List<Node> nodes =  this.getNodesByQuery(sql.toString(),0,1);
+    return this.transferNodes2Objects(nodes);
   }
 
 }

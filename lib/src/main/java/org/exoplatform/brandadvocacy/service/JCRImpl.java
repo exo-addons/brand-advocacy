@@ -204,7 +204,14 @@ public class JCRImpl implements IService {
   }
 
   @Override
-  public Mission getMissionRandom() {
+  public Mission getMissionRandom(String mkey, String pKey) {
+    List<Mission> missions = this.getMissionDAO().getMissionsRandom(mkey);
+    if(null != missions && missions.size() > 0){
+      Mission mission = missions.get(0);
+      List<Proposition> propositions = this.getPropositionDAO().getPropositionsRandom(mission.getId(),pKey);
+      mission.setPropositions(propositions);
+      return mission;
+    }
     return null;
   }
 
@@ -229,18 +236,23 @@ public class JCRImpl implements IService {
   }
 
   @Override
-  public MissionParticipant updateMissionParticipant(MissionParticipant missionParticipant) throws RepositoryException {
+  public MissionParticipant updateMissionParticipant(MissionParticipant missionParticipant) {
     return this.getMissionParticipantDAO().updateMissionParticipant(missionParticipant);
   }
 
   @Override
-  public List<MissionParticipant> getAllMissionParticipants() throws RepositoryException {
+  public List<MissionParticipant> getAllMissionParticipants() {
     return this.getMissionParticipantDAO().getAllMissionParticipants();
   }
 
   @Override
   public List<MissionParticipant> getMissionParticipantsByParticipant(String username) throws RepositoryException {
     return this.getMissionParticipantDAO().getAllMissionParticipantsByParticipant(username);
+  }
+
+  @Override
+  public MissionParticipant getMissionParticipantById(String mpId) {
+    return this.getMissionParticipantDAO().getMissionParticipantById(mpId);
   }
 
   @Override

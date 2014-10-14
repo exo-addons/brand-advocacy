@@ -1,3 +1,4 @@
+#{param name=sizes/}
 <!-- Step 2 -->
 <div class="tweetStepContent step-2">
     <h5 class="titleStep">
@@ -6,47 +7,47 @@
     <form class="tweetAddrForm" action="">
         <div class="control-group">
             <div class="controls">
-                <input type="text" placeholder="First Name ">
+                <input type="text" id="brad-participant-fname" placeholder="First Name ">
             </div>
         </div>
         <div class="control-group">
             <div class="controls">
-                <input type="text" placeholder="Last Name">
+                <input type="text" id="brad-participant-lname" placeholder="Last Name">
             </div>
         </div>
         <div class="control-group">
             <div class="controls">
-                <input type="text" placeholder="Address">
+                <input type="text" id="brad-participant-address" placeholder="Address">
             </div>
         </div>
         <div class="control-group">
             <div class="controls">
-                <input type="text" placeholder="City">
+                <input type="text" id="brad-participant-city" placeholder="City">
             </div>
         </div>
         <div class="control-group">
             <div class="controls">
-                <input type="text" placeholder="Phone">
+                <input type="text" id="brad-participant-phone" placeholder="Phone">
             </div>
         </div>
 
         <div class="control-group">
             <label class="control-label" for="tweetCountry">Country</label>
             <div class="controls">
-                <select name="tweetCountry" id="tweetCountry">
-                    <option value="vn">Vietnam</option>
-                    <option value="vn">Laos</option>
-                    <option value="vn">Campuchia</option>
+                <select name="tweetCountry" id="brad-participant-country">
+                    <option value="vietnam">Vietnam</option>
+                    <option value="laos">Laos</option>
+                    <option value="cambodia">Campuchia</option>
                 </select>
             </div>
         </div>
         <div class="control-group">
             <label class="control-label" for="tweetSize">How would you like it:</label>
             <div class="controls">
-                <select name="tweetSize" id="tweetSize">
-                    <option value="vn">Size L</option>
-                    <option value="vn">Size M</option>
-                    <option value="vn">Size S</option>
+                <select name="tweetSize" id="brad-participant-size">
+                   <% sizes.each { size -> %>
+                    <option value="<%= size.getValue() %>"><%= size.getLabel() %></option>
+                    <% } %>
                 </select>
             </div>
         </div>

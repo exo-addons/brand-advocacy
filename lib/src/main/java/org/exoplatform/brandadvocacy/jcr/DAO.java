@@ -54,12 +54,17 @@ public abstract class DAO {
     this.jcrImplService = jcrImpl;
   }
 
-  public List<Node> getNodesByQuery(String sql){
+  public List<Node> getNodesByQuery(String sql, int offset, int limit){
 
     List<Node> list = new ArrayList<Node>();
     try {
       Session session = this.getJcrImplService().getSession();
-      Query query = session.getWorkspace().getQueryManager().createQuery(sql, Query.SQL);
+      QueryImpl query = (QueryImpl) session.getWorkspace().getQueryManager().createQuery(sql, Query.SQL);
+      if(0 != offset)
+        query.setOffset(offset);
+      if (0 != limit)
+        query.setLimit(limit);
+
       QueryResult result = query.execute();
       NodeIterator nodes = result.getNodes();
       if (nodes.hasNext()) {

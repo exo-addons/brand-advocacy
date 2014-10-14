@@ -142,7 +142,7 @@ public class MissionParticipantDAO extends DAO {
     StringBuilder sql = new StringBuilder("select * from "+ JCRImpl.MISSION_PARTICIPANT_NODE_TYPE +" where ");
     sql.append(node_prop_labelID).append(" like '%"+keyword+"%'");
     sql.append(" OR "+node_prop_participant_username).append(" like '%"+keyword+"%'");
-    List<Node> nodes =  this.getNodesByQuery(sql.toString());
+    List<Node> nodes =  this.getNodesByQuery(sql.toString(),0,0);
     return this.transferNodes2Objects(nodes);
   }
 
@@ -244,6 +244,28 @@ public class MissionParticipantDAO extends DAO {
 
     }
     return missionParticipants;
+  }
+
+  public List<MissionParticipant> getAll(){
+    List<MissionParticipant> missionParticipants = new ArrayList<MissionParticipant>();
+    StringBuilder sql = new StringBuilder("select * from "+ JCRImpl.MISSION_PARTICIPANT_NODE_TYPE +" where ");
+    sql.append("");
+
+    return null;
+
+  }
+
+  public MissionParticipant getMissionParticipantById(String mpId){
+    Node node = null;
+    try {
+      node = this.getNodeById(mpId);
+      if(null != node)
+        return this.transferNode2Object(node);
+
+    } catch (RepositoryException e) {
+      log.error(" brad ERROR: cannot get mission participant by id ");
+    }
+    return null;
   }
 
 }

@@ -36,18 +36,32 @@ $(function() {
 
   $(document).on('click.juzbrad.ft.done.view','.btn-brad-done',function(){
     var jStart = $(this);
-    jStart.jzAjax("JuZFrontEndApplication.loadTerminateView()",{
-      success: function(data){
-        bradFrontend.ftStepDOM.html(data);
-      }
-    });
+    var missionId = $(".missionId").val();
+    var propositionId = $(".propositionId").val();
+    var status = $(".mpStatus").val();
+    if(bradFrontend.checkFtForm(missionId,propositionId)){
+
+      bradFrontend.addMissionParticipant(bradFrontend,missionId,propositionId,status);
+
+    }
   });
 
   $(document).on('click.juzbrad.ft.terminate.view','.btn-brad-terminate',function(){
     var jStart = $(this);
+    var fname = $("#brad-participant-fname").val();
+    var lname = $("#brad-participant-lname").val();
+    var address = $("#brad-participant-address").val();
+    var city = $("#brad-participant-city").val();
+    var phone = $("#brad-participant-phone").val();
+    var country = $("#brad-participant-country").val();
+    var size = $("#brad-participant-size").val();
     jStart.jzAjax("JuZFrontEndApplication.loadThankyouView()",{
+      data:{fname:fname,lname:lname,address:address,city:city,phone:phone,country:country,size:size},
       success: function(data){
-        bradFrontend.ftStepDOM.html(data);
+        if(typeof data == "string" && data != "nok")
+          bradFrontend.ftStepDOM.html(data);
+        else
+          alert("something went wrong, please reload this page");
       }
     });
   });
@@ -56,6 +70,40 @@ $(function() {
     this.ftStepDOM = null;
   };
 
+  bradFrontend.prototype.checkFtForm = function(missionId, propositionId ){
+    var res = true;
+    if(null == missionId || 0 == missionId || typeof missionId == "undefined")
+      res = false;
+    else if(null == propositionId || 0 == propositionId || typeof propositionId == "undefined")
+      res = false;
+
+    if(!res)
+      alert(" something went wrong, cannot identify current mission");
+    return res;
+  }
+
+  bradFrontend.prototype.addMissionParticipant = function(parent,missionId, propositionId, status){
+    this.ftStepDOM.jzAjax("JuZFrontEndApplication.addMissionParticipant()",{
+      data:{missionId:missionId,propositionId:propositionId,status:status},
+      success: function(data){
+        if(typeof data == "string" && data == "ok")
+          parent.loadTerminateView();
+        else
+          alert("something went wrong, cannot add mission participant");
+      }
+    });
+  }
+  bradFrontend.prototype.loadTerminateView = function(){
+    var jDoneBtn = $(".btn-brad-done");
+    jDoneBtn.jzAjax("JuZFrontEndApplication.loadTerminateView()",{
+      success: function(data){
+        if(typeof data == "string" && data != "nok")
+          bradFrontend.ftStepDOM.html(data);
+        else
+          alert("something went wrong");
+      }
+    });
+  }
   bradFrontend.prototype.loadStartView = function () {
     $("#brandadvocacy-ft").jzLoad("JuZFrontEndApplication.loadStartView()",
       {},

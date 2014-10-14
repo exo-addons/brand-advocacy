@@ -43,13 +43,13 @@ public enum Size {
   public String getLabel() {
       switch (this.size) {
           case 3:
-              return "S";
+              return "Size S";
           case 2:
-              return "M";
+              return "Size M";
           case 1:
-              return "L";
+              return "Size L";
           default:
-              return "No size";
+              return "Customization";
       }
   }
 

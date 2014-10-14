@@ -213,12 +213,10 @@ public class TestMission extends AbstractTest {
       e.printStackTrace();
     }
     int nbMPs = 0;
-    try {
-      nbMPs = this.service.getAllMissionParticipants().size();
-      assertEquals("1 participant should have 2 mission participants ", 2 , nbMPs);
-    } catch (RepositoryException e) {
-      e.printStackTrace();
-    }
+
+    nbMPs = this.service.getAllMissionParticipants().size();
+    assertEquals("1 participant should have 2 mission participants ", 2 , nbMPs);
+
     int nbParticipants = this.service.getAllParticipants().size();
     assertEquals("should have 1 participant ", 1 , nbParticipants);
 
@@ -242,11 +240,9 @@ public class TestMission extends AbstractTest {
     } catch (RepositoryException e) {
       e.printStackTrace();
     }
-    try {
-      assertEquals("should have 1 more mission participant ",nbMPs+1,this.service.getAllMissionParticipants().size());
-    } catch (RepositoryException e) {
-      e.printStackTrace();
-    }
+
+    assertEquals("should have 1 more mission participant ",nbMPs+1,this.service.getAllMissionParticipants().size());
+
     assertEquals("should have 1 more participant ", nbParticipants + 1 , this.service.getAllParticipants().size());
     showInfo();
   }
@@ -280,15 +276,13 @@ public class TestMission extends AbstractTest {
         e.printStackTrace();
       }
     }
-    try {
-      List<MissionParticipant> missionParticipants = this.service.getAllMissionParticipants();
-      debug("========= list mission participants ================");
-      for (MissionParticipant missionParticipant:missionParticipants){
-        debug(missionParticipant.toString());
-      }
-    } catch (RepositoryException e) {
-      log.error("cannot get all mission participants");
+
+    List<MissionParticipant> missionParticipants = this.service.getAllMissionParticipants();
+    debug("========= list mission participants ================");
+    for (MissionParticipant missionParticipant:missionParticipants){
+      debug(missionParticipant.toString());
     }
+
 
   }
 
