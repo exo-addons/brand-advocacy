@@ -59,7 +59,6 @@ public class JuZFrontEndApplication {
   @View
   public Response.Content index(SecurityContext securityContext){
     this.remoteUserName = securityContext.getUserPrincipal().getName();
-    this.currentMissionParticipantId = null;
     return indexTpl.ok();
   }
 
@@ -83,23 +82,53 @@ public class JuZFrontEndApplication {
 
   @Ajax
   @Resource
-  public Response.Content loadProcessView(){
-    Mission missionRandom = this.jcrService.getMissionRandom("Write a review of eXo","been using eXo Platform");
-    return processTpl.with().set("mission",missionRandom).set("status", Status.INPROGRESS).ok();
+  public Response loadProcessView(){
+    String result = "nok";
+    Mission missionRandom = null;
+    if(null == this.currentMissionParticipantId){
+      missionRandom = this.jcrService.getMissionRandom("","");
+      if(null != missionRandom) {
+        String propositionId = missionRandom.getPropositions().get(0).getId();
+        if (this.addMissionParticipant(missionRandom.getId(),propositionId) )
+          result = "ok";
+      }
+    }else{
+      MissionParticipant missionParticipant = this.jcrService.getMissionParticipantById(this.currentMissionParticipantId);
+      if(null != missionParticipant){
+        missionRandom = this.jcrService.getMissionById(missionParticipant.getMission_id());
+        Proposition proposition = this.jcrService.getPropositionById(missionParticipant.getProposition_id());
+        if (null != proposition){
+          List<Proposition> propositions = new ArrayList<Proposition>(1);
+          propositions.add(proposition);
+          missionRandom.setPropositions(propositions);
+          result = "ok";
+        }
+      }
+    }
+    if("ok".equals(result) && null != missionRandom)
+     return processTpl.with().set("mission", missionRandom).ok();
+    else
+      return Response.ok("nok");
   }
 
   @Ajax
   @Resource
-  public Response.Content loadTerminateView(){
+  public Response loadTerminateView(){
     if(null != this.currentMissionParticipantId){
-      return terminateTpl.with().set("sizes", Size.values()).ok();
+      MissionParticipant missionParticipant = this.jcrService.getMissionParticipantById(this.currentMissionParticipantId);
+      if(null != missionParticipant){
+        missionParticipant.setStatus(Status.INPROGRESS);
+        if (null != this.jcrService.updateMissionParticipant(missionParticipant)){
+          return terminateTpl.with().set("sizes", Size.values()).ok();
+        }
+      }
     }
     return Response.ok("nok");
   }
 
   @Ajax
   @Resource
-  public Response.Content loadThankyouView(String fname, String lname, String address, String city, String phone,String country,String size ){
+  public Response loadThankyouView(String fname, String lname, String address, String city, String phone,String country,String size ){
     if(null != this.currentMissionParticipantId){
       MissionParticipant missionParticipant = this.jcrService.getMissionParticipantById(this.currentMissionParticipantId);
       if(null != missionParticipant){
@@ -120,17 +149,12 @@ public class JuZFrontEndApplication {
 
   }
 
-  @Ajax
-  @Resource
-  public Response addMissionParticipant(String missionId, String propositionId, String status){
+  public Boolean addMissionParticipant(String missionId, String propositionId){
 
     MissionParticipant missionParticipant = new MissionParticipant();
     missionParticipant.setMission_id(missionId);
     missionParticipant.setProposition_id(propositionId);
     missionParticipant.setParticipant_username(this.remoteUserName);
-    if(null != status)
-      missionParticipant.setStatus(Status.getStatus(Integer.parseInt(status)));
-
     try {
       missionParticipant = this.jcrService.addMissionParticipant(missionParticipant);
       if(null != missionParticipant){
@@ -140,12 +164,12 @@ public class JuZFrontEndApplication {
         missionParticipantIds.add(this.currentMissionParticipantId);
         participant.setMission_participant_ids(missionParticipantIds);
         if (null != this.jcrService.addParticipant(participant));
-          return Response.ok("ok");
+          return true;
       }
     } catch (RepositoryException e) {
       e.printStackTrace();
     }
-    return Response.ok("nok");
+    return false;
   }
 
 }

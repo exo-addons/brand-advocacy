@@ -96,7 +96,13 @@ public class MissionParticipantDAO extends DAO {
         missionParticipant.setModifiedDate(p.getLong());
       }
     }
-    return missionParticipant;
+    try{
+      missionParticipant.checkValid();
+      return missionParticipant;
+    }catch (BrandAdvocacyServiceException brade){
+      log.error(" ERROR cannot transfert node to mission participant "+brade.getMessage());
+    }
+    return null;
   }
   private List<MissionParticipant> transferNodes2Objects(List<Node> nodes){
     List<MissionParticipant> missionParticipants = new ArrayList<MissionParticipant>();

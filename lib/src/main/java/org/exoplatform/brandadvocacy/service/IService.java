@@ -31,7 +31,7 @@ public interface IService {
  
   public Mission addMission(Mission m) throws BrandAdvocacyServiceException;
   public void removeMission(String id);
-  public Mission getMissionById(String id) throws RepositoryException;
+  public Mission getMissionById(String id);
   public List<Mission> getAllMissions();
   public Mission updateMission(Mission m);
   public Mission getMissionRandom(String missionKeyWord, String propositionKeyWord);

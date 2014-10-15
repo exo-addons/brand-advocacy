@@ -189,7 +189,7 @@ public class JCRImpl implements IService {
   }
 
   @Override
-  public Mission getMissionById(String id) throws RepositoryException{
+  public Mission getMissionById(String id){
     return this.getMissionDAO().getMissionById(id);
   }
 

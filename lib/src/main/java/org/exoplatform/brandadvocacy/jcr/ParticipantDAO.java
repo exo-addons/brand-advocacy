@@ -139,7 +139,8 @@ public class ParticipantDAO extends DAO {
           Participant existingParticipant = this.transferNode2Object(participantNode);
           Set<String> newMPIds = participant.getMission_participant_ids();
           for (String mpid:existingParticipant.getMission_participant_ids()){
-            newMPIds.add(mpid);
+            if(!newMPIds.contains(mpid))
+              newMPIds.add(mpid);
           }
           participant.setMission_participant_ids(newMPIds);
         }

@@ -1,16 +1,20 @@
 package org.exoplatform.community.brandadvocacy.portlet.backend.models;
 
 
+import org.exoplatform.brandadvocacy.model.Status;
+
 /**
  * Created by exoplatform on 14/10/14.
  */
 public class MissionParticipantDTO {
   private String id;
   private String mission_id;
+  private String mission_title;
   private String participant_fullName;
   private String url_submitted;
-  private String status;
+  private Status status;
   private String size;
+  private String date_submitted;
 
   public String getId() {
     return id;
@@ -44,11 +48,11 @@ public class MissionParticipantDTO {
     this.url_submitted = url_submitted;
   }
 
-  public String getStatus() {
+  public Status getStatus() {
     return status;
   }
 
-  public void setStatus(String status) {
+  public void setStatus(Status status) {
     this.status = status;
   }
 
@@ -61,5 +65,19 @@ public class MissionParticipantDTO {
   }
 
 
+  public String getMission_title() {
+    return mission_title;
+  }
 
+  public void setMission_title(String mission_title) {
+    this.mission_title = mission_title;
+  }
+
+  public String getDate_submitted() {
+    return date_submitted;
+  }
+
+  public void setDate_submitted(String date_submitted) {
+    this.date_submitted = date_submitted;
+  }
 }

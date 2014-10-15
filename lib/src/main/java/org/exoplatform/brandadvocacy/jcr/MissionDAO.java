@@ -129,7 +129,14 @@ public class MissionDAO extends DAO {
         m.setCreatedDate(p.getLong());
       }
     }
-    return m;
+    try {
+      m.checkValid();
+      return m;
+    }
+    catch (BrandAdvocacyServiceException brade){
+      log.error(" ERROR cannot tranfert node to mission object "+brade.getMessage());
+    }
+    return null;
   }
   public List<Mission> transferNodes2Objects(List<Node> nodes) {
     List<Mission> missions = new ArrayList<Mission>(nodes.size());
@@ -198,10 +205,16 @@ public class MissionDAO extends DAO {
 
   }
 
-  public Mission getMissionById(String id) throws RepositoryException {
-    Node aNode = this.getNodeById(id);
-    if(aNode != null)
-      return this.transferNode2Object(aNode);
+  public Mission getMissionById(String id) {
+    Node aNode = null;
+    try {
+      aNode = this.getNodeById(id);
+      if(aNode != null)
+        return this.transferNode2Object(aNode);
+    } catch (RepositoryException e) {
+      log.error("ERROR cannot get mission by id "+e.getStackTrace());
+    }
+
     return null;
   }
   public Mission updateMission(Mission m){

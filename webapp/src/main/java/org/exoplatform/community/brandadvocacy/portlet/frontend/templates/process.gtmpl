@@ -1,11 +1,9 @@
 #{param name=mission/}
-#{param name=status/}
 <%
 if(null != mission) {
     def propositions = mission.getPropositions();
 %>
     <input type="hidden" name="missionId" class="missionId" value="<%= mission.getId()%>"/>
-    <input type="hidden" name="mpStatus" class="mpStatus" value="<%= status.getValue() %>"/>
     <!-- Step 1 -->
     <div class="tweetStepContent step-1">
         <h5 class="titleStep">

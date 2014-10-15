@@ -69,16 +69,11 @@ public class MissionController {
   @View
   public Response.Content editForm(String id){
 
-    try {
-      Mission mission =  this.missionService.getMissionById(id);
-      if(null != mission){
-        return editTpl.with().set("priorities", Priority.values()).set("mission",mission).ok();
-      }
-    } catch (javax.jcr.RepositoryException e) {
-      e.printStackTrace();
+    Mission mission =  this.missionService.getMissionById(id);
+    if(null != mission){
+      return editTpl.with().set("priorities", Priority.values()).set("mission",mission).ok();
     }
     return Response.ok("mission not found").withMimeType("text/html; charset=UTF-8").withHeader("Cache-Control", "no-cache");
-
   }
 
   @View
@@ -90,16 +85,13 @@ public class MissionController {
 
   @View
   public Response.Content view(String id){
-    try {
+
       Mission mission = this.missionService.getMissionById(id);
       if(null != mission){
         List<Proposition> propositions = this.missionService.getPropositionsByMissionId(id);
         mission.setPropositions(propositions);
         return viewTpl.with().set("priorities", Priority.values()).set("mission",mission).ok();
       }
-    } catch (RepositoryException e) {
-      e.printStackTrace();
-    }
     return Response.ok("something went wrong");
   }
 
@@ -122,9 +114,8 @@ public class MissionController {
 
   @Action
   public Response update(String id, String labelID, String title, String third_party_link, String priority, String active){
-    Mission mission = null;
-    try {
-      mission = this.missionService.getMissionById(id);
+    Mission mission  = this.missionService.getMissionById(id);
+    if (null != mission){
       mission.setLabelID(labelID);
       mission.setTitle(title);
       mission.setThird_party_link(third_party_link);
@@ -136,10 +127,8 @@ public class MissionController {
       mission.setActive(mActive);
       this.missionService.updateMission(mission);
       return MissionController_.index();
-    } catch (RepositoryException e) {
-      e.printStackTrace();
-    }
 
+    }
     return Response.ok("something went wrong, cannot update mission not existing");
 
 

@@ -17,8 +17,8 @@ $(function() {
     });
   });
   $(document).on('click.juzbrad.ft.index.view','.btn-brad-close',function(){
-    var jStart = $(this);
-    jStart.jzAjax("JuZFrontEndApplication.loadIndexView()",{
+    var jClose = $(this);
+    jClose.jzAjax("JuZFrontEndApplication.loadIndexView()",{
       success: function(data){
         $("#brad-ft-container").html(data);
       }
@@ -29,25 +29,25 @@ $(function() {
     var jStart = $(this);
     jStart.jzAjax("JuZFrontEndApplication.loadProcessView()",{
       success: function(data){
-        bradFrontend.ftStepDOM.html(data);
+        if(typeof data == "string" && data != "nok")
+          bradFrontend.ftStepDOM.html(data);
+        else
+          alert("something went wrong !!!, please try later");
       }
     });
   });
 
   $(document).on('click.juzbrad.ft.done.view','.btn-brad-done',function(){
-    var jStart = $(this);
     var missionId = $(".missionId").val();
     var propositionId = $(".propositionId").val();
     var status = $(".mpStatus").val();
     if(bradFrontend.checkFtForm(missionId,propositionId)){
-
-      bradFrontend.addMissionParticipant(bradFrontend,missionId,propositionId,status);
-
+      bradFrontend.loadTerminateView();
     }
   });
 
   $(document).on('click.juzbrad.ft.terminate.view','.btn-brad-terminate',function(){
-    var jStart = $(this);
+    var jTerminate = $(this);
     var fname = $("#brad-participant-fname").val();
     var lname = $("#brad-participant-lname").val();
     var address = $("#brad-participant-address").val();
@@ -55,7 +55,7 @@ $(function() {
     var phone = $("#brad-participant-phone").val();
     var country = $("#brad-participant-country").val();
     var size = $("#brad-participant-size").val();
-    jStart.jzAjax("JuZFrontEndApplication.loadThankyouView()",{
+    jTerminate.jzAjax("JuZFrontEndApplication.loadThankyouView()",{
       data:{fname:fname,lname:lname,address:address,city:city,phone:phone,country:country,size:size},
       success: function(data){
         if(typeof data == "string" && data != "nok")
@@ -82,17 +82,6 @@ $(function() {
     return res;
   }
 
-  bradFrontend.prototype.addMissionParticipant = function(parent,missionId, propositionId, status){
-    this.ftStepDOM.jzAjax("JuZFrontEndApplication.addMissionParticipant()",{
-      data:{missionId:missionId,propositionId:propositionId,status:status},
-      success: function(data){
-        if(typeof data == "string" && data == "ok")
-          parent.loadTerminateView();
-        else
-          alert("something went wrong, cannot add mission participant");
-      }
-    });
-  }
   bradFrontend.prototype.loadTerminateView = function(){
     var jDoneBtn = $(".btn-brad-done");
     jDoneBtn.jzAjax("JuZFrontEndApplication.loadTerminateView()",{

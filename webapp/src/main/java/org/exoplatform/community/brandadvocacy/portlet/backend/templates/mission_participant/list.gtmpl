@@ -1,8 +1,20 @@
-#{param name=missionParticipants/}
+#{param name=missionParticipantDTOs/}
+#{param name=states/}
 
 <ul>
-    <% missionParticipants.each { missionParticipant -> %>
+    <% missionParticipantDTOs.each { missionParticipantDTO -> %>
+    <% def mpid = missionParticipantDTO.getId() %>
         <li>
+            <%= missionParticipantDTO.getParticipant_fullName()%>
+            <%= missionParticipantDTO.getMission_title()%>
+            <select name="status">
+                <% states.each { status -> %>
+                <option value="<%= status.getValue() %>" <% if(status.getValue() == missionParticipantDTO.getStatus().getValue() ) { %> selected  <% } %> ><%= status.getLabel() %></option>
+                <% } %>
+            </select>
+            <%= missionParticipantDTO.getUrl_submitted()%>
+            <%= missionParticipantDTO.getDate_submitted()%>
+            <a href="@{MissionParticipantController.view(id=mpid)}" role="button">View</a>
         </li>
     <% } %>
 </ul>

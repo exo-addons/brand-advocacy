@@ -72,9 +72,8 @@ public class ManagerController {
         if(null != notif){
           mNotif = "1".equals(notif)? true:false;
         }
-        Mission mission = null;
-        try {
-          mission = this.managerService.getMissionById(mid);
+        Mission mission  = this.managerService.getMissionById(mid);
+        if (null != mission){
           List<Manager> managers = new ArrayList<Manager>(1);
           Manager manager = new Manager(username);
           manager.setMission_id(mission.getId());
@@ -83,10 +82,8 @@ public class ManagerController {
           manager.setNotif(mNotif);
           managers.add(manager);
           this.managerService.addManagers2Mission(mission.getId(),managers);
-        } catch (RepositoryException e) {
-          e.printStackTrace();
+          return missionController.view(mid);
         }
-        return missionController.view(mid);
       }
       else
         return Response.ok("cannot find this user");
@@ -105,9 +102,9 @@ public class ManagerController {
     if(null != notif){
       mNotif = "1".equals(notif)? true:false;
     }
-    Mission mission = null;
-    try {
-      mission = this.managerService.getMissionById(mid);
+    Mission mission =  this.managerService.getMissionById(mid);
+    if(null != mission) {
+
       Manager manager = this.managerService.getManager(mission.getLabelID(),username);
       if(null != manager){
         manager.setMission_id(mission.getId());
@@ -117,22 +114,15 @@ public class ManagerController {
         this.managerService.updateManager(manager);
       }
 
-    } catch (RepositoryException e) {
-      e.printStackTrace();
     }
   }
 
   @Action
   public void delete(String mid,String username){
-    Mission mission = null;
-    try {
-      mission = this.managerService.getMissionById(mid);
-      if (null != mission){
-        this.managerService.removeManager(mission.getLabelID(),username);
-      }
-
-    } catch (RepositoryException e) {
-      e.printStackTrace();
+    Mission mission =  this.managerService.getMissionById(mid);
+    if (null != mission){
+      this.managerService.removeManager(mission.getLabelID(),username);
     }
   }
+
 }

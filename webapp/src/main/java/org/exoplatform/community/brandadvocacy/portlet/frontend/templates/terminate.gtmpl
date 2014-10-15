@@ -4,7 +4,6 @@
     <h5 class="titleStep">
         <span class="numb">2</span><span class="textStep">Submit your personal address</span>
     </h5>
-    <form class="tweetAddrForm" action="">
         <div class="control-group">
             <div class="controls">
                 <input type="text" id="brad-participant-fname" placeholder="First Name ">
@@ -54,6 +53,5 @@
         <div class="action">
             <button class="btn btn-brad-terminate" >Submit</button>
         </div>
-    </form>
 </div>
 <!-- /.step-2 -->
