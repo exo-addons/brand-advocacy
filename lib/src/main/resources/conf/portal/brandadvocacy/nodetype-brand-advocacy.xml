@@ -104,7 +104,10 @@
         </propertyDefinition>        
         <propertyDefinition name="exo:mission_participant_ids" requiredType="Reference" autoCreated="false" mandatory="true" onParentVersion="COPY" protected="false" multiple="true">
           <valueConstraints/>
-        </propertyDefinition>        
+        </propertyDefinition>
+        <propertyDefinition name="exo:mission_ids" requiredType="Reference" autoCreated="false" mandatory="true" onParentVersion="COPY" protected="false" multiple="true">
+          <valueConstraints/>
+        </propertyDefinition>
       </propertyDefinitions>
       <childNodeDefinitions>
         <childNodeDefinition name="exo:addresseslist" defaultPrimaryType="brad:addresseslist" autoCreated="true" mandatory="false"

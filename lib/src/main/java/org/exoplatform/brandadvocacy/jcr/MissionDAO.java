@@ -17,6 +17,7 @@
 package org.exoplatform.brandadvocacy.jcr;
 
 import org.exoplatform.brandadvocacy.model.Mission;
+import org.exoplatform.brandadvocacy.model.Participant;
 import org.exoplatform.brandadvocacy.model.Priority;
 import org.exoplatform.brandadvocacy.service.BrandAdvocacyServiceException;
 import org.exoplatform.brandadvocacy.service.JCRImpl;
@@ -30,6 +31,7 @@ import javax.jcr.query.QueryResult;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.Set;
 
 /**
  * Created by The eXo Platform SAS Author : eXoPlatform exo@exoplatform.com Sep
@@ -53,6 +55,8 @@ public class MissionDAO extends DAO {
   
   public MissionDAO(JCRImpl jcrImpl) {
     super(jcrImpl);
+
+
   }
 
   public Node getOrCreateMissionHome() {
@@ -111,6 +115,7 @@ public class MissionDAO extends DAO {
     Mission m = new Mission();
     m.setId(node.getUUID());
     PropertyIterator iter = node.getProperties("exo:*");
+    iter =  node.getProperties();
     Property p;
     String name;
     while (iter.hasNext()) {
@@ -270,11 +275,13 @@ public class MissionDAO extends DAO {
 
   public int getTotalNumberMissions(Boolean isPublic, Boolean isActive,int priority){
     StringBuilder sql = new StringBuilder("select jcr:uuid from "+ JCRImpl.MISSION_NODE_TYPE +" where ");
+
     if(isPublic){
-      sql.append(node_prop_active).append("=").append(true);
+      sql.append(node_prop_active).append(" = 'true' ");
     }else{
-      sql.append(node_prop_active).append("=").append(isActive);
+      sql.append(node_prop_active).append("='").append(isActive).append("'");
     }
+
     if(priority != 0){
       sql.append(" AND ").append(node_prop_priority).append("=").append(priority);
     }
@@ -283,17 +290,49 @@ public class MissionDAO extends DAO {
   public Mission getRandomMission(int priority){
 
     int total = this.getTotalNumberMissions(true,true,priority);
+    if(0 == total)
+      return null;
     StringBuilder sql = new StringBuilder("select * from "+ JCRImpl.MISSION_NODE_TYPE +" where ");
-    sql.append(node_prop_active).append("=").append(true);
+    sql.append(node_prop_active).append("= 'true' ");
     sql.append(" AND ").append(node_prop_priority).append("=").append(priority);
     Random random = new Random();
     List<Node> nodes =  this.getNodesByQuery(sql.toString(), random.nextInt(total),1);
     try {
-      return this.transferNode2Object(nodes.get(0));
+      if (nodes.size() > 0)
+        return this.transferNode2Object(nodes.get(0));
     } catch (RepositoryException e) {
       log.error("ERROR cannot get random mission");
     }
     return null;
   }
 
+  public List<Mission> getAllMissionsByParticipant(String username){
+
+    List<Mission> missions = new ArrayList<Mission>();
+    ParticipantDAO participantDAO = this.getJcrImplService().getParticipantDAO();
+    Node participantNode = participantDAO.getNodeByUserName(username);
+    if (null != participantNode){
+      Participant participant = null;
+      try {
+        participant = participantDAO.transferNode2Object(participantNode);
+        Set<String> mids = participant.getMission_ids();
+        Mission mission;
+        for (String mid:mids){
+          mission = this.transferNode2Object(this.getNodeById(mid));
+          mission.checkValid();
+          missions.add(mission);
+        }
+      } catch (RepositoryException e) {
+        log.error("=== ERROR getAllMissionParticipantsByParticipant: cannot transfer node to object "+username);
+        e.printStackTrace();
+      }
+
+    }
+    return missions;
+  }
+  public List<Mission> getAllMissionsAvailableForParticipant(List<Mission> missionsToCheck, String username){
+    List<Mission> missions = new ArrayList<Mission>();
+
+    return missions;
+  }
 }

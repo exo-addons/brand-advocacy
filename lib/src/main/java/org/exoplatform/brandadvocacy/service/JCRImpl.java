@@ -209,6 +209,11 @@ public class JCRImpl implements IService {
   }
 
   @Override
+  public List<Mission> getAllMissionsByParticipant(String username) {
+    return this.getMissionDAO().getAllMissionsByParticipant(username);
+  }
+
+  @Override
   public Mission addManagers2Mission(String mid, List<Manager> managers) {
     return this.getManagerDAO().addManager2Mission(mid,managers);
   }
@@ -224,7 +229,7 @@ public class JCRImpl implements IService {
   }
 
   @Override
-  public MissionParticipant addMissionParticipant(MissionParticipant missionParticipant) throws RepositoryException {
+  public MissionParticipant addMissionParticipant(MissionParticipant missionParticipant) {
     return this.getMissionParticipantDAO().addMissionParticipant(missionParticipant);
   }
 
@@ -239,7 +244,7 @@ public class JCRImpl implements IService {
   }
 
   @Override
-  public List<MissionParticipant> getMissionParticipantsByParticipant(String username) throws RepositoryException {
+  public List<MissionParticipant> getMissionParticipantsByParticipant(String username) {
     return this.getMissionParticipantDAO().getAllMissionParticipantsByParticipant(username);
   }
 
@@ -249,7 +254,7 @@ public class JCRImpl implements IService {
   }
 
   @Override
-  public Participant addParticipant(Participant p) throws RepositoryException{
+  public Participant addParticipant(Participant p){
 
     return this.getParticipantDAO().addParticipant(p);
     
@@ -262,9 +267,8 @@ public class JCRImpl implements IService {
   }
 
   @Override
-  public Participant getParticipantById(String id) {
-    // TODO Auto-generated method stub
-    return null;
+  public Participant getParticipantByUserName(String username) {
+    return this.getParticipantDAO().getParticipantByUserName(username);
   }
 
   @Override

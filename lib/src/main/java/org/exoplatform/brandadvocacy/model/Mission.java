@@ -53,7 +53,7 @@ public class Mission {
     this.setLabelID(UUID.randomUUID().toString());
     this.setCreatedDate(System.currentTimeMillis());
     this.setModifiedDate(System.currentTimeMillis());
-    this.setActive(false);
+    this.setActive(true);
   }
 
   public String getLabelID() {
@@ -128,7 +128,7 @@ public class Mission {
    }
   }
   public String toString(){
-    return getClass().getName()+" - " +this.getTitle()+" - "+this.getThird_party_link();
+    return this.getTitle()+" - "+this.getActive()+" - "+this.getPriority().getLabel();
   }
 
 

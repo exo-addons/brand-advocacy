@@ -30,6 +30,7 @@ public class Participant extends User {
 
   private List<Address> addresses;
   private Set<String> mission_participant_ids = new HashSet<String>();
+  private Set<String> mission_ids = new HashSet<String>();
   public Participant(){
 
   }
@@ -56,10 +57,19 @@ public class Participant extends User {
     if(null == this.getUserName() || "".equals(this.getUserName()))
       throw new BrandAdvocacyServiceException(BrandAdvocacyServiceException.PARTICIPANT_INVALID,"participant must have username");
     if (0 == this.getMission_participant_ids().size())
+      throw new BrandAdvocacyServiceException(BrandAdvocacyServiceException.PARTICIPANT_INVALID,"participant must have at least 1 mission participant");
+    if (0 == this.getMission_ids().size())
       throw new BrandAdvocacyServiceException(BrandAdvocacyServiceException.PARTICIPANT_INVALID,"participant must participate to 1 mission");
   }
   public String toString(){
     return getClass().getName()+" - username = "+this.getUserName()+" - number missions "+this.getMission_participant_ids().size();
   }
 
+  public Set<String> getMission_ids() {
+    return mission_ids;
+  }
+
+  public void setMission_ids(Set<String> mission_ids) {
+    this.mission_ids = mission_ids;
+  }
 }

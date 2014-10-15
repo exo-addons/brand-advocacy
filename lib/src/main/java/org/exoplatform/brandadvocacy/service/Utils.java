@@ -16,6 +16,9 @@
  */
 package org.exoplatform.brandadvocacy.service;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 /**
  * Created by The eXo Platform SAS
  * Author : eXoPlatform
@@ -37,5 +40,12 @@ public class Utils {
         }
     }
     return buffer.toString();
+  }
+
+  public static String convertDateFromLong(Long val){
+    Date date=new Date(val);
+    SimpleDateFormat df2 = new SimpleDateFormat("dd/MM/yy");
+    String dateText = df2.format(date);
+    return dateText;
   }
 }

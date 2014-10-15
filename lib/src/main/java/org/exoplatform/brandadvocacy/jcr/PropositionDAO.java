@@ -240,9 +240,9 @@ public class PropositionDAO extends DAO {
   public int getTotalNumberPropositions(Boolean isPublic, Boolean isActive,String mid){
     StringBuilder sql = new StringBuilder("select jcr:uuid from "+ JCRImpl.PROPOSITION_NODE_TYPE +" where ");
     if(isPublic){
-      sql.append(node_prop_active).append("=").append(true);
+      sql.append(node_prop_active).append("= 'true' ");
     }else{
-      sql.append(node_prop_active).append("=").append(isActive);
+      sql.append(node_prop_active).append("='").append(isActive).append("'");
     }
     if (null != mid && !"".equals(mid)){
       sql.append(" AND ").append(node_prop_mission_id).append(" = ").append(mid);
@@ -251,13 +251,14 @@ public class PropositionDAO extends DAO {
   }
   public Proposition getRandomProposition(String mid){
 
-    StringBuilder sql = new StringBuilder("select * from "+ JCRImpl.MISSION_NODE_TYPE +" where ");
-    sql.append(node_prop_active).append("=").append(true);
-    sql.append(" AND ").append(node_prop_mission_id).append("=").append(mid);
+    StringBuilder sql = new StringBuilder("select * from "+ JCRImpl.PROPOSITION_NODE_TYPE +" where ");
+    sql.append(node_prop_active).append("= 'true'");
+    sql.append(" AND ").append(node_prop_mission_id).append("='").append(mid).append("'");
     sql.append(" ORDER BY ").append(node_prop_numberUsed);
     List<Node> nodes =  this.getNodesByQuery(sql.toString(),0,1);
     try {
-      return this.transferNode2Object(nodes.get(0));
+      if (nodes.size() > 0)
+        return this.transferNode2Object(nodes.get(0));
     } catch (RepositoryException e) {
       log.error("ERROR cannot get random proposition");
     }

@@ -17,7 +17,6 @@
 package org.exoplatform.brandadvocacy.jcr;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 
 import javax.jcr.Node;
@@ -67,12 +66,12 @@ public abstract class DAO {
 
       QueryResult result = query.execute();
       NodeIterator nodes = result.getNodes();
-      if (nodes.hasNext()) {
+      while (nodes.hasNext()) {
         list.add(nodes.nextNode()) ;
       }
     } catch (RepositoryException e) {
       log.error("ERROR cannot get nodes by query  "+sql);
-      e.printStackTrace();
+        e.printStackTrace();
     }
     return list;
   }

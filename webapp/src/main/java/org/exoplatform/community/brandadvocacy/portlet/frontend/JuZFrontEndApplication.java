@@ -134,24 +134,20 @@ public class JuZFrontEndApplication {
     missionParticipant.setMission_id(missionId);
     missionParticipant.setProposition_id(propositionId);
     missionParticipant.setParticipant_username(this.remoteUserName);
-    try {
-      missionParticipant = this.jcrService.addMissionParticipant(missionParticipant);
-      if(null != missionParticipant){
-        Proposition proposition = this.jcrService.getPropositionById(missionParticipant.getProposition_id());
-        if(null != proposition){
-          proposition.setNumberUsed(proposition.getNumberUsed()+1);
-          this.jcrService.updateProposition(proposition);
-        }
-        this.currentMissionParticipantId = missionParticipant.getId();
-        Participant participant = new Participant(this.remoteUserName);
-        Set<String> missionParticipantIds = new HashSet<String>();
-        missionParticipantIds.add(this.currentMissionParticipantId);
-        participant.setMission_ids(missionParticipantIds);
-        if (null != this.jcrService.addParticipant(participant));
-          return true;
+    missionParticipant = this.jcrService.addMissionParticipant(missionParticipant);
+    if(null != missionParticipant){
+      Proposition proposition = this.jcrService.getPropositionById(missionParticipant.getProposition_id());
+      if(null != proposition){
+        proposition.setNumberUsed(proposition.getNumberUsed()+1);
+        this.jcrService.updateProposition(proposition);
       }
-    } catch (RepositoryException e) {
-      e.printStackTrace();
+      this.currentMissionParticipantId = missionParticipant.getId();
+      Participant participant = new Participant(this.remoteUserName);
+      Set<String> missionIds = new HashSet<String>();
+      missionIds.add(missionId);
+      participant.setMission_ids(missionIds);
+      if (null != this.jcrService.addParticipant(participant));
+        return true;
     }
     return false;
   }

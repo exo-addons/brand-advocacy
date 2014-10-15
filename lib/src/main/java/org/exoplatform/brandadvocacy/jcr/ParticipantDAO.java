@@ -38,6 +38,7 @@ public class ParticipantDAO extends DAO {
 
   private static final String node_prop_username = "exo:username";
   private static final String node_prop_mission_participant_ids = "exo:mission_participant_ids";
+  private static final String node_prop_mission_ids = "exo:mission_ids";
   public static final String node_prop_addresses = "exo:addresseslist";
   private static final Log log = ExoLogger.getLogger(ParticipantDAO.class);
   public ParticipantDAO(JCRImpl jcrImpl) {
@@ -45,10 +46,17 @@ public class ParticipantDAO extends DAO {
   }
 
   public void setProperties(Node aNode,Participant participant) throws RepositoryException {
+    try{
+      participant.checkValid();
+      Set<String> missionParticipantIds = participant.getMission_participant_ids();
+      Set<String> missionIds = participant.getMission_ids();
+      aNode.setProperty(node_prop_mission_participant_ids,missionParticipantIds.toArray(new String[missionParticipantIds.size()]));
+      aNode.setProperty(node_prop_mission_ids,missionIds.toArray(new String[missionIds.size()]));
+      aNode.setProperty(node_prop_username,participant.getUserName());
 
-    Set<String> missionParticipantIds = participant.getMission_participant_ids();
-    aNode.setProperty(node_prop_mission_participant_ids,missionParticipantIds.toArray(new String[missionParticipantIds.size()]));
-    aNode.setProperty(node_prop_username,participant.getUserName());
+    }catch (BrandAdvocacyServiceException brade){
+      log.error("ERROR cannot set peroperties for participant node "+brade.getMessage());
+    }
   }
   public Participant transferNode2Object(Node node) throws RepositoryException{
     Participant participant = new Participant();
@@ -63,11 +71,24 @@ public class ParticipantDAO extends DAO {
         }
         participant.setMission_participant_ids(missionParticipantIds);
       }
+      else if(name.equals(node_prop_mission_ids)){
+        Set<String> missionIds = new HashSet<String>();
+        for (Value mids:p.getValues()){
+          missionIds.add(mids.getString());
+        }
+        participant.setMission_ids(missionIds);
+      }
       else if(name.equals(node_prop_username)){
         participant.setUserName(p.getString());
       }
     }
-    return participant;
+    try {
+      participant.checkValid();
+      return participant;
+    }catch (BrandAdvocacyServiceException brade){
+      log.error("ERROR cannot transfert node to participant obj "+brade.getMessage());
+    }
+    return null;
   }
   public Node getOrCreateParticipantHome() {
     String path = String.format("%s/%s",JCRImpl.EXTENSION_PATH,JCRImpl.PARTICIPANT_PATH);
@@ -93,18 +114,9 @@ public class ParticipantDAO extends DAO {
   public Node getNodeByUserName(String username){
     StringBuilder sql = new StringBuilder("select * from "+ JCRImpl.PARTICIPANT_NODE_TYPE);
     sql.append(" WHERE ").append(node_prop_username).append(" like '").append(username).append("'");
-    Session session;
-    try {
-      session = this.getJcrImplService().getSession();
-      Query query = session.getWorkspace().getQueryManager().createQuery(sql.toString(), Query.SQL);
-      QueryResult result = query.execute();
-      NodeIterator nodes = result.getNodes();
-      if (nodes.hasNext()) {
-        return nodes.nextNode();
-      }else
-        throw new BrandAdvocacyServiceException(BrandAdvocacyServiceException.PARTICIPANT_NOT_EXISTS,"cannot get participant "+username);
-    } catch (RepositoryException e) {
-      log.error("ERROR cannot get participant node  "+ username +" Exception "+e.getMessage());
+    List<Node> nodes =  this.getNodesByQuery(sql.toString(),0,1);
+    if (nodes.size() > 0) {
+      return nodes.get(0);
     }
     return null;
   }
@@ -113,18 +125,9 @@ public class ParticipantDAO extends DAO {
     sql.append(JCRImpl.EXTENSION_PATH).append("/").append(JCRImpl.PARTICIPANT_PATH);
     sql.append("/").append(Utils.queryEscape(pid));
     sql.append("'");
-    Session session;
-    try {
-      session = this.getJcrImplService().getSession();
-      Query query = session.getWorkspace().getQueryManager().createQuery(sql.toString(), Query.SQL);
-      QueryResult result = query.execute();
-      NodeIterator nodes = result.getNodes();
-      if (nodes.hasNext()) {
-        return nodes.nextNode();
-      }else
-        throw new BrandAdvocacyServiceException(BrandAdvocacyServiceException.PARTICIPANT_NOT_EXISTS,"cannot get participant "+pid);
-    } catch (RepositoryException e) {
-      log.error("ERROR cannot get participant node  "+ pid +" Exception "+e.getMessage());
+    List<Node> nodes =  this.getNodesByQuery(sql.toString(),0,1);
+    if (nodes.size() > 0) {
+      return nodes.get(0);
     }
     return null;
   }
@@ -143,6 +146,13 @@ public class ParticipantDAO extends DAO {
               newMPIds.add(mpid);
           }
           participant.setMission_participant_ids(newMPIds);
+
+          Set<String> newMIds = participant.getMission_ids();
+          for (String mid:existingParticipant.getMission_ids()){
+            if(!newMIds.contains(mid))
+              newMIds.add(mid);
+          }
+          participant.setMission_ids(newMIds);
         }
         else{
           participantNode = participantHomeNode.addNode(participant.getUserName(),JCRImpl.PARTICIPANT_NODE_TYPE);
@@ -191,4 +201,14 @@ public class ParticipantDAO extends DAO {
     }
     return participants;
   }
+
+  public Participant getParticipantByUserName(String username){
+    try {
+      return this.transferNode2Object(this.getNodeByUserName(username));
+    } catch (RepositoryException e) {
+      log.error("ERROR cannot get participant by username");
+    }
+    return null;
+  }
+
 }

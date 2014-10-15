@@ -1,0 +1,678 @@
+<div class="referral-porlet">
+	<h3>Brand Advocacy Admin</h3><br>
+	<!-- TAB 1 -->
+	<div id="UITabPane" class="uiTabNormal uiTabInPage referral-tab-group">
+		<ul class="nav nav-tabs">
+			<li class="active"><a href="#generalTab" data-toggle="tab">General</a></li>
+			<li><a href="#missionsTab" data-toggle="tab">Missions</a></li>
+			<li><a href="#participantsTab" data-toggle="tab">Participants</a></li>
+		</ul>
+		<div id="myTabContent" class="tab-content">
+			<div class="tab-pane fade in active" id="generalTab">
+				<div class="form-horizontal">
+					<div class="control-group">
+						<label class="control-label">Program Title:</label>
+						<div class="controls">
+							<input class="full" type="text" placeholder="Win a free eXo T-Shirt !">
+						</div>
+					</div>
+					<div class="control-group">
+						<label class="control-label">Team roles:</label>
+						<div class="controls">
+							<table class="uiGrid table table-hover table-striped">
+								<thead>
+									<tr>
+										<th>User</th>
+										<th class="center" style="width: 155px;">Role</th>
+										<th class="center" style="width: 125px;">Email Notification</th>
+										<th class="center actionContainer" style="width: 65px;">Actions</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr>
+										<td>John Doe</td>
+										<td class="center">
+											<select class="input-medium" name="" id="">
+												<option value="">validator</option>
+											</select>
+										</td>
+										<td class="center">
+											<div class="iPhoneCheckContainer" style="width: 60px;">
+												<input type="checkbox" tabindex="3" checked="checked" style="visibility: hidden;" name="rememberme" value="true" data-yes="Yes" data-no="No" class="yesno" id="rememberme">
+												<label class="iPhoneCheckLabelOff" style="width: 51px;">
+													<span style="margin-right: -41px;">No</span>
+												</label>
+												<label class="iPhoneCheckLabelOn" style="width: 51px;">
+													<span style="margin-left: 0px;">Yes</span>
+												</label>
+												<div class="iPhoneCheckHandle" style="left: 41px;">
+													<div class="iPhoneCheckHandleRight">
+														<div class="iPhoneCheckHandleCenter"></div>
+													</div>
+												</div>
+											</div>
+										</td>
+										<td class="center actionContainer">
+											<a data-original-title="Delete" class="actionIcon" rel="tooltip" data-placement="bottom">
+								               	<i class="uiIconDeleteUser uiIconLightGray"></i>
+											</a>
+										</td>
+									</tr>
+									<tr>
+										<td>John Doe</td>
+										<td class="center">
+											<select class="input-medium" name="" id="">
+												<option value="">validator</option>
+											</select>
+										</td>
+										<td class="center">
+											<div class="iPhoneCheckContainer" style="width: 60px;">
+												<input type="checkbox" tabindex="3" checked="checked" style="visibility: hidden;" name="rememberme" value="true" data-yes="Yes" data-no="No" class="yesno" id="rememberme">
+												<label class="iPhoneCheckLabelOff" style="width: 51px;">
+													<span style="margin-right: -41px;">No</span>
+												</label>
+												<label class="iPhoneCheckLabelOn" style="width: 51px;">
+													<span style="margin-left: 0px;">Yes</span>
+												</label>
+												<div class="iPhoneCheckHandle" style="left: 41px;">
+													<div class="iPhoneCheckHandleRight">
+														<div class="iPhoneCheckHandleCenter"></div>
+													</div>
+												</div>
+											</div>
+										</td>
+										<td class="center actionContainer">
+											<a data-original-title="Delete" class="actionIcon" rel="tooltip" data-placement="bottom">
+								               	<i class="uiIconDeleteUser uiIconLightGray"></i>
+											</a>
+										</td>
+									</tr>
+									<tr>
+										<td>John Doe</td>
+										<td class="center">
+											<select class="input-medium" name="" id="">
+												<option value="">validator</option>
+											</select>
+										</td>
+										<td class="center">
+											<div class="iPhoneCheckContainer" style="width: 60px;">
+												<input type="checkbox" tabindex="3" checked="checked" style="visibility: hidden;" name="rememberme" value="true" data-yes="Yes" data-no="No" class="yesno" id="rememberme">
+												<label class="iPhoneCheckLabelOff" style="width: 51px;">
+													<span style="margin-right: -41px;">No</span>
+												</label>
+												<label class="iPhoneCheckLabelOn" style="width: 51px;">
+													<span style="margin-left: 0px;">Yes</span>
+												</label>
+												<div class="iPhoneCheckHandle" style="left: 41px;">
+													<div class="iPhoneCheckHandleRight">
+														<div class="iPhoneCheckHandleCenter"></div>
+													</div>
+												</div>
+											</div>
+										</td>
+										<td class="center actionContainer">
+											<a data-original-title="Delete" class="actionIcon" rel="tooltip" data-placement="bottom">
+								               	<i class="uiIconDeleteUser uiIconLightGray"></i>
+											</a>
+										</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="tab-pane fade" id="missionsTab">
+				<p>Food truck fixie locavore, accusamus mcsweeney's marfa nulla single-origin coffee squid. Exercitation +1 labore velit, blog sartorial PBR leggings next level wes anderson artisan four loko farm-to-table craft beer twee. Qui photo booth letterpress, commodo enim craft beer mlkshk aliquip jean shorts ullamco ad vinyl cillum PBR. Homo nostrud organic, assumenda labore aesthetic magna delectus mollit. Keytar helvetica VHS salvia yr, vero magna velit sapiente labore stumptown. Vegan fanny pack odio cillum wes anderson 8-bit, sustainable jean shorts beard ut DIY ethical culpa terry richardson biodiesel. Art party scenester stumptown, tumblr butcher vero sint qui sapiente accusamus tattooed echo park.</p>
+			</div>
+			<div class="tab-pane fade" id="participantsTab">
+				<p>Etsy mixtape wayfarers, ethical wes anderson tofu before they sold out mcsweeney's organic lomo retro fanny pack lo-fi farm-to-table readymade. Messenger bag gentrify pitchfork tattooed craft beer, iphone skateboard locavore carles etsy salvia banksy hoodie helvetica. DIY synth PBR banksy irony. Leggings gentrify squid 8-bit cred pitchfork. Williamsburg banh mi whatever gluten-free, carles pitchfork biodiesel fixie etsy retro mlkshk vice blog. Scenester cred you probably haven't heard of them, vinyl craft beer blog stumptown. Pitchfork sustainable tofu synth chambray yr.</p>
+			</div>
+		</div>
+	</div>
+	<!-- TAB 1 -->
+	<br>
+	<!-- TAB 2 Step 1-->
+	<div id="UITabPane" class="uiTabNormal uiTabInPage referral-tab-group">
+		<ul class="nav nav-tabs">
+			<li><a href="#generalTab" data-toggle="tab">General</a></li>
+			<li  class="active"><a href="#missionsTab" data-toggle="tab">Missions</a></li>
+			<li><a href="#participantsTab" data-toggle="tab">Participants</a></li>
+		</ul>
+		<div id="myTabContent" class="tab-content">
+			<div class="tab-pane fade" id="generalTab">...</div>
+			<div class="tab-pane fade in active" id="missionsTab">
+				<ul class="breadcrumb">
+				    <li><a href="#">Manager the missions</a><span class="uiIconMiniArrowRight"></span></li>
+				    <li class="active">Write a review on Sourceforge.com</li>
+				</ul>
+				<br>
+				<table class="uiGrid table table-hover table-striped mgB0">
+					<thead>
+						<tr>
+							<th>Title</th>
+							<th class="center" style="width: 65px;">Priority</th>
+							<th>Link</th>
+							<th class="center" style="width: 65px;">Activated</th>
+							<th class="center actionContainer" style="width: 65px;">Action</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td>Write a review on Sourceforge.org</td>
+							<td class="center">
+								<select name="" id="" class="input-mini">
+								<option value="">1</option>
+								<option value="">2</option>
+								<option value="">3</option>
+							</select>
+							</td>
+							<td><a href="#">http://wwww.sourceforge.org</a></td>
+							<td class="center">
+								<div style="width: 60px;" class="iPhoneCheckContainer">
+									<input type="checkbox" id="rememberme" class="yesno" data-no="No" data-yes="Yes" value="true" name="rememberme" style="visibility: hidden;" checked="checked" tabindex="3">
+									<label style="width: 51px;" class="iPhoneCheckLabelOff">
+										<span style="margin-right: -41px;">No</span>
+									</label>
+									<label style="width: 51px;" class="iPhoneCheckLabelOn">
+										<span style="margin-left: 0px;">Yes</span>
+									</label>
+									<div style="left: 41px;" class="iPhoneCheckHandle">
+										<div class="iPhoneCheckHandleRight">
+											<div class="iPhoneCheckHandleCenter"></div>
+										</div>
+									</div>
+								</div>
+							</td>
+							<td class="center actionContainer">
+								<a data-original-title="Edit" class="actionIcon" rel="tooltip" data-placement="bottom">
+									<i class="uiIconViewUserInfo uiIconLightGray"></i>
+								</a>
+								<a data-original-title="Delete" class="actionIcon" rel="tooltip" data-placement="bottom">
+					               	<i class="uiIconDeleteUser uiIconLightGray"></i>
+								</a>
+							</td>
+						</tr>
+						<tr>
+							<td>Write a review on Sourceforge.org</td>
+							<td class="center">
+								<select name="" id="" class="input-mini">
+								<option value="">1</option>
+								<option value="">2</option>
+								<option value="">3</option>
+							</select>
+							</td>
+							<td><a href="#">http://wwww.sourceforge.org</a></td>
+							<td class="center">
+								<div style="width: 60px;" class="iPhoneCheckContainer">
+									<input type="checkbox" id="rememberme" class="yesno" data-no="No" data-yes="Yes" value="true" name="rememberme" style="visibility: hidden;" checked="checked" tabindex="3">
+									<label style="width: 51px;" class="iPhoneCheckLabelOff">
+										<span style="margin-right: -41px;">No</span>
+									</label>
+									<label style="width: 51px;" class="iPhoneCheckLabelOn">
+										<span style="margin-left: 0px;">Yes</span>
+									</label>
+									<div style="left: 41px;" class="iPhoneCheckHandle">
+										<div class="iPhoneCheckHandleRight">
+											<div class="iPhoneCheckHandleCenter"></div>
+										</div>
+									</div>
+								</div>
+							</td>
+							<td class="center actionContainer">
+								<a data-original-title="Edit" class="actionIcon" rel="tooltip" data-placement="bottom">
+									<i class="uiIconViewUserInfo uiIconLightGray"></i>
+								</a>
+								<a data-original-title="Delete" class="actionIcon" rel="tooltip" data-placement="bottom">
+					               	<i class="uiIconDeleteUser uiIconLightGray"></i>
+								</a>
+							</td>
+						</tr>
+						<tr>
+							<td>Write a review on Sourceforge.org</td>
+							<td class="center">
+								<select name="" id="" class="input-mini">
+								<option value="">1</option>
+								<option value="">2</option>
+								<option value="">3</option>
+							</select>
+							</td>
+							<td><a href="#">http://wwww.sourceforge.org</a></td>
+							<td class="center">
+								<div style="width: 60px;" class="iPhoneCheckContainer">
+									<input type="checkbox" id="rememberme" class="yesno" data-no="No" data-yes="Yes" value="true" name="rememberme" style="visibility: hidden;" checked="checked" tabindex="3">
+									<label style="width: 51px;" class="iPhoneCheckLabelOff">
+										<span style="margin-right: -41px;">No</span>
+									</label>
+									<label style="width: 51px;" class="iPhoneCheckLabelOn">
+										<span style="margin-left: 0px;">Yes</span>
+									</label>
+									<div style="left: 41px;" class="iPhoneCheckHandle">
+										<div class="iPhoneCheckHandleRight">
+											<div class="iPhoneCheckHandleCenter"></div>
+										</div>
+									</div>
+								</div>
+							</td>
+							<td class="center actionContainer">
+								<a data-original-title="Edit" class="actionIcon" rel="tooltip" data-placement="bottom">
+									<i class="uiIconViewUserInfo uiIconLightGray"></i>
+								</a>
+								<a data-original-title="Delete" class="actionIcon" rel="tooltip" data-placement="bottom">
+					               	<i class="uiIconDeleteUser uiIconLightGray"></i>
+								</a>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+			<div class="tab-pane fade" id="participantsTab">
+				<p>Etsy mixtape wayfarers, ethical wes anderson tofu before they sold out mcsweeney's organic lomo retro fanny pack lo-fi farm-to-table readymade. Messenger bag gentrify pitchfork tattooed craft beer, iphone skateboard locavore carles etsy salvia banksy hoodie helvetica. DIY synth PBR banksy irony. Leggings gentrify squid 8-bit cred pitchfork. Williamsburg banh mi whatever gluten-free, carles pitchfork biodiesel fixie etsy retro mlkshk vice blog. Scenester cred you probably haven't heard of them, vinyl craft beer blog stumptown. Pitchfork sustainable tofu synth chambray yr.</p>
+			</div>
+		</div>
+	</div>
+	<!-- TAB 2 Step 1-->
+	<br>
+	<!-- TAB 2 Step 2-->
+	<div id="UITabPane" class="uiTabNormal uiTabInPage referral-tab-group">
+		<ul class="nav nav-tabs">
+			<li><a href="#generalTab" data-toggle="tab">General</a></li>
+			<li  class="active"><a href="#missionsTab" data-toggle="tab">Missions</a></li>
+			<li><a href="#participantsTab" data-toggle="tab">Participants</a></li>
+		</ul>
+		<div id="myTabContent" class="tab-content">
+			<div class="tab-pane fade" id="generalTab">...</div>
+			<div class="tab-pane fade in active" id="missionsTab">
+				<ul class="breadcrumb">
+				    <li><a href="#">Manager the missions</a><span class="uiIconMiniArrowRight"></span></li>
+				    <li class="active">Write a review on Sourceforge.com</li>
+				</ul>
+
+				<div class="form-horizontal">
+					<div class="control-group">
+						<label class="control-label">Title:</label>
+						<div class="controls">
+							<input class="full" type="text" placeholder="Write a review on Sourceforge.com">
+						</div>
+					</div>
+					<div class="control-group">
+						<label class="control-label">Proposition lists:</label>
+						<div class="controls">
+							<table class="uiGrid table table-hover table-striped mgB0">
+								<thead>
+									<tr>
+										<th>Proposition</th>
+										<th class="center" style="width: 65px">Nb Used</th>
+										<th class="center" style="width: 65px">Activated</th>
+										<th class="center actionContainer" style="width: 65px">Actions</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr>
+										<td>I've been using eXo since few years now what</td>
+										<td class="center">
+											1
+										</td>
+										<td class="center">
+											<div style="width: 60px;" class="iPhoneCheckContainer">
+												<input type="checkbox" id="rememberme" class="yesno" data-no="No" data-yes="Yes" value="true" name="rememberme" style="visibility: hidden;" checked="checked" tabindex="3">
+												<label style="width: 51px;" class="iPhoneCheckLabelOff">
+													<span style="margin-right: -41px;">No</span>
+												</label>
+												<label style="width: 51px;" class="iPhoneCheckLabelOn">
+													<span style="margin-left: 0px;">Yes</span>
+												</label>
+												<div style="left: 41px;" class="iPhoneCheckHandle">
+													<div class="iPhoneCheckHandleRight">
+														<div class="iPhoneCheckHandleCenter"></div>
+													</div>
+												</div>
+											</div>
+										</td>
+										<td class="center actionContainer">
+											<a data-original-title="Edit" class="actionIcon" rel="tooltip" data-placement="bottom">
+												<i class="uiIconViewUserInfo uiIconLightGray"></i>
+											</a>
+											<a data-original-title="Delete" class="actionIcon" rel="tooltip" data-placement="bottom">
+								               	<i class="uiIconDeleteUser uiIconLightGray"></i>
+											</a>
+										</td>
+									</tr>
+									<tr>
+										<td>I've been using eXo since few years now what</td>
+										<td class="center">
+											1
+										</td>
+										<td class="center">
+											<div class="iPhoneCheckContainer" style="width: 60px;">
+												<input type="checkbox" tabindex="3" checked="checked" style="visibility: hidden;" name="rememberme" value="false" data-yes="Yes" data-no="No" class="yesno" id="rememberme">
+												<label class="iPhoneCheckLabelOff" style="width: 51px;">
+													<span style="margin-right: -1px;">No</span>
+													</label><label class="iPhoneCheckLabelOn" style="width: 11px;">
+													<span style="margin-left: -40px;">Yes</span>
+													</label><div class="iPhoneCheckHandle" style="left: 1px;">
+													<div class="iPhoneCheckHandleRight">
+														<div class="iPhoneCheckHandleCenter"></div>
+													</div>
+												</div>
+											</div>
+										</td>
+										<td class="center actionContainer">
+											<a data-original-title="Edit" class="actionIcon" rel="tooltip" data-placement="bottom">
+												<i class="uiIconViewUserInfo uiIconLightGray"></i>
+											</a>
+											<a data-original-title="Delete" class="actionIcon" rel="tooltip" data-placement="bottom">
+								               	<i class="uiIconDeleteUser uiIconLightGray"></i>
+											</a>
+										</td>
+									</tr>
+									<tr>
+										<td>I've been using eXo since few years now what</td>
+										<td class="center">
+											1
+										</td>
+										<td class="center">
+											<div style="width: 60px;" class="iPhoneCheckContainer">
+												<input type="checkbox" id="rememberme" class="yesno" data-no="No" data-yes="Yes" value="true" name="rememberme" style="visibility: hidden;" checked="checked" tabindex="3">
+												<label style="width: 51px;" class="iPhoneCheckLabelOff">
+													<span style="margin-right: -41px;">No</span>
+												</label>
+												<label style="width: 51px;" class="iPhoneCheckLabelOn">
+													<span style="margin-left: 0px;">Yes</span>
+												</label>
+												<div style="left: 41px;" class="iPhoneCheckHandle">
+													<div class="iPhoneCheckHandleRight">
+														<div class="iPhoneCheckHandleCenter"></div>
+													</div>
+												</div>
+											</div>
+										</td>
+										<td class="center actionContainer">
+											<a data-original-title="Edit" class="actionIcon" rel="tooltip" data-placement="bottom">
+												<i class="uiIconViewUserInfo uiIconLightGray"></i>
+											</a>
+											<a data-original-title="Delete" class="actionIcon" rel="tooltip" data-placement="bottom">
+								               	<i class="uiIconDeleteUser uiIconLightGray"></i>
+											</a>
+										</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+					</div>
+					<div class="control-group">
+						<div class="controls text-right">
+							<button class="btn btn-primary">Add</button>
+						</div>
+					</div>
+					<div class="control-group">
+						<label class="control-label">Link:</label>
+						<div class="controls">
+							<input class="full" type="text" placeholder="" value="http://sourceforge.net/project/exo/">
+						</div>
+					</div>
+					<div class="control-group">
+						<label class="control-label">Priority:</label>
+						<div class="controls">
+							<select name="" id="" class="input-mini">
+								<option value="">1</option>
+								<option value="">2</option>
+								<option value="">3</option>
+							</select>
+						</div>
+					</div>
+					<div class="control-group">
+						<label class="control-label">Activated:</label>
+						<div class="controls">
+							<div style="width: 60px;" class="iPhoneCheckContainer">
+								<input type="checkbox" id="rememberme" class="yesno" data-no="No" data-yes="Yes" value="true" name="rememberme" style="visibility: hidden;" checked="checked" tabindex="3">
+								<label style="width: 51px;" class="iPhoneCheckLabelOff">
+									<span style="margin-right: -41px;">No</span>
+								</label>
+								<label style="width: 51px;" class="iPhoneCheckLabelOn">
+									<span style="margin-left: 0px;">Yes</span>
+								</label>
+								<div style="left: 41px;" class="iPhoneCheckHandle">
+									<div class="iPhoneCheckHandleRight">
+										<div class="iPhoneCheckHandleCenter"></div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="text-center">
+						<button class="btn btn-primary">Save</button>
+						<button class="btn mgL20">Cancel</button>
+					</div>
+				</div>
+			</div>
+			<div class="tab-pane fade" id="participantsTab">
+				<p>Etsy mixtape wayfarers, ethical wes anderson tofu before they sold out mcsweeney's organic lomo retro fanny pack lo-fi farm-to-table readymade. Messenger bag gentrify pitchfork tattooed craft beer, iphone skateboard locavore carles etsy salvia banksy hoodie helvetica. DIY synth PBR banksy irony. Leggings gentrify squid 8-bit cred pitchfork. Williamsburg banh mi whatever gluten-free, carles pitchfork biodiesel fixie etsy retro mlkshk vice blog. Scenester cred you probably haven't heard of them, vinyl craft beer blog stumptown. Pitchfork sustainable tofu synth chambray yr.</p>
+			</div>
+		</div>
+	</div>
+	<!-- TAB 2 Step 2-->
+	<br>
+	<!-- TAB 2 Step 2 with Popup -->
+	<div id="UITabPane" class="uiTabNormal uiTabInPage referral-tab-group">
+		<ul class="nav nav-tabs">
+			<li><a href="#generalTab" data-toggle="tab">General</a></li>
+			<li  class="active"><a href="#missionsTab" data-toggle="tab">Missions</a></li>
+			<li><a href="#participantsTab" data-toggle="tab">Participants</a></li>
+		</ul>
+		<div id="myTabContent" class="tab-content">
+			<div class="tab-pane fade" id="generalTab">...</div>
+			<div class="tab-pane fade in active" id="missionsTab">
+				<ul class="breadcrumb">
+				    <li><a href="#">Manager the missions</a><span class="uiIconMiniArrowRight"></span></li>
+				    <li class="active">Write a review on Sourceforge.com</li>
+				</ul>
+
+				<div class="form-horizontal">
+					<div class="control-group">
+						<label class="control-label">Title:</label>
+						<div class="controls">
+							<input class="full" type="text" placeholder="Write a review on Sourceforge.com">
+						</div>
+					</div>
+					<div class="control-group">
+						<label class="control-label">Proposition lists:</label>
+						<div class="controls">
+							<table class="uiGrid table table-hover table-striped mgB0">
+								<thead>
+									<tr>
+										<th>Proposition</th>
+										<th class="center" style="width: 65px">Nb Used</th>
+										<th class="center" style="width: 65px">On/Off</th>
+										<th class="center actionContainer" style="width: 65px">Actions</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr>
+										<td>I've been using eXo since few years now what</td>
+										<td class="center">
+											1
+										</td>
+										<td class="center">
+											<div style="width: 60px;" class="iPhoneCheckContainer">
+												<input type="checkbox" id="rememberme" class="yesno" data-no="No" data-yes="Yes" value="true" name="rememberme" style="visibility: hidden;" checked="checked" tabindex="3">
+												<label style="width: 51px;" class="iPhoneCheckLabelOff">
+													<span style="margin-right: -41px;">No</span>
+												</label>
+												<label style="width: 51px;" class="iPhoneCheckLabelOn">
+													<span style="margin-left: 0px;">Yes</span>
+												</label>
+												<div style="left: 41px;" class="iPhoneCheckHandle">
+													<div class="iPhoneCheckHandleRight">
+														<div class="iPhoneCheckHandleCenter"></div>
+													</div>
+												</div>
+											</div>
+										</td>
+										<td class="center actionContainer">
+											<a data-original-title="Edit" class="actionIcon" rel="tooltip" data-placement="bottom">
+												<i class="uiIconViewUserInfo uiIconLightGray"></i>
+											</a>
+											<a data-original-title="Delete" class="actionIcon" rel="tooltip" data-placement="bottom">
+								               	<i class="uiIconDeleteUser uiIconLightGray"></i>
+											</a>
+										</td>
+									</tr>
+									<tr>
+										<td>I've been using eXo since few years now what</td>
+										<td class="center">
+											1
+										</td>
+										<td class="center">
+											<div class="iPhoneCheckContainer" style="width: 60px;">
+												<input type="checkbox" tabindex="3" checked="checked" style="visibility: hidden;" name="rememberme" value="false" data-yes="Yes" data-no="No" class="yesno" id="rememberme">
+												<label class="iPhoneCheckLabelOff" style="width: 51px;">
+													<span style="margin-right: -1px;">No</span>
+													</label><label class="iPhoneCheckLabelOn" style="width: 11px;">
+													<span style="margin-left: -40px;">Yes</span>
+													</label><div class="iPhoneCheckHandle" style="left: 1px;">
+													<div class="iPhoneCheckHandleRight">
+														<div class="iPhoneCheckHandleCenter"></div>
+													</div>
+												</div>
+											</div>
+										</td>
+										<td class="center actionContainer">
+											<a data-original-title="Edit" class="actionIcon" rel="tooltip" data-placement="bottom">
+												<i class="uiIconViewUserInfo uiIconLightGray"></i>
+											</a>
+											<a data-original-title="Delete" class="actionIcon" rel="tooltip" data-placement="bottom">
+								               	<i class="uiIconDeleteUser uiIconLightGray"></i>
+											</a>
+										</td>
+									</tr>
+									<tr>
+										<td>I've been using eXo since few years now what</td>
+										<td class="center">
+											1
+										</td>
+										<td class="center">
+											<div style="width: 60px;" class="iPhoneCheckContainer">
+												<input type="checkbox" id="rememberme" class="yesno" data-no="No" data-yes="Yes" value="true" name="rememberme" style="visibility: hidden;" checked="checked" tabindex="3">
+												<label style="width: 51px;" class="iPhoneCheckLabelOff">
+													<span style="margin-right: -41px;">No</span>
+												</label>
+												<label style="width: 51px;" class="iPhoneCheckLabelOn">
+													<span style="margin-left: 0px;">Yes</span>
+												</label>
+												<div style="left: 41px;" class="iPhoneCheckHandle">
+													<div class="iPhoneCheckHandleRight">
+														<div class="iPhoneCheckHandleCenter"></div>
+													</div>
+												</div>
+											</div>
+										</td>
+										<td class="center actionContainer">
+											<a data-original-title="Edit" class="actionIcon" rel="tooltip" data-placement="bottom">
+												<i class="uiIconViewUserInfo uiIconLightGray"></i>
+											</a>
+											<a data-original-title="Delete" class="actionIcon" rel="tooltip" data-placement="bottom">
+								               	<i class="uiIconDeleteUser uiIconLightGray"></i>
+											</a>
+										</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+					</div>
+					<div class="control-group">
+						<div class="controls text-right">
+							<button class="btn btn-primary">Add</button>
+						</div>
+					</div>
+					<div class="control-group">
+						<label class="control-label">Link:</label>
+						<div class="controls">
+							<input class="full" type="text" placeholder="" value="http://sourceforge.net/project/exo/">
+						</div>
+					</div>
+					<div class="control-group">
+						<label class="control-label">Priority:</label>
+						<div class="controls">
+							<select name="" id="" class="input-mini">
+								<option value="">1</option>
+								<option value="">2</option>
+								<option value="">3</option>
+							</select>
+						</div>
+					</div>
+					<div class="control-group">
+						<label class="control-label">Activated:</label>
+						<div class="controls">
+							<div style="width: 60px;" class="iPhoneCheckContainer">
+								<input type="checkbox" id="rememberme" class="yesno" data-no="No" data-yes="Yes" value="true" name="rememberme" style="visibility: hidden;" checked="checked" tabindex="3">
+								<label style="width: 51px;" class="iPhoneCheckLabelOff">
+									<span style="margin-right: -41px;">No</span>
+								</label>
+								<label style="width: 51px;" class="iPhoneCheckLabelOn">
+									<span style="margin-left: 0px;">Yes</span>
+								</label>
+								<div style="left: 41px;" class="iPhoneCheckHandle">
+									<div class="iPhoneCheckHandleRight">
+										<div class="iPhoneCheckHandleCenter"></div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="text-center">
+						<button class="btn btn-primary">Save</button>
+						<button class="btn mgL20">Cancel</button>
+					</div>
+				</div>
+			</div>
+			<div class="tab-pane fade" id="participantsTab">
+				<p>Etsy mixtape wayfarers, ethical wes anderson tofu before they sold out mcsweeney's organic lomo retro fanny pack lo-fi farm-to-table readymade. Messenger bag gentrify pitchfork tattooed craft beer, iphone skateboard locavore carles etsy salvia banksy hoodie helvetica. DIY synth PBR banksy irony. Leggings gentrify squid 8-bit cred pitchfork. Williamsburg banh mi whatever gluten-free, carles pitchfork biodiesel fixie etsy retro mlkshk vice blog. Scenester cred you probably haven't heard of them, vinyl craft beer blog stumptown. Pitchfork sustainable tofu synth chambray yr.</p>
+			</div>
+		</div>
+
+		<!-- Popupp -->
+		<div class="uiPopup UIDragObject NormalStyle" style="display: block; left: 330px; top: 50px; visibility: visible; width: 540px; z-index: 4;">
+			<div class="popupHeader clearfix">
+				<a onclick="" title="Close Window" class="uiIconClose pull-right"></a>
+				<span class="PopupTitle popupTitle">Add a new Proposition</span>
+			</div>
+			<div class="PopupContent popupContent">
+				<div class="addNewProposition">
+					<div class="control-group">
+						<label class="control-label">Content:</label>
+						<div class="control row-fluid">
+							<textarea class="span12" style="min-height: 84px" name="" id="" cols="30" rows="15"></textarea>
+						</div>
+					</div>
+					<div class="row-fluid control-group">
+						<label class="control-label span2">Activated:</label>
+						<div class="controls">
+							<div class="iPhoneCheckContainer" style="width: 60px;">
+								<input type="checkbox" tabindex="3" checked="checked" style="visibility: hidden;" name="rememberme" value="false" data-yes="Yes" data-no="No" class="yesno" id="rememberme">
+								<label class="iPhoneCheckLabelOff" style="width: 51px;">
+									<span style="margin-right: -1px;">No</span>
+									</label><label class="iPhoneCheckLabelOn" style="width: 11px;">
+									<span style="margin-left: -40px;">Yes</span>
+									</label><div class="iPhoneCheckHandle" style="left: 1px;">
+									<div class="iPhoneCheckHandleRight">
+										<div class="iPhoneCheckHandleCenter"></div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="uiAction uiActionBorder">
+				    <button class="btn" type="button">Save</button>
+				    <button class="btn" type="button">Cancel</button>
+				  </div>
+			</div>
+		</div>
+		<!-- Popupp -->
+	</div>
+	<!-- TAB 2 Step 2 with Popup -->
+	<br>
+	<!-- TAB 3 -->
+	<!-- TAB 3 -->
+</div>
