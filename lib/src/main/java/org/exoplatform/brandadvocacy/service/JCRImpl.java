@@ -204,15 +204,8 @@ public class JCRImpl implements IService {
   }
 
   @Override
-  public Mission getMissionRandom(String mkey, String pKey) {
-    List<Mission> missions = this.getMissionDAO().getMissionsRandom(mkey);
-    if(null != missions && missions.size() > 0){
-      Mission mission = missions.get(0);
-      List<Proposition> propositions = this.getPropositionDAO().getPropositionsRandom(mission.getId(),pKey);
-      mission.setPropositions(propositions);
-      return mission;
-    }
-    return null;
+  public Mission getRandomMisson(int priority) {
+    return this.getMissionDAO().getRandomMission(priority);
   }
 
   @Override
@@ -342,6 +335,11 @@ public class JCRImpl implements IService {
   @Override
   public List<Proposition> searchPropositions(String sql){
     return this.getPropositionDAO().searchPropositions(sql);
+  }
+
+  @Override
+  public Proposition getRandomProposition(String mid) {
+    return this.getPropositionDAO().getRandomProposition(mid);
   }
 
 }

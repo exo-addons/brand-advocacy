@@ -29,6 +29,7 @@ import javax.jcr.query.Query;
 import javax.jcr.query.QueryResult;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 /**
  * Created by The eXo Platform SAS Author : eXoPlatform exo@exoplatform.com Sep
@@ -267,12 +268,32 @@ public class MissionDAO extends DAO {
     }
   }
 
-  public List<Mission> getMissionsRandom(String keyword){
+  public int getTotalNumberMissions(Boolean isPublic, Boolean isActive,int priority){
+    StringBuilder sql = new StringBuilder("select jcr:uuid from "+ JCRImpl.MISSION_NODE_TYPE +" where ");
+    if(isPublic){
+      sql.append(node_prop_active).append("=").append(true);
+    }else{
+      sql.append(node_prop_active).append("=").append(isActive);
+    }
+    if(priority != 0){
+      sql.append(" AND ").append(node_prop_priority).append("=").append(priority);
+    }
+    return this.getNodesByQuery(sql.toString(),0,0).size();
+  }
+  public Mission getRandomMission(int priority){
+
+    int total = this.getTotalNumberMissions(true,true,priority);
     StringBuilder sql = new StringBuilder("select * from "+ JCRImpl.MISSION_NODE_TYPE +" where ");
-    sql.append(node_prop_labelID).append(" like '%"+keyword+"%'");
-    sql.append(" OR "+node_prop_title).append(" like '%"+keyword+"%'");
-    List<Node> nodes =  this.getNodesByQuery(sql.toString(),0,1);
-    return this.transferNodes2Objects(nodes);
+    sql.append(node_prop_active).append("=").append(true);
+    sql.append(" AND ").append(node_prop_priority).append("=").append(priority);
+    Random random = new Random();
+    List<Node> nodes =  this.getNodesByQuery(sql.toString(), random.nextInt(total),1);
+    try {
+      return this.transferNode2Object(nodes.get(0));
+    } catch (RepositoryException e) {
+      log.error("ERROR cannot get random mission");
+    }
+    return null;
   }
 
 }

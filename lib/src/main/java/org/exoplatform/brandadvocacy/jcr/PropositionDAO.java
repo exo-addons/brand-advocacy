@@ -29,6 +29,7 @@ import javax.jcr.query.Query;
 import javax.jcr.query.QueryResult;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 /**
  * Created by The eXo Platform SAS
@@ -236,14 +237,31 @@ public class PropositionDAO extends DAO {
     return null;
   }
 
-  public List<Proposition> getPropositionsRandom(String mid, String keyword){
-    StringBuilder sql = new StringBuilder("select * from "+ JCRImpl.PROPOSITION_NODE_TYPE +" where ");
-    sql.append(node_prop_mission_id).append(" like '"+mid+"'").append(" AND ( ");
-    sql.append(node_prop_labelID).append(" like '%"+keyword+"%'");
-    sql.append(" OR "+node_prop_content).append(" like '%"+keyword+"%'");
-    sql.append(" ) ");
+  public int getTotalNumberPropositions(Boolean isPublic, Boolean isActive,String mid){
+    StringBuilder sql = new StringBuilder("select jcr:uuid from "+ JCRImpl.PROPOSITION_NODE_TYPE +" where ");
+    if(isPublic){
+      sql.append(node_prop_active).append("=").append(true);
+    }else{
+      sql.append(node_prop_active).append("=").append(isActive);
+    }
+    if (null != mid && !"".equals(mid)){
+      sql.append(" AND ").append(node_prop_mission_id).append(" = ").append(mid);
+    }
+    return this.getNodesByQuery(sql.toString(),0,0).size();
+  }
+  public Proposition getRandomProposition(String mid){
+
+    StringBuilder sql = new StringBuilder("select * from "+ JCRImpl.MISSION_NODE_TYPE +" where ");
+    sql.append(node_prop_active).append("=").append(true);
+    sql.append(" AND ").append(node_prop_mission_id).append("=").append(mid);
+    sql.append(" ORDER BY ").append(node_prop_numberUsed);
     List<Node> nodes =  this.getNodesByQuery(sql.toString(),0,1);
-    return this.transferNodes2Objects(nodes);
+    try {
+      return this.transferNode2Object(nodes.get(0));
+    } catch (RepositoryException e) {
+      log.error("ERROR cannot get random proposition");
+    }
+    return null;
   }
 
 }

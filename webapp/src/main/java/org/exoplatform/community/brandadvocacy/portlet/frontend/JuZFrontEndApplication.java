@@ -3,7 +3,6 @@ package org.exoplatform.community.brandadvocacy.portlet.frontend;
 import juzu.*;
 import juzu.plugin.ajax.Ajax;
 import juzu.request.SecurityContext;
-import juzu.template.Template;
 import org.exoplatform.brandadvocacy.model.*;
 import org.exoplatform.brandadvocacy.service.IService;
 import org.exoplatform.services.organization.OrganizationService;
@@ -85,26 +84,6 @@ public class JuZFrontEndApplication {
   public Response loadProcessView(){
     String result = "nok";
     Mission missionRandom = null;
-    if(null == this.currentMissionParticipantId){
-      missionRandom = this.jcrService.getMissionRandom("","");
-      if(null != missionRandom) {
-        String propositionId = missionRandom.getPropositions().get(0).getId();
-        if (this.addMissionParticipant(missionRandom.getId(),propositionId) )
-          result = "ok";
-      }
-    }else{
-      MissionParticipant missionParticipant = this.jcrService.getMissionParticipantById(this.currentMissionParticipantId);
-      if(null != missionParticipant){
-        missionRandom = this.jcrService.getMissionById(missionParticipant.getMission_id());
-        Proposition proposition = this.jcrService.getPropositionById(missionParticipant.getProposition_id());
-        if (null != proposition){
-          List<Proposition> propositions = new ArrayList<Proposition>(1);
-          propositions.add(proposition);
-          missionRandom.setPropositions(propositions);
-          result = "ok";
-        }
-      }
-    }
     if("ok".equals(result) && null != missionRandom)
      return processTpl.with().set("mission", missionRandom).ok();
     else
@@ -149,7 +128,7 @@ public class JuZFrontEndApplication {
 
   }
 
-  public Boolean addMissionParticipant(String missionId, String propositionId){
+  private Boolean addMissionParticipant(String missionId, String propositionId){
 
     MissionParticipant missionParticipant = new MissionParticipant();
     missionParticipant.setMission_id(missionId);
@@ -158,11 +137,16 @@ public class JuZFrontEndApplication {
     try {
       missionParticipant = this.jcrService.addMissionParticipant(missionParticipant);
       if(null != missionParticipant){
+        Proposition proposition = this.jcrService.getPropositionById(missionParticipant.getProposition_id());
+        if(null != proposition){
+          proposition.setNumberUsed(proposition.getNumberUsed()+1);
+          this.jcrService.updateProposition(proposition);
+        }
         this.currentMissionParticipantId = missionParticipant.getId();
         Participant participant = new Participant(this.remoteUserName);
         Set<String> missionParticipantIds = new HashSet<String>();
         missionParticipantIds.add(this.currentMissionParticipantId);
-        participant.setMission_participant_ids(missionParticipantIds);
+        participant.setMission_ids(missionParticipantIds);
         if (null != this.jcrService.addParticipant(participant));
           return true;
       }
@@ -172,4 +156,30 @@ public class JuZFrontEndApplication {
     return false;
   }
 
+  private Mission getOrCreateRandomMission(){
+    Mission randomMission = null;
+    if(null == this.currentMissionParticipantId){
+      randomMission = this.jcrService.getRandomMisson(3);
+      if(null != randomMission) {
+        String propositionId = randomMission.getPropositions().get(0).getId();
+        if (this.addMissionParticipant(randomMission.getId(),propositionId) )
+          return randomMission;
+      }
+    }else{
+      MissionParticipant missionParticipant = this.jcrService.getMissionParticipantById(this.currentMissionParticipantId);
+      if(null != missionParticipant){
+        randomMission = this.jcrService.getMissionById(missionParticipant.getMission_id());
+        Proposition proposition = this.jcrService.getPropositionById(missionParticipant.getProposition_id());
+        if (null != proposition){
+          List<Proposition> propositions = new ArrayList<Proposition>(1);
+          propositions.add(proposition);
+          randomMission.setPropositions(propositions);
+          return randomMission;
+        }
+      }
+    }
+
+    return null;
+
+  }
 }
