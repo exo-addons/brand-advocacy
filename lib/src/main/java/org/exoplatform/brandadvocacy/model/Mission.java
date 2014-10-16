@@ -49,11 +49,11 @@ public class Mission {
    
   }
   public void init(){
-    this.setPriority(Priority.PRIORITY_2);
+    this.setPriority(Priority.PRIORITY_1);
     this.setLabelID(UUID.randomUUID().toString());
     this.setCreatedDate(System.currentTimeMillis());
     this.setModifiedDate(System.currentTimeMillis());
-    this.setActive(true);
+    this.setActive(false);
   }
 
   public String getLabelID() {

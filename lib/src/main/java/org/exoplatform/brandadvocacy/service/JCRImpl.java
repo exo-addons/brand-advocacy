@@ -204,8 +204,8 @@ public class JCRImpl implements IService {
   }
 
   @Override
-  public Mission getRandomMisson(int priority) {
-    return this.getMissionDAO().getRandomMission(priority);
+  public Mission getRandomMisson(String username) {
+    return this.getMissionDAO().getRandomMission(username);
   }
 
   @Override
@@ -251,6 +251,11 @@ public class JCRImpl implements IService {
   @Override
   public MissionParticipant getMissionParticipantById(String mpId) {
     return this.getMissionParticipantDAO().getMissionParticipantById(mpId);
+  }
+
+  @Override
+  public void removeMissionParticipant(String id) {
+    this.getMissionParticipantDAO().removeMissionParticipant(id);
   }
 
   @Override

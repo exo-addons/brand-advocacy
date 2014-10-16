@@ -34,7 +34,7 @@ public interface IService {
   public Mission getMissionById(String id);
   public List<Mission> getAllMissions();
   public Mission updateMission(Mission m);
-  public Mission getRandomMisson(int priority);
+  public Mission getRandomMisson(String username);
   public List<Mission> getAllMissionsByParticipant(String username);
 
   public Participant addParticipant(Participant p);
@@ -67,5 +67,5 @@ public interface IService {
   public List<MissionParticipant> getAllMissionParticipants();
   public List<MissionParticipant> getMissionParticipantsByParticipant(String username);
   public MissionParticipant getMissionParticipantById(String mpId);
-
+  public void removeMissionParticipant(String id);
 }

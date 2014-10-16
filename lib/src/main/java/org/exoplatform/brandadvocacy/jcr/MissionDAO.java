@@ -28,10 +28,7 @@ import org.exoplatform.services.log.Log;
 import javax.jcr.*;
 import javax.jcr.query.Query;
 import javax.jcr.query.QueryResult;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Created by The eXo Platform SAS Author : eXoPlatform exo@exoplatform.com Sep
@@ -287,25 +284,61 @@ public class MissionDAO extends DAO {
     }
     return this.getNodesByQuery(sql.toString(),0,0).size();
   }
-  public Mission getRandomMission(int priority){
 
-    int total = this.getTotalNumberMissions(true,true,priority);
-    if(0 == total)
+  public Mission getRandomMission(String username){
+
+    if(this.getTotalNumberMissions(true,true,0) == 0)
       return null;
-    StringBuilder sql = new StringBuilder("select * from "+ JCRImpl.MISSION_NODE_TYPE +" where ");
-    sql.append(node_prop_active).append("= 'true' ");
-    sql.append(" AND ").append(node_prop_priority).append("=").append(priority);
+    List<String> mission_prio1_Ids = this.getMissionIdsByPriority(Priority.PRIORITY_1.getValue());
+    if (mission_prio1_Ids.size() == 0)
+      mission_prio1_Ids = this.getMissionIdsByPriority(Priority.PRIORITY_2.getValue());
+    if (mission_prio1_Ids.size() == 0)
+      mission_prio1_Ids = this.getMissionIdsByPriority(Priority.PRIORITY_3.getValue());
+
+    List<String> missionIds = mission_prio1_Ids;
+    Map<Integer,List<String>> mission_used_ids = this.getMissionIdsByParticipant(username);
+    if(mission_used_ids.size() > 0){
+
+      List<String> mission_used_prio1_ids = mission_used_ids.get(Priority.PRIORITY_1.getValue());
+      List<String> mission_used_prio2_ids = mission_used_ids.get(Priority.PRIORITY_2.getValue());
+      List<String> mission_used_prio3_ids = mission_used_ids.get(Priority.PRIORITY_3.getValue());
+      if(mission_used_prio1_ids.size() == mission_prio1_Ids.size()){
+
+        List<String> mission_prio2_Ids = this.getMissionIdsByPriority(Priority.PRIORITY_2.getValue());
+        if(mission_used_prio2_ids.size() == mission_prio2_Ids.size()){
+          List<String> mission_prio3_Ids = this.getMissionIdsByPriority(Priority.PRIORITY_3.getValue());
+          if(mission_prio3_Ids.size() == mission_used_prio3_ids.size()){
+            missionIds = mission_prio1_Ids;
+          }else{
+            if(mission_prio3_Ids.removeAll(mission_used_prio3_ids)){
+              missionIds = mission_prio3_Ids;
+            }
+          }
+
+        }else{
+          if(mission_prio2_Ids.removeAll(mission_used_prio2_ids)){
+            missionIds = mission_prio2_Ids;
+          }
+        }
+      }else{
+        if(mission_prio1_Ids.removeAll(mission_used_prio1_ids)){
+          missionIds = mission_prio1_Ids;
+        }
+      }
+    }
     Random random = new Random();
-    List<Node> nodes =  this.getNodesByQuery(sql.toString(), random.nextInt(total),1);
-    try {
-      if (nodes.size() > 0)
-        return this.transferNode2Object(nodes.get(0));
-    } catch (RepositoryException e) {
-      log.error("ERROR cannot get random mission");
+    int nb = missionIds.size();
+    if(nb > 0){
+      String mid = missionIds.get(random.nextInt(nb));
+      try {
+        Node missionNode = this.getNodeById(mid);
+        return this.transferNode2Object(missionNode);
+      } catch (RepositoryException e) {
+        log.error("cannot get random mission for "+username);
+      }
     }
     return null;
   }
-
   public List<Mission> getAllMissionsByParticipant(String username){
 
     List<Mission> missions = new ArrayList<Mission>();
@@ -330,9 +363,59 @@ public class MissionDAO extends DAO {
     }
     return missions;
   }
-  public List<Mission> getAllMissionsAvailableForParticipant(List<Mission> missionsToCheck, String username){
-    List<Mission> missions = new ArrayList<Mission>();
-
-    return missions;
+  private List<String> getMissionIdsByPriority(int priority){
+    List<String> missionIds = new ArrayList<String>();
+    StringBuilder sql = new StringBuilder("select jcr:uuid from "+ JCRImpl.MISSION_NODE_TYPE +" where ");
+    sql.append(node_prop_active).append("= 'true' ");
+    sql.append(" AND ").append(node_prop_priority).append("=").append(priority);
+    List<Node> nodes =  this.getNodesByQuery(sql.toString(),0,0);
+    for (Node node:nodes){
+      try {
+          missionIds.add(node.getUUID());
+      } catch (RepositoryException e) {
+        log.error("ERROR cannot get mission ids by prio");
+      }
+    }
+    return missionIds;
   }
+  private Map<Integer,List<String>> getMissionIdsByParticipant(String username){
+
+    Map<Integer,List<String>> missionIds = new HashMap<Integer, List<String>>();
+    ParticipantDAO participantDAO = this.getJcrImplService().getParticipantDAO();
+    Node participantNode = participantDAO.getNodeByUserName(username);
+    if (null != participantNode){
+      Participant participant = null;
+      try {
+        participant = participantDAO.transferNode2Object(participantNode);
+        Set<String> mids = participant.getMission_ids();
+        Mission mission;
+        List<String> mission_prio1_ids = new ArrayList<String>();
+        List<String> mission_prio2_ids = new ArrayList<String>();
+        List<String> mission_prio3_ids = new ArrayList<String>();
+        for (String mid:mids){
+          mission = this.transferNode2Object(this.getNodeById(mid));
+          mission.checkValid();
+          if (mission.getPriority().equals(Priority.PRIORITY_1)){
+            mission_prio1_ids.add(mission.getId());
+          }else if (mission.getPriority().equals(Priority.PRIORITY_2)){
+            mission_prio2_ids.add(mission.getId());
+          }else if (mission.getPriority().equals(Priority.PRIORITY_3)){
+            mission_prio3_ids.add(mission.getId());
+          }
+        }
+        missionIds.put(Priority.PRIORITY_1.getValue(),mission_prio1_ids);
+        missionIds.put(Priority.PRIORITY_2.getValue(),mission_prio2_ids);
+        missionIds.put(Priority.PRIORITY_3.getValue(),mission_prio3_ids);
+
+      } catch (RepositoryException e) {
+        log.error("=== ERROR getMissionIdsByParticipant for "+username);
+        e.printStackTrace();
+      } catch (BrandAdvocacyServiceException brade){
+        log.error("ERROR "+brade.getMessage());
+      }
+
+    }
+    return missionIds;
+  }
+
 }

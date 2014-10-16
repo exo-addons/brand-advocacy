@@ -1,6 +1,9 @@
 /**
  * Created by exoplatform on 08/10/14.
  */
-function Ta(){
-        
-}
+$(function() {
+  function bradBackend(){
+    this.ftStepDOM = null;
+  };
+
+});

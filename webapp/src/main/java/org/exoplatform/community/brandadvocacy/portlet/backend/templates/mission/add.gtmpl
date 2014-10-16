@@ -1,20 +1,61 @@
 #{param name=priorities/}
 <form action="@{MissionController.add()}" method="POST" role="form">
-    <h5>Add a mission</h5>
-    Title
-    <input type="text" name="title" value=""/>
-    <br/>
-    Third part link
-    <input type="text" name="third_party_link" value=""/>
-    <br/>
-    Priority
-    <select name="priority">
-        <% priorities.each { priority -> %>
-        <option value="<%= priority.getValue() %>"><%= priority.getValue() %></option>
-        <% } %>
-    </select>
-    <br/>
-    Active <input type="checkbox" name="active" id="active" value="1" />
-    <br/>
-    <button type="submit">Add</button>
+
+    <div class="form-horizontal">
+        <div class="control-group">
+            <label class="control-label">Title:</label>
+            <div class="controls">
+                <input class="full" type="text" name="title" id="title" placeholder="Write a review on Sourceforge.com">
+            </div>
+        </div>
+        <div class="control-group">
+            <label class="control-label">Proposition lists:</label>
+            <div class="controls">
+            </div>
+        </div>
+        <div class="control-group">
+            <div class="controls text-right">
+                <button class="btn btn-primary">Add</button>
+            </div>
+        </div>
+        <div class="control-group">
+            <label class="control-label">Link:</label>
+            <div class="controls">
+                <input class="full" type="text" name="third_party_link" id="third_party_link"  placeholder="http://sourceforge.net/project/exo/">
+            </div>
+        </div>
+        <div class="control-group">
+            <label class="control-label">Priority:</label>
+            <div class="controls">
+                    <select name="priority" id="priority"  class="input-mini">
+                        <% priorities.each { priority -> %>
+                        <option value="<%= priority.getValue() %>"><%= priority.getValue() %></option>
+                        <% } %>
+                    </select>
+            </div>
+        </div>
+        <div class="control-group">
+            <label class="control-label">Activated:</label>
+            <div class="controls">
+                <div style="width: 60px;" class="iPhoneCheckContainer">
+                    <input type="checkbox" name="active" id="active" value="1" class="yesno" data-no="No" data-yes="Yes" style="visibility: hidden;" checked="checked" tabindex="3">
+                    <label style="width: 51px;" class="iPhoneCheckLabelOff">
+                        <span style="margin-right: -41px;">No</span>
+                    </label>
+                    <label style="width: 51px;" class="iPhoneCheckLabelOn">
+                        <span style="margin-left: 0px;">Yes</span>
+                    </label>
+                    <div style="left: 41px;" class="iPhoneCheckHandle">
+                        <div class="iPhoneCheckHandleRight">
+                            <div class="iPhoneCheckHandleCenter"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="text-center">
+            <button class="btn btn-primary" type="submit">Save</button>
+            <button class="btn mgL20">Cancel</button>
+        </div>
+    </div>
 </form>

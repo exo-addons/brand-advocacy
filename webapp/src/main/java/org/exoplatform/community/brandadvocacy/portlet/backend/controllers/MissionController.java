@@ -4,6 +4,7 @@ import juzu.Action;
 import juzu.Path;
 import juzu.Response;
 import juzu.View;
+import juzu.request.SecurityContext;
 import juzu.template.Template;
 import org.exoplatform.brandadvocacy.model.Manager;
 import org.exoplatform.brandadvocacy.model.Mission;

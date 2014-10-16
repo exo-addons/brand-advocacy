@@ -30,108 +30,6 @@ import java.util.*;
  */
 public class TestMission extends AbstractTest {
 
-/*
-  public void testCreate(){
-    int nb = this.service.getAllMissions().size();
-    Mission m = new Mission("my second mission");
-    List<Manager> managers = new ArrayList<Manager>();
-
-    Manager manager = new Manager(this.username);
-    managers.add(manager);
-
-    m.setManagers(managers);
-    m = this.service.addMission(m);
-
-
-    assertEquals("should have 1 more missions ", nb+1, this.service.getAllMissions().size());
-    assertEquals("should have 1 managers ",1, this.service.getAllManagers(m.getId()).size());
-
-    managers = new ArrayList<Manager>();
-    manager = new Manager("toto");
-    manager.setRole(Role.Shipping_Manager);
-    managers.add(manager);
-    this.service.addManagers2Mission(m.getId(),managers);
-    assertEquals("should have 2 managers ",2, this.service.getAllManagers(m.getId()).size());
-
-    List<Proposition> propositions = new ArrayList<Proposition>();
-    Proposition proposition = new Proposition();
-    proposition.setContent("proposition 1");
-    propositions.add(proposition);
-    this.service.addProposition2Mission(m.getId(), propositions);
-    assertEquals("should have 1 proposition ", 1, this.service.getAllPropositions(m.getId()).size());
-  }
-  public void testManager(Mission m){
-    debug(" ============ test manager =================");
-    Manager manager = new Manager(this.username);
-    manager.setRole(Role.Validator);
-    manager.setMission_id(m.getId());
-    this.service.updateManager(manager);
-    this.service.removeManager(manager);
-    assertEquals("should have 1 manager after removing 1",1,this.service.getAllManagers(m.getId()).size());
-  }
-  public void testProposition(Proposition proposition){
-    debug("================ test proposition");
-    proposition.setContent("new content");
-    this.service.updateProposition(proposition);
-    ShowMissionInfo();
-    this.service.removeProposition(proposition);
-    assertEquals("should have no propostion after removing",0,this.service.getAllPropositions(proposition.getMission_id()).size());
-  }
-  public void testMissionParticipant() throws RepositoryException {
-    Mission m = new Mission("mission twitter");
-    m.setThird_party_link("http:google.com");
-    m = this.service.addMission(m);
-    Manager manager = new Manager(this.username);
-    List<Manager> managers = new ArrayList<Manager>();
-    managers.add(manager);
-    this.service.addManagers2Mission(m.getId(),managers);
-    Proposition proposition = new Proposition("twitte it !!! ");
-    List<Proposition> propositions = new ArrayList<Proposition>();
-    propositions.add(proposition);
-    this.service.addProposition2Mission(m.getId(),propositions);
-    ShowMissionInfo();
-    MissionParticipant missionParticipant = new MissionParticipant();
-    missionParticipant.setParticipant_username("participant 1");
-    missionParticipant.setMission_id(m.getId());
-    this.service.addMissionParticipant(missionParticipant);
-    showMissionParticipantInfo();
-  }
-  public void ShowMissionInfo(){
-    List<Mission> missions = this.service.getAllMissions();
-    for (Mission m:missions){
-      debug(m.toString());
-      List<Manager> managers = this.service.getAllManagers(m.getId());
-      for (Manager manager:managers){
-        debug(manager.toString());
-      }
-      List<Proposition> propositions = this.service.getAllPropositions(m.getId());
-      for (Proposition proposition:propositions){
-        debug(proposition.toString());
-      }
-    }
-  }
-  public void showMissionParticipantInfo(){
-    try {
-      List<MissionParticipant> missionParticipants = this.service.getAllMissionParticipants();
-      for (MissionParticipant missionParticipant:missionParticipants){
-        debug(missionParticipant.toString());
-      }
-    } catch (RepositoryException e) {
-      log.error("cannot get all mission participants");
-    }
-  }
-  public void testDuplicateManager(){
-    Mission mission = new Mission("mission for manager");
-    List<Manager> managers = new ArrayList<Manager>();
-    Manager manager = new Manager(this.username);
-    managers.add(manager);
-    manager = new Manager(this.username);
-    managers.add(manager);
-    mission.setManagers(managers);
-    mission = this.service.addMission(mission);
-    ShowMissionInfo();
-  }
-*/
   public void testAll(){
     Mission m = new Mission("facebook !!!! priority 1 ");
     List<Manager> managers = new ArrayList<Manager>();
@@ -385,6 +283,15 @@ public class TestMission extends AbstractTest {
     m_prio5 = this.service.addMission(m_prio5);
     this.service.addManagers2Mission(m_prio5.getId(),managers);
 
+    propositions = new ArrayList<Proposition>();
+    proposition = new Proposition();
+    proposition.setContent("proposition 1 for mission prio 4");
+    propositions.add(proposition);
+    proposition2 = new Proposition();
+    proposition2.setContent("proposition 2 for mission prio 4");
+    propositions.add(proposition2);
+    this.service.addProposition2Mission(m_prio5.getId(), propositions);
+
     Mission m_prio6 = new Mission(" mission prio 5 ");
     managers = new ArrayList<Manager>();
     manager = new Manager("manager2");
@@ -394,18 +301,30 @@ public class TestMission extends AbstractTest {
     m_prio6 = this.service.addMission(m_prio6);
     this.service.addManagers2Mission(m_prio6.getId(),managers);
 
+    propositions = new ArrayList<Proposition>();
+    proposition = new Proposition();
+    proposition.setContent("proposition 1 for mission prio 5");
+    propositions.add(proposition);
+    proposition2 = new Proposition();
+    proposition2.setContent("proposition 2 for mission prio 5");
+    propositions.add(proposition2);
+    this.service.addProposition2Mission(m_prio6.getId(), propositions);
+
     assertEquals("should have 8 mission ",8,this.service.getAllMissions().size());
+
 //    this.showInfo();
     this.showInfoRandom();
   }
   public void showInfoRandom(){
 
-    Mission mission = this.service.getRandomMisson(1);
-    debug(" random mission "+mission.getTitle());
-    debug("========= list propositions  ================");
-    Proposition proposition = this.service.getRandomProposition(mission.getId());
-    if(null != proposition)
-      debug(" random proposition "+proposition.getContent());
+    Mission mission = this.service.getRandomMisson("participant_1");
+    if(null != mission){
+      debug(" random mission "+mission.getTitle() + " - "+mission.getPriority().getLabel());
+      debug("========= list propositions  ================");
+      Proposition proposition = this.service.getRandomProposition(mission.getId());
+      if(null != proposition)
+        debug(" random proposition "+proposition.getContent());
+    }
 
   }
   public void showInfo(){

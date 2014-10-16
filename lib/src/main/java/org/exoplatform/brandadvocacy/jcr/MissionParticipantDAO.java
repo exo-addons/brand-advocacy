@@ -274,4 +274,28 @@ public class MissionParticipantDAO extends DAO {
     return null;
   }
 
+  public int getTotalNumberMPByParticipant(int status,String username){
+    StringBuilder sql = new StringBuilder("select jcr:uuid from "+ JCRImpl.MISSION_PARTICIPANT_NODE_TYPE +" where ");
+    sql.append(node_prop_participant_username).append(" = '").append(username).append("'");
+    if (status != 0){
+      sql.append(" AND ").append(node_prop_status).append(" = '").append(status).append("'");
+    }
+    return this.getNodesByQuery(sql.toString(),0,0).size();
+  }
+
+  public void removeMissionParticipant(String id){
+    try {
+      Node node = this.getNodeById(id); //this.getNodeByLabelID(proposition.getMission_id(), proposition.getId());
+      if(null != node){
+        Session session = node.getSession();
+        node.remove();
+        session.save();
+      }else
+        throw new BrandAdvocacyServiceException(BrandAdvocacyServiceException.PROPOSITION_NOT_EXISTS," cannot remove proposition not exists");
+    } catch (RepositoryException e) {
+      log.error("==== ERROR cannot removeMissionParticipant "+e.getMessage() );
+    } catch (BrandAdvocacyServiceException brade){
+      log.error(brade.getMessage());
+    }
+  }
 }

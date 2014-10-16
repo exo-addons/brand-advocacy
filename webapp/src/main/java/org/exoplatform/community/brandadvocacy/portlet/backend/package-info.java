@@ -17,10 +17,16 @@
     id = "bradBKJS", value = "js/brad-backend.js",location = AssetLocation.SERVER,depends = {"jquery"}
   )
 })
+@Stylesheets(
+{
+  @Stylesheet(value = "css/brad-backend.css",location = AssetLocation.SERVER)
+}
+)
+
+@Assets("*")
 package org.exoplatform.community.brandadvocacy.portlet.backend;
 import juzu.asset.AssetLocation;
-import juzu.plugin.asset.Script;
-import juzu.plugin.asset.Scripts;
+import juzu.plugin.asset.*;
 import juzu.plugin.webjars.WebJar;
 import juzu.plugin.webjars.WebJars;
 import juzu.Application;

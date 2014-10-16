@@ -1,10 +1,12 @@
 package org.exoplatform.community.brandadvocacy.portlet.backend;
 
 import juzu.*;
+import juzu.request.SecurityContext;
 import juzu.template.Template;
 import org.exoplatform.brandadvocacy.service.IService;
 import org.exoplatform.community.brandadvocacy.portlet.backend.controllers.LoginController;
 import org.exoplatform.community.brandadvocacy.portlet.backend.controllers.MissionController;
+import org.exoplatform.community.brandadvocacy.portlet.backend.templates.index;
 import org.exoplatform.services.organization.OrganizationService;
 
 import javax.inject.Inject;
@@ -17,7 +19,7 @@ public class JuZBackEndApplication {
 
   @Inject
   @Path("index.gtmpl")
-  Template index;
+  org.exoplatform.community.brandadvocacy.portlet.backend.templates.index index;
 
   OrganizationService organizationService;
   IService brandAdvocacyService;
@@ -31,7 +33,6 @@ public class JuZBackEndApplication {
   public JuZBackEndApplication(OrganizationService organizationService,IService brandAdvocacyService){
     this.organizationService = organizationService;
     this.brandAdvocacyService = brandAdvocacyService;
-
   }
 
   @View

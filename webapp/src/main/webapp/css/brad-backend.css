@@ -1,0 +1,13 @@
+.referral-porlet {
+    padding: 20px;
+}
+.referral-porlet .addNewProposition textarea {
+    min-width: 100%;
+    max-width: 100%;
+}
+.referral-porlet .uiTabInPage {
+    position: relative;
+}
+.referral-porlet .text-center {
+    text-align: center;
+}

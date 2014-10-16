@@ -1,5 +1,7 @@
 package org.exoplatform.community.brandadvocacy.portlet.backend.controllers;
 
+import juzu.Response;
+import juzu.View;
 import juzu.request.SecurityContext;
 import org.exoplatform.services.organization.OrganizationService;
 
@@ -14,12 +16,11 @@ public class LoginController implements Serializable {
 
   private String currentUserName;
   OrganizationService organizationService;
-
   @Inject
-  public LoginController(OrganizationService organizationService, SecurityContext securityContext){
+  public LoginController(OrganizationService organizationService){
 
     this.organizationService = organizationService;
-    this.setCurrentUserName(securityContext.getUserPrincipal().getName());
+    this.setCurrentUserName("init");
 
   }
 

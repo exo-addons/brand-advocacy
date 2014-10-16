@@ -4,12 +4,67 @@
 <ul>
     <% propositions.each { proposition -> %>
         <% def pid = proposition.getId()%>
+
         <li>
             <%= proposition.getShortContent(50)%>
             <%= proposition.getNumberUsed()%>
+            <%= proposition.getActive()%>
             <a href="@{PropositionController.editForm(id=pid)}" role="button">edit</a>
             <a href="@{PropositionController.delete(mid=missionId,id=pid)}" role="button">Del</a>
         </li>
     <% } %>
 </ul>
+
+<table class="uiGrid table table-hover table-striped mgB0">
+    <thead>
+        <tr>
+            <th>Proposition</th>
+            <th class="center" style="width: 65px">Nb Used</th>
+            <th class="center" style="width: 65px">On/Off</th>
+            <th class="center actionContainer" style="width: 65px">Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        <% propositions.each { proposition -> %>
+            <%
+                def pid = proposition.getId();
+                def strActiveChkbox = "";
+                if(proposition.getActive())
+                    strActiveChkbox = "checked";
+            %>
+            <tr>
+                <td>
+                    <%= proposition.getShortContent(50)%>
+                </td>
+                <td class="center">
+                    <%= proposition.getNumberUsed()%>
+                </td>
+                <td class="center">
+                    <div style="width: 60px;" class="iPhoneCheckContainer">
+                        <input type="checkbox" id="proposition_active_<%=pid%>" class="yesno" data-no="No" data-yes="Yes" value="true" style="visibility: hidden;" <%=strActiveChkbox%> tabindex="3">
+                        <label style="width: 51px;" class="iPhoneCheckLabelOff">
+                            <span style="margin-right: -41px;">No</span>
+                        </label>
+                        <label style="width: 51px;" class="iPhoneCheckLabelOn">
+                            <span style="margin-left: 0px;">Yes</span>
+                        </label>
+                        <div style="left: 41px;" class="iPhoneCheckHandle">
+                            <div class="iPhoneCheckHandleRight">
+                                <div class="iPhoneCheckHandleCenter"></div>
+                            </div>
+                        </div>
+                    </div>
+                </td>
+                <td class="center actionContainer">
+                    <a data-original-title="Edit" class="actionIcon" rel="tooltip" data-placement="bottom" href="@{PropositionController.editForm(id=pid)}">
+                        <i class="uiIconViewUserInfo uiIconLightGray"></i>
+                    </a>
+                    <a data-original-title="Delete" class="actionIcon" rel="tooltip" data-placement="bottom" href="@{PropositionController.delete(mid=missionId,id=pid)}">
+                        <i class="uiIconDeleteUser uiIconLightGray"></i>
+                    </a>
+                </td>
+            </tr>
+        <% } %>
+    </tbody>
+</table>
 <a href="@{MissionController.view(id=missionId)}" role="button">Back to mission</a>
