@@ -308,6 +308,11 @@ public class JCRImpl implements IService {
   }
 
   @Override
+  public Address getAddressById(String id) {
+    return this.getAddressDAO().getAddressById(id);
+  }
+
+  @Override
   public Manager updateManager(Manager manager) {
     return this.getManagerDAO().updateManager(manager);
   }

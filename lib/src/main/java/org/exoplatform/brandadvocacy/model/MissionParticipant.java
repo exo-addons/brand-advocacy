@@ -45,6 +45,7 @@ public class MissionParticipant {
     this.setStatus(Status.OPEN);
     this.setSize(Size.Medium);
     this.setCreatedDate(System.currentTimeMillis());
+    this.setModifiedDate(System.currentTimeMillis());
 
   }
   public String getLabelID() {

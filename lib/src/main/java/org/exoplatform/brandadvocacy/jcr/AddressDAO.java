@@ -68,10 +68,13 @@ public class AddressDAO extends DAO{
         address.setPhone(p.getString());
       }
     }
-    return address;
-  }
-  public Node getNodeById(String id) throws RepositoryException{
-    return this.getJcrImplService().getSession().getNodeByUUID(id);
+    try {
+      address.checkValid();
+      return address;
+    }catch (BrandAdvocacyServiceException brade){
+      log.error("ERROR cannot transfer node to object");
+    }
+    return null;
   }
   public Node getNodeByLabelID(String pid,String labelID){
     StringBuilder sql = new StringBuilder("select * from "+ JCRImpl.ADDRESS_NODE_TYPE +" where jcr:path like '");
@@ -191,6 +194,21 @@ public class AddressDAO extends DAO{
       log.error(brade.getMessage());
     }
 
+    return null;
+  }
+
+  public Address getAddressById(String id){
+    if (null == id || "".equals(id))
+      return null;
+
+    try {
+      Node node = this.getNodeById(id);
+      if (null != node){
+        return this.transferNode2Object(node);
+      }
+    } catch (RepositoryException e) {
+      log.error("ERROR getAddressById cannot get address node");
+    }
     return null;
   }
 }

@@ -47,6 +47,7 @@ public interface IService {
   public Address updateAddress(Address address);
   public Address removeAddress(Address address);
   public List<Address> getAllAddressesByParticipant(String username);
+  public Address getAddressById(String id);
 
   public Mission addManagers2Mission(String mid,List<Manager> managers);
   public Manager updateManager(Manager manager);

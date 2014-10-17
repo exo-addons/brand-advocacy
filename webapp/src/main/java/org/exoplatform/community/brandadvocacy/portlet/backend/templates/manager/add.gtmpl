@@ -14,4 +14,4 @@
     <button type="submit">add</button>
 </form>
 <br/>
-<a href="@{MissionController.view(id=missionId)}" role="button">Back to mission</a>
+<a href="@{MissionController.editForm(id=missionId)}" role="button">Back to mission</a>

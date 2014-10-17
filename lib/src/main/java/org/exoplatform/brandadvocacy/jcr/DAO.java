@@ -75,4 +75,7 @@ public abstract class DAO {
     }
     return list;
   }
+  public Node getNodeById(String id) throws RepositoryException{
+    return this.getJcrImplService().getSession().getNodeByUUID(id);
+  }
 }

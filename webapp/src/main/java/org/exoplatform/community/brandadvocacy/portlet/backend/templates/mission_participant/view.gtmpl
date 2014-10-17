@@ -1,2 +1,94 @@
-#(param name=missionParticipant/)
-mission participant detail
+#{param name=missionParticipantDTO/}
+#{param name=address/}
+#{param name=participantDTO/}
+#{param name=states/}
+
+<%
+def username = participantDTO.getFullName();
+def urlProfile = participantDTO.getUrlProfile();
+def urlAvatar = participantDTO.getUrlAvatar();
+def strEmail = participantDTO.getEmail();
+def strUserAddress = "";
+def strAddress = "";
+def strPhone = "";
+if(address != null){
+    strUserAddress = address.getfName() +" "+address.getlName();
+    strAddress = address.getAddress() + ", " +address.getCity()+", "+address.getCountry();
+    strPhone = address.getPhone();
+}
+
+def tshirtSize = missionParticipantDTO.getSize();
+def strMissionTitle = missionParticipantDTO.getMission_title();
+def strDateSubmitted = missionParticipantDTO.getDate_submitted()
+%>
+
+<div class="referral-porlet">
+	<h3>Brand Advocacy Admin</h3><br>
+	<!-- TAB 1 -->
+	<div id="UITabPane" class="uiTabNormal uiTabInPage referral-tab-group">
+		<ul class="nav nav-tabs">
+			<li class="active"><a href="#generalTab" data-toggle="tab">General</a></li>
+			<li><a href="@{MissionController.list()}" data-toggle="tab">Missions</a></li>
+			<li><a href="@{MissionParticipantController.index()}" data-toggle="tab">Participants</a></li>
+		</ul>
+		<div id="myTabContent" class="tab-content">
+
+		<!-- part for ajax -->
+			<div class="tab-pane fade" id="generalTab">...</div>
+			<div class="tab-pane fade" id="missionsTab">...</div>
+			<div class="tab-pane fade in active" id="participantsTab">
+				<ul class="breadcrumb">
+				    <li><a href="#">Participants</a><span class="uiIconMiniArrowRight"></span></li>
+				    <li class="active"><%= username %></li>
+				</ul>
+				<br>
+				<div class="ref-detail-user">
+					<div class="media">
+						<div class="pull-left mgR15-ipt">
+							<img alt="User Default Avatar" class="avatarLargeWithBorder" src="../img/user-default.jpg">
+						</div>
+						<div class="media-body">
+							<h4 class="ref-user-name"><%= strUserAddress %></h4>
+							<div class="row-fluid">
+								<div class="span6">
+								    <% if(null != address){ %>
+                                        <p><b>Address:</b> <span><%= strUserAddress %></span></p>
+                                        <p><b>Phone:</b> <span><%= strPhone%></span></p>
+                                        <p><b>Email:</b> <span><%= strEmail%></span></p>
+                                        <p><b>T-Shirt Size:</b> <span><%= tshirtSize%></span></p>
+								    <% }else{ %>
+                                        no address yet
+                                    <% } %>
+								</div>
+								<div class="span6">
+									<p><b>Missions:</b> <span><%= strMissionTitle %></span></p>
+									<p><b>Submit Date:</b> <span><%= strDateSubmitted %></span></p>
+									<p>
+										<b>Status: </b>
+                                        <select name="status"  class="input-medium mgL10">
+                                            <% states.each { status -> %>
+                                            <option value="<%= status.getValue() %>" <% if(status.getValue() == missionParticipantDTO.getStatus().getValue() ) { %> selected  <% } %> ><%= status.getLabel() %></option>
+                                            <% } %>
+                                        </select>
+									</p>
+									<p><b>Link:</b> <a href="<%= missionParticipantDTO.getUrl_submitted() %>" target="_blank"><%= missionParticipantDTO.getUrl_submitted() %></a></p>
+									<p>
+										<b>Previous Misstions:</b><br>
+										<span>
+											<a href="#">Tweet about the exo add-on</a> has been submitted <a href="#">4 week ago</a><br>
+											<a href="#">Write your customer story</a> has been submitted <a href="#">1 month ago</a>
+										</span>
+									</p>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="text-center"><button class="btn btn-primary">Back</button></div>
+				</div>
+				<!-- /.ref-detail-user -->
+			</div>
+
+        <!-- end keep this part for ajax -->
+		</div>
+	</div>
+</div>

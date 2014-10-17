@@ -58,8 +58,8 @@ public class MissionController {
   org.exoplatform.community.brandadvocacy.portlet.backend.templates.mission.view viewTpl;
 
   @View
-  public Response.Content index(){
-    return indexTpl.ok();
+  public Response index(){
+    return Response.ok(" mission index page");
   }
 
   @View
@@ -81,7 +81,7 @@ public class MissionController {
   public Response.Content list(String keyword, String size, String page){
     int _size = size != null ? Integer.parseInt(size) : 5;
     int _page = page != null ? Integer.parseInt(page) : 0;
-    return listTpl.with().missions(this.missionService.getAllMissions()).ok();
+    return listTpl.with().set("priorities",Priority.values()).set("missions",this.missionService.getAllMissions()).ok();
   }
 
   @View
@@ -127,8 +127,7 @@ public class MissionController {
         mActive = active.equals("1") ? true:false;
       mission.setActive(mActive);
       this.missionService.updateMission(mission);
-      return MissionController_.index();
-
+      return MissionController_.list("",null,null);
     }
     return Response.ok("something went wrong, cannot update mission not existing");
 

@@ -43,19 +43,25 @@ public class ManagerController {
   @View
   public Response.Content list(String mid){
 
-    List<Manager> managers = this.managerService.getAllManagers(mid);
-    User exoUser;
-    for (Manager manager:managers){
-      try {
-        exoUser = this.organizationService.getUserHandler().findUserByName(manager.getUserName());
-        if(null != exoUser){
-          manager.setFullName(exoUser.getFirstName() + " "+exoUser.getLastName());
+    Mission mission = this.managerService.getMissionById(mid);
+    if (null != mission){
+      List<Manager> managers = this.managerService.getAllManagers(mid);
+      User exoUser;
+      for (Manager manager:managers){
+        try {
+          exoUser = this.organizationService.getUserHandler().findUserByName(manager.getUserName());
+          if(null != exoUser){
+            manager.setFullName(exoUser.getFirstName() + " "+exoUser.getLastName());
+          }
+        } catch (Exception e) {
+          e.printStackTrace();
         }
-      } catch (Exception e) {
-        e.printStackTrace();
       }
+      return listTpl.with().set("roles",Role.values()).set("managers", managers).set("mission",mission).ok();
     }
-    return listTpl.with().set("roles",Role.values()).set("managers", managers).set("missionId",mid).ok();
+    else
+      return Response.ok("nok");
+
 
   }
 

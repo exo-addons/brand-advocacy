@@ -43,6 +43,11 @@
       <artifactId>exo.core.component.organization.api</artifactId>
       <scope>provided</scope>
     </dependency>
+    <dependency>
+      <groupId>org.exoplatform.social</groupId>
+      <artifactId>social-component-core</artifactId>
+      <scope>provided</scope>
+    </dependency>
     <!-- provider for juzu -->
     <dependency>
       <groupId>org.exoplatform.kernel</groupId>

@@ -5,33 +5,116 @@ if(mission != null){
     def strActiveChkbox = "";
     if(mission.getActive())
         strActiveChkbox = "checked";
+
+    def mid = mission.getId();
+
 %>
     <form action="@{MissionController.update()}" method="POST" role="form">
-        <input type ="hidden" name="id" id="id"  value="<%= mission.getId()%>" />
+        <input type ="hidden" name="id" id="id"  value="<%= mid %>" />
         <input type ="hidden" name="labelID" id="labelID" value="<%= mission.getLabelID()%>" />
-        <h5>Update a mission</h5>
-        <br/>
-        Title
-        <input type="text" name="title" id="title" value="<%= mission.getTitle() %>"/>
-        <br/>
-        Third part link
-        <input type="text" name="third_party_link" id="third_party_link" value="<%= mission.getThird_party_link() %>"/>
-        <br/>
-        Priority
-        <select name="priority">
-            <% priorities.each { priority -> %>
-            <option value="<%= priority.getValue() %>" <% if(mission.getPriority().getValue() == priority.getValue()){ %> selected  <%}%> ><%= priority.getValue() %></option>
-            <% } %>
-        </select>
 
-        <br/>
-        Active <input type="checkbox" name="active" id="active" <%= strActiveChkbox %> value="1" />
-        <br/>
-        <button type="submit">Update</button>
+<div class="referral-porlet">
+	<h3>Brand Advocacy Admin</h3><br>
+	<!-- TAB 1 -->
+	<div id="UITabPane" class="uiTabNormal uiTabInPage referral-tab-group">
+		<ul class="nav nav-tabs">
+			<li class="active"><a href="#generalTab" data-toggle="tab">General</a></li>
+			<li><a href="@{MissionController.list()}" data-toggle="tab">Missions</a></li>
+			<li><a href="@{MissionParticipantController.index()}" data-toggle="tab">Participants</a></li>
+		</ul>
+		<div id="myTabContent" class="tab-content">
+
+		<!-- keep only this part for ajax -->
+
+		<div id="myTabContent" class="tab-content">
+			<div class="tab-pane fade" id="generalTab">...</div>
+			<div class="tab-pane fade in active" id="missionsTab">
+				<ul class="breadcrumb">
+				    <li><a href="@{MissionController.list()}">Manager the missions</a><span class="uiIconMiniArrowRight"></span></li>
+				    <li class="active"><%= mission.getTitle() %></li>
+				</ul>
+
+				<div class="form-horizontal">
+					<div class="control-group">
+						<label class="control-label">Title:</label>
+						<div class="controls">
+							<input class="full" type="text" name="title" id="title" value="<%= mission.getTitle() %>">
+						</div>
+					</div>
+					<div class="control-group">
+					    <!-- list propositions -->
+					    <a href=@{PropositionController.list(mid=mid)}> view list propositions</a>
+					</div>
+					<div class="control-group">
+						<div class="controls text-right">
+                            <a href="@{PropositionController.addForm(mid=mid)}" >Add Proposition</a>
+						</div>
+					</div>
+
+                    <div class="control-group">
+                        <!-- list propositions -->
+                        <a href=@{ManagerController.list(mid=mid)}> view list managers</a>
+                    </div>
+                    <div class="control-group">
+                        <div class="controls text-right">
+                            <a href="@{ManagerController.addForm(mid=mid)}" >Add Manager</a>
+                        </div>
+                    </div>
+
+					<div class="control-group">
+						<label class="control-label">Link:</label>
+						<div class="controls">
+							<input  class="full" type="text" name="third_party_link" id="third_party_link" value="<%= mission.getThird_party_link()%>" >
+						</div>
+					</div>
+					<div class="control-group">
+						<label class="control-label">Priority:</label>
+						<div class="controls">
+                            <select name="priority" class="input-mini">
+                                <% priorities.each { priority -> %>
+                                <option value="<%= priority.getValue() %>" <% if(mission.getPriority().getValue() == priority.getValue()){ %> selected  <% } %> ><%= priority.getValue() %></option>
+                                <% } %>
+                            </select>
+						</div>
+					</div>
+					<div class="control-group">
+						<label class="control-label">Activated:</label>
+						<div class="controls">
+                            <div style="width: 60px;" class="iPhoneCheckContainer">
+                                <input type="checkbox" class="yesno mission_active" name="mission_active" id="mission_active"  data-no="No" data-yes="Yes" value="1" style="visibility: hidden;" checked="checked" tabindex="3">
+                                <label style="width: 51px;" class="iPhoneCheckLabelOff">
+                                    <span style="margin-right: -41px;">No</span>
+                                </label>
+                                <label style="width: 51px;" class="iPhoneCheckLabelOn">
+                                    <span style="margin-left: 0px;">Yes</span>
+                                </label>
+                                <div style="left: 41px;" class="iPhoneCheckHandle">
+                                    <div class="iPhoneCheckHandleRight">
+                                        <div class="iPhoneCheckHandleCenter"></div>
+                                    </div>
+                                </div>
+                            </div>
+						</div>
+					</div>
+					<div class="text-center">
+						<button class="btn btn-primary" type="submit">Save</button>
+						<button class="btn mgL20">Cancel</button>
+					</div>
+				</div>
+			</div>
+		</div>
+
+
+<!-- end part keeping for ajax -->
+
+		</div>
+	</div>
+</div>
+
+
     </form>
 <%
 } else{
 %>
 <p> mission not found </p>
 <% } %>
-<a href="@{MissionController.index()}" role="button">Home</a>

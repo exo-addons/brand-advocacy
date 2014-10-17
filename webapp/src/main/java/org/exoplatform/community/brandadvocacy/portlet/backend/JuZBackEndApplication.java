@@ -8,6 +8,7 @@ import org.exoplatform.community.brandadvocacy.portlet.backend.controllers.Login
 import org.exoplatform.community.brandadvocacy.portlet.backend.controllers.MissionController;
 import org.exoplatform.community.brandadvocacy.portlet.backend.templates.index;
 import org.exoplatform.services.organization.OrganizationService;
+import org.exoplatform.social.core.manager.IdentityManager;
 
 import javax.inject.Inject;
 

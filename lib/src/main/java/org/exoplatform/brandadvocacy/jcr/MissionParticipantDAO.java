@@ -53,6 +53,7 @@ public class MissionParticipantDAO extends DAO {
     super(jcrImpl);
   }
   private void setProperties(Node aNode,MissionParticipant missionParticipant) throws RepositoryException {
+
     aNode.setProperty(node_prop_labelID,missionParticipant.getLabelID());
     aNode.setProperty(node_prop_mission_id,missionParticipant.getMission_id());
     aNode.setProperty(node_prop_proposition_id, missionParticipant.getProposition_id());
@@ -63,6 +64,7 @@ public class MissionParticipantDAO extends DAO {
     aNode.setProperty(node_prop_status,missionParticipant.getStatus().getValue());
     aNode.setProperty(node_prop_dateCreated,missionParticipant.getCreatedDate());
     aNode.setProperty(node_prop_modifiedDate,missionParticipant.getModifiedDate());
+
   }
   private MissionParticipant transferNode2Object(Node node) throws RepositoryException{
     MissionParticipant missionParticipant = new MissionParticipant();
