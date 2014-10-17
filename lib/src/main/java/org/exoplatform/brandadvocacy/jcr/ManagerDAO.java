@@ -23,8 +23,10 @@ import javax.jcr.*;
 import javax.jcr.query.Query;
 import javax.jcr.query.QueryResult;
 
+import com.google.common.collect.Lists;
 import org.exoplatform.brandadvocacy.model.Manager;
 import org.exoplatform.brandadvocacy.model.Mission;
+import org.exoplatform.brandadvocacy.model.Program;
 import org.exoplatform.brandadvocacy.model.Role;
 import org.exoplatform.brandadvocacy.service.BrandAdvocacyServiceException;
 import org.exoplatform.brandadvocacy.service.JCRImpl;
@@ -48,13 +50,42 @@ public class ManagerDAO extends DAO{
   public ManagerDAO(JCRImpl jcrImpl) {
     super(jcrImpl);
   }
-  public void setProperties(Node aNode,Manager m) throws RepositoryException{
+  private Node getOrCreateProgramManagerHome(String programId){
+    if(null == programId || "".equals(programId)){
+      log.error("ERROR cannot get mission home for an invalid program id ");
+      return null;
+    }
+    try {
+      Node node = this.getNodeById(programId);
+      return this.getJcrImplService().getProgramDAO().getOrCreateManagerHome(node);
+    } catch (RepositoryException e) {
+      log.error("ERROR cannot get mission home for an invalid program "+e.getMessage());
+    }
+    return null;
+  }
+  private Node getOrCreateMissionManagerHome(String missionId){
+    if(null == missionId || "".equals(missionId)){
+      log.error("ERROR cannot get mission home for an invalid program id ");
+      return null;
+    }
+    try {
+      Node node = this.getNodeById(missionId);
+      return this.getJcrImplService().getMissionDAO().getOrCreateManagerHome(node);
+    } catch (RepositoryException e) {
+      log.error("ERROR cannot get mission home for an invalid program "+e.getMessage());
+    }
+    return null;
+  }
+
+  private void setProperties(Node aNode,Manager m) throws RepositoryException{
     aNode.setProperty(node_prop_mission_id,m.getMission_id());
     aNode.setProperty(node_prop_username,m.getUserName());
     aNode.setProperty(node_prop_notif, m.getNotif());
     aNode.setProperty(node_prop_role, m.getRole().getValue());
   }
   public Manager transferNode2Object(Node node) throws RepositoryException{
+    if (null != node)
+      return null;
     Manager manager = new Manager();
     PropertyIterator iter = node.getProperties("exo:*");
     while (iter.hasNext()) {
@@ -73,104 +104,112 @@ public class ManagerDAO extends DAO{
         manager.setNotif(p.getBoolean());
       }
     }
-    return manager;
+    try {
+      manager.checkValid();
+      return manager;
+    }catch (BrandAdvocacyServiceException brade){
+      log.error("ERROR cannot transfer node to manager object");
+    }
+    return null;
   }
-  public Node getManagerNode(String missionLabelId,String username){
+  public List<Manager> transferNodes2Objects(List<Node> nodes){
+    List<Manager> managers = new ArrayList<Manager>(nodes.size());
+    Manager manager;
+    for (Node node:nodes){
+      try {
+        manager = this.transferNode2Object(node);
+        if (null != manager)
+          managers.add(manager);
+      } catch (RepositoryException e) {
+        log.error("ERROR cannot transfer node to manager object "+e.getMessage());
+      }
+    }
+    return managers;
+  }
+  private Node getMissionManagerNodeById(String missionLabelId,String username){
+
     StringBuilder sql = new StringBuilder("select * from "+ JCRImpl.MANAGER_NODE_TYPE +" where jcr:path like '");
     sql.append(JCRImpl.EXTENSION_PATH).append("/").append(JCRImpl.MISSIONS_PATH);
     sql.append("/").append(Utils.queryEscape(missionLabelId)).append("/").append(MissionDAO.node_prop_managers);
     sql.append("/").append(Utils.queryEscape(username));
     sql.append("'");
-    Session session;
-    try {
-      session = this.getJcrImplService().getSession();
-      Query query = session.getWorkspace().getQueryManager().createQuery(sql.toString(), Query.SQL);
-      QueryResult result = query.execute();
-      NodeIterator nodes = result.getNodes();
-      if (nodes.hasNext()) {
-        return nodes.nextNode();
-      }
-    } catch (RepositoryException e) {
-      log.error("ERROR cannot get manager  "+username +" from mission "+missionLabelId+" Exeption "+e.getMessage());
-    }
-    return null;
+    return this.getNodesByQuery(sql.toString(),0,1).get(0);
   }
-  public Mission addManager2Mission(String mid,List<Manager> managers){
+  private Node addManager(Node homeNode, Manager manager){
     try {
-      if(null == mid || "".equals(mid))
-        throw new BrandAdvocacyServiceException(BrandAdvocacyServiceException.ID_INVALID, "cannot add managers to mission id null");
-
-      try {
-        Node missionNode = this.getJcrImplService().getMissionDAO().getNodeById(mid);
-        Node managerHomeNode = this.getJcrImplService().getMissionDAO().getOrCreateManagerHome(missionNode);
-        if(null != managerHomeNode){
-          int nb = (int) managerHomeNode.getNodes().getSize();
-          Manager manager;
-          Node managerNode;
-          int i = 0;
-          for(i = 0;i<managers.size();i++){
-            manager = managers.get(i);
-            manager.setMission_id(mid);
-            if (!managerHomeNode.hasNode(manager.getUserName())){
-              managerNode = managerHomeNode.addNode(manager.getUserName(), JCRImpl.MANAGER_NODE_TYPE);
-              this.setProperties(managerNode, manager);
-            }
-
-          }
-          if(0 != i) {
-            managerHomeNode.getSession().save();
-            return this.getJcrImplService().getMissionDAO().transferNode2Object(missionNode);
-          }
-        }
-      } catch (ItemExistsException ie){
-        log.error(" === ERROR cannot add existing item "+ie.getMessage());
-      } catch (RepositoryException e) {
-        log.error("=== ERROR add manager to mission "+e.getMessage());
+      manager.checkValid();
+      if(!homeNode.hasNode(manager.getUserName())){
+        Node managerNode = homeNode.addNode(manager.getUserName(),JCRImpl.MANAGER_NODE_TYPE);
+        this.setProperties(managerNode,manager);
+        managerNode.save();
+        return managerNode;
       }
-
-
-    } catch (BrandAdvocacyServiceException brade) {
+    }catch (RepositoryException re){
+      log.error("ERROR cannot add manager "+re.getMessage());
+    }catch (BrandAdvocacyServiceException brade){
       log.error("ERROR cannot add manager "+brade.getMessage());
     }
     return null;
-  }  
-  public List<Manager> getAllManagers(String mid){
+  }
 
-    List<Manager> managers = new ArrayList<Manager>();
+  public Manager addManager2Mission(String mid,Manager manager){
 
-    if(null == mid || "".equals(mid))
-      throw new BrandAdvocacyServiceException(BrandAdvocacyServiceException.ID_INVALID, "cannot get all managers from mission id null");
+    Node nodeHome = this.getOrCreateMissionManagerHome(mid);
+    if (null == nodeHome){
+      log.error("ERROR cannot add manager to mission null ");
+      return null;
+    }
     try {
-      Node missionNode = this.getJcrImplService().getMissionDAO().getNodeById(mid);
-      if(null != missionNode){
-        Node managerHomeNode = this.getJcrImplService().getMissionDAO().getOrCreateManagerHome(missionNode);
+      return this.transferNode2Object(this.addManager(nodeHome, manager));
+    } catch (RepositoryException e) {
+      log.error("ERROR cannot add manager to mission " + e.getMessage());
+    }
+    return null;
+  }
+  public List<Manager> addManagers2Mission(String mid,List<Manager> managers){
+    List<Node> nodes = new ArrayList<Node>(managers.size());
+    Node nodeHome = this.getOrCreateMissionManagerHome(mid);
+    if (null != nodeHome){
+      for (Manager manager:managers){
+        Node node = this.addManager(nodeHome,manager);
+        if (null != node)
+          nodes.add(node);
+      }
+      if(nodes.size() > 0){
+        return this.transferNodes2Objects(nodes);
+      }
+    }
+    return null;
+  }  
+  public List<Manager> getAllMissionManagers(String mid){
+
+    if(null == mid || "".equals(mid)){
+      log.error("ERROR cannot get all managers from mission null");
+      return null;
+    }
+    try {
+       Node managerHomeNode = this.getOrCreateMissionManagerHome(mid);
+      if (null != managerHomeNode){
         NodeIterator nodes = managerHomeNode.getNodes();
-        Node manager = null;
-        Manager aManager = null;
-        while (nodes.hasNext()) {
-          manager = (Node) nodes.next();
-          aManager = this.transferNode2Object(manager);
-          if(aManager.checkValid())
-            managers.add(aManager);
-        }
-        return managers;
+        return this.transferNodes2Objects(Lists.newArrayList(nodes));
       }
     } catch (RepositoryException e) {
         log.error("==== ERROR get all managers "+e.getMessage() );
+    } catch (BrandAdvocacyServiceException brade){
+      log.error(" ERROR cannot get all managers "+brade.getMessage());
     }
-    return managers;
+    return null;
   }
-  public Manager updateManager(Manager manager){
-    if(!manager.checkValid())
-      return null;
+
+  public Manager updateMissionManager(Manager manager){
     try {
-      Node managerNode = this.getManagerNode(manager.getMissionLabelId(),manager.getUserName());
-      if(null != managerNode && manager.getUserName().equals(managerNode.getProperty(node_prop_username).getString())){
+      manager.checkValid();
+      Node managerNode = this.getMissionManagerNodeById(manager.getMissionLabelId(), manager.getUserName());
+      if(null != managerNode){
         this.setProperties(managerNode,manager);
         managerNode.save();
         return this.transferNode2Object(managerNode);
-      }else
-        throw new BrandAdvocacyServiceException(BrandAdvocacyServiceException.MANAGER_NOT_EXISTS," cannot update manager not exists");
+      }
     } catch (RepositoryException e) {
       log.error("==== ERROR cannot update manager "+e.getMessage() );
     } catch (BrandAdvocacyServiceException brade){
@@ -178,15 +217,14 @@ public class ManagerDAO extends DAO{
     }
     return null;
   }
-  public void removeManager(String missionLabelId,String username){
+  public void removeMissionManager(String missionLabelId,String username){
     try {
-      Node managerNode = this.getManagerNode(missionLabelId,username);
+      Node managerNode = this.getMissionManagerNodeById(missionLabelId, username);
       if(null != managerNode){
         Session session = managerNode.getSession();
         managerNode.remove();
         session.save();
-      }else
-        throw new BrandAdvocacyServiceException(BrandAdvocacyServiceException.MANAGER_NOT_EXISTS," cannot remove manager not exists");
+      }
     } catch (RepositoryException e) {
       log.error("==== ERROR cannot remove manager "+e.getMessage() );
     } catch (BrandAdvocacyServiceException brade){
@@ -194,11 +232,11 @@ public class ManagerDAO extends DAO{
     }
 
   }
-  public Manager getManager(String missionLabelId,String username){
+  public Manager getMissionManager(String missionLabelId,String username){
     if(null == username || null == missionLabelId || "".equals(missionLabelId) || "".equals(username))
       return null;
     try {
-      return this.transferNode2Object(this.getManagerNode(missionLabelId,username));
+      return this.transferNode2Object(this.getMissionManagerNodeById(missionLabelId, username));
     } catch (RepositoryException e) {
       log.error(" ERROR cannot get manager from mission");
     }
@@ -206,4 +244,88 @@ public class ManagerDAO extends DAO{
     return null;
 
   }
+  public Manager addManager2Program(String programId,Manager manager){
+
+    Node nodeHome = this.getOrCreateProgramManagerHome(programId);
+    if (null == nodeHome){
+      log.error("ERROR cannot add manager to program null ");
+      return null;
+    }
+    try {
+      return this.transferNode2Object(this.addManager(nodeHome,manager));
+    } catch (RepositoryException e) {
+      log.error("ERROR cannot add manager 2 program "+e.getMessage());
+    }
+    return null;
+  }
+  public List<Manager> addManagers2Program(String programId,List<Manager> managers){
+    List<Node> nodes = new ArrayList<Node>(managers.size());
+    Node nodeHome = this.getOrCreateProgramManagerHome(programId);
+    if (null != nodeHome){
+      for (Manager manager:managers){
+        Node node = this.addManager(nodeHome,manager);
+        if (null != node)
+          nodes.add(node);
+      }
+      if(nodes.size() > 0){
+        return this.transferNodes2Objects(nodes);
+      }
+    }
+    return null;
+  }
+
+  private Node getProgramManagerNodeById(String programId,String username){
+    Node homeNode = this.getOrCreateProgramManagerHome(programId);
+    if (null != homeNode){
+      try {
+        if(homeNode.hasNode(username)){
+          return homeNode.getNode(username);
+        }
+      } catch (RepositoryException e) {
+        e.printStackTrace();
+      }
+    }
+    return null;
+  }
+
+  public Manager getProgramManagerById(String programId, String username){
+    try {
+      return this.transferNode2Object(this.getProgramManagerNodeById(programId,username));
+    } catch (RepositoryException e) {
+      log.error("ERROR cannot get program manager "+e.getMessage());
+    }
+    return null;
+  }
+
+  public void removeManagerFromProgram(String programId, String username){
+
+    Node managerNode = this.getProgramManagerNodeById(programId,username);
+    if (null != managerNode){
+      try {
+        Session session = managerNode.getSession();
+        managerNode.remove();
+        session.save();
+      } catch (RepositoryException e) {
+        log.error("ERROR cannot remove manager from program "+e.getMessage());
+      }
+    }
+  }
+
+  public Manager updateProgramManager(Manager manager){
+    try {
+      manager.checkValid();
+      Node managerNode = this.getProgramManagerNodeById(manager.getProgramId(), manager.getUserName());
+      if(null != managerNode){
+        this.setProperties(managerNode,manager);
+        managerNode.save();
+        return this.transferNode2Object(managerNode);
+      }
+    } catch (RepositoryException e) {
+      log.error("==== ERROR cannot update program manager"+e.getMessage() );
+    } catch (BrandAdvocacyServiceException brade){
+      log.error("ERROR cannot update program manager"+brade.getMessage());
+    }
+    return null;
+  }
+
 }

@@ -16,6 +16,7 @@
  */
 package org.exoplatform.brandadvocacy.jcr;
 
+import com.google.common.collect.Lists;
 import org.exoplatform.brandadvocacy.model.Mission;
 import org.exoplatform.brandadvocacy.model.Participant;
 import org.exoplatform.brandadvocacy.model.Priority;
@@ -52,13 +53,20 @@ public class MissionDAO extends DAO {
   
   public MissionDAO(JCRImpl jcrImpl) {
     super(jcrImpl);
-
-
   }
 
-  public Node getOrCreateMissionHome() {
-    String path = String.format("%s/%s",JCRImpl.EXTENSION_PATH,MISSIONS_PATH);
-    return this.getJcrImplService().getOrCreateNode(path);
+  public Node getOrCreateMissionHome(String programId) {
+    if(null == programId || "".equals(programId)){
+      log.error("ERROR cannot get mission home for an invalid program id ");
+      return null;
+    }
+    try {
+      Node node = this.getNodeById(programId);
+      return this.getJcrImplService().getProgramDAO().getOrCreateMissionHome(node);
+    } catch (RepositoryException e) {
+      log.error("ERROR cannot get mission home for an invalid program "+e.getMessage());
+    }
+    return null;
   }
   public Node getOrCreateManagerHome(Node missionNode) throws RepositoryException {
 
@@ -96,7 +104,7 @@ public class MissionDAO extends DAO {
     return propostionHome;
   }
 
-  public void setPropertiesNode(Node missionNode, Mission m) throws RepositoryException {
+  private void setPropertiesNode(Node missionNode, Mission m) throws RepositoryException {
     if(null != m.getLabelID() && !"".equals(m.getLabelID()))
       missionNode.setProperty(node_prop_labelID,m.getLabelID());
     missionNode.setProperty(node_prop_title, m.getTitle());
@@ -141,74 +149,56 @@ public class MissionDAO extends DAO {
     }
     return null;
   }
+
   public List<Mission> transferNodes2Objects(List<Node> nodes) {
     List<Mission> missions = new ArrayList<Mission>(nodes.size());
     Mission mission;
     for (Node node:nodes){
       try {
         mission = this.transferNode2Object(node);
-        mission.checkValid();
-        missions.add(mission);
+        if (null != mission)
+          missions.add(mission);
       } catch (RepositoryException e) {
         e.printStackTrace();
       }
     }
     return missions;
   }
-  public Mission createMission(Mission m) {
-    try {
-      m.checkValid();
-      try {
-        Node homeMissionNode = this.getOrCreateMissionHome();
-        Node missionNode = homeMissionNode.addNode(m.getLabelID(),JCRImpl.MISSION_NODE_TYPE);
-        this.setPropertiesNode(missionNode,m);
+  public Mission addMission2Program(String programId,Mission mission) {
+    try{
+      mission.checkValid();
+      Node homeMissionNode = this.getOrCreateMissionHome(programId);
+      if (null != homeMissionNode){
+        Node missionNode = homeMissionNode.addNode(mission.getLabelID(),JCRImpl.MISSION_NODE_TYPE);
+        this.setPropertiesNode(missionNode,mission);
         homeMissionNode.getSession().save();
-        if(null != m.getManagers() && m.getManagers().size() > 0)
-          this.getJcrImplService().getManagerDAO().addManager2Mission(missionNode.getUUID(), m.getManagers());
         return this.transferNode2Object(missionNode);
-      }catch (ItemExistsException ie){
-        log.error(" === ERROR cannot add existing item "+ie.getMessage());
       }
-      catch (RepositoryException e) {
-        log.error(" repo exception "+e.getMessage());
-      }
-    } catch (BrandAdvocacyServiceException brade) {
-      log.error("cannot create mission with null title");
+    }catch (RepositoryException re){
+      log.error("ERROR cannot add mission 2 program "+re.getMessage());
+    } catch (BrandAdvocacyServiceException brade){
+      log.error("ERROR cannot add mission 2 program "+brade.getMessage());
     }
     return null;
   }
-  public List<Mission> getAllMissions(){
+  public List<Mission> getAllMissionsByProgramId(String programId){
     List<Mission> missions = new ArrayList<Mission>();
-    Node missionHome = this.getOrCreateMissionHome();
     try {
-      NodeIterator nodes =  missionHome.getNodes();
-      while (nodes.hasNext()) {
-        missions.add(this.transferNode2Object(nodes.nextNode()));
+      Node missionHome = this.getOrCreateMissionHome(programId);
+      if (null != missionHome){
+        NodeIterator nodes =  missionHome.getNodes();
+        return this.transferNodes2Objects(Lists.newArrayList(nodes));
       }
-      return missions;
     } catch (RepositoryException e) {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
+      log.error("ERROR cannot get all mission in "+programId);
     }
     return null;
   }
-  public Node getNodeByLabelID(String labelID){
-    StringBuilder sql = new StringBuilder("select * from "+ JCRImpl.MISSION_NODE_TYPE +" where jcr:path like '");
-    sql.append(JCRImpl.EXTENSION_PATH).append("/").append(MISSIONS_PATH);
-    sql.append("/").append(Utils.queryEscape(labelID)).append("'");
-    List<Node> nodes =  this.getNodesByQuery(sql.toString(),0,1);
-    if (nodes.size() > 0) {
-      return nodes.get(0);
-    }
-    return null;
-  }
-  public Node getNodeById(String id) throws RepositoryException {
-
-    return this.getJcrImplService().getSession().getNodeByUUID(id);
-
-  }
-
   public Mission getMissionById(String id) {
+    if(null == id || "".equals(id)){
+      log.error("ERROR cannot get mission by id");
+      return null;
+    }
     Node aNode = null;
     try {
       aNode = this.getNodeById(id);
@@ -243,16 +233,20 @@ public class MissionDAO extends DAO {
     return null;
   }
   public void removeMissionById(String id){
-      try {
-          Node aNode = this.getNodeById(id);
-          if (aNode != null) {
-              Session session = aNode.getSession();
-              aNode.remove();
-              session.save();
-          }
-      } catch (RepositoryException e) {
-          log.error(" ERROR remove mission "+id+" === Exception "+e.getMessage());
-      }
+    if (null == id || "".equals(id)) {
+      log.error("ERROR cannot remove mission null");
+      return;
+    }
+    try {
+        Node aNode = this.getNodeById(id);
+        if (aNode != null) {
+            Session session = aNode.getSession();
+            aNode.remove();
+            session.save();
+        }
+    } catch (RepositoryException e) {
+        log.error(" ERROR remove mission "+id+" === Exception "+e.getMessage());
+    }
   }
   
   public void setActiveMission(String id,Boolean isActive){

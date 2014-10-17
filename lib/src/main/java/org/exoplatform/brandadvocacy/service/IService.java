@@ -28,8 +28,12 @@ import java.util.List;
  * Sep 9, 2014  
  */
 public interface IService {
- 
-  public Mission addMission(Mission m) throws BrandAdvocacyServiceException;
+
+  public Program addProgram(Program program);
+  public Program updateProgram(Program program);
+  public Program getProgramById(String programId);
+
+  public Mission addMission(String programId,Mission m);
   public void removeMission(String id);
   public Mission getMissionById(String id);
   public List<Mission> getAllMissions();
@@ -45,15 +49,22 @@ public interface IService {
 
   public Address addAddress(String username,Address address);
   public Address updateAddress(Address address);
-  public Address removeAddress(Address address);
+  public void removeAddress(String id);
   public List<Address> getAllAddressesByParticipant(String username);
   public Address getAddressById(String id);
 
-  public Mission addManagers2Mission(String mid,List<Manager> managers);
-  public Manager updateManager(Manager manager);
-  public List<Manager> getAllManagers(String mid);
-  public void removeManager(String missionLabelId, String username);
-  public Manager getManager(String missionLabelId,String username);
+  public Manager addManager2Mission(String missionId,Manager manager);
+  public List<Manager> addManagers2Mission(String missionId,List<Manager> managers);
+  public Manager updateMissionManager(Manager manager);
+  public List<Manager> getAllMissionManagers(String missionId);
+  public void removeMissionManager(String missionId, String username);
+  public Manager getMissionManager(String missionId,String username);
+
+  public Manager addManager2Program(String programId,Manager manager);
+  public List<Manager> addManagers2Program(String programId,List<Manager> managers);
+  public Manager updateProgramManager(String programId,Manager manager);
+  public void removeProgramManager(String programId,String username);
+  public Manager getProgramManager(String programId,String username);
 
   public Proposition updateProposition(Proposition proposition);
   public List<Proposition> getPropositionsByMissionId(String mid);

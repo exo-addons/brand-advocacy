@@ -1,6 +1,9 @@
 package org.exoplatform.brandadvocacy.jcr;
 
+import com.google.common.collect.Lists;
 import org.exoplatform.brandadvocacy.model.Address;
+import org.exoplatform.brandadvocacy.model.Manager;
+import org.exoplatform.brandadvocacy.model.Mission;
 import org.exoplatform.brandadvocacy.service.BrandAdvocacyServiceException;
 import org.exoplatform.brandadvocacy.service.JCRImpl;
 import org.exoplatform.brandadvocacy.service.Utils;
@@ -44,6 +47,8 @@ public class AddressDAO extends DAO{
   }
 
   public Address transferNode2Object(Node node) throws RepositoryException {
+    if (null != node)
+      return null;
     Address address = new Address();
     address.setId(node.getUUID());
     PropertyIterator iter = node.getProperties("exo:*");
@@ -76,99 +81,77 @@ public class AddressDAO extends DAO{
     }
     return null;
   }
-  public Node getNodeByLabelID(String pid,String labelID){
-    StringBuilder sql = new StringBuilder("select * from "+ JCRImpl.ADDRESS_NODE_TYPE +" where jcr:path like '");
-    sql.append(JCRImpl.EXTENSION_PATH).append("/").append(JCRImpl.PARTICIPANT_PATH);
-    sql.append("/").append(Utils.queryEscape(pid)).append("/").append(ParticipantDAO.node_prop_addresses);
-    sql.append("/").append(Utils.queryEscape(labelID));
-    sql.append("'");
-    Session session;
-    try {
-      session = this.getJcrImplService().getSession();
-      Query query = session.getWorkspace().getQueryManager().createQuery(sql.toString(), Query.SQL);
-      QueryResult result = query.execute();
-      NodeIterator nodes = result.getNodes();
-      if (nodes.hasNext()) {
-        return nodes.nextNode();
+  public List<Address> transferNodes2Objects(List<Node> nodes) {
+    List<Address> addresses  = new ArrayList<Address>(nodes.size());
+    for (Node node:nodes){
+      try {
+        Address address = this.transferNode2Object(node);
+        if (null != address){
+          addresses.add(address);
+        }
+      } catch (RepositoryException e) {
+        e.printStackTrace();
       }
-    } catch (RepositoryException e) {
-      log.error("ERROR cannot get address  "+labelID +" from participant "+pid+" Exeption "+e.getMessage());
     }
-    return null;
+    return addresses;
   }
-
-  public Address addAddress2Participant(String username,Address address){
+  public Address addAddress2Participant(String username,Address address) {
+    if (null == username || "".equals(username)) {
+      log.error("cannot add address to participant null");
+      return null;
+    }
     try {
       address.checkValid();
-      if(null == username || "".equals(username))
-        throw new BrandAdvocacyServiceException(BrandAdvocacyServiceException.ID_INVALID, "cannot add address to participant id null");
-      try {
-        Node participantNode = this.getJcrImplService().getParticipantDAO().getNodeByUserName(username);
-        Node addressHomeNode = this.getJcrImplService().getParticipantDAO().getOrCreateAddressHome(participantNode);
-        if(null != addressHomeNode){
-          Node addressNode = addressHomeNode.addNode(address.getLabelID(),JCRImpl.ADDRESS_NODE_TYPE);
+      Node participantNode = this.getJcrImplService().getParticipantDAO().getNodeByUserName(username);
+      Node addressHomeNode = this.getJcrImplService().getParticipantDAO().getOrCreateAddressHome(participantNode);
+      if (null != addressHomeNode) {
+        Node addressNode = addressHomeNode.addNode(address.getLabelID(), JCRImpl.ADDRESS_NODE_TYPE);
+        if (null != addressNode) {
           this.setProperties(addressNode, address);
           addressHomeNode.save();
           return this.transferNode2Object(addressNode);
-
         }
       }
-      catch (ItemExistsException ie){
-        log.error(" === ERROR cannot add existing item "+ie.getMessage());
-      }
-      catch (UnsupportedRepositoryOperationException e) {
-        log.error("=== ERROR cannot add address to participant "+e.getMessage());
-      } catch (RepositoryException e) {
-        log.error("=== ERROR cannot add address to participant "+e.getMessage());
-      }
-
+    } catch (ItemExistsException ie) {
+      log.error(" === ERROR cannot add existing item " + ie.getMessage());
+    } catch (UnsupportedRepositoryOperationException e) {
+      log.error("=== ERROR cannot add address to participant " + e.getMessage());
+    } catch (RepositoryException e) {
+      log.error("=== ERROR cannot add address to participant " + e.getMessage());
     } catch (BrandAdvocacyServiceException brade) {
-      log.error("=== ERROR cannot add address "+brade.getMessage());
+      log.error("=== ERROR cannot add address " + brade.getMessage());
     }
     return null;
   }
-  public List<Address> getAllAddressesByParticipant(String username){
-    List<Address> addresses = new ArrayList<Address>();
 
-    if(null == username || "".equals(username))
-      throw new BrandAdvocacyServiceException(BrandAdvocacyServiceException.ID_INVALID, "cannot get all addresses from participant id null");
+  public List<Address> getAllAddressesByParticipant(String username){
+    if (null == username || "".equals(username)) {
+      log.error("cannot add address to participant null");
+      return null;
+    }
     try {
       Node participantNode = this.getJcrImplService().getParticipantDAO().getNodeByUserName(username);
       if(null != participantNode){
         Node addressHomeNode = this.getJcrImplService().getParticipantDAO().getOrCreateAddressHome(participantNode);
         if(null != addressHomeNode){
           NodeIterator nodes = addressHomeNode.getNodes();
-          Address address;
-          while (nodes.hasNext()){
-            try {
-              address = this.transferNode2Object(nodes.nextNode());
-              address.checkValid();
-              addresses.add(address);
-            } catch (RepositoryException re){
-              log.error("=== ERROR get all addresses ");
-              re.printStackTrace();
-            } catch (BrandAdvocacyServiceException brade){
-              log.error("==== ERROR get all addresses "+brade.getMessage());
-            }
-
-          }
+          return this.transferNodes2Objects(Lists.newArrayList(nodes));
         }
       }
     } catch (RepositoryException e) {
       log.error("==== ERROR get all propositions "+e.getMessage() );
     }
-    return addresses;
+    return null;
   }
   public Address updateAddress(Address address){
     try {
       address.checkValid();
       Node addressNode = this.getNodeById(address.getId());
-      if(null != addressNode && address.getId().equals(addressNode.getUUID())){
+      if(null != addressNode){
         this.setProperties(addressNode,address);
-        addressNode.getSession().save();
-        return address;
-      }else
-        throw new BrandAdvocacyServiceException(BrandAdvocacyServiceException.ADDRESS_NOT_EXISTS," cannot update address not exists");
+        addressNode.save();
+        return this.transferNode2Object(addressNode);
+      }
     } catch (RepositoryException e) {
       log.error("==== ERROR cannot update address "+e.getMessage() );
     } catch (BrandAdvocacyServiceException brade){
@@ -176,25 +159,23 @@ public class AddressDAO extends DAO{
     }
     return null;
   }
-  public Address removeAddress(Address address){
+  public void removeAddress(String id){
+    if (null == id || "".equals(id)){
+      log.error("ERROR cannot remove address null");
+      return;
+    }
     try {
-      if(null == address.getId() || "".equals(address.getId()))
-        throw new BrandAdvocacyServiceException(BrandAdvocacyServiceException.ID_INVALID,"cannot remove invalid address");
-      Node addressNode = this.getNodeById(address.getId());
-      if(null != addressNode && address.getId().equals(addressNode.getUUID())){
+      Node addressNode = this.getNodeById(id);
+      if(null != addressNode){
         Session session = addressNode.getSession();
         addressNode.remove();
         session.save();
-        return address;
-      }else
-        throw new BrandAdvocacyServiceException(BrandAdvocacyServiceException.ADDRESS_NOT_EXISTS," cannot remove address not exists");
+      }
     } catch (RepositoryException e) {
       log.error("==== ERROR cannot remove address "+e.getMessage() );
     } catch (BrandAdvocacyServiceException brade){
       log.error(brade.getMessage());
     }
-
-    return null;
   }
 
   public Address getAddressById(String id){

@@ -35,6 +35,7 @@ public class MissionParticipant {
   private String address_id;
   private String url_submitted;
   private Status status;
+  private long date_submitted;
   private long createdDate;
   private long modifiedDate;
   private Size size;
@@ -94,6 +95,13 @@ public class MissionParticipant {
   }
   public void setAddress_id(String address_id) {
     this.address_id = address_id;
+  }
+  public long getDate_submitted() {
+    return date_submitted;
+  }
+
+  public void setDate_submitted(long date_submitted) {
+    this.date_submitted = date_submitted;
   }
   public long getCreatedDate() {
     return createdDate;

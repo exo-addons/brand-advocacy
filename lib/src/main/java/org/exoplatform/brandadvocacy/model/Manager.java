@@ -16,6 +16,8 @@
  */
 package org.exoplatform.brandadvocacy.model;
 
+import org.exoplatform.brandadvocacy.service.BrandAdvocacyServiceException;
+
 import javax.jcr.Value;
 
 /**
@@ -26,6 +28,7 @@ import javax.jcr.Value;
  */
 public class Manager extends User{
 
+  private String programId;
   private String mission_id;
   private String missionLabelId;
   private Role role;  
@@ -39,6 +42,13 @@ public class Manager extends User{
     this.setUserName(username);
     this.setRole(Role.Admin);
     this.setNotif(true);
+  }
+  public String getProgramId() {
+    return programId;
+  }
+
+  public void setProgramId(String programId) {
+    this.programId = programId;
   }
   public void setMission_id(String mission_id) {
     this.mission_id = mission_id;
@@ -63,10 +73,9 @@ public class Manager extends User{
   public String getRoleLabel(){
     return this.getRole().getLabel();
   }
-  public Boolean checkValid(){
-    if(null == this.getUserName() || "".equals(this.getUserName()) || null == this.getMission_id() || "".equals(this.getMission_id()) )
-      return false;
-    return true;
+  public void checkValid() throws BrandAdvocacyServiceException{
+    if(null == this.getUserName() || "".equals(this.getUserName()) )
+      throw new BrandAdvocacyServiceException(BrandAdvocacyServiceException.MANAGER_INVALID," username manager is invalid");
   }
 
   public String toString(){
@@ -80,4 +89,5 @@ public class Manager extends User{
   public void setMissionLabelId(String missionLabelId) {
     this.missionLabelId = missionLabelId;
   }
+
 }

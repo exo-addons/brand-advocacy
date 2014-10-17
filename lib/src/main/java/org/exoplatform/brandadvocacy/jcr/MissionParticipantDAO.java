@@ -46,6 +46,7 @@ public class MissionParticipantDAO extends DAO {
   public static final String node_prop_address_id = "exo:address_id";
   public static final String node_prop_size = "exo:size";
   public static final String node_prop_status = "exo:status";
+  public static final String node_prop_date_submitted = "exo:date_submitted";
   public static final String node_prop_dateCreated = "exo:dateCreated";
   public static final String node_prop_modifiedDate = "exo:modifiedDate";
 
@@ -62,6 +63,7 @@ public class MissionParticipantDAO extends DAO {
     aNode.setProperty(node_prop_address_id,missionParticipant.getAddress_id());
     aNode.setProperty(node_prop_size,missionParticipant.getSize().getValue());
     aNode.setProperty(node_prop_status,missionParticipant.getStatus().getValue());
+    aNode.setProperty(node_prop_date_submitted,missionParticipant.getDate_submitted());
     aNode.setProperty(node_prop_dateCreated,missionParticipant.getCreatedDate());
     aNode.setProperty(node_prop_modifiedDate,missionParticipant.getModifiedDate());
 
@@ -92,6 +94,8 @@ public class MissionParticipantDAO extends DAO {
         missionParticipant.setSize(Size.getSize((int) p.getLong()));
       } else if (name.equals(node_prop_status)){
         missionParticipant.setStatus(Status.getStatus((int) p.getLong()));
+      } else if (name.equals(node_prop_date_submitted)){
+        missionParticipant.setDate_submitted(p.getLong());
       } else if (name.equals(node_prop_dateCreated)){
         missionParticipant.setCreatedDate(p.getLong());
       } else if(name.equals(node_prop_modifiedDate)){
