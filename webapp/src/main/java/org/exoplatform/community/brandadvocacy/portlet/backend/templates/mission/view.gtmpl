@@ -47,4 +47,3 @@
 </form>
 <a href="@{ManagerController.list(mid=mid)}" role="button">View Managers</a>
 <% } %>
-<a href="@{MissionController.index()}" role="button">Home</a>

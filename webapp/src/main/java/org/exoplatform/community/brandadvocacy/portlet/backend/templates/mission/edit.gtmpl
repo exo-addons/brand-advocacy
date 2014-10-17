@@ -20,7 +20,7 @@ if(mission != null){
 		<ul class="nav nav-tabs">
 			<li class="active"><a href="#generalTab" data-toggle="tab">General</a></li>
 			<li><a href="@{MissionController.list()}" data-toggle="tab">Missions</a></li>
-			<li><a href="@{MissionParticipantController.index()}" data-toggle="tab">Participants</a></li>
+			<li><a href="@{MissionParticipantController.list()}" data-toggle="tab">Participants</a></li>
 		</ul>
 		<div id="myTabContent" class="tab-content">
 

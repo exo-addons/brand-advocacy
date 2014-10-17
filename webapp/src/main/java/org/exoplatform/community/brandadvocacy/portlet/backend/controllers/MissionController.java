@@ -57,7 +57,6 @@ public class MissionController {
   @Path("mission/view.gtmpl")
   org.exoplatform.community.brandadvocacy.portlet.backend.templates.mission.view viewTpl;
 
-  @View
   public Response index(){
     return Response.ok(" mission index page");
   }

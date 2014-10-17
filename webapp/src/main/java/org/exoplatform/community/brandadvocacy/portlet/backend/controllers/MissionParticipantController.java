@@ -45,7 +45,7 @@ public class MissionParticipantController {
   }
 
   @View
-  public Response.Content index(){
+  public Response.Content list(){
 
     List<MissionParticipantDTO> missionParticipantDTOs = new ArrayList<MissionParticipantDTO>();
     MissionParticipantDTO missionParticipantDTO;
