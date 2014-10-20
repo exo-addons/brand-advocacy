@@ -19,6 +19,7 @@ public class Program {
   public Program(String title){
     this.setLabelID(UUID.randomUUID().toString());
     this.setTitle(title);
+    this.setActive(true);
   }
   public String getId() {
     return id;
@@ -61,5 +62,8 @@ public class Program {
       throw new BrandAdvocacyServiceException(BrandAdvocacyServiceException.PROGRAM_INVALID," progam must have title");
     else if (null == this.getLabelID() || "".equals(this.getLabelID()))
       throw new BrandAdvocacyServiceException(BrandAdvocacyServiceException.ID_INVALID,"program must have label id");
+  }
+  public String toString(){
+    return this.getTitle();
   }
 }

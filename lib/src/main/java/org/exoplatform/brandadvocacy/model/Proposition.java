@@ -87,15 +87,12 @@ public class Proposition {
   public void setNumberUsed(int nb){
     this.numberUsed = nb;
   }
-  public Boolean checkValid(){
-
-
+  public void checkValid() throws BrandAdvocacyServiceException{
     if(null == this.getContent() || "".equals(this.getContent())){
-      return false;
+      throw new BrandAdvocacyServiceException(BrandAdvocacyServiceException.PROPOSITION_INVALID,"proposition cannot have empty content");
     }else if(null == this.getMission_id() || "".equals(this.getMission_id())){
-      return false;
+      throw new BrandAdvocacyServiceException(BrandAdvocacyServiceException.PROPOSITION_INVALID,"proposition must belogn to 1 mission");
     }
-    return true;
 
   }
   public String getShortContent(int length){

@@ -28,6 +28,7 @@ import java.util.*;
  */
 public class Participant extends User {
 
+  private String programId;
   private List<Address> addresses;
   private Set<String> mission_participant_ids = new HashSet<String>();
   private Set<String> mission_ids = new HashSet<String>();
@@ -54,6 +55,8 @@ public class Participant extends User {
     this.addresses = addresses;
   }
   public void checkValid() throws BrandAdvocacyServiceException{
+    if (null == this.getProgramId() || "".equals(this.getProgramId()))
+      throw new BrandAdvocacyServiceException(BrandAdvocacyServiceException.PARTICIPANT_INVALID," participant must belong to a program");
     if(null == this.getUserName() || "".equals(this.getUserName()))
       throw new BrandAdvocacyServiceException(BrandAdvocacyServiceException.PARTICIPANT_INVALID,"participant must have username");
     if (0 == this.getMission_participant_ids().size())
@@ -71,5 +74,13 @@ public class Participant extends User {
 
   public void setMission_ids(Set<String> mission_ids) {
     this.mission_ids = mission_ids;
+  }
+
+  public String getProgramId() {
+    return programId;
+  }
+
+  public void setProgramId(String programId) {
+    this.programId = programId;
   }
 }

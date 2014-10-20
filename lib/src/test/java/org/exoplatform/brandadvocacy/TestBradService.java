@@ -16,10 +16,9 @@
  */
 package org.exoplatform.brandadvocacy;
 
+import EDU.oswego.cs.dl.util.concurrent.FJTask;
 import org.exoplatform.brandadvocacy.model.*;
-import org.junit.Test;
 
-import javax.jcr.RepositoryException;
 import java.util.*;
 
 /**
@@ -28,10 +27,244 @@ import java.util.*;
  *          exo@exoplatform.com
  * Sep 22, 2014  
  */
-public class TestMission extends AbstractTest {
+public class TestBradService extends AbstractTest {
 
+  public void testProgram(){
+
+    Program program = new Program("brand advocacy program");
+    program = this.service.addProgram(program);
+    int nbPrograms = 0;
+    List<Program> programs = this.service.getAllPrograms();
+    if (null != programs){
+      nbPrograms = programs.size();
+    }
+    assertEquals("should have 1 program",1,nbPrograms);
+
+    Manager manager1 = new Manager(this.username);
+    manager1.setParentId(program.getId());
+    manager1 = this.service.addManager2Program(manager1);
+    int nbManagers =     this.service.getAllManagersInProgram(program.getId()).size();
+    assertEquals("should 1 manager in program",1,nbManagers);
+    assertEquals("manager should have name like ","anhvt",manager1.getUserName());
+
+    List<Manager> managers = new ArrayList<Manager>(2);
+    Manager manager2 = new Manager("manage 1");
+    manager2.setRole(Role.Validator);
+    managers.add(manager2);
+    manager2 = new Manager("manager 2");
+    manager2.setRole(Role.Shipping_Manager);
+    managers.add(manager2);
+
+    this.service.addManagers2Program(program.getId(),managers);
+    assertEquals("should have 2 more managers ",nbManagers+2,this.service.getAllManagersInProgram(program.getId()).size());
+
+  }
+
+  public void testMission(){
+    Program currentProgram = null;
+    List<Program> programs = this.service.getAllPrograms();
+    for (Program program:programs){
+      currentProgram = program;
+    }
+    int nbMission = this.service.getAllMissionsByProgramId(currentProgram.getId()).size();
+    Mission mission1 = new Mission(currentProgram.getId()," mission 1 - prio 1");
+    mission1.setActive(true);
+    this.service.addMission2Program(mission1);
+    assertEquals("should have 1 mission",nbMission+1,this.service.getAllMissionsByProgramId(currentProgram.getId()).size());
+
+    nbMission = this.service.getAllMissionsByProgramId(currentProgram.getId()).size();
+    Mission mission2 = new Mission(currentProgram.getId()," mission 2 - prio 1");
+    mission2.setActive(true);
+    mission2 = this.service.addMission2Program(mission2);
+
+    assertEquals("should have 1 more mission ",nbMission+1,this.service.getAllMissionsByProgramId(currentProgram.getId()).size());
+
+    List<Manager> mission2Managers = this.service.getAllMissionManagers(mission2.getId());
+    int nbMissionManagers = 0;
+    if (null != mission2Managers){
+      nbMissionManagers = mission2Managers.size();
+    }
+
+    Manager missionManager1 = new Manager("i_am_mission_manager");
+    missionManager1.setRole(Role.Admin);
+    missionManager1.setParentId(mission2.getId());
+    missionManager1 = this.service.addManager2Mission(missionManager1);
+    assertEquals("should have 1 more manager in mission ",nbMissionManagers+1,this.service.getAllMissionManagers(mission2.getId()).size());
+    assertEquals(" manager should have username like ","i_am_mission_manager",missionManager1.getUserName());
+
+    mission2.setTitle("edit title");
+    mission2.setThird_part_link("google.com");
+    mission2 = this.service.updateMission(mission2);
+    assertEquals("should have new title","edit title",mission2.getTitle());
+    assertEquals("should have third part link","google.com",mission2.getThird_part_link());
+
+    nbMission = this.service.getAllMissionsByProgramId(currentProgram.getId()).size();
+    this.service.removeMissionById(mission2.getId());
+    assertEquals("shoule reduce 1 mission",nbMission-1,this.service.getAllMissionsByProgramId(currentProgram.getId()).size());
+  }
+  public void testProposition(){
+    Program currentProgram = null;
+    List<Program> programs = this.service.getAllPrograms();
+    for (Program program:programs){
+      currentProgram = program;
+    }
+    Mission currentMission = null;
+    List<Mission> missions = this.service.getAllMissionsByProgramId(currentProgram.getId());
+    for (Mission mission:missions){
+      currentMission = mission;
+    }
+    int nbPropositions = this.service.getAllPropositions(currentMission.getId()).size();
+    Proposition proposition1 = new Proposition();
+    proposition1.setContent(" i am proposition 1");
+    proposition1.setMission_id(currentMission.getId());
+    proposition1 = this.service.addProposition2Mission(proposition1);
+    assertEquals("should have 1 more proposition",nbPropositions+1,this.service.getAllPropositions(currentMission.getId()).size());
+
+    proposition1.setContent("new content");
+    proposition1 = this.service.updateProposition(proposition1);
+    assertEquals("new content should be new content ","new content",proposition1.getContent());
+    nbPropositions = this.service.getAllPropositions(currentMission.getId()).size();
+    this.service.removeProposition(proposition1.getId());
+    assertEquals("should reduce 1 proposition",nbPropositions-1,this.service.getAllPropositions(currentMission.getId()).size());
+
+    Proposition proposition2 = new Proposition();
+    proposition2.setContent(" i am proposition 2");
+    proposition2.setMission_id(currentMission.getId());
+    this.service.addProposition2Mission(proposition2);
+  }
+
+  public void testMissionParticipant(){
+    Program currentProgram = null;
+    List<Program> programs = this.service.getAllPrograms();
+    for (Program program:programs){
+      currentProgram = program;
+    }
+
+    Mission currentMission = new Mission(currentProgram.getId()," mission 1 - prio 1");
+    currentMission.setActive(true);
+    currentMission = this.service.addMission2Program(currentMission);
+
+    Proposition currentProposition = new Proposition();
+    currentProposition.setContent(" i am proposition 1");
+    currentProposition.setMission_id(currentMission.getId());
+    currentProposition = this.service.addProposition2Mission(currentProposition);
+
+
+    int nbMP = this.service.getAllMissionParticipantsInProgram(currentProgram.getId()).size();
+    MissionParticipant missionParticipant = new MissionParticipant();
+    missionParticipant.setMission_id(currentMission.getId());
+    missionParticipant.setProposition_id(currentProposition.getId());
+    missionParticipant.setParticipant_username(this.username);
+    missionParticipant = this.service.addMissionParticipant2Program(currentProgram.getId(),missionParticipant);
+    assertEquals("should have 1 more MP",nbMP+1,this.service.getAllMissionParticipantsInProgram(currentProgram.getId()).size());
+
+    int nbUsedOld = currentProposition.getNumberUsed();
+    currentProposition.setNumberUsed(nbUsedOld+1);
+    currentProposition = this.service.updateProposition(currentProposition);
+    assertEquals("number proposition used should be added to 1",nbUsedOld+1,currentProposition.getNumberUsed());
+
+    missionParticipant.setStatus(Status.INPROGRESS);
+    missionParticipant.setUrl_submitted("twitter.com");
+    Long date_submitted = System.currentTimeMillis();
+    missionParticipant.setDate_submitted(date_submitted);
+    missionParticipant= this.service.updateMissionParticipantInProgram(currentProgram.getId(),missionParticipant);
+    assertEquals("should update url submitted","twitter.com",missionParticipant.getUrl_submitted());
+
+    missionParticipant.setStatus(Status.WAITING_FOR_VALIDATE);
+    this.service.updateMissionParticipantInProgram(currentProgram.getId(),missionParticipant);
+    assertEquals("should update status",Status.WAITING_FOR_VALIDATE,missionParticipant.getStatus());
+    assertEquals("should keep date submitted",(Long)date_submitted,(Long)missionParticipant.getDate_submitted());
+    assertEquals("should keep the url submitted","twitter.com",missionParticipant.getUrl_submitted());
+
+    int nbParticipants = this.service.getAllParticipantsInProgram(currentProgram.getId()).size();
+    Participant participant = this.service.getParticipantInProgramByUserName(currentProgram.getId(),this.username);
+    if (null == participant){
+      participant = new Participant(this.username);
+    }
+    Set<String> mpIds = new HashSet<String>(1);
+    mpIds.add(missionParticipant.getId());
+    Set<String> mIds = new HashSet<String>(1);
+    mIds.add(currentMission.getId());
+    participant.setMission_participant_ids(mpIds);
+    participant.setMission_ids(mIds);
+    participant.setProgramId(currentProgram.getId());
+    participant = this.service.addParticipant2Program(participant);
+    assertEquals("should have 1 more participant",nbParticipants+1,this.service.getAllParticipantsInProgram(currentProgram.getId()).size());
+
+    Mission newMission = new Mission(currentProgram.getId(),"mission 2: review on twitter");
+    newMission.setActive(true);
+    newMission.setThird_part_link("google.com");
+    newMission = this.service.addMission2Program(newMission);
+
+    Proposition proposition1 = new Proposition("i am proposition 1 in new mission");
+    proposition1.setMission_id(newMission.getId());
+    proposition1 = this.service.addProposition2Mission(proposition1);
+
+    MissionParticipant missionParticipant1 = new MissionParticipant();
+    missionParticipant1.setMission_id(newMission.getId());
+    missionParticipant1.setProposition_id(proposition1.getId());
+    missionParticipant1.setParticipant_username(participant.getUserName());
+    missionParticipant1.setStatus(Status.OPEN);
+    missionParticipant1 = this.service.addMissionParticipant2Program(currentProgram.getId(),missionParticipant1);
+
+    participant = this.service.getParticipantInProgramByUserName(currentProgram.getId(),this.username);
+    int nbMPIdsOld = participant.getMission_participant_ids().size();
+    int nbMIdsOld = participant.getMission_ids().size();
+
+    Set<String> newMPIds = new HashSet<String>(1);
+    newMPIds.add(missionParticipant1.getId());
+    participant.setMission_participant_ids(newMPIds);
+
+    Set<String> newMIds = new HashSet<String>(1);
+    newMIds.add(newMission.getId());
+    participant.setMission_ids(newMIds);
+
+    participant = this.service.addParticipant2Program(participant);
+    assertEquals("should participate 1 more mission",nbMIdsOld+1,participant.getMission_ids().size());
+    assertEquals("should have 1 more mission participant",nbMPIdsOld+1,participant.getMission_participant_ids().size());
+
+    Proposition proposition2 = new Proposition(" i am proposition 2 in new mission");
+    proposition2.setMission_id(newMission.getId());
+    proposition2 = this.service.addProposition2Mission(proposition2);
+
+    participant = this.service.getParticipantInProgramByUserName(currentProgram.getId(),this.username);
+    MissionParticipant missionParticipant2 = new MissionParticipant();
+    missionParticipant2.setMission_id(newMission.getId());
+    missionParticipant2.setProposition_id(proposition2.getId());
+    missionParticipant2.setParticipant_username(participant.getUserName());
+    missionParticipant2 = this.service.addMissionParticipant2Program(currentProgram.getId(),missionParticipant2);
+
+    nbMPIdsOld = participant.getMission_participant_ids().size();
+    nbMIdsOld = participant.getMission_ids().size();
+
+    newMPIds = new HashSet<String>(1);
+    newMPIds.add(missionParticipant2.getId());
+    participant.setMission_participant_ids(newMPIds);
+
+    newMIds = new HashSet<String>(1);
+    newMIds.add(newMission.getId());
+    participant.setMission_ids(newMIds);
+
+    participant = this.service.addParticipant2Program(participant);
+    assertEquals("should participate only 2 missions",nbMIdsOld,participant.getMission_ids().size());
+    assertEquals("should have 1 more mission participant",nbMPIdsOld+1,participant.getMission_participant_ids().size());
+
+
+  }
+  /*
   public void testAll(){
-    Mission m = new Mission("facebook !!!! priority 1 ");
+    int nbPrograms = 0;
+    List<Program> programs = this.service.getAllPrograms();
+    if (null != programs){
+      nbPrograms = programs.size();
+    }
+    Program program = new Program("brand advocacy program");
+    program = this.service.addProgram(program);
+    assertEquals("should have 1 program",1,nbPrograms);
+
+    Mission mission1 = new Mission(program.getId(),"facebook !!!! priority 1 ");
+    mission1.setActive(true);
+
     List<Manager> managers = new ArrayList<Manager>();
     Manager manager = new Manager(this.username);
     manager.setRole(Role.Shipping_Manager);
@@ -64,7 +297,7 @@ public class TestMission extends AbstractTest {
     assertEquals("should have 2 propositions in mission "+m.getTitle(),2,this.service.getPropositionsByMissionId(m.getId()).size());
 
     m.setTitle("fb");
-    m.setThird_party_link("exo.com");
+    m.setThird_part_link("exo.com");
     m = this.service.updateMission(m);
     assertEquals("fb",m.getTitle());
 
@@ -364,5 +597,6 @@ public class TestMission extends AbstractTest {
 
 
   }
+  */
 
 }

@@ -4,8 +4,6 @@ import juzu.Action;
 import juzu.Path;
 import juzu.Response;
 import juzu.View;
-import juzu.request.SecurityContext;
-import juzu.template.Template;
 import org.exoplatform.brandadvocacy.model.Manager;
 import org.exoplatform.brandadvocacy.model.Mission;
 import org.exoplatform.brandadvocacy.model.Priority;
@@ -13,7 +11,6 @@ import org.exoplatform.brandadvocacy.model.Proposition;
 import org.exoplatform.brandadvocacy.service.IService;
 
 import javax.inject.Inject;
-import javax.jcr.RepositoryException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -80,7 +77,7 @@ public class MissionController {
   public Response.Content list(String keyword, String size, String page){
     int _size = size != null ? Integer.parseInt(size) : 5;
     int _page = page != null ? Integer.parseInt(page) : 0;
-    return listTpl.with().set("priorities",Priority.values()).set("missions",this.missionService.getAllMissions()).ok();
+    return listTpl.with().set("priorities", Priority.values()).set("missions", this.missionService.getAllMissions()).ok();
   }
 
   @View
@@ -101,7 +98,7 @@ public class MissionController {
     if (null != active)
       mActive = active.equals("1") ? true:false;
     Mission mission = new Mission(title);
-    mission.setThird_party_link(third_party_link);
+    mission.setThird_part_link(third_party_link);
     mission.setActive(mActive);
     mission.setPriority(Priority.getPriority(Integer.parseInt(priority)));
     List<Manager> managers = new ArrayList<Manager>();
@@ -118,7 +115,7 @@ public class MissionController {
     if (null != mission){
       mission.setLabelID(labelID);
       mission.setTitle(title);
-      mission.setThird_party_link(third_party_link);
+      mission.setThird_part_link(third_party_link);
       mission.setCreatedDate(0);
       mission.setPriority(Priority.getPriority(Integer.parseInt(priority)));
       Boolean mActive = false;

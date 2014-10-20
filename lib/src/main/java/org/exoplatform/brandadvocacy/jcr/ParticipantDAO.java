@@ -36,6 +36,7 @@ import java.util.*;
  */
 public class ParticipantDAO extends DAO {
 
+  private static final String node_prop_program_id = "exo:program_id";
   private static final String node_prop_username = "exo:username";
   private static final String node_prop_mission_participant_ids = "exo:mission_participant_ids";
   private static final String node_prop_mission_ids = "exo:mission_ids";
@@ -45,11 +46,12 @@ public class ParticipantDAO extends DAO {
     super(jcrImpl);
   }
 
-  public void setProperties(Node aNode,Participant participant) throws RepositoryException {
+  private void setProperties(Node aNode,Participant participant) throws RepositoryException {
     try{
       participant.checkValid();
       Set<String> missionParticipantIds = participant.getMission_participant_ids();
       Set<String> missionIds = participant.getMission_ids();
+      aNode.setProperty(node_prop_program_id,participant.getProgramId());
       aNode.setProperty(node_prop_mission_participant_ids,missionParticipantIds.toArray(new String[missionParticipantIds.size()]));
       aNode.setProperty(node_prop_mission_ids,missionIds.toArray(new String[missionIds.size()]));
       aNode.setProperty(node_prop_username,participant.getUserName());
@@ -59,6 +61,8 @@ public class ParticipantDAO extends DAO {
     }
   }
   public Participant transferNode2Object(Node node) throws RepositoryException{
+    if (null == node)
+      return null;
     Participant participant = new Participant();
     PropertyIterator iter = node.getProperties("exo:*");
     while (iter.hasNext()) {
@@ -81,6 +85,9 @@ public class ParticipantDAO extends DAO {
       else if(name.equals(node_prop_username)){
         participant.setUserName(p.getString());
       }
+      else if(name.equals(node_prop_program_id)) {
+        participant.setProgramId(p.getString());
+      }
     }
     try {
       participant.checkValid();
@@ -90,51 +97,44 @@ public class ParticipantDAO extends DAO {
     }
     return null;
   }
-  public Node getOrCreateParticipantHome() {
-    String path = String.format("%s/%s",JCRImpl.EXTENSION_PATH,JCRImpl.PARTICIPANT_PATH);
-    return this.getJcrImplService().getOrCreateNode(path);
-  }
-  public Node getOrCreateAddressHome(Node participantNode) throws RepositoryException {
-
-    Node addressHome = null;
+  private Node getOrCreateParticipantHome(String programId){
+    if (null == programId || "".equals(programId)){
+      log.error("ERROR cannot get or create participant home in program null");
+      return null;
+    }
+    Node programNode = null;
     try {
-      addressHome = participantNode.getNode(node_prop_addresses);
-    } catch (RepositoryException e) {
-      log.error("address list node not exists");
-    }
-    if(null == addressHome){
-      try {
-        addressHome = participantNode.addNode(node_prop_addresses,JCRImpl.ADDRESS_LIST_NODE_TYPE);
-      } catch (RepositoryException e) {
-        e.printStackTrace();
+      programNode = this.getNodeById(programId);
+      if (null != programNode){
+        return this.getJcrImplService().getProgramDAO().getOrCreateParticipantHome(programNode);
       }
+    } catch (RepositoryException e) {
     }
-    return addressHome;
+    return null;
   }
-  public Node getNodeByUserName(String username){
+  public Node getOrCreateAddressHome(Node participantNode) {
+    try {
+      return this.getOrCreateNodeCommon(participantNode,node_prop_addresses,JCRImpl.ADDRESS_LIST_NODE_TYPE);
+    } catch (RepositoryException e) {
+      e.printStackTrace();
+    }
+    return null;
+  }
+  public Node getNodeByUserName(String programId,String username){
     StringBuilder sql = new StringBuilder("select * from "+ JCRImpl.PARTICIPANT_NODE_TYPE);
     sql.append(" WHERE ").append(node_prop_username).append(" like '").append(username).append("'");
+    sql.append(" AND ").append(node_prop_program_id).append(" = '").append(programId).append("'");
     List<Node> nodes =  this.getNodesByQuery(sql.toString(),0,1);
     if (nodes.size() > 0) {
       return nodes.get(0);
     }
     return null;
   }
-  public Node getParticipantNode(String pid){
-    StringBuilder sql = new StringBuilder("select * from "+ JCRImpl.PARTICIPANT_NODE_TYPE +" where jcr:path like '");
-    sql.append(JCRImpl.EXTENSION_PATH).append("/").append(JCRImpl.PARTICIPANT_PATH);
-    sql.append("/").append(Utils.queryEscape(pid));
-    sql.append("'");
-    List<Node> nodes =  this.getNodesByQuery(sql.toString(),0,1);
-    if (nodes.size() > 0) {
-      return nodes.get(0);
-    }
-    return null;
-  }
-  public Participant addParticipant(Participant participant){
+  public Participant addParticipant2Program(Participant participant){
     try{
       participant.checkValid();
-      Node participantHomeNode = this.getOrCreateParticipantHome();
+      String programId = participant.getProgramId();
+      Node participantHomeNode = this.getOrCreateParticipantHome(programId);
       if(null != participantHomeNode){
         Node participantNode = null;
         if (participantHomeNode.hasNode(participant.getUserName())) {
@@ -178,10 +178,10 @@ public class ParticipantDAO extends DAO {
     return null;
   }
 
-  public List<Participant> getAllParticipants(){
+  public List<Participant> getAllParticipantsInProgram(String programId){
     List<Participant> participants = new ArrayList<Participant>();
     try {
-      Node participantHomeNode = this.getOrCreateParticipantHome();
+      Node participantHomeNode = this.getOrCreateParticipantHome(programId);
       if(null != participantHomeNode){
         NodeIterator nodes = participantHomeNode.getNodes();
         Node participantNode = null;
@@ -189,8 +189,8 @@ public class ParticipantDAO extends DAO {
         while (nodes.hasNext()) {
           participantNode = (Node) nodes.next();
           participant = this.transferNode2Object(participantNode);
-          participant.checkValid();
-          participants.add(participant);
+          if (null != participant)
+            participants.add(participant);
         }
         return participants;
       }
@@ -202,9 +202,9 @@ public class ParticipantDAO extends DAO {
     return participants;
   }
 
-  public Participant getParticipantByUserName(String username){
+  public Participant getParticipantInProgramByUserName(String programId,String username){
     try {
-      return this.transferNode2Object(this.getNodeByUserName(username));
+      return this.transferNode2Object(this.getNodeByUserName(programId,username));
     } catch (RepositoryException e) {
       log.error("ERROR cannot get participant by username");
     }

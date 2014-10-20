@@ -69,6 +69,8 @@ public class MissionParticipantDAO extends DAO {
 
   }
   private MissionParticipant transferNode2Object(Node node) throws RepositoryException{
+    if (null == node)
+      return null;
     MissionParticipant missionParticipant = new MissionParticipant();
     missionParticipant.setId(node.getUUID());
     PropertyIterator iter = node.getProperties("exo:*");
@@ -116,57 +118,68 @@ public class MissionParticipantDAO extends DAO {
     for (Node node:nodes){
       try {
         missionParticipant = this.transferNode2Object(node);
-        missionParticipant.checkValid();
-        missionParticipants.add(missionParticipant);
+        if (null != missionParticipant)
+          missionParticipants.add(missionParticipant);
       } catch (RepositoryException e) {
         e.printStackTrace();
       }
     }
     return missionParticipants;
   }
-  public Node getOrCreateMissionParticipantHome() {
-    String path = String.format("%s/%s",JCRImpl.EXTENSION_PATH,JCRImpl.MISSION_PARTICIPANT_PATH);
-    return this.getJcrImplService().getOrCreateNode(path);
-  }
-  public Node getNodeById(String id) throws RepositoryException{
-    return this.getJcrImplService().getSession().getNodeByUUID(id);
-  }
-  public Node getMissionParticipantNodeByLabelID(String labelID){
-    StringBuilder sql = new StringBuilder("select * from "+ JCRImpl.MISSION_PARTICIPANT_NODE_TYPE +" where jcr:path like '");
-    sql.append(JCRImpl.EXTENSION_PATH).append("/").append(JCRImpl.MISSION_PARTICIPANT_PATH);
-    sql.append("/").append(Utils.queryEscape(labelID));
-    sql.append("'");
-    Session session;
+  public Node getOrCreateMissionParticipantHome(String programId) {
+    if (null == programId || "".equals(programId)){
+      log.error("ERROR cannot get or create mission participant home in program null");
+      return null;
+    }
     try {
-      session = this.getJcrImplService().getSession();
-      Query query = session.getWorkspace().getQueryManager().createQuery(sql.toString(), Query.SQL);
-      QueryResult result = query.execute();
-      NodeIterator nodes = result.getNodes();
-      if (nodes.hasNext()) {
-        return nodes.nextNode();
-      }
+      Node node = this.getNodeById(programId);
+      return this.getJcrImplService().getProgramDAO().getOrCreateMissionParticipantHome(node);
     } catch (RepositoryException e) {
-      log.error("ERROR cannot get mission participant node  "+ labelID +" Exception "+e.getMessage());
+      e.printStackTrace();
     }
     return null;
   }
-  public List<MissionParticipant> searchMissionParticipants(String keyword){
-    StringBuilder sql = new StringBuilder("select * from "+ JCRImpl.MISSION_PARTICIPANT_NODE_TYPE +" where ");
-    sql.append(node_prop_labelID).append(" like '%"+keyword+"%'");
-    sql.append(" OR "+node_prop_participant_username).append(" like '%"+keyword+"%'");
-    List<Node> nodes =  this.getNodesByQuery(sql.toString(),0,0);
-    return this.transferNodes2Objects(nodes);
+  private List<MissionParticipant> sortByDate(List<MissionParticipant> missionParticipants){
+    List<MissionParticipant> result = new LinkedList<MissionParticipant>();
+    result.addAll(missionParticipants);
+    Collections.sort(result,new Comparator<MissionParticipant>() {
+      @Override
+      public int compare(MissionParticipant o1, MissionParticipant o2) {
+        return (int)(o2.getCreatedDate() - o1.getCreatedDate());
+      }
+    });
+    return result;
+  }
+  public List<MissionParticipant> searchMissionParticipants(String programId, String keyword, int offset, int limit){
+    Program program = this.getJcrImplService().getProgramDAO().getProgramById(programId);
+    if (null != program){
+      StringBuilder sql = new StringBuilder("select * from "+ JCRImpl.MISSION_PARTICIPANT_NODE_TYPE +" where ");
+      sql.append("jcr:path like '");
+      sql.append(JCRImpl.EXTENSION_PATH).append("/").append(Utils.queryEscape(program.getLabelID())).append("/").append(ProgramDAO.node_prop_missionparticipants);
+      sql.append("'");
+      sql.append(" AND ( ").append(node_prop_labelID).append(" like '%"+keyword+"%'");
+      sql.append(" OR "+node_prop_participant_username).append(" like '%"+keyword+"%' ) ");
+      List<Node> nodes =  this.getNodesByQuery(sql.toString(),offset,limit);
+      return this.sortByDate(this.transferNodes2Objects(nodes));
+    }
+    return null;
   }
 
-  public MissionParticipant addMissionParticipant(MissionParticipant missionParticipant){
+  public MissionParticipant addMissionParticipant2Program(String programId, MissionParticipant missionParticipant){
     try{
       missionParticipant.checkValid();
-      Node missionParticipantHome = this.getOrCreateMissionParticipantHome();
+      Node missionParticipantHome = this.getOrCreateMissionParticipantHome(programId);
       if (null != missionParticipantHome){
-        Node missionParticipantNode =  missionParticipantHome.addNode(missionParticipant.getLabelID(),JCRImpl.MISSION_PARTICIPANT_NODE_TYPE);
-        this.setProperties(missionParticipantNode,missionParticipant);
-        missionParticipantHome.getSession().save();
-        return this.transferNode2Object(missionParticipantNode);
+        Node missionParticipantNode = null;
+        if (!missionParticipantHome.hasNode(missionParticipant.getLabelID()))
+          missionParticipantNode =  missionParticipantHome.addNode(missionParticipant.getLabelID(),JCRImpl.MISSION_PARTICIPANT_NODE_TYPE);
+        else
+          missionParticipantNode = missionParticipantHome.getNode(missionParticipant.getLabelID());
+        if (null != missionParticipantNode){
+          this.setProperties(missionParticipantNode,missionParticipant);
+          missionParticipantHome.save();
+          return this.transferNode2Object(missionParticipantNode);
+        }
       }
     }
     catch (ItemExistsException ie){
@@ -180,14 +193,13 @@ public class MissionParticipantDAO extends DAO {
     }
     return null;
   }
-  public MissionParticipant updateMissionParticipant(MissionParticipant missionParticipant){
+  public MissionParticipant updateMissionParticipantInProgram(String programId, MissionParticipant missionParticipant){
     try {
-
       missionParticipant.checkValid();
-      Node missionParticipantHome = this.getOrCreateMissionParticipantHome();
+      Node missionParticipantHome = this.getOrCreateMissionParticipantHome(programId);
       if (null != missionParticipantHome && missionParticipantHome.hasNode(missionParticipant.getLabelID())){
         Node missionParticipantNode = missionParticipantHome.getNode(missionParticipant.getLabelID());
-        if(null != missionParticipantNode && missionParticipant.getId().equals(missionParticipantNode.getUUID()) ){
+        if(null != missionParticipantNode){
           this.setProperties(missionParticipantNode,missionParticipant);
            missionParticipantNode.save();
           return this.transferNode2Object(missionParticipantNode);
@@ -204,73 +216,66 @@ public class MissionParticipantDAO extends DAO {
     return null;
   }
 
-  public List<MissionParticipant> getAllMissionParticipants(){
+  public List<MissionParticipant> getAllMissionParticipantsInProgram(String programId){
 
     Set<MissionParticipant> missionParticipants = new HashSet<MissionParticipant>();
     try{
-      Node missionParticipantHome = this.getOrCreateMissionParticipantHome();
-      NodeIterator nodes =  missionParticipantHome.getNodes();
-      while (nodes.hasNext()){
-        try{
-          missionParticipants.add(this.transferNode2Object(nodes.nextNode()));
-        }catch (RepositoryException re){
-          log.error(" === ERROR cannot get mission participant node list ");
+      Node missionParticipantHome = this.getOrCreateMissionParticipantHome(programId);
+      if (null != missionParticipantHome){
+        NodeIterator nodes =  missionParticipantHome.getNodes();
+        MissionParticipant missionParticipant;
+        while (nodes.hasNext()){
+          try{
+            missionParticipant = this.transferNode2Object(nodes.nextNode());
+            if (null != missionParticipant)
+              missionParticipants.add(missionParticipant);
+          }catch (RepositoryException re){
+            log.error(" === ERROR cannot get mission participant node list ");
+          }
         }
+        List<MissionParticipant> result = new LinkedList<MissionParticipant>();
+        result.addAll(missionParticipants);
+        Collections.sort(result,new Comparator<MissionParticipant>() {
+          @Override
+          public int compare(MissionParticipant o1, MissionParticipant o2) {
+            return (int)(o2.getCreatedDate() - o1.getCreatedDate());
+          }
+        });
+        return result;
       }
-      List<MissionParticipant> result = new LinkedList<MissionParticipant>();
-      result.addAll(missionParticipants);
-      Collections.sort(result,new Comparator<MissionParticipant>() {
-        @Override
-        public int compare(MissionParticipant o1, MissionParticipant o2) {
-          return (int)(o2.getCreatedDate() - o1.getCreatedDate());
-        }
-      });
-      return result;
     }catch (RepositoryException re){
       log.error("=== ERROR cannot find all mission participants");
     }
     return null;
 
   }
-  public List<MissionParticipant> getAllMissionParticipantsByParticipant(String username){
+  public List<MissionParticipant> getAllMissionParticipantsInProgramByParticipant(String programId,String username){
 
     List<MissionParticipant> missionParticipants = new ArrayList<MissionParticipant>();
-    ParticipantDAO participantDAO = this.getJcrImplService().getParticipantDAO();
-    Node participantNode = participantDAO.getNodeByUserName(username);
-    if (null != participantNode){
-      Participant participant = null;
-      try {
-        participant = participantDAO.transferNode2Object(participantNode);
+    try {
+      Participant participant = this.getJcrImplService().getParticipantDAO().getParticipantInProgramByUserName(programId,username);
+      if (null != participant){
         Set<String> mpids = participant.getMission_participant_ids();
-        Session session = this.getJcrImplService().getSession();
         MissionParticipant missionParticipant;
         for (String mpid:mpids){
-          missionParticipant = this.transferNode2Object(session.getNodeByUUID(mpid));
-          missionParticipant.checkValid();
-          missionParticipants.add(missionParticipant);
+          missionParticipant = this.transferNode2Object(this.getNodeById(mpid));
+          if (null != missionParticipant)
+            missionParticipants.add(missionParticipant);
         }
-      } catch (RepositoryException e) {
-        log.error("=== ERROR getAllMissionParticipantsByParticipant: cannot transfer node to object "+username);
-        e.printStackTrace();
+        return this.sortByDate(missionParticipants);
       }
-
+    } catch (RepositoryException e) {
+      log.error("=== ERROR getAllMissionParticipantsByParticipant: cannot transfer node to object "+username);
+      e.printStackTrace();
     }
     return missionParticipants;
   }
 
-  public List<MissionParticipant> getAll(){
-    List<MissionParticipant> missionParticipants = new ArrayList<MissionParticipant>();
-    StringBuilder sql = new StringBuilder("select * from "+ JCRImpl.MISSION_PARTICIPANT_NODE_TYPE +" where ");
-    sql.append("");
-
-    return null;
-
-  }
-
   public MissionParticipant getMissionParticipantById(String mpId){
-    Node node = null;
+    if (null == mpId || "".equals(mpId))
+      return null;
     try {
-      node = this.getNodeById(mpId);
+      Node node = this.getNodeById(mpId);
       if(null != node)
         return this.transferNode2Object(node);
 
@@ -280,13 +285,20 @@ public class MissionParticipantDAO extends DAO {
     return null;
   }
 
-  public int getTotalNumberMPByParticipant(int status,String username){
-    StringBuilder sql = new StringBuilder("select jcr:uuid from "+ JCRImpl.MISSION_PARTICIPANT_NODE_TYPE +" where ");
-    sql.append(node_prop_participant_username).append(" = '").append(username).append("'");
-    if (status != 0){
-      sql.append(" AND ").append(node_prop_status).append(" = '").append(status).append("'");
+  public int getTotalNumberMPByParticipant(String programId,int status,String username){
+    Program program = this.getJcrImplService().getProgramDAO().getProgramById(programId);
+    if (null != program){
+      StringBuilder sql = new StringBuilder("select jcr:uuid from "+ JCRImpl.MISSION_PARTICIPANT_NODE_TYPE +" where ");
+      sql.append("jcr:path like '");
+      sql.append(JCRImpl.EXTENSION_PATH).append("/").append(Utils.queryEscape(program.getLabelID())).append("/").append(ProgramDAO.node_prop_missionparticipants);
+      sql.append("'");
+      sql.append(" AND ").append(node_prop_participant_username).append(" = '").append(username).append("'");
+      if (status != 0){
+        sql.append(" AND ").append(node_prop_status).append(" = '").append(status).append("'");
+      }
+      return this.getNodesByQuery(sql.toString(),0,0).size();
     }
-    return this.getNodesByQuery(sql.toString(),0,0).size();
+    return 0;
   }
 
   public void removeMissionParticipant(String id){

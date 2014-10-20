@@ -1,15 +1,13 @@
 package org.exoplatform.brandadvocacy.jcr;
 
+import com.google.common.collect.Lists;
 import org.exoplatform.brandadvocacy.model.Program;
 import org.exoplatform.brandadvocacy.service.BrandAdvocacyServiceException;
 import org.exoplatform.brandadvocacy.service.JCRImpl;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 
-import javax.jcr.Node;
-import javax.jcr.Property;
-import javax.jcr.PropertyIterator;
-import javax.jcr.RepositoryException;
+import javax.jcr.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,37 +23,26 @@ public class ProgramDAO extends DAO {
   public static final String node_prop_active = "exo:active";
   public static final String node_prop_managers = "exo:managerslist";
   public static final String node_prop_missions = "exo:missionslist";
+  public static final String node_prop_participants = "exo:participantslist";
+  public static final String node_prop_missionparticipants = "exo:missionparticipantslist";
 
   public ProgramDAO(JCRImpl jcrImpl) {
     super(jcrImpl);
   }
 
   public Node getOrCreateManagerHome(Node node) throws RepositoryException {
-
-    Node managerHome = null;
-    try {
-      managerHome = node.getNode(node_prop_managers);
-      if (null == managerHome)
-        managerHome = node.addNode(node_prop_managers,JCRImpl.MANAGER_LIST_NODE_TYPE);
-      return managerHome;
-    } catch (RepositoryException e) {
-      log.error("managers list node not exists");
-    }
-    return null;
+    return this.getOrCreateNodeCommon(node,node_prop_managers,JCRImpl.MANAGER_LIST_NODE_TYPE);
   }
 
   public Node getOrCreateMissionHome(Node node) throws RepositoryException {
+    return this.getOrCreateNodeCommon(node,node_prop_missions,JCRImpl.MISSION_LIST_NODE_TYPE);
+  }
 
-    Node missionHome = null;
-    try {
-      missionHome = node.getNode(node_prop_missions);
-      if (null == missionHome)
-        missionHome = missionHome.addNode(node_prop_missions,JCRImpl.MISSION_LIST_NODE_TYPE);
-      return missionHome;
-    } catch (RepositoryException e) {
-      log.error("missions list node not exists");
-    }
-    return null;
+  public Node getOrCreateParticipantHome(Node node) throws RepositoryException {
+    return this.getOrCreateNodeCommon(node,node_prop_participants,JCRImpl.PARTICIPANT_LIST_NODE_TYPE);
+  }
+  public Node getOrCreateMissionParticipantHome(Node node) throws RepositoryException {
+    return this.getOrCreateNodeCommon(node,node_prop_missionparticipants,JCRImpl.MISSION_PARTICIPANT_LIST_NODE_TYPE);
   }
 
   private void setPropertiesNode(Node node, Program program) throws RepositoryException {
@@ -150,6 +137,16 @@ public class ProgramDAO extends DAO {
         return this.transferNode2Object(node);
     }catch (RepositoryException re){
       log.error("ERROR cannot get program by id "+id);
+    }
+    return null;
+  }
+  public List<Program> getAllPrograms(){
+    Node node = this.getJcrImplService().getOrCreateExtensionHome();
+    try {
+      NodeIterator nodeIterator = node.getNodes();
+      return this.transferNodes2Objects(Lists.newArrayList(nodeIterator));
+    } catch (RepositoryException e) {
+      e.printStackTrace();
     }
     return null;
   }

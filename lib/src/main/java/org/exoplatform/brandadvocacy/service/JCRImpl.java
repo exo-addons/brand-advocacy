@@ -74,6 +74,8 @@ public class JCRImpl implements IService {
   public static final String MISSION_NODE_TYPE = "brad:mission";
   public static final String MISSION_LIST_NODE_TYPE = "brad:missionslist";
   public static final String MANAGER_LIST_NODE_TYPE = "brad:managerslist";
+  public static final String MISSION_PARTICIPANT_LIST_NODE_TYPE = "brad:missionparticipantslist";
+  public static final String PARTICIPANT_LIST_NODE_TYPE = "brad:participantslist";
   public static final String PROPOSITION_LIST_NODE_TYPE = "brad:propositionslist";
   public static final String MANAGER_NODE_TYPE = "brad:manager";
   public static final String PROPOSITION_NODE_TYPE = "brad:proposition";
@@ -186,6 +188,7 @@ public class JCRImpl implements IService {
     this.propositionDAO = propositionDAO;
   }
 
+
   @Override
   public Program addProgram(Program program) {
     return this.getProgramDAO().addProgram(program);
@@ -202,115 +205,63 @@ public class JCRImpl implements IService {
   }
 
   @Override
-  public Mission addMission(String programId, Mission m) {
-    return this.getMissionDAO().addMission2Program(programId,m);
+  public List<Program> getAllPrograms() {
+    return this.getProgramDAO().getAllPrograms();
   }
 
   @Override
-  public void removeMission(String id) {
-
-    this.getMissionDAO().removeMissionById(id);
-    
+  public Mission addMission2Program(Mission mission) {
+    return this.getMissionDAO().addMission2Program(mission);
   }
 
   @Override
-  public Mission getMissionById(String id){
-    return this.getMissionDAO().getMissionById(id);
+  public void removeMissionById(String missionId) {
+    this.getMissionDAO().removeMissionById(missionId);
   }
 
   @Override
-  public List<Mission> getAllMissions() {
-    return null;
-  }
-
-
-  @Override
-  public Mission updateMission(Mission m) {
-    return this.getMissionDAO().updateMission(m);
+  public Mission getMissionById(String missionId) {
+    return this.getMissionDAO().getMissionById(missionId);
   }
 
   @Override
-  public Mission getRandomMisson(String username) {
-    return this.getMissionDAO().getRandomMission(username);
+  public List<Mission> getAllMissionsByProgramId(String programId) {
+    return this.getMissionDAO().getAllMissionsByProgramId(programId);
   }
 
   @Override
-  public List<Mission> getAllMissionsByParticipant(String username) {
-    return this.getMissionDAO().getAllMissionsByParticipant(username);
+  public Mission updateMission(Mission mission) {
+    return this.getMissionDAO().updateMission(mission);
   }
 
   @Override
-  public Mission addProposition2Mission(String mid, List<Proposition> propositions) {
-    return this.getPropositionDAO().addProposition2Mission(mid,propositions);
+  public Mission getRandomMisson(String programId, String username) {
+    return this.getMissionDAO().getRandomMission(programId,username);
   }
 
   @Override
-  public void removeProposition(String id) {
-    this.getPropositionDAO().removeProposition(id);
+  public List<Mission> getAllMissionsByParticipant(String programId, String username) {
+    return this.getMissionDAO().getAllMissionsInProgramByParticipant(programId,username);
   }
 
   @Override
-  public MissionParticipant addMissionParticipant(MissionParticipant missionParticipant) {
-    return this.getMissionParticipantDAO().addMissionParticipant(missionParticipant);
+  public Participant addParticipant2Program(Participant participant) {
+    return this.getParticipantDAO().addParticipant2Program(participant);
   }
 
   @Override
-  public MissionParticipant updateMissionParticipant(MissionParticipant missionParticipant) {
-    return this.getMissionParticipantDAO().updateMissionParticipant(missionParticipant);
+  public Participant getParticipantInProgramByUserName(String programId, String username) {
+    return this.getParticipantDAO().getParticipantInProgramByUserName(programId,username);
   }
 
   @Override
-  public List<MissionParticipant> getAllMissionParticipants() {
-    return this.getMissionParticipantDAO().getAllMissionParticipants();
+  public List<Participant> getAllParticipantsInProgram(String programId) {
+    return this.getParticipantDAO().getAllParticipantsInProgram(programId);
   }
 
   @Override
-  public List<MissionParticipant> getMissionParticipantsByParticipant(String username) {
-    return this.getMissionParticipantDAO().getAllMissionParticipantsByParticipant(username);
-  }
-
-  @Override
-  public MissionParticipant getMissionParticipantById(String mpId) {
-    return this.getMissionParticipantDAO().getMissionParticipantById(mpId);
-  }
-
-  @Override
-  public void removeMissionParticipant(String id) {
-    this.getMissionParticipantDAO().removeMissionParticipant(id);
-  }
-
-  @Override
-  public Participant addParticipant(Participant p){
-
-    return this.getParticipantDAO().addParticipant(p);
-    
-  }
-
-  @Override
-  public void removeParticipant(String id) {
-    // TODO Auto-generated method stub
-    
-  }
-
-  @Override
-  public Participant getParticipantByUserName(String username) {
-    return this.getParticipantDAO().getParticipantByUserName(username);
-  }
-
-  @Override
-  public List<Participant> getAllParticipants() {
-    return this.getParticipantDAO().getAllParticipants();
-  }
-
-  @Override
-  public List<Participant> getParticipantsByMissionId(String mid) {
-    // TODO Auto-generated method stub
-    return null;
-  }
-
-  @Override
-  public Address addAddress(String username, Address address) {
-    return this.getAddressDAO().addAddress2Participant(username, address);
+  public Address addAddress2Participant(String programId, String username, Address address) {
+    return this.getAddressDAO().addAddress2Participant(programId,username,address);
   }
 
   @Override
@@ -319,13 +270,13 @@ public class JCRImpl implements IService {
   }
 
   @Override
-  public void removeAddress(String id) {
-    this.getAddressDAO().removeAddress(id);
+  public void removeAddress(String addressId) {
+    this.getAddressDAO().removeAddress(addressId);
   }
 
   @Override
-  public List<Address> getAllAddressesByParticipant(String username) {
-    return this.getAddressDAO().getAllAddressesByParticipant(username);
+  public List<Address> getAllAddressesByParticipantInProgram(String programId, String username) {
+    return this.getAddressDAO().getAllAddressesByParticipantInProgram(programId,username);
   }
 
   @Override
@@ -334,58 +285,93 @@ public class JCRImpl implements IService {
   }
 
   @Override
-  public Manager addManager2Mission(String missionId, Manager manager) {
-    return null;
+  public Manager addManager2Mission(Manager manager) {
+    return this.getManagerDAO().addManager2Mission(manager);
   }
 
   @Override
   public List<Manager> addManagers2Mission(String missionId, List<Manager> managers) {
-    return null;
+    return this.getManagerDAO().addManagers2Mission(missionId,managers);
   }
 
   @Override
-  public Manager updateMissionManager(Manager manager) {
-    return null;
+  public Manager updateMissionManager(String missionId,Manager manager) {
+    return this.getManagerDAO().updateMissionManager(missionId,manager);
   }
 
   @Override
   public List<Manager> getAllMissionManagers(String missionId) {
-    return null;
+    return this.getManagerDAO().getAllMissionManagers(missionId);
   }
 
   @Override
   public void removeMissionManager(String missionId, String username) {
-
+    this.getManagerDAO().removeMissionManager(missionId,username);
   }
 
   @Override
-  public Manager getMissionManager(String missionId, String username) {
-    return null;
+  public Manager getMissionManagerByUserName(String missionId, String username) {
+    return this.getManagerDAO().getMissionManagerByUserName(missionId,username);
   }
 
   @Override
-  public Manager addManager2Program(String programId, Manager manager) {
-    return null;
+  public Manager addManager2Program(Manager manager) {
+    return this.getManagerDAO().addManager2Program(manager);
   }
 
   @Override
   public List<Manager> addManagers2Program(String programId, List<Manager> managers) {
-    return null;
+    return this.getManagerDAO().addManagers2Program(programId,managers);
   }
 
   @Override
   public Manager updateProgramManager(String programId, Manager manager) {
-    return null;
+    return this.getManagerDAO().updateProgramManager(programId,manager);
   }
 
   @Override
-  public void removeProgramManager(String programId, String username) {
-
+  public void removeManagerFromProgram(String programId, String username) {
+    this.getManagerDAO().removeManagerFromProgram(programId,username);
   }
 
   @Override
-  public Manager getProgramManager(String programId, String username) {
-    return null;
+  public Manager getProgramManagerByUserName(String programId, String username) {
+    return this.getManagerDAO().getProgramManagerByUserName(programId,username);
+  }
+
+  @Override
+  public List<Manager> getAllManagersInProgram(String programId) {
+    return this.getManagerDAO().getAllManagersInProgram(programId);
+  }
+
+  @Override
+  public Proposition addProposition2Mission(Proposition proposition) {
+    return this.getPropositionDAO().addProposition2Mission(proposition);
+  }
+
+  @Override
+  public List<Proposition> getAllPropositions(String missionId) {
+    return this.getPropositionDAO().getAllPropositions(missionId);
+  }
+
+  @Override
+  public Proposition getPropositionById(String id) {
+    return this.getPropositionDAO().getPropositionById(id);
+  }
+
+  @Override
+  public Proposition getRandomProposition(String missionId) {
+    return this.getPropositionDAO().getRandomProposition(missionId);
+  }
+
+  @Override
+  public void removeProposition(String propositionId) {
+    this.getPropositionDAO().removeProposition(propositionId);
+  }
+
+  @Override
+  public List<Proposition> searchPropositions(String keyword, int offset, int limit) {
+    return this.getPropositionDAO().searchPropositions(keyword,offset,limit);
   }
 
   @Override
@@ -394,22 +380,38 @@ public class JCRImpl implements IService {
   }
 
   @Override
-  public Proposition getPropositionById(String id){
-    return this.getPropositionDAO().getPropositionById(id);
-  }
-  @Override
-  public List<Proposition> getPropositionsByMissionId(String mid) {
-    return this.getPropositionDAO().getAllPropositions(mid);
+  public MissionParticipant addMissionParticipant2Program(String programId, MissionParticipant missionParticipant) {
+    return this.getMissionParticipantDAO().addMissionParticipant2Program(programId,missionParticipant);
   }
 
   @Override
-  public List<Proposition> searchPropositions(String sql){
-    return this.getPropositionDAO().searchPropositions(sql);
+  public List<MissionParticipant> getAllMissionParticipantsInProgram(String programId) {
+    return this.getMissionParticipantDAO().getAllMissionParticipantsInProgram(programId);
   }
 
   @Override
-  public Proposition getRandomProposition(String mid) {
-    return this.getPropositionDAO().getRandomProposition(mid);
+  public List<MissionParticipant> getAllMissionParticipantsInProgramByParticipant(String programId, String username) {
+    return this.getMissionParticipantDAO().getAllMissionParticipantsInProgramByParticipant(programId,username);
+  }
+
+  @Override
+  public MissionParticipant getMissionParticipantById(String mpId) {
+    return this.getMissionParticipantDAO().getMissionParticipantById(mpId);
+  }
+
+  @Override
+  public MissionParticipant updateMissionParticipantInProgram(String programId, MissionParticipant missionParticipant) {
+    return this.getMissionParticipantDAO().updateMissionParticipantInProgram(programId,missionParticipant);
+  }
+
+  @Override
+  public void removeMissionParticipant(String id) {
+    this.getMissionParticipantDAO().removeMissionParticipant(id);
+  }
+
+  @Override
+  public List<MissionParticipant> searchMissionParticipants(String programId, String keyword, int offset, int limit) {
+    return this.getMissionParticipantDAO().searchMissionParticipants(programId,keyword,offset,limit);
   }
 
 }

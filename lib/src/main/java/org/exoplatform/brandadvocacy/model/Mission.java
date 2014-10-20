@@ -30,8 +30,9 @@ import java.util.UUID;
 public class Mission {
   
   private String id;
+  private String programId;
   private String title;
-  private String third_party_link;
+  private String third_part_link;
   private Priority priority;
   private Boolean active;
   List<Proposition> propositions;
@@ -44,8 +45,13 @@ public class Mission {
     this.init();
   }
   public Mission(String title){
-   this.setTitle(title);
-   this.init();
+    this.setTitle(title);
+    this.init();
+  }
+  public Mission(String programId, String title){
+    this.setProgramId(programId);
+    this.setTitle(title);
+    this.init();
    
   }
   public void init(){
@@ -76,11 +82,11 @@ public class Mission {
   public void setTitle(String title) {
     this.title = title;
   }
-  public String getThird_party_link() {
-    return third_party_link;
+  public String getThird_part_link() {
+    return third_part_link;
   }
-  public void setThird_party_link(String third_party_link) {
-    this.third_party_link = third_party_link;
+  public void setThird_part_link(String third_part_link) {
+    this.third_part_link = third_part_link;
   }
   public Priority getPriority() {
     return priority;
@@ -120,16 +126,25 @@ public class Mission {
     this.managers = managers;
   }
   public void checkValid() throws BrandAdvocacyServiceException {
+    if (null == this.getProgramId() || "".equals(this.getProgramId())){
+      throw new BrandAdvocacyServiceException(BrandAdvocacyServiceException.MISSION_INVALID,"mission must belong to a program");
+    }
     if(null == this.getLabelID() || "".equals(this.getLabelID()))
-     throw new IllegalArgumentException("mission label is invalid ");
-
+      throw new BrandAdvocacyServiceException(BrandAdvocacyServiceException.ID_INVALID,"mission must have label id");
     if (null == this.getTitle() || "".equals(this.getTitle()) || this.getTitle().trim().isEmpty()) {
-      throw new IllegalArgumentException("Mission title is invalid");    
-   }
+      throw new BrandAdvocacyServiceException(BrandAdvocacyServiceException.MISSION_INVALID,"mission must have title");
+    }
   }
   public String toString(){
     return this.getTitle()+" - "+this.getActive()+" - "+this.getPriority().getLabel();
   }
 
 
+  public String getProgramId() {
+    return programId;
+  }
+
+  public void setProgramId(String programId) {
+    this.programId = programId;
+  }
 }

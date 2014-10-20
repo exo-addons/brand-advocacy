@@ -10,7 +10,6 @@ import org.exoplatform.community.brandadvocacy.portlet.backend.models.MissionPar
 import org.exoplatform.community.brandadvocacy.portlet.backend.models.ParticipantDTO;
 import org.exoplatform.services.organization.OrganizationService;
 import org.exoplatform.services.organization.User;
-import org.exoplatform.services.organization.UserProfile;
 import org.exoplatform.social.core.identity.model.Identity;
 import org.exoplatform.social.core.identity.provider.OrganizationIdentityProvider;
 import org.exoplatform.social.core.manager.IdentityManager;
@@ -85,7 +84,7 @@ public class MissionParticipantController {
           Identity identity = this.identityManager.getOrCreateIdentity(OrganizationIdentityProvider.NAME,missionParticipant.getParticipant_username(),true);
           if (null != identity){
             MissionParticipantDTO missionParticipantDTO = new MissionParticipantDTO();
-            missionParticipantDTO.setMission_title(mission.getTitle()+" on "+mission.getThird_party_link());
+            missionParticipantDTO.setMission_title(mission.getTitle()+" on "+mission.getThird_part_link());
             missionParticipantDTO.setSize(missionParticipant.getSize().getLabel());
             missionParticipantDTO.setDate_submitted(Utils.convertDateFromLong(missionParticipant.getModifiedDate()));
             missionParticipantDTO.setStatus(missionParticipant.getStatus());

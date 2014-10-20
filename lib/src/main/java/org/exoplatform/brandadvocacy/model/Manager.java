@@ -18,8 +18,6 @@ package org.exoplatform.brandadvocacy.model;
 
 import org.exoplatform.brandadvocacy.service.BrandAdvocacyServiceException;
 
-import javax.jcr.Value;
-
 /**
  * Created by The eXo Platform SAS
  * Author : eXoPlatform
@@ -28,9 +26,7 @@ import javax.jcr.Value;
  */
 public class Manager extends User{
 
-  private String programId;
-  private String mission_id;
-  private String missionLabelId;
+  private String parentId;
   private Role role;  
   private Boolean notif;
 
@@ -43,20 +39,13 @@ public class Manager extends User{
     this.setRole(Role.Admin);
     this.setNotif(true);
   }
-  public String getProgramId() {
-    return programId;
+  public void setParentId(String parentId) {
+    this.parentId = parentId;
   }
 
-  public void setProgramId(String programId) {
-    this.programId = programId;
-  }
-  public void setMission_id(String mission_id) {
-    this.mission_id = mission_id;
-  }
+  public String getParentId() {
 
-  public String getMission_id() {
-
-    return mission_id;
+    return parentId;
   }
   public Role getRole(){
     return this.role;
@@ -74,20 +63,13 @@ public class Manager extends User{
     return this.getRole().getLabel();
   }
   public void checkValid() throws BrandAdvocacyServiceException{
+    if (null == this.getParentId() || "".equals(this.getParentId()))
+      throw new BrandAdvocacyServiceException(BrandAdvocacyServiceException.MANAGER_INVALID,"manager must manage a program or mission");
     if(null == this.getUserName() || "".equals(this.getUserName()) )
       throw new BrandAdvocacyServiceException(BrandAdvocacyServiceException.MANAGER_INVALID," username manager is invalid");
   }
 
   public String toString(){
-    return getClass().getName()+" - " + this.getUserName()+" - "+this.getRole()+" - "+this.getNotif();
+    return this.getParentId()+" - " + this.getUserName()+" - "+this.getRole()+" - "+this.getNotif();
   }
-
-  public String getMissionLabelId() {
-    return missionLabelId;
-  }
-
-  public void setMissionLabelId(String missionLabelId) {
-    this.missionLabelId = missionLabelId;
-  }
-
 }

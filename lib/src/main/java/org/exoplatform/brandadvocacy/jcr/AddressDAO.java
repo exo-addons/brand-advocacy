@@ -36,6 +36,18 @@ public class AddressDAO extends DAO{
   public AddressDAO(JCRImpl jcrImpl) {
     super(jcrImpl);
   }
+  private Node getOrCreateAddressHome(String prgoramId, String username){
+
+    if (null == username || "".equals(username)){
+      log.error("ERROR cannot get or create address home in participant null");
+      return null;
+    }
+    Node participant = this.getJcrImplService().getParticipantDAO().getNodeByUserName(prgoramId,username);
+    if (null != participant){
+      return this.getJcrImplService().getParticipantDAO().getOrCreateAddressHome(participant);
+    }
+    return null;
+  }
   public void setProperties(Node aNode, Address adrs) throws RepositoryException {
     aNode.setProperty(node_prop_labelID,adrs.getLabelID());
     aNode.setProperty(node_prop_fname,adrs.getfName());
@@ -95,17 +107,17 @@ public class AddressDAO extends DAO{
     }
     return addresses;
   }
-  public Address addAddress2Participant(String username,Address address) {
-    if (null == username || "".equals(username)) {
-      log.error("cannot add address to participant null");
-      return null;
-    }
+  public Address addAddress2Participant(String programId, String username,Address address) {
+
     try {
+      Node addressHomeNode = this.getOrCreateAddressHome(programId,username);
       address.checkValid();
-      Node participantNode = this.getJcrImplService().getParticipantDAO().getNodeByUserName(username);
-      Node addressHomeNode = this.getJcrImplService().getParticipantDAO().getOrCreateAddressHome(participantNode);
       if (null != addressHomeNode) {
-        Node addressNode = addressHomeNode.addNode(address.getLabelID(), JCRImpl.ADDRESS_NODE_TYPE);
+        Node addressNode = null;
+        if(addressHomeNode.hasNode(address.getLabelID()))
+          addressNode = addressHomeNode.addNode(address.getLabelID(), JCRImpl.ADDRESS_NODE_TYPE);
+        else
+          addressNode = addressHomeNode.getNode(address.getLabelID());
         if (null != addressNode) {
           this.setProperties(addressNode, address);
           addressHomeNode.save();
@@ -124,20 +136,13 @@ public class AddressDAO extends DAO{
     return null;
   }
 
-  public List<Address> getAllAddressesByParticipant(String username){
-    if (null == username || "".equals(username)) {
-      log.error("cannot add address to participant null");
-      return null;
-    }
+  public List<Address> getAllAddressesByParticipantInProgram(String programId, String username){
     try {
-      Node participantNode = this.getJcrImplService().getParticipantDAO().getNodeByUserName(username);
-      if(null != participantNode){
-        Node addressHomeNode = this.getJcrImplService().getParticipantDAO().getOrCreateAddressHome(participantNode);
+        Node addressHomeNode = this.getOrCreateAddressHome(programId,username);
         if(null != addressHomeNode){
           NodeIterator nodes = addressHomeNode.getNodes();
           return this.transferNodes2Objects(Lists.newArrayList(nodes));
         }
-      }
     } catch (RepositoryException e) {
       log.error("==== ERROR get all propositions "+e.getMessage() );
     }

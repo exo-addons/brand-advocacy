@@ -12,7 +12,6 @@ import org.exoplatform.services.organization.OrganizationService;
 import org.exoplatform.services.organization.User;
 
 import javax.inject.Inject;
-import javax.jcr.RepositoryException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -82,7 +81,7 @@ public class ManagerController {
         if (null != mission){
           List<Manager> managers = new ArrayList<Manager>(1);
           Manager manager = new Manager(username);
-          manager.setMission_id(mission.getId());
+          manager.setParentId(mission.getId());
           manager.setMissionLabelId(mission.getLabelID());
           manager.setRole(Role.getRole(Integer.parseInt(role)));
           manager.setNotif(mNotif);
@@ -113,7 +112,7 @@ public class ManagerController {
 
       Manager manager = this.managerService.getManager(mission.getLabelID(),username);
       if(null != manager){
-        manager.setMission_id(mission.getId());
+        manager.setParentId(mission.getId());
         manager.setMissionLabelId(mission.getLabelID());
         manager.setRole(Role.getRole(Integer.parseInt(role)));
         manager.setNotif(mNotif);

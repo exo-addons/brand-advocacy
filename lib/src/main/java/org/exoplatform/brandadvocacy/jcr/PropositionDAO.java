@@ -51,7 +51,21 @@ public class PropositionDAO extends DAO {
     // TODO Auto-generated constructor stub
   }
 
-  public void setProperties(Node aNode, Proposition p) throws RepositoryException {
+  private Node getOrCreatePropositionHome(String missionId){
+    if(null == missionId || "".equals(missionId)){
+      log.error("ERROR cannot get mission home for an invalid program id ");
+      return null;
+    }
+    try {
+      return this.getJcrImplService().getMissionDAO().getOrCreatePropositionHome(this.getNodeById(missionId));
+    } catch (RepositoryException e) {
+      e.printStackTrace();
+    }
+    return null;
+  }
+
+
+  private void setProperties(Node aNode, Proposition p) throws RepositoryException {
     aNode.setProperty(node_prop_labelID,p.getLabelID());
     aNode.setProperty(node_prop_mission_id, p.getMission_id());
     aNode.setProperty(node_prop_content, p.getContent());
@@ -60,6 +74,8 @@ public class PropositionDAO extends DAO {
   }
 
   private Proposition transferNode2Object(Node node) throws RepositoryException {
+    if (null == node)
+      return null;
     Proposition proposition = new Proposition();
     proposition.setId(node.getUUID());
     PropertyIterator iter = node.getProperties("exo:*");
@@ -80,7 +96,14 @@ public class PropositionDAO extends DAO {
         proposition.setNumberUsed((int) p.getLong());
       }
     }
-    return proposition;
+    try {
+      proposition.checkValid();
+      return proposition;
+    }catch (BrandAdvocacyServiceException brade){
+      log.error("ERROR transfer node to proposition object "+brade.getMessage());
+    }
+
+    return null;
   }
   private List<Proposition> transferNodes2Objects(List<Node> nodes){
     List<Proposition> propositions = new ArrayList<Proposition>(nodes.size());
@@ -88,7 +111,7 @@ public class PropositionDAO extends DAO {
     for (Node node:nodes){
       try {
         aPropostion = this.transferNode2Object(node);
-        if(aPropostion.checkValid()){
+        if(null != aPropostion){
           propositions.add(aPropostion);
         }
       } catch (RepositoryException e) {
@@ -97,10 +120,7 @@ public class PropositionDAO extends DAO {
     }
     return propositions;
   }
-  public Node getNodeById(String id) throws RepositoryException{
-    return this.getJcrImplService().getSession().getNodeByUUID(id);
-  }
-  public Node getNodeByLabelID(String mid, String pid){
+  private Node getNodeByLabelID(String mid, String pid){
     StringBuilder sql = new StringBuilder("select * from "+ JCRImpl.PROPOSITION_NODE_TYPE +" where jcr:path like '");
     sql.append(JCRImpl.EXTENSION_PATH).append("/").append(JCRImpl.MISSIONS_PATH);
     sql.append("/").append(Utils.queryEscape(mid)).append("/").append(MissionDAO.node_prop_propositions);
@@ -121,74 +141,53 @@ public class PropositionDAO extends DAO {
     return null;
   }
 
-  public List<Proposition> searchPropositions(String keyword){
+  public List<Proposition> searchPropositions(String keyword, int offset, int limit){
     StringBuilder sql = new StringBuilder("select * from "+ JCRImpl.PROPOSITION_NODE_TYPE +" where ");
     sql.append(node_prop_labelID).append(" like '%"+keyword+"%'");
     sql.append(" OR "+node_prop_content).append(" like '%"+keyword+"%'");
-    List<Node> nodes =  this.getNodesByQuery(sql.toString(),0,0);
+    List<Node> nodes =  this.getNodesByQuery(sql.toString(),offset,limit);
     return this.transferNodes2Objects(nodes);
   }
 
-  public Mission addProposition2Mission(String mid,List<Proposition> propositions){
+  public Proposition addProposition2Mission(Proposition proposition){
     try {
-      if(null == mid || "".equals(mid))
-        throw new BrandAdvocacyServiceException(BrandAdvocacyServiceException.ID_INVALID, "cannot add proposition to mission id null");
-      try {
-        Node missionNode = this.getJcrImplService().getMissionDAO().getNodeById(mid);
-        Node propositionHomeNode = this.getJcrImplService().getMissionDAO().getOrCreatePropositionHome(missionNode);
-        if(null != propositionHomeNode){
-          Proposition proposition;
-          Node propositionNode;
-          int i = 0;
-          for(i = 0;i<propositions.size();i++){
-            proposition = propositions.get(i);
-            proposition.setMission_id(mid);
-            if(proposition.checkValid()) {
-              propositionNode = propositionHomeNode.addNode(proposition.getLabelID(), JCRImpl.PROPOSITION_NODE_TYPE);
-              this.setProperties(propositionNode, proposition);
-            }
-          }
-          if(0 != i) {
-            propositionHomeNode.save();
-            return this.getJcrImplService().getMissionDAO().transferNode2Object(missionNode);
-          }
-        }
-      }
-      catch (ItemExistsException ie){
-        log.error(" === ERROR cannot add existing item "+ie.getMessage());
-      }
-      catch (UnsupportedRepositoryOperationException e) {
-        log.error("=== ERROR cannot add proposition to mission "+e.getMessage());
-      } catch (RepositoryException e) {
-        log.error("=== ERROR cannot add proposition to mission "+e.getMessage());
+      proposition.checkValid();
+      String mid = proposition.getMission_id();
+      Node propositionHomeNode = this.getOrCreatePropositionHome(mid);
+      if(null != propositionHomeNode){
+        Node node = propositionHomeNode.addNode(proposition.getLabelID(),JCRImpl.PROPOSITION_NODE_TYPE);
+        this.setProperties(node,proposition);
+        propositionHomeNode.save();
+        return this.transferNode2Object(node);
       }
 
-    } catch (BrandAdvocacyServiceException brade) {
-      log.error("=== ERROR cannot add proposition "+brade.getMessage());
     }
+    catch (ItemExistsException ie){
+      log.error(" === ERROR cannot add existing item "+ie.getMessage());
+    }
+    catch (UnsupportedRepositoryOperationException e) {
+      log.error("=== ERROR cannot add proposition to mission "+e.getMessage());
+    } catch (RepositoryException e) {
+      log.error("=== ERROR cannot add proposition to mission "+e.getMessage());
+    }
+
     return null;
   }
   public List<Proposition> getAllPropositions(String mid){
     List<Proposition> propositions = new ArrayList<Proposition>();
-
-    if(null == mid || "".equals(mid))
-      throw new BrandAdvocacyServiceException(BrandAdvocacyServiceException.ID_INVALID, "cannot get all propositions from mission id null");
     try {
-      Node missionNode = this.getJcrImplService().getMissionDAO().getNodeById(mid);
-      if(null != missionNode){
-        Node propositionHomeNode = this.getJcrImplService().getMissionDAO().getOrCreatePropositionHome(missionNode);
+
+      Node propositionHomeNode = this.getOrCreatePropositionHome(mid);
+      if (null != propositionHomeNode){
         NodeIterator nodes = propositionHomeNode.getNodes();
         Node propositionNode = null;
         Proposition aProposition = null;
         while (nodes.hasNext()) {
           propositionNode = (Node) nodes.next();
           aProposition = this.transferNode2Object(propositionNode);
-          if(aProposition.checkValid())
+          if (null != aProposition)
             propositions.add(aProposition);
-          else
-            log.error("cannot get invalid proposition "+propositionNode.toString());
         }
-        return propositions;
       }
     } catch (RepositoryException e) {
       log.error("==== ERROR get all propositions "+e.getMessage() );
@@ -196,16 +195,14 @@ public class PropositionDAO extends DAO {
     return propositions;
   }
   public Proposition updateProposition(Proposition proposition){
-    if(!proposition.checkValid())
-      return null;
     try {
+      proposition.checkValid();
       Node propositionNode = this.getNodeById(proposition.getId());//this.getNodeByLabelID(proposition.getMission_id(), proposition.getId());
-      if(null != propositionNode && proposition.getId().equals(propositionNode.getUUID())){
+      if(null != propositionNode){
         this.setProperties(propositionNode,proposition);
-        propositionNode.getSession().save();
+        propositionNode.save();
         return this.transferNode2Object(propositionNode);
-      }else
-        throw new BrandAdvocacyServiceException(BrandAdvocacyServiceException.PROPOSITION_NOT_EXISTS," cannot update proposition not exists");
+      }
     } catch (RepositoryException e) {
       log.error("==== ERROR cannot update proposition "+e.getMessage() );
     } catch (BrandAdvocacyServiceException brade){

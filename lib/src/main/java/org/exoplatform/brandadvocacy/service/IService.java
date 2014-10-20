@@ -32,52 +32,53 @@ public interface IService {
   public Program addProgram(Program program);
   public Program updateProgram(Program program);
   public Program getProgramById(String programId);
+  public List<Program> getAllPrograms();
 
-  public Mission addMission(String programId,Mission m);
-  public void removeMission(String id);
-  public Mission getMissionById(String id);
-  public List<Mission> getAllMissions();
-  public Mission updateMission(Mission m);
-  public Mission getRandomMisson(String username);
-  public List<Mission> getAllMissionsByParticipant(String username);
+  public Mission addMission2Program(Mission mission);
+  public void removeMissionById(String missionId);
+  public Mission getMissionById(String missionId);
+  public List<Mission> getAllMissionsByProgramId(String programId);
+  public Mission updateMission(Mission mission);
+  public Mission getRandomMisson(String programId,String username);
+  public List<Mission> getAllMissionsByParticipant(String programId, String username);
 
-  public Participant addParticipant(Participant p);
-  public void removeParticipant(String id);
-  public Participant getParticipantByUserName(String id);
-  public List<Participant> getAllParticipants();
-  public List<Participant> getParticipantsByMissionId(String mid);
+  public Participant addParticipant2Program(Participant participant);
+  public Participant getParticipantInProgramByUserName(String programId, String username);
+  public List<Participant> getAllParticipantsInProgram(String programId);
 
-  public Address addAddress(String username,Address address);
+  public Address addAddress2Participant(String programId, String username,Address address);
   public Address updateAddress(Address address);
-  public void removeAddress(String id);
-  public List<Address> getAllAddressesByParticipant(String username);
+  public void removeAddress(String addressId);
+  public List<Address> getAllAddressesByParticipantInProgram(String programId, String username);
   public Address getAddressById(String id);
 
-  public Manager addManager2Mission(String missionId,Manager manager);
+  public Manager addManager2Mission(Manager manager);
   public List<Manager> addManagers2Mission(String missionId,List<Manager> managers);
-  public Manager updateMissionManager(Manager manager);
+  public Manager updateMissionManager(String missionId,Manager manager);
   public List<Manager> getAllMissionManagers(String missionId);
   public void removeMissionManager(String missionId, String username);
-  public Manager getMissionManager(String missionId,String username);
+  public Manager getMissionManagerByUserName(String missionId,String username);
 
-  public Manager addManager2Program(String programId,Manager manager);
+  public Manager addManager2Program(Manager manager);
   public List<Manager> addManagers2Program(String programId,List<Manager> managers);
   public Manager updateProgramManager(String programId,Manager manager);
-  public void removeProgramManager(String programId,String username);
-  public Manager getProgramManager(String programId,String username);
+  public void removeManagerFromProgram(String programId, String username);
+  public Manager getProgramManagerByUserName(String programId, String username);
+  public List<Manager> getAllManagersInProgram(String programId);
 
-  public Proposition updateProposition(Proposition proposition);
-  public List<Proposition> getPropositionsByMissionId(String mid);
+  public Proposition addProposition2Mission(Proposition proposition);
+  public List<Proposition> getAllPropositions(String missionId);
   public Proposition getPropositionById(String id);
-  public Mission addProposition2Mission(String mid,List<Proposition> propositions);
-  public void removeProposition(String id);
-  public List<Proposition> searchPropositions(String sql);
-  public Proposition getRandomProposition(String mid);
+  public Proposition getRandomProposition(String missionId);
+  public void removeProposition(String propositionId);
+  public List<Proposition> searchPropositions(String keyword, int offset, int limit);
+  public Proposition updateProposition(Proposition proposition);
 
-  public MissionParticipant addMissionParticipant(MissionParticipant missionParticipant);
-  public MissionParticipant updateMissionParticipant(MissionParticipant missionParticipant);
-  public List<MissionParticipant> getAllMissionParticipants();
-  public List<MissionParticipant> getMissionParticipantsByParticipant(String username);
-  public MissionParticipant getMissionParticipantById(String mpId);
+  public MissionParticipant addMissionParticipant2Program(String programId, MissionParticipant missionParticipant);
+  public List<MissionParticipant> getAllMissionParticipantsInProgram(String programId);
+  public List<MissionParticipant> getAllMissionParticipantsInProgramByParticipant(String programId,String username);
   public void removeMissionParticipant(String id);
+  public MissionParticipant getMissionParticipantById(String mpId);
+  public List<MissionParticipant> searchMissionParticipants(String programId, String keyword, int offset, int limit);
+  public MissionParticipant updateMissionParticipantInProgram(String programId, MissionParticipant missionParticipant);
 }

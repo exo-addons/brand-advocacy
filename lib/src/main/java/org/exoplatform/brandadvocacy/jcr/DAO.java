@@ -78,4 +78,14 @@ public abstract class DAO {
   public Node getNodeById(String id) throws RepositoryException{
     return this.getJcrImplService().getSession().getNodeByUUID(id);
   }
+
+  public Node getOrCreateNodeCommon(Node parent,String refChild,String nodeChildType) throws RepositoryException {
+    Node child;
+    if (parent.hasNode(refChild)){
+      child = parent.getNode(refChild);
+    }else {
+      child = parent.addNode(refChild,nodeChildType);
+    }
+    return child;
+  }
 }

@@ -25,7 +25,7 @@
         <div class="control-group">
             <label class="control-label">Link:</label>
             <div class="controls">
-                <input class="full" type="text" name="third_party_link" id="third_party_link"  placeholder="http://sourceforge.net/project/exo/">
+                <input class="full" type="text" name="third_part_link" id="third_part_link"  placeholder="http://sourceforge.net/project/exo/">
             </div>
         </div>
         <div class="control-group">

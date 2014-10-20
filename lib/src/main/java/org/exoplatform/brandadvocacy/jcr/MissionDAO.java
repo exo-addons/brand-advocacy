@@ -22,13 +22,10 @@ import org.exoplatform.brandadvocacy.model.Participant;
 import org.exoplatform.brandadvocacy.model.Priority;
 import org.exoplatform.brandadvocacy.service.BrandAdvocacyServiceException;
 import org.exoplatform.brandadvocacy.service.JCRImpl;
-import org.exoplatform.brandadvocacy.service.Utils;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 
 import javax.jcr.*;
-import javax.jcr.query.Query;
-import javax.jcr.query.QueryResult;
 import java.util.*;
 
 /**
@@ -41,9 +38,10 @@ public class MissionDAO extends DAO {
 
   public static final String MISSIONS_PATH   = "Missions";
 
+  public static final String node_prop_program_id = "exo:program_id";
   public static final String node_prop_labelID = "exo:labelID";
   public static final String node_prop_title = "exo:title";  
-  public static final String node_prop_third_party_link = "exo:third_party_link";
+  public static final String node_prop_third_part_link = "exo:third_part_link";
   public static final String node_prop_priority = "exo:priority";
   public static final String node_prop_active = "exo:active";
   public static final String node_prop_dateCreated = "exo:dateCreated";
@@ -105,10 +103,11 @@ public class MissionDAO extends DAO {
   }
 
   private void setPropertiesNode(Node missionNode, Mission m) throws RepositoryException {
+    missionNode.setProperty(node_prop_program_id,m.getProgramId());
     if(null != m.getLabelID() && !"".equals(m.getLabelID()))
       missionNode.setProperty(node_prop_labelID,m.getLabelID());
     missionNode.setProperty(node_prop_title, m.getTitle());
-    missionNode.setProperty(node_prop_third_party_link, m.getThird_party_link());
+    missionNode.setProperty(node_prop_third_part_link, m.getThird_part_link());
     missionNode.setProperty(node_prop_priority, m.getPriority().getValue());
     missionNode.setProperty(node_prop_active, m.getActive());
     if (0 != m.getCreatedDate())
@@ -117,6 +116,8 @@ public class MissionDAO extends DAO {
       missionNode.setProperty(node_prop_modifiedDate,m.getModifiedDate());
   }
   public Mission transferNode2Object(Node node) throws RepositoryException {
+    if (null == node)
+      return null;
     Mission m = new Mission();
     m.setId(node.getUUID());
     PropertyIterator iter = node.getProperties("exo:*");
@@ -128,10 +129,12 @@ public class MissionDAO extends DAO {
       name = p.getName();
       if (name.equals(node_prop_labelID)) {
         m.setLabelID(p.getString());
+      } else if (name.equals(node_prop_program_id)) {
+        m.setProgramId(p.getString());
       } else if (name.equals(node_prop_title)) {
         m.setTitle(p.getString());
-      } else if (name.equals(node_prop_third_party_link)) {
-        m.setThird_party_link(p.getString());
+      } else if (name.equals(node_prop_third_part_link)) {
+        m.setThird_part_link(p.getString());
       } else if(name.equals(node_prop_priority)){
         m.setPriority(Priority.getPriority((int) p.getLong()));
       } else if(name.equals(node_prop_active)){
@@ -164,14 +167,15 @@ public class MissionDAO extends DAO {
     }
     return missions;
   }
-  public Mission addMission2Program(String programId,Mission mission) {
+  public Mission addMission2Program(Mission mission) {
     try{
       mission.checkValid();
+      String programId = mission.getProgramId();
       Node homeMissionNode = this.getOrCreateMissionHome(programId);
       if (null != homeMissionNode){
         Node missionNode = homeMissionNode.addNode(mission.getLabelID(),JCRImpl.MISSION_NODE_TYPE);
         this.setPropertiesNode(missionNode,mission);
-        homeMissionNode.getSession().save();
+        homeMissionNode.save();
         return this.transferNode2Object(missionNode);
       }
     }catch (RepositoryException re){
@@ -264,7 +268,7 @@ public class MissionDAO extends DAO {
     }
   }
 
-  public int getTotalNumberMissions(Boolean isPublic, Boolean isActive,int priority){
+  public int getTotalNumberMissions(String programId, Boolean isPublic, Boolean isActive,int priority){
     StringBuilder sql = new StringBuilder("select jcr:uuid from "+ JCRImpl.MISSION_NODE_TYPE +" where ");
 
     if(isPublic){
@@ -279,18 +283,18 @@ public class MissionDAO extends DAO {
     return this.getNodesByQuery(sql.toString(),0,0).size();
   }
 
-  public Mission getRandomMission(String username){
+  public Mission getRandomMission(String programId, String username){
 
-    if(this.getTotalNumberMissions(true,true,0) == 0)
+    if(this.getTotalNumberMissions(programId,true,true,0) == 0)
       return null;
-    List<String> mission_prio1_Ids = this.getMissionIdsByPriority(Priority.PRIORITY_1.getValue());
+    List<String> mission_prio1_Ids = this.getMissionIdsByPriority(programId,Priority.PRIORITY_1.getValue());
     if (mission_prio1_Ids.size() == 0)
-      mission_prio1_Ids = this.getMissionIdsByPriority(Priority.PRIORITY_2.getValue());
+      mission_prio1_Ids = this.getMissionIdsByPriority(programId,Priority.PRIORITY_2.getValue());
     if (mission_prio1_Ids.size() == 0)
-      mission_prio1_Ids = this.getMissionIdsByPriority(Priority.PRIORITY_3.getValue());
+      mission_prio1_Ids = this.getMissionIdsByPriority(programId,Priority.PRIORITY_3.getValue());
 
     List<String> missionIds = mission_prio1_Ids;
-    Map<Integer,List<String>> mission_used_ids = this.getMissionIdsByParticipant(username);
+    Map<Integer,List<String>> mission_used_ids = this.getMissionIdsByParticipant(programId,username);
     if(mission_used_ids.size() > 0){
 
       List<String> mission_used_prio1_ids = mission_used_ids.get(Priority.PRIORITY_1.getValue());
@@ -298,9 +302,9 @@ public class MissionDAO extends DAO {
       List<String> mission_used_prio3_ids = mission_used_ids.get(Priority.PRIORITY_3.getValue());
       if(mission_used_prio1_ids.size() == mission_prio1_Ids.size()){
 
-        List<String> mission_prio2_Ids = this.getMissionIdsByPriority(Priority.PRIORITY_2.getValue());
+        List<String> mission_prio2_Ids = this.getMissionIdsByPriority(programId,Priority.PRIORITY_2.getValue());
         if(mission_used_prio2_ids.size() == mission_prio2_Ids.size()){
-          List<String> mission_prio3_Ids = this.getMissionIdsByPriority(Priority.PRIORITY_3.getValue());
+          List<String> mission_prio3_Ids = this.getMissionIdsByPriority(programId,Priority.PRIORITY_3.getValue());
           if(mission_prio3_Ids.size() == mission_used_prio3_ids.size()){
             missionIds = mission_prio1_Ids;
           }else{
@@ -333,11 +337,11 @@ public class MissionDAO extends DAO {
     }
     return null;
   }
-  public List<Mission> getAllMissionsByParticipant(String username){
+  public List<Mission> getAllMissionsInProgramByParticipant(String programId, String username){
 
     List<Mission> missions = new ArrayList<Mission>();
     ParticipantDAO participantDAO = this.getJcrImplService().getParticipantDAO();
-    Node participantNode = participantDAO.getNodeByUserName(username);
+    Node participantNode = participantDAO.getNodeByUserName(programId,username);
     if (null != participantNode){
       Participant participant = null;
       try {
@@ -357,11 +361,13 @@ public class MissionDAO extends DAO {
     }
     return missions;
   }
-  private List<String> getMissionIdsByPriority(int priority){
+  private List<String> getMissionIdsByPriority(String programId, int priority){
     List<String> missionIds = new ArrayList<String>();
     StringBuilder sql = new StringBuilder("select jcr:uuid from "+ JCRImpl.MISSION_NODE_TYPE +" where ");
     sql.append(node_prop_active).append("= 'true' ");
+    sql.append(" AND ").append(node_prop_program_id).append(" = '").append(programId).append("'");
     sql.append(" AND ").append(node_prop_priority).append("=").append(priority);
+
     List<Node> nodes =  this.getNodesByQuery(sql.toString(),0,0);
     for (Node node:nodes){
       try {
@@ -372,11 +378,11 @@ public class MissionDAO extends DAO {
     }
     return missionIds;
   }
-  private Map<Integer,List<String>> getMissionIdsByParticipant(String username){
+  private Map<Integer,List<String>> getMissionIdsByParticipant(String programId, String username){
 
     Map<Integer,List<String>> missionIds = new HashMap<Integer, List<String>>();
     ParticipantDAO participantDAO = this.getJcrImplService().getParticipantDAO();
-    Node participantNode = participantDAO.getNodeByUserName(username);
+    Node participantNode = participantDAO.getNodeByUserName(programId,username);
     if (null != participantNode){
       Participant participant = null;
       try {
