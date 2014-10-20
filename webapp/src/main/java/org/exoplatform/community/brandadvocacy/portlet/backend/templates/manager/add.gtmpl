@@ -1,7 +1,8 @@
-#{param name=missionId/}
+#{decorate path=container.gtmpl/}
+#{param name=programId/}
 #{param name=roles/}
-<form action="@{ManagerController.add()}" method="POST" role="form">
-    <input type="hidden" name="mid" id="mid" value="<%=missionId%>"/>
+<form action="@{ManagerController.add2Program()}" method="POST" role="form">
+    <input type="hidden" name="programId" id="programId" value="<%=programId%>"/>
     <input type="text" name="username" id="username" value=""/>
     <br/>
     <select name="role" id="role">
@@ -13,5 +14,3 @@
     <input type="checkbox" name="notif" id="notif" value="1" />
     <button type="submit">add</button>
 </form>
-<br/>
-<a href="@{MissionController.editForm(id=missionId)}" role="button">Back to mission</a>

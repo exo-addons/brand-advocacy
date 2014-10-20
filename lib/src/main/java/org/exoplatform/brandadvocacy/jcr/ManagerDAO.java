@@ -327,9 +327,10 @@ public class ManagerDAO extends DAO{
     }
   }
 
-  public Manager updateProgramManager(String programId,Manager manager){
+  public Manager updateProgramManager(Manager manager){
     try {
       manager.checkValid();
+      String programId = manager.getParentId();
       Node managerNode = this.getProgramManagerNodeById(programId, manager.getUserName());
       if(null != managerNode){
         this.setProperties(managerNode,manager);

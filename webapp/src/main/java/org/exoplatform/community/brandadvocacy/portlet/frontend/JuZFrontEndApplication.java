@@ -25,6 +25,7 @@ public class JuZFrontEndApplication {
 
   String remoteUserName;
   String currentMissionParticipantId;
+  String currentProgramId;
   @Inject
   @Path("index.gtmpl")
   org.exoplatform.community.brandadvocacy.portlet.frontend.templates.index indexTpl;
@@ -61,10 +62,23 @@ public class JuZFrontEndApplication {
     return indexTpl.ok();
   }
 
+  private void loadCurrentProgram(){
+    List<Program> programs = this.jcrService.getAllPrograms();
+    for (Program program:programs){
+      this.currentProgramId = program.getId();
+      break;
+    }
+  }
+
   @Ajax
   @Resource
   public Response.Content loadIndexView(){
-    return indexTpl.ok();
+    if (null == this.currentProgramId)
+      this.loadCurrentProgram();
+    if (null != this.currentProgramId)
+      return indexTpl.ok();
+    else
+      return Response.ok("no program available");
   }
 
   @Ajax
@@ -96,7 +110,7 @@ public class JuZFrontEndApplication {
       MissionParticipant missionParticipant = this.jcrService.getMissionParticipantById(this.currentMissionParticipantId);
       if(null != missionParticipant){
         missionParticipant.setStatus(Status.INPROGRESS);
-        if (null != this.jcrService.updateMissionParticipant(missionParticipant)){
+        if (null != this.jcrService.updateMissionParticipantInProgram(this.currentProgramId,missionParticipant)){
           return terminateTpl.with().set("sizes", Size.values()).ok();
         }
       }
@@ -111,12 +125,12 @@ public class JuZFrontEndApplication {
       MissionParticipant missionParticipant = this.jcrService.getMissionParticipantById(this.currentMissionParticipantId);
       if(null != missionParticipant){
         Address addressObj = new Address(fname,lname,address,city,country,phone);
-        addressObj = this.jcrService.addAddress(this.remoteUserName,addressObj);
+        addressObj = this.jcrService.addAddress2Participant(this.currentProgramId,this.remoteUserName,addressObj);
         if(null != addressObj ){
           missionParticipant.setStatus(Status.WAITING_FOR_VALIDATE);
           missionParticipant.setAddress_id(addressObj.getId());
           missionParticipant.setSize(Size.getSize(Integer.parseInt(size)));
-          if (null != this.jcrService.updateMissionParticipant(missionParticipant) ){
+          if (null != this.jcrService.updateMissionParticipantInProgram(this.currentProgramId,missionParticipant) ){
             this.currentMissionParticipantId = null;
             return thankyouTpl.ok();
           }
@@ -133,10 +147,11 @@ public class JuZFrontEndApplication {
     missionParticipant.setMission_id(missionId);
     missionParticipant.setProposition_id(propositionId);
     missionParticipant.setParticipant_username(this.remoteUserName);
-    missionParticipant = this.jcrService.addMissionParticipant(missionParticipant);
+    missionParticipant = this.jcrService.addMissionParticipant2Program(this.currentProgramId,missionParticipant);
     if(null != missionParticipant){
 
       Participant participant = new Participant(this.remoteUserName);
+      participant.setProgramId(this.currentProgramId);
       Set<String> missionIds = new HashSet<String>();
       missionIds.add(missionId);
       participant.setMission_ids(missionIds);
@@ -144,7 +159,7 @@ public class JuZFrontEndApplication {
       missionParticipantIds.add(missionParticipant.getId());
       participant.setMission_participant_ids(missionParticipantIds);
 
-      if (null != this.jcrService.addParticipant(participant)) {
+      if (null != this.jcrService.addParticipant2Program(participant)) {
         this.currentMissionParticipantId = missionParticipant.getId();
         Proposition proposition = this.jcrService.getPropositionById(missionParticipant.getProposition_id());
         if(null != proposition){
@@ -162,7 +177,7 @@ public class JuZFrontEndApplication {
   private Mission getOrCreateRandomMission(){
     Mission randomMission = null;
     if(null == this.currentMissionParticipantId){
-      randomMission = this.jcrService.getRandomMisson(this.remoteUserName);
+      randomMission = this.jcrService.getRandomMisson(this.currentProgramId,this.remoteUserName);
       if(null != randomMission) {
         Proposition randomProposition = this.jcrService.getRandomProposition(randomMission.getId());
         if(null != randomProposition){

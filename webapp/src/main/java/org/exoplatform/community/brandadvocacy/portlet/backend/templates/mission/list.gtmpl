@@ -1,19 +1,8 @@
+#{decorate path=container.gtmpl/}
 #{param name=missions/}
 #{param name=priorities/}
-
-<div class="referral-porlet">
-	<h3>Brand Advocacy Admin</h3><br>
-	<!-- TAB 1 -->
-	<div id="UITabPane" class="uiTabNormal uiTabInPage referral-tab-group">
-		<ul class="nav nav-tabs">
-			<li class="active"><a href="#generalTab" data-toggle="tab">General</a></li>
-			<li><a href="@{MissionController.list()}" data-toggle="tab">Missions</a></li>
-			<li><a href="@{MissionParticipantController.list()}" data-toggle="tab">Participants</a></li>
-		</ul>
-		<div id="myTabContent" class="tab-content">
-
-		<!-- keep only this part for ajax -->
-
+#{param name=programId/}
+<!-- keep only this part for ajax -->
 <div class="tab-pane fade" id="generalTab">...</div>
 <div class="tab-pane fade in active" id="missionsTab">
     <ul class="breadcrumb">
@@ -39,7 +28,7 @@
                     strActiveChkbox = "checked";
             %>
             <tr>
-                <td><a href="@{MissionController.editForm(id=mid)}">${mission.getTitle()}</a></td>
+                <td><a href="@{JuZBackEndApplication.index(action="mission_edit",programId=programId,missionId=mid)}">${mission.getTitle()}</a></td>
                 <td class="center">
                     <select name="priority" class="input-mini">
                         <% priorities.each { priority -> %>
@@ -47,7 +36,7 @@
                         <% } %>
                     </select>
                 </td>
-                <td><a href="<%= mission.getThird_party_link()%>"><%= mission.getThird_party_link()%></a></td>
+                <td><a href="<%= mission.getThird_part_link()%>"><%= mission.getThird_part_link()%></a></td>
                 <td class="center">
                     <div style="width: 60px;" class="iPhoneCheckContainer">
                         <input type="checkbox" class="yesno mission_active" data-no="No" data-yes="Yes" value="1" style="visibility: hidden;" checked="checked" tabindex="3">
@@ -65,10 +54,10 @@
                     </div>
                 </td>
                 <td class="center actionContainer">
-                    <a href="@{MissionController.editForm(id=mid)}" data-original-title="Edit" class="actionIcon" rel="tooltip" data-placement="bottom">
+                    <a href="@{JuZBackEndApplication.index(action="mission_edit",programId=programId,missionId=mid)}" data-original-title="Edit" class="actionIcon" rel="tooltip" data-placement="bottom">
                         <i class="uiIconViewUserInfo uiIconLightGray"></i>
                     </a>
-                    <a href="@{MissionController.delete(id=mid)}" data-original-title="Delete" class="actionIcon" rel="tooltip" data-placement="bottom">
+                    <a href="@{JuZBackEndApplication.index(action="mission_delete",programId=programId,missionId=mid)}" data-original-title="Delete" class="actionIcon" rel="tooltip" data-placement="bottom">
                         <i class="uiIconDeleteUser uiIconLightGray"></i>
                     </a>
                 </td>
@@ -79,11 +68,7 @@
 </div>
 <div class="control-group">
     <div class="controls text-right">
-        <a href="@{MissionController.addForm()}" class="btn btn-primary">Add</a>
+        <a href="@{JuZBackEndApplication.index(action="mission_add",programId=programId)}" class="btn btn-primary">Add</a>
     </div>
 </div>
 <!-- end part keeping for ajax -->
-
-		</div>
-	</div>
-</div>

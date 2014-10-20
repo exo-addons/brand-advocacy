@@ -1,14 +1,11 @@
 #{decorate path=container.gtmpl/}
-#{param name=program/}
-<% if (null != program){ %>
-<form action="@{ProgramController.update()}" method="POST" role="form">
-<input type="hidden" name="programId" value="<%=program.getId() %>" >
+<form action="@{ProgramController.add()}" method="POST" role="form">
     <div class="tab-pane fade in active" id="generalTab">
         <div class="form-horizontal">
             <div class="control-group">
                 <label class="control-label">Program Title:</label>
                 <div class="controls">
-                    <input class="full" type="text" name="title" value="<%= program.getTitle()%>"  placeholder="Win a free eXo T-Shirt !">
+                    <input class="full" type="text" name="title" placeholder="Win a free eXo T-Shirt !">
                 </div>
             </div>
             <div class="control-group list-managers-container">
@@ -17,9 +14,8 @@
         </div>
         <div class="control-group">
             <div class="controls text-right">
-                <button type="submit" class="btn btn-primary">Update</a>
+                <button type="submit" class="btn btn-primary">Add</a>
             </div>
         </div>
     </div>
 </form>
-<% } %>

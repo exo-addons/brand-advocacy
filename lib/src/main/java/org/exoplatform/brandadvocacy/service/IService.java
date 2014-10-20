@@ -61,7 +61,7 @@ public interface IService {
 
   public Manager addManager2Program(Manager manager);
   public List<Manager> addManagers2Program(String programId,List<Manager> managers);
-  public Manager updateProgramManager(String programId,Manager manager);
+  public Manager updateProgramManager(Manager manager);
   public void removeManagerFromProgram(String programId, String username);
   public Manager getProgramManagerByUserName(String programId, String username);
   public List<Manager> getAllManagersInProgram(String programId);

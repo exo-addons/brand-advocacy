@@ -16,7 +16,7 @@ import java.util.List;
  * Created by exoplatform on 10/10/14.
  */
 public class PropositionController {
-
+/*
   IService propositionService;
 
   @Inject
@@ -102,5 +102,5 @@ public class PropositionController {
 
 
   }
-
+*/
 }

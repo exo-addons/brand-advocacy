@@ -1,106 +1,74 @@
+#{decorate path=container.gtmpl/}
 #{param name=managers/}
-#{param name=mission/}
+#{param name=program/}
 #{param name=roles/}
 
-<% def missionId = mission.getId(); %>
+<% def programId = program.getId(); %>
 
+<! -- use this part for ajax -->
+    <div class="form-horizontal">
+        <div class="control-group">
+            <label class="control-label">Team roles:</label>
+            <div class="controls">
+                <table class="uiGrid table table-hover table-striped">
+                    <thead>
+                        <tr>
+                            <th>User</th>
+                            <th class="center" style="width: 155px;">Role</th>
+                            <th class="center" style="width: 125px;">Email Notification</th>
+                            <th class="center actionContainer" style="width: 65px;">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
 
-<div class="referral-porlet">
-	<h3>Brand Advocacy Admin</h3><br>
-	<!-- TAB 1 -->
-	<div id="UITabPane" class="uiTabNormal uiTabInPage referral-tab-group">
-		<ul class="nav nav-tabs">
-			<li class="active"><a href="#generalTab" data-toggle="tab">General</a></li>
-			<li><a href="@{MissionController.list()}" data-toggle="tab">Missions</a></li>
-			<li><a href="@{MissionParticipantController.list()}" data-toggle="tab">Participants</a></li>
-		</ul>
-		<div id="myTabContent" class="tab-content">
+                        <% managers.each { manager -> %>
+                        <%
+                            def strActiveChkbox = "";
+                            if(manager.getNotif())
+                                strActiveChkbox = "checked";
+                        %>
+                        <% def username = manager.getUserName() %>
+                        <form action="@{ManagerController.updateProgramManager()}" method="POST" role="form">
+                        <input type="hidden" name="username" id="username" value="<%=username%>"/>
+                        <input type="hidden" name="programId" id="programId" value="<%=programId%>"/>
+                        <tr>
+                            <td><%= manager.getFullName()%></td>
+                            <td class="center">
+                                <select name="role" class="input-medium">
+                                <% roles.each{ role -> %>
+                                    <option value="<%= role.getValue() %>" <% if(role.getValue() == manager.getRole().getValue() ) { %> selected  <% } %> ><%= role.getLabel() %></option>
+                                <% } %>
+                                </select>
+                            </td>
+                            <td class="center">
+                                <div class="iPhoneCheckContainer" style="width: 60px;">
+                                    <input type="checkbox" name="notif" tabindex="3" <%= strActiveChkbox %> style="visibility: hidden;" name="rememberme" value="true" data-yes="Yes" data-no="No" class="yesno" id="rememberme">
+                                    <label class="iPhoneCheckLabelOff" style="width: 51px;">
+                                        <span style="margin-right: -41px;">No</span>
+                                    </label>
+                                    <label class="iPhoneCheckLabelOn" style="width: 51px;">
+                                        <span style="margin-left: 0px;">Yes</span>
+                                    </label>
+                                    <div class="iPhoneCheckHandle" style="left: 41px;">
+                                        <div class="iPhoneCheckHandleRight">
+                                            <div class="iPhoneCheckHandleCenter"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="center actionContainer">
+                                <a href="@{ManagerController.deleteProgramManager(programId=programId,username=username)}" data-original-title="Delete" class="actionIcon" rel="tooltip" data-placement="bottom">
+                                    <i class="uiIconDeleteUser uiIconLightGray"></i>
+                                </a>
+                                <button type="submit">Update</button>
+                        </tr>
+                        </form>
 
-
-            <! -- use this part for ajax -->
-			<div class="tab-pane fade in active" id="generalTab">
-				<div class="form-horizontal">
-					<div class="control-group">
-						<label class="control-label">Program Title:</label>
-						<div class="controls">
-							<input class="full" type="text" disabled placeholder="<%= mission.getTitle()%>">
-						</div>
-					</div>
-					<div class="control-group">
-						<label class="control-label">Team roles:</label>
-						<div class="controls">
-							<table class="uiGrid table table-hover table-striped">
-								<thead>
-									<tr>
-										<th>User</th>
-										<th class="center" style="width: 155px;">Role</th>
-										<th class="center" style="width: 125px;">Email Notification</th>
-										<th class="center actionContainer" style="width: 65px;">Actions</th>
-									</tr>
-								</thead>
-								<tbody>
-
-								    <% managers.each { manager -> %>
-                                    <%
-                                        def strActiveChkbox = "";
-                                        if(manager.getNotif())
-                                            strActiveChkbox = "checked";
-                                    %>
-                                    <% def username = manager.getUserName() %>
-                                    <form action="@{ManagerController.update()}" method="POST" role="form">
-                                    <input type="hidden" name="username" id="username" value="<%=username%>"/>
-                                    <input type="hidden" name="mid" id="mid" value="<%=missionId%>"/>
-									<tr>
-										<td><%= manager.getFullName()%></td>
-										<td class="center">
-                                            <select name="role" class="input-medium">
-                                            <% roles.each{ role -> %>
-                                                <option value="<%= role.getValue() %>" <% if(role.getValue() == manager.getRole().getValue() ) { %> selected  <% } %> ><%= role.getLabel() %></option>
-                                            <% } %>
-                                            </select>
-										</td>
-										<td class="center">
-											<div class="iPhoneCheckContainer" style="width: 60px;">
-												<input type="checkbox" name="notif" tabindex="3" <%= strActiveChkbox %> style="visibility: hidden;" name="rememberme" value="true" data-yes="Yes" data-no="No" class="yesno" id="rememberme">
-												<label class="iPhoneCheckLabelOff" style="width: 51px;">
-													<span style="margin-right: -41px;">No</span>
-												</label>
-												<label class="iPhoneCheckLabelOn" style="width: 51px;">
-													<span style="margin-left: 0px;">Yes</span>
-												</label>
-												<div class="iPhoneCheckHandle" style="left: 41px;">
-													<div class="iPhoneCheckHandleRight">
-														<div class="iPhoneCheckHandleCenter"></div>
-													</div>
-												</div>
-											</div>
-										</td>
-										<td class="center actionContainer">
-											<a href="@{ManagerController.delete(mid=missionId,username=username)}" data-original-title="Delete" class="actionIcon" rel="tooltip" data-placement="bottom">
-								               	<i class="uiIconDeleteUser uiIconLightGray"></i>
-											</a>
-                                            <button type="submit">Update</button>
-									</tr>
-                                    </form>
-
-                                    <% } %>
-								</tbody>
-							</table>
-						</div>
-					</div>
-				</div>
-			</div>
-
-            <div class="control-group">
-                <div class="controls text-right">
-                    <a href="@{ManagerController.addForm(mid=missionId)}" class="btn btn-primary">Add</a>
-                </div>
+                        <% } %>
+                    </tbody>
+                </table>
             </div>
+        </div>
+    </div>
 
-            <! -- end use this part for ajax -->
-
-
-
-		</div>
-	</div>
-</div>
+<! -- end use this part for ajax -->

@@ -6,8 +6,10 @@ import juzu.Response;
 import juzu.View;
 import org.exoplatform.brandadvocacy.model.Manager;
 import org.exoplatform.brandadvocacy.model.Mission;
+import org.exoplatform.brandadvocacy.model.Program;
 import org.exoplatform.brandadvocacy.model.Role;
 import org.exoplatform.brandadvocacy.service.IService;
+import org.exoplatform.community.brandadvocacy.portlet.backend.models.ManagerDTO;
 import org.exoplatform.services.organization.OrganizationService;
 import org.exoplatform.services.organization.User;
 
@@ -20,7 +22,8 @@ import java.util.List;
  */
 public class ManagerController {
 
-  IService managerService;
+
+  IService jcrService;
   OrganizationService organizationService;
   @Inject
   MissionController missionController;
@@ -34,29 +37,32 @@ public class ManagerController {
   org.exoplatform.community.brandadvocacy.portlet.backend.templates.manager.add addTpl;
 
   @Inject
-  public ManagerController(OrganizationService organizationService,IService managerService){
+  public ManagerController(OrganizationService organizationService,IService iService){
     this.organizationService = organizationService;
-    this.managerService = managerService;
+    this.jcrService = iService;
   }
 
-  @View
-  public Response.Content list(String mid){
+  public Response.Content listProgramManagers(String programId){
 
-    Mission mission = this.managerService.getMissionById(mid);
-    if (null != mission){
-      List<Manager> managers = this.managerService.getAllManagers(mid);
+    Program program = this.jcrService.getProgramById(programId);
+    if (null != program){
+      List<Manager> managers = this.jcrService.getAllManagersInProgram(programId);
       User exoUser;
+      List<ManagerDTO> managerDTOs = new ArrayList<ManagerDTO>(managers.size());
+      ManagerDTO managerDTO;
       for (Manager manager:managers){
         try {
           exoUser = this.organizationService.getUserHandler().findUserByName(manager.getUserName());
           if(null != exoUser){
-            manager.setFullName(exoUser.getFirstName() + " "+exoUser.getLastName());
+            managerDTO = new ManagerDTO(manager.getUserName());
+            managerDTO.setFullName(exoUser.getFirstName() + " "+exoUser.getLastName());
+            managerDTOs.add(managerDTO);
           }
         } catch (Exception e) {
           e.printStackTrace();
         }
       }
-      return listTpl.with().set("roles",Role.values()).set("managers", managers).set("mission",mission).ok();
+      return listTpl.with().set("roles",Role.values()).set("managers", managerDTOs).set("program",program).ok();
     }
     else
       return Response.ok("nok");
@@ -64,12 +70,11 @@ public class ManagerController {
 
   }
 
-  @View
-  public Response.Content addForm(String mid){
-    return addTpl.with().set("missionId",mid).set("roles",Role.values()).ok();
+  public Response.Content addProgramManagerForm(String programId){
+    return addTpl.with().set("programId",programId).set("roles",Role.values()).ok();
   }
   @Action
-  public Response add(String mid, String username, String role, String notif){
+  public Response add2Program(String progamId, String username, String role, String notif){
     try {
       User exoUser = this.organizationService.getUserHandler().findUserByName(username);
       if(null != exoUser){
@@ -77,17 +82,13 @@ public class ManagerController {
         if(null != notif){
           mNotif = "1".equals(notif)? true:false;
         }
-        Mission mission  = this.managerService.getMissionById(mid);
-        if (null != mission){
-          List<Manager> managers = new ArrayList<Manager>(1);
+        Program program = this.jcrService.getProgramById(progamId);
+        if (null != program){
           Manager manager = new Manager(username);
-          manager.setParentId(mission.getId());
-          manager.setMissionLabelId(mission.getLabelID());
+          manager.setParentId(program.getId());
           manager.setRole(Role.getRole(Integer.parseInt(role)));
           manager.setNotif(mNotif);
-          managers.add(manager);
-          this.managerService.addManagers2Mission(mission.getId(),managers);
-          return missionController.view(mid);
+          this.jcrService.addManager2Program(manager);
         }
       }
       else
@@ -102,32 +103,22 @@ public class ManagerController {
   }
 
   @Action
-  public void update(String mid, String username, String role, String notif){
+  public void updateProgramManager(String programId, String username, String role, String notif){
     Boolean mNotif = false;
     if(null != notif){
       mNotif = "1".equals(notif)? true:false;
     }
-    Mission mission =  this.managerService.getMissionById(mid);
-    if(null != mission) {
-
-      Manager manager = this.managerService.getManager(mission.getLabelID(),username);
-      if(null != manager){
-        manager.setParentId(mission.getId());
-        manager.setMissionLabelId(mission.getLabelID());
-        manager.setRole(Role.getRole(Integer.parseInt(role)));
-        manager.setNotif(mNotif);
-        this.managerService.updateManager(manager);
-      }
-
+    Manager manager = this.jcrService.getProgramManagerByUserName(programId,username);
+    if(null != manager){
+      manager.setRole(Role.getRole(Integer.parseInt(role)));
+      manager.setNotif(mNotif);
+      this.jcrService.updateProgramManager(manager);
     }
   }
 
   @Action
-  public void delete(String mid,String username){
-    Mission mission =  this.managerService.getMissionById(mid);
-    if (null != mission){
-      this.managerService.removeManager(mission.getLabelID(),username);
-    }
+  public void deleteProgramManager(String programId, String username){
+    this.jcrService.removeManagerFromProgram(programId,username);
   }
 
 }

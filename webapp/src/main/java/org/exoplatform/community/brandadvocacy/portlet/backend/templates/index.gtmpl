@@ -1,1 +1,2 @@
-I AM PORTLET INDEX
+#{param name=remoteUserName}
+I AM PORTLET INDEX <%= remoteUserName%>

@@ -325,8 +325,8 @@ public class JCRImpl implements IService {
   }
 
   @Override
-  public Manager updateProgramManager(String programId, Manager manager) {
-    return this.getManagerDAO().updateProgramManager(programId,manager);
+  public Manager updateProgramManager(Manager manager) {
+    return this.getManagerDAO().updateProgramManager(manager);
   }
 
   @Override

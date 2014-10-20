@@ -1,19 +1,8 @@
+#{decorate path=container.gtmpl/}
 #{param name=priorities/}
+#{param name=programId/}
 <form action="@{MissionController.add()}" method="POST" role="form">
-
-
-<div class="referral-porlet">
-	<h3>Brand Advocacy Admin</h3><br>
-	<!-- TAB 1 -->
-	<div id="UITabPane" class="uiTabNormal uiTabInPage referral-tab-group">
-		<ul class="nav nav-tabs">
-			<li class="active"><a href="#generalTab" data-toggle="tab">General</a></li>
-			<li><a href="@{MissionController.list()}" data-toggle="tab">Missions</a></li>
-			<li><a href="@{MissionParticipantController.list()}" data-toggle="tab">Participants</a></li>
-		</ul>
-		<div id="myTabContent" class="tab-content">
-
-		<!-- keep only this part for ajax -->
+<!-- keep only this part for ajax -->
 
     <div class="form-horizontal">
         <div class="control-group">
@@ -59,13 +48,9 @@
         </div>
         <div class="text-center">
             <button class="btn btn-primary" type="submit">Save</button>
-            <button class="btn mgL20">Cancel</button>
+            <a class="btn mgL20" href=@{JuZBackEndApplication.index(action="mission_index",programId=programId)}>Cancel</a>
         </div>
     </div>
 
 <!-- end part keeping for ajax -->
-
-        </div>
-    </div>
-</div>
 </form>

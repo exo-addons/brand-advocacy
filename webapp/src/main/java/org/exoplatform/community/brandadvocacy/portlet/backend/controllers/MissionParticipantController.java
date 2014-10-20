@@ -22,7 +22,7 @@ import java.util.List;
  * Created by exoplatform on 10/12/14.
  */
 public class MissionParticipantController {
-
+/*
   OrganizationService organizationService;
   IdentityManager identityManager;
   IService missionParticipantService;
@@ -108,5 +108,5 @@ public class MissionParticipantController {
     return Response.ok("nok");
   }
 
-
+*/
 }
