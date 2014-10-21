@@ -1,37 +1,55 @@
+#{decorate path=container.gtmpl/}
 #{param name=missionParticipantDTOs/}
 #{param name=states/}
+    <div id="myTabContent" class="tab-content">
+        <div class="tab-pane fade" id="generalTab">...</div>
+        <div class="tab-pane fade" id="missionsTab">...</div>
+        <div class="tab-pane fade in active" id="participantsTab">
+            <ul class="breadcrumb mgB10">
+                <li><a href="#">Participants</a></li>
+            </ul>
+            <div class="uiSearchInput">
+               <input id="inputValue" type="text" name="missionParticipant_keyword" placeholder="Search">
+             </div>
+             <br>
+             <table class="uiGrid table table-hover table-striped mgB0">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Missions</th>
+                        <th  style="width: 150px;">Status</th>
+                        <th>Link</th>
+                        <th class="center" style="width: 80px;">Submit Date</th>
+                        <th class="center" style="width: 65px;">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% missionParticipantDTOs.each { missionParticipantDTO -> %>
+                    <% def missionParticipantId = missionParticipantDTO.getId() %>
+                     <tr>
+                         <td><%= missionParticipantDTO.getParticipant_fullName()%></td>
+                         <td><%= missionParticipantDTO.getMission_title()%></td>
+                         <td class="center">
+                             <select name="status" class="input-medium">
+                                 <% states.each { status -> %>
+                                 <option value="<%= status.getValue() %>" <% if(status.getValue() == missionParticipantDTO.getStatus().getValue() ) { %> selected  <% } %> ><%= status.getLabel() %></option>
+                                 <% } %>
+                             </select>
+                         </td>
+                         <td><a href="<%= missionParticipantDTO.getUrl_submitted()%>" target="_blank"><%= missionParticipantDTO.getUrl_submitted()%></a></td>
+                         <td class="center"><%= missionParticipantDTO.getDate_submitted()%></td>
+                         <td class="center">
+                             <a href="@{JuZBackEndApplication.index(action="mission_participant_view",programId="",missionId=missionParticipantId)}" data-placement="bottom" rel="tooltip" class="actionIcon" data-original-title="Preview" >
+                                 <i class="uiIconPreview uiIconLightGray"></i>
+                             </a>
+                         </td>
+                     </tr>
+                    <% } %>
+                </tbody>
+            </table><!-- /table -->
+        </div>
+    </div>
+	<!-- TAB 3 Step 1-->
 
-
-<div class="referral-porlet">
-	<h3>Brand Advocacy Admin</h3><br>
-	<!-- TAB 1 -->
-	<div id="UITabPane" class="uiTabNormal uiTabInPage referral-tab-group">
-		<ul class="nav nav-tabs">
-			<li class="active"><a href="#generalTab" data-toggle="tab">General</a></li>
-			<li><a href="@{MissionController.list()}" data-toggle="tab">Missions</a></li>
-			<li><a href="@{MissionParticipantController.list()}" data-toggle="tab">Participants</a></li>
-		</ul>
-		<div id="myTabContent" class="tab-content">
-
-<ul>
-    <% missionParticipantDTOs.each { missionParticipantDTO -> %>
-    <% def mpid = missionParticipantDTO.getId() %>
-        <li>
-            <%= missionParticipantDTO.getParticipant_fullName()%>
-            <%= missionParticipantDTO.getMission_title()%>
-            <select name="status">
-                <% states.each { status -> %>
-                <option value="<%= status.getValue() %>" <% if(status.getValue() == missionParticipantDTO.getStatus().getValue() ) { %> selected  <% } %> ><%= status.getLabel() %></option>
-                <% } %>
-            </select>
-            <%= missionParticipantDTO.getUrl_submitted()%>
-            <%= missionParticipantDTO.getDate_submitted()%>
-            <a href="@{MissionParticipantController.view(id=mpid)}" role="button">View</a>
-        </li>
-    <% } %>
-</ul>
 <!-- end part keeping for ajax -->
 
-		</div>
-	</div>
-</div>

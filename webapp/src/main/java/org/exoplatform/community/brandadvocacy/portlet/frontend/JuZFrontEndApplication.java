@@ -59,7 +59,12 @@ public class JuZFrontEndApplication {
   @View
   public Response.Content index(SecurityContext securityContext){
     this.remoteUserName = securityContext.getUserPrincipal().getName();
-    return indexTpl.ok();
+    if (null == this.currentProgramId)
+      this.loadCurrentProgram();
+    if (null != this.currentProgramId)
+      return indexTpl.ok();
+    else
+      return Response.ok("no program available");
   }
 
   private void loadCurrentProgram(){
@@ -73,8 +78,7 @@ public class JuZFrontEndApplication {
   @Ajax
   @Resource
   public Response.Content loadIndexView(){
-    if (null == this.currentProgramId)
-      this.loadCurrentProgram();
+
     if (null != this.currentProgramId)
       return indexTpl.ok();
     else

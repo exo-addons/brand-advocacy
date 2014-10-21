@@ -55,23 +55,24 @@ public class MissionController {
   public Response index(SecurityContext securityContext,String action,String programId, String missionId){
     loginController.setCurrentUserName(securityContext.getUserPrincipal().getName());
 
-    if (null != programId){
+    if (null != programId) {
       this.currentProgramId = programId;
-      if(null == missionId){
-        if (action.equals("index")){
-          return this.list("",null,null);
-        }else if (action.equals("add")){
-          return this.addForm();
-        }
-      }else{
-        this.currentMissionId = missionId;
-        if (action.equals("edit")){
-          return this.editForm();
-        }
-        else
-          MissionController_.delete();
-      }
     }
+    if(null == missionId){
+      if (action.equals("index")){
+        return this.list("",null,null);
+      }else if (action.equals("add")){
+        return this.addForm();
+      }
+    }else{
+      this.currentMissionId = missionId;
+      if (action.equals("edit")){
+        return this.editForm();
+      }
+      else
+        return this.delete();
+    }
+
     return indexTpl.ok();
 
   }
@@ -82,7 +83,8 @@ public class MissionController {
 
     Mission mission =  this.missionService.getMissionById(this.currentMissionId);
     if(null != mission){
-      return editTpl.with().set("priorities", Priority.values()).set("mission",mission).ok();
+      List<Proposition> propositions = this.missionService.getAllPropositions(mission.getId());
+      return editTpl.with().set("priorities", Priority.values()).set("mission",mission).set("propositions",propositions).ok();
     }
     return Response.ok("mission not found").withMimeType("text/html; charset=UTF-8").withHeader("Cache-Control", "no-cache");
   }
@@ -90,36 +92,36 @@ public class MissionController {
   public Response list(String keyword, String size, String page){
     int _size = size != null ? Integer.parseInt(size) : 5;
     int _page = page != null ? Integer.parseInt(page) : 0;
-    return listTpl.with().set("priorities", Priority.values()).set("programId",this.currentProgramId).set("missions", this.missionService.getAllMissionsByProgramId(this.currentProgramId)).ok();
+    List<Mission> missions = this.missionService.getAllMissionsByProgramId(this.currentProgramId);
+    if (null!= missions && missions.size() > 0)
+      return listTpl.with().set("priorities", Priority.values()).set("programId",this.currentProgramId).set("missions",missions).ok();
+
+    return JuZBackEndApplication_.index("something went wrong, please try later");
   }
 
   @Action
-  public Response add(String title,String third_party_link,String priority,String active){
+  public Response add(String title,String third_part_link,String priority,String active){
 
     Boolean mActive = false;
     if (null != active)
       mActive = active.equals("1") ? true:false;
     Mission mission = new Mission(this.currentProgramId,title);
-    mission.setThird_part_link(third_party_link);
+    mission.setThird_part_link(third_part_link);
     mission.setActive(mActive);
     mission.setPriority(Priority.getPriority(Integer.parseInt(priority)));
-    List<Manager> managers = new ArrayList<Manager>();
-    Manager manager = new Manager(loginController.getCurrentUserName());
-    managers.add(manager);
-    mission.setManagers(managers);
     mission = this.missionService.addMission2Program(mission);
     if(null != mission)
-      return JuZBackEndApplication_.index("index",this.currentProgramId);
+      return JuZBackEndApplication_.index("mission_index",this.currentProgramId);
     else
-      return Response.ok("ERROR");
+      return JuZBackEndApplication_.index("can not add mission to program, please try later");
   }
 
   @Action
-  public Response update(String id, String title, String third_party_link, String priority, String active){
+  public Response update(String id, String title, String third_part_link, String priority, String active){
     Mission mission  = this.missionService.getMissionById(id);
     if (null != mission){
       mission.setTitle(title);
-      mission.setThird_part_link(third_party_link);
+      mission.setThird_part_link(third_part_link);
       mission.setCreatedDate(0);
       mission.setPriority(Priority.getPriority(Integer.parseInt(priority)));
       Boolean mActive = false;
@@ -128,19 +130,19 @@ public class MissionController {
       mission.setActive(mActive);
       mission = this.missionService.updateMission(mission);
       if(null != mission)
-        return JuZBackEndApplication_.index("index",this.currentProgramId,null);
+        return JuZBackEndApplication_.index("mission_index",this.currentProgramId);
       else
-        return Response.ok("ERROR");
+        return JuZBackEndApplication_.index("can not update mission, please try later");
     }
-    return Response.ok("something went wrong, cannot update mission not existing");
+    return JuZBackEndApplication_.index("something went wrong, cannot update mission not existing");
 
 
   }
-
+  @View
   @Action
   public Response delete(){
     this.missionService.removeMissionById(this.currentMissionId);
-    return JuZBackEndApplication_.index("index",this.currentProgramId,null);
+    return this.list("", null, null);
   }
 
 

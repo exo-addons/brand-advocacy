@@ -1,2 +1,3 @@
-#{param name=remoteUserName}
-I AM PORTLET INDEX <%= remoteUserName%>
+#{decorate path=container.gtmpl/}
+#{param name=msg/}
+Error Message: <%= msg %>

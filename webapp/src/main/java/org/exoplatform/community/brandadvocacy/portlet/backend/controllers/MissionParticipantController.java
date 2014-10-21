@@ -2,10 +2,13 @@ package org.exoplatform.community.brandadvocacy.portlet.backend.controllers;
 
 import juzu.Path;
 import juzu.Response;
+import juzu.SessionScoped;
 import juzu.View;
+import juzu.request.SecurityContext;
 import org.exoplatform.brandadvocacy.model.*;
 import org.exoplatform.brandadvocacy.service.IService;
 import org.exoplatform.brandadvocacy.service.Utils;
+import org.exoplatform.community.brandadvocacy.portlet.backend.JuZBackEndApplication_;
 import org.exoplatform.community.brandadvocacy.portlet.backend.models.MissionParticipantDTO;
 import org.exoplatform.community.brandadvocacy.portlet.backend.models.ParticipantDTO;
 import org.exoplatform.services.organization.OrganizationService;
@@ -21,12 +24,17 @@ import java.util.List;
 /**
  * Created by exoplatform on 10/12/14.
  */
+@SessionScoped
 public class MissionParticipantController {
-/*
+
   OrganizationService organizationService;
   IdentityManager identityManager;
   IService missionParticipantService;
 
+  String currentProgramId;
+  String currentMissionParticipantId;
+  @Inject
+  LoginController loginController;
   @Inject
   @Path("mission_participant/list.gtmpl")
   org.exoplatform.community.brandadvocacy.portlet.backend.templates.mission_participant.list listTpl;
@@ -37,19 +45,42 @@ public class MissionParticipantController {
 
 
   @Inject
-  public MissionParticipantController(OrganizationService organizationService, IdentityManager identityManager, IService iService){
+  public MissionParticipantController(OrganizationService organizationService,IdentityManager identityManager ,IService iService){
     this.organizationService = organizationService;
     this.identityManager = identityManager;
     this.missionParticipantService = iService;
+    this.currentProgramId = null;
+    this.currentMissionParticipantId = null;
   }
 
-  @View
-  public Response.Content list(){
+  public Response index(SecurityContext securityContext,String action,String programId){
+
+    loginController.setCurrentUserName(securityContext.getUserPrincipal().getName());
+    this.currentProgramId = programId;
+    if (null != programId && !"".equals(programId)){
+      return this.list();
+    }
+    return JuZBackEndApplication_.index("cannot manage mission participant in program null");
+
+  }
+
+  public Response index(SecurityContext securityContext,String action,String programId,String missionParticipantId){
+
+    loginController.setCurrentUserName(securityContext.getUserPrincipal().getName());
+    this.currentProgramId = programId;
+    this.currentMissionParticipantId = missionParticipantId;
+    if (null != missionParticipantId && !"".equals(missionParticipantId)){
+      return this.view();
+    }
+    return JuZBackEndApplication_.index("cannot manage mission participant in program null");
+
+  }
+  public Response list(){
 
     List<MissionParticipantDTO> missionParticipantDTOs = new ArrayList<MissionParticipantDTO>();
     MissionParticipantDTO missionParticipantDTO;
     Mission mission;
-    List<MissionParticipant>  missionParticipants = this.missionParticipantService.getAllMissionParticipants();
+    List<MissionParticipant>  missionParticipants = this.missionParticipantService.getAllMissionParticipantsInProgram(this.currentProgramId);
     User exoUser;
     for (MissionParticipant missionParticipant : missionParticipants){
       try {
@@ -74,9 +105,8 @@ public class MissionParticipantController {
     return listTpl.with().set("missionParticipantDTOs",missionParticipantDTOs).set("states", Status.values()).ok();
   }
 
-  @View
-  public Response.Content view(String id){
-    MissionParticipant missionParticipant = this.missionParticipantService.getMissionParticipantById(id);
+  public Response view(){
+    MissionParticipant missionParticipant = this.missionParticipantService.getMissionParticipantById(this.currentMissionParticipantId);
     if(null != missionParticipant){
       try {
         Mission mission = this.missionParticipantService.getMissionById(missionParticipant.getMission_id());
@@ -108,5 +138,5 @@ public class MissionParticipantController {
     return Response.ok("nok");
   }
 
-*/
+
 }

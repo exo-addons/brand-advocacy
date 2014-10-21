@@ -59,7 +59,7 @@ public class AddressDAO extends DAO{
   }
 
   public Address transferNode2Object(Node node) throws RepositoryException {
-    if (null != node)
+    if (null == node)
       return null;
     Address address = new Address();
     address.setId(node.getUUID());
@@ -114,7 +114,7 @@ public class AddressDAO extends DAO{
       address.checkValid();
       if (null != addressHomeNode) {
         Node addressNode = null;
-        if(addressHomeNode.hasNode(address.getLabelID()))
+        if(!addressHomeNode.hasNode(address.getLabelID()))
           addressNode = addressHomeNode.addNode(address.getLabelID(), JCRImpl.ADDRESS_NODE_TYPE);
         else
           addressNode = addressHomeNode.getNode(address.getLabelID());

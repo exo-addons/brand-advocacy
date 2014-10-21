@@ -70,7 +70,7 @@ public interface IService {
   public List<Proposition> getAllPropositions(String missionId);
   public Proposition getPropositionById(String id);
   public Proposition getRandomProposition(String missionId);
-  public void removeProposition(String propositionId);
+  public String removeProposition(String propositionId);
   public List<Proposition> searchPropositions(String keyword, int offset, int limit);
   public Proposition updateProposition(Proposition proposition);
 

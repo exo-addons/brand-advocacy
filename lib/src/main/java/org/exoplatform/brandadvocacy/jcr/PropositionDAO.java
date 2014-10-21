@@ -17,6 +17,7 @@
 package org.exoplatform.brandadvocacy.jcr;
 
 import org.exoplatform.brandadvocacy.model.Mission;
+import org.exoplatform.brandadvocacy.model.Program;
 import org.exoplatform.brandadvocacy.model.Proposition;
 import org.exoplatform.brandadvocacy.service.BrandAdvocacyServiceException;
 import org.exoplatform.brandadvocacy.service.JCRImpl;
@@ -210,10 +211,13 @@ public class PropositionDAO extends DAO {
     }
     return null;
   }
-  public void removeProposition(String id){
+  public String removeProposition(String id){
+    String missionId = null;
     try {
       Node propositionNode = this.getNodeById(id); //this.getNodeByLabelID(proposition.getMission_id(), proposition.getId());
       if(null != propositionNode){
+        Proposition proposition = this.transferNode2Object(propositionNode);
+        missionId = proposition.getMission_id();
         Session session = propositionNode.getSession();
         propositionNode.remove();
         session.save();
@@ -224,6 +228,7 @@ public class PropositionDAO extends DAO {
     } catch (BrandAdvocacyServiceException brade){
       log.error(brade.getMessage());
     }
+    return missionId;
   }
   public Proposition getPropositionById(String id){
     try {

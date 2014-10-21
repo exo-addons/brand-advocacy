@@ -365,8 +365,8 @@ public class JCRImpl implements IService {
   }
 
   @Override
-  public void removeProposition(String propositionId) {
-    this.getPropositionDAO().removeProposition(propositionId);
+  public String removeProposition(String propositionId) {
+    return this.getPropositionDAO().removeProposition(propositionId);
   }
 
   @Override

@@ -2,6 +2,7 @@ package org.exoplatform.community.brandadvocacy.portlet.backend.controllers;
 
 import juzu.*;
 import juzu.request.SecurityContext;
+import org.exoplatform.brandadvocacy.model.Manager;
 import org.exoplatform.brandadvocacy.model.Program;
 import org.exoplatform.brandadvocacy.service.IService;
 import org.exoplatform.community.brandadvocacy.portlet.backend.JuZBackEndApplication;
@@ -49,8 +50,15 @@ public class ProgramController {
   @Action
   public Response add(String title){
     Program program = new Program(title);
-    this.jcrService.addProgram(program);
-    return JuZBackEndApplication_.index();
+    program = this.jcrService.addProgram(program);
+    if (null != program){
+      Manager manager = new Manager(loginController.getCurrentUserName());
+      manager.setParentId(program.getId());
+      this.jcrService.addManager2Program(manager);
+      return JuZBackEndApplication_.index();
+    }else
+      return JuZBackEndApplication_.index("cannot add program, please retry later");
+
   }
 
   @Action

@@ -1,15 +1,6 @@
+#{decorate path=container.gtmpl/}
 #{param name=proposition/}
-<div class="referral-porlet">
-	<h3>Brand Advocacy Admin</h3><br>
-	<!-- TAB 1 -->
-	<div id="UITabPane" class="uiTabNormal uiTabInPage referral-tab-group">
-		<ul class="nav nav-tabs">
-			<li class="active"><a href="#generalTab" data-toggle="tab">General</a></li>
-			<li><a href="@{MissionController.list()}" data-toggle="tab">Missions</a></li>
-			<li><a href="@{MissionParticipantController.list()}" data-toggle="tab">Participants</a></li>
-		</ul>
 
-#{param name=proposition/}
 <%
 if(proposition != null){
     def missionId = proposition.getMission_id();
@@ -19,7 +10,7 @@ if(proposition != null){
 %>
 
     <form action="@{PropositionController.update()}" method="POST" role="form">
-        <input type ="hidden" name="id" id="id"  value="<%= proposition.getId()%>" />
+        <input type ="hidden" name="propositionId" id="propositionId"  value="<%= proposition.getId()%>" />
         <input type ="hidden" name="labelID" id="labelID" value="<%= proposition.getLabelID()%>" />
 
 		<!-- Popupp -->
@@ -58,7 +49,7 @@ if(proposition != null){
 				</div>
 				<div class="uiAction uiActionBorder">
 				    <button class="btn" type="submit">Save</button>
-				    <button class="btn" type="button">Cancel</button>
+                    <a class="btn mgL20" href="@{JuZBackEndApplication.index(action="mission_edit",programId=null,missionId=missionId)}">Cancel</a>
 				  </div>
 			</div>
 		</div>
@@ -68,6 +59,3 @@ if(proposition != null){
 <%
 }
 %>
-	</div>
-</div>
-

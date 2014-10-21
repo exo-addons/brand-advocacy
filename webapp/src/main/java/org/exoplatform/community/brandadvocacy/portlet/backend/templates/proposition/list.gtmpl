@@ -1,57 +1,146 @@
+#{decorate path=container.gtmpl/}
+#{param name=mission/}
+#{param name=priorities/}
 #{param name=propositions/}
-#{param name=missionId/}
+<%
+if(mission != null){
+    def strActiveChkbox = "";
+    if(mission.getActive())
+        strActiveChkbox = "checked";
 
+    def missionId = mission.getId();
 
-<table class="uiGrid table table-hover table-striped mgB0">
-    <thead>
-        <tr>
-            <th>Proposition</th>
-            <th class="center" style="width: 65px">Nb Used</th>
-            <th class="center" style="width: 65px">On/Off</th>
-            <th class="center actionContainer" style="width: 65px">Actions</th>
-        </tr>
-    </thead>
-    <tbody>
-        <% propositions.each { proposition -> %>
-            <%
-                def pid = proposition.getId();
-                def strActiveChkbox = "";
-                if(proposition.getActive())
-                    strActiveChkbox = "checked";
-            %>
-            <tr>
-                <td>
-                    <%= proposition.getShortContent(50)%>
-                </td>
-                <td class="center">
-                    <%= proposition.getNumberUsed()%>
-                </td>
-                <td class="center">
-                    <div style="width: 60px;" class="iPhoneCheckContainer">
-                        <input type="checkbox" id="proposition_active_<%=pid%>" class="yesno" data-no="No" data-yes="Yes" value="true" style="visibility: hidden;" <%=strActiveChkbox%> tabindex="3">
-                        <label style="width: 51px;" class="iPhoneCheckLabelOff">
-                            <span style="margin-right: -41px;">No</span>
-                        </label>
-                        <label style="width: 51px;" class="iPhoneCheckLabelOn">
-                            <span style="margin-left: 0px;">Yes</span>
-                        </label>
-                        <div style="left: 41px;" class="iPhoneCheckHandle">
-                            <div class="iPhoneCheckHandleRight">
-                                <div class="iPhoneCheckHandleCenter"></div>
+    def programId = mission.getProgramId();
+
+%>
+<form action="@{MissionController.update()}" method="POST" role="form">
+    <input type ="hidden" name="id" id="id"  value="<%= missionId %>" />
+    <!-- keep only this part for ajax -->
+
+    <div id="myTabContent" class="tab-content">
+        <div class="tab-pane fade" id="generalTab">...</div>
+        <div class="tab-pane fade in active" id="missionsTab">
+            <ul class="breadcrumb">
+                <li><a href="@{JuZBackEndApplication.index(action="mission_index",programId=programId)}">Manager the missions</a><span class="uiIconMiniArrowRight"></span></li>
+                <li class="active"><%= mission.getTitle() %></li>
+            </ul>
+
+            <div class="form-horizontal">
+                <div class="control-group">
+                    <label class="control-label">Title:</label>
+                    <div class="controls">
+                        <input class="full" type="text" name="title" id="title" value="<%= mission.getTitle() %>">
+                    </div>
+                </div>
+                <div class="control-group proposition-container">
+                    <label class="control-label">Proposition lists:</label>
+                    <div class="controls">
+                        <table class="uiGrid table table-hover table-striped mgB0">
+                            <thead>
+                                <tr>
+                                    <th>Proposition</th>
+                                    <th class="center" style="width: 65px">Nb Used</th>
+                                    <th class="center" style="width: 65px">Activated</th>
+                                    <th class="center actionContainer" style="width: 65px">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+
+                                <% propositions.each { proposition -> %>
+                                    <%
+                                        def pid = proposition.getId();
+                                        def strActiveChkboxProposition = "";
+                                        if(proposition.getActive())
+                                            strActiveChkboxProposition = "checked";
+                                    %>
+                                    <tr>
+                                        <td>
+                                            <%= proposition.getShortContent(50)%>
+                                        </td>
+                                        <td class="center">
+                                            <%= proposition.getNumberUsed()%>
+                                        </td>
+                                        <td class="center">
+                                            <div style="width: 60px;" class="iPhoneCheckContainer">
+                                                <input type="checkbox" id="proposition_active_<%=pid%>" class="yesno" data-no="No" data-yes="Yes" value="true" style="visibility: hidden;" <%=strActiveChkboxProposition%> tabindex="3">
+                                                <label style="width: 51px;" class="iPhoneCheckLabelOff">
+                                                    <span style="margin-right: -41px;">No</span>
+                                                </label>
+                                                <label style="width: 51px;" class="iPhoneCheckLabelOn">
+                                                    <span style="margin-left: 0px;">Yes</span>
+                                                </label>
+                                                <div style="left: 41px;" class="iPhoneCheckHandle">
+                                                    <div class="iPhoneCheckHandleRight">
+                                                        <div class="iPhoneCheckHandleCenter"></div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td class="center actionContainer">
+                                            <a data-original-title="Edit" class="actionIcon" rel="tooltip" data-placement="bottom" href="@{JuZBackEndApplication.index(action="proposition_edit",programId=null,missionId=missionId,propositionId=pid)}">
+                                                <i class="uiIconViewUserInfo uiIconLightGray"></i>
+                                            </a>
+                                            <a data-original-title="Delete" class="actionIcon" rel="tooltip" data-placement="bottom" href="@{JuZBackEndApplication.index(action="proposition_delete",programId=null,missionId=missionId,propositionId=pid)}">
+                                                <i class="uiIconDeleteUser uiIconLightGray"></i>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                <% } %>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="control-group">
+                    <div class="controls text-right">
+                        <a class="btn btn-primary" href="@{JuZBackEndApplication.index(action="proposition_add",programId=null,missionId=missionId,propositionId="")}">Add</a>
+                    </div>
+                </div>
+
+                <div class="control-group">
+                    <label class="control-label">Link:</label>
+                    <div class="controls">
+                        <input  class="full" type="text" name="third_part_link" id="third_part_link" value="<%= mission.getThird_part_link()%>" >
+                    </div>
+                </div>
+                <div class="control-group">
+                    <label class="control-label">Priority:</label>
+                    <div class="controls">
+                        <select name="priority" class="input-mini">
+                            <% priorities.each { priority -> %>
+                            <option value="<%= priority.getValue() %>" <% if(mission.getPriority().getValue() == priority.getValue()){ %> selected  <% } %> ><%= priority.getValue() %></option>
+                            <% } %>
+                        </select>
+                    </div>
+                </div>
+                <div class="control-group">
+                    <label class="control-label">Activated:</label>
+                    <div class="controls">
+                        <div style="width: 60px;" class="iPhoneCheckContainer">
+                            <input type="checkbox" class="yesno mission_active" name="mission_active" id="mission_active"  data-no="No" data-yes="Yes" value="1" style="visibility: hidden;" checked="checked" tabindex="3">
+                            <label style="width: 51px;" class="iPhoneCheckLabelOff">
+                                <span style="margin-right: -41px;">No</span>
+                            </label>
+                            <label style="width: 51px;" class="iPhoneCheckLabelOn">
+                                <span style="margin-left: 0px;">Yes</span>
+                            </label>
+                            <div style="left: 41px;" class="iPhoneCheckHandle">
+                                <div class="iPhoneCheckHandleRight">
+                                    <div class="iPhoneCheckHandleCenter"></div>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </td>
-                <td class="center actionContainer">
-                    <a data-original-title="Edit" class="actionIcon" rel="tooltip" data-placement="bottom" href="@{PropositionController.editForm(id=pid)}">
-                        <i class="uiIconViewUserInfo uiIconLightGray"></i>
-                    </a>
-                    <a data-original-title="Delete" class="actionIcon" rel="tooltip" data-placement="bottom" href="@{PropositionController.delete(mid=missionId,id=pid)}">
-                        <i class="uiIconDeleteUser uiIconLightGray"></i>
-                    </a>
-                </td>
-            </tr>
-        <% } %>
-    </tbody>
-</table>
-<a href="@{MissionController.editForm(id=missionId)}" role="button">Back to mission</a>
+                </div>
+                <div class="text-center">
+                    <button class="btn btn-primary" type="submit">Save</button>
+                    <a class="btn mgL20" href="@{JuZBackEndApplication.index(action="mission_index",programId=programId)}">Cancel</a>
+                </div>
+            </div>
+        </div>
+    </div>
+<!-- end part keeping for ajax -->
+</form>
+<%
+}
+%>

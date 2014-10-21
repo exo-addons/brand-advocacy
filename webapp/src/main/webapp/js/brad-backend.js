@@ -3,7 +3,9 @@
  */
 $(function() {
   function bradBackend(){
-    this.ftStepDOM = null;
+
+
   };
+
 
 });

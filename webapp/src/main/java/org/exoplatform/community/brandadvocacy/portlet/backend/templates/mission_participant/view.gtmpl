@@ -1,3 +1,4 @@
+#{decorate path=container.gtmpl/}
 #{param name=missionParticipantDTO/}
 #{param name=address/}
 #{param name=participantDTO/}
@@ -22,33 +23,25 @@ def strMissionTitle = missionParticipantDTO.getMission_title();
 def strDateSubmitted = missionParticipantDTO.getDate_submitted()
 %>
 
-<div class="referral-porlet">
-	<h3>Brand Advocacy Admin</h3><br>
-	<!-- TAB 1 -->
-	<div id="UITabPane" class="uiTabNormal uiTabInPage referral-tab-group">
-		<ul class="nav nav-tabs">
-			<li class="active"><a href="#generalTab" data-toggle="tab">General</a></li>
-			<li><a href="@{MissionController.list()}" data-toggle="tab">Missions</a></li>
-			<li><a href="@{MissionParticipantController.list()}" data-toggle="tab">Participants</a></li>
-		</ul>
-		<div id="myTabContent" class="tab-content">
 
 		<!-- part for ajax -->
 			<div class="tab-pane fade" id="generalTab">...</div>
 			<div class="tab-pane fade" id="missionsTab">...</div>
 			<div class="tab-pane fade in active" id="participantsTab">
 				<ul class="breadcrumb">
-				    <li><a href="#">Participants</a><span class="uiIconMiniArrowRight"></span></li>
+				    <li><a href="@{JuZBackEndApplication.index(action="mission_participant_index")}">Participants</a><span class="uiIconMiniArrowRight"></span></li>
 				    <li class="active"><%= username %></li>
 				</ul>
 				<br>
 				<div class="ref-detail-user">
 					<div class="media">
 						<div class="pull-left mgR15-ipt">
-							<img alt="User Default Avatar" class="avatarLargeWithBorder" src="../img/user-default.jpg">
+						<a href="<%=urlProfile%>" target="_blank">
+							<img alt="User Default Avatar" class="avatarLargeWithBorder" src="<%=urlAvatar%>">
+						</a>
 						</div>
 						<div class="media-body">
-							<h4 class="ref-user-name"><%= strUserAddress %></h4>
+							<h4 class="ref-user-name"><a href="<%=urlProfile%>" target="_blank"><%= strUserAddress %></a></h4>
 							<div class="row-fluid">
 								<div class="span6">
 								    <% if(null != address){ %>
@@ -83,12 +76,9 @@ def strDateSubmitted = missionParticipantDTO.getDate_submitted()
 							</div>
 						</div>
 					</div>
-					<div class="text-center"><button class="btn btn-primary">Back</button></div>
+					<div class="text-center"><a class="btn btn-primary" href="@{JuZBackEndApplication.index(action="mission_participant_index")}">Back</a></div>
 				</div>
 				<!-- /.ref-detail-user -->
 			</div>
 
         <!-- end keep this part for ajax -->
-		</div>
-	</div>
-</div>

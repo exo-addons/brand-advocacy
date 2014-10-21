@@ -4,7 +4,8 @@
 	<div id="UITabPane" class="uiTabNormal uiTabInPage referral-tab-group">
 		<ul class="nav nav-tabs">
 			<li class="active"><a href="@{JuZBackEndApplication.index()}" data-toggle="tab">General</a></li>
-	        <li class="active"><a href="@{JuZBackEndApplication.index(action="mission_index",programId=null)}" data-toggle="tab">Mission</a></li>
+	        <li class="active"><a href="@{JuZBackEndApplication.index(action="mission_index")}" data-toggle="tab">Missions</a></li>
+            <li class="active"><a href="@{JuZBackEndApplication.index(action="mission_participant_index")}" data-toggle="tab">Participants</a></li>
 		</ul>
 		<div id="myTabContent" class="tab-content">
             #{insert/}
