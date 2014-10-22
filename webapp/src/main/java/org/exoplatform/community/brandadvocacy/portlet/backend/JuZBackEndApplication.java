@@ -64,7 +64,12 @@ public class JuZBackEndApplication {
       else if (action.equals("mission_index"))
         return missionController.index();
     }
-    return programController.index();
+    if (loginController.isAdmin()){
+      return programController.index();
+    }else{
+      return missionParticipantController.index();
+    }
+
   }
   @View
   public Response showError(String msg){

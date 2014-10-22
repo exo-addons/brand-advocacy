@@ -50,19 +50,8 @@
                                     </select>
                                 </td>
                                 <td class="center">
-                                    <div class="iPhoneCheckContainer" style="width: 60px;">
-                                        <input type="checkbox" name="notif" tabindex="3" <%= strActiveChkbox %> style="visibility: hidden;" name="rememberme" value="true" data-yes="Yes" data-no="No" class="yesno" id="rememberme">
-                                        <label class="iPhoneCheckLabelOff" style="width: 51px;">
-                                            <span style="margin-right: -41px;">No</span>
-                                        </label>
-                                        <label class="iPhoneCheckLabelOn" style="width: 51px;">
-                                            <span style="margin-left: 0px;">Yes</span>
-                                        </label>
-                                        <div class="iPhoneCheckHandle" style="left: 41px;">
-                                            <div class="iPhoneCheckHandleRight">
-                                                <div class="iPhoneCheckHandleCenter"></div>
-                                            </div>
-                                        </div>
+                                    <div class="spaceIphoneChkBox">
+                                        <input type="checkbox" value="false" style="visibility: hidden;" checked="checked" data="<%=username%>"/>
                                     </div>
                                 </td>
                                 <td class="center actionContainer">

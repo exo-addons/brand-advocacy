@@ -6,7 +6,10 @@
         <div class="tab-pane fade" id="missionsTab">...</div>
         <div class="tab-pane fade in active" id="participantsTab">
             <ul class="breadcrumb mgB10">
-                <li><a href="#">Participants</a></li>
+                <li>
+                <a href="#">Participants</a>
+                <div><input type="checkbox" data-no="No" data-yes="Yes" value="false" id="addonStatusOnModal" style="visibility: hidden;" class="yesno" tabindex="3" /></div>
+                </li>
             </ul>
             <div class="uiSearchInput">
                <input id="inputValue" type="text" name="missionParticipant_keyword" placeholder="Search">
