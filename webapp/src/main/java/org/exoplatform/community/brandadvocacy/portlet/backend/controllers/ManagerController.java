@@ -1,14 +1,13 @@
 package org.exoplatform.community.brandadvocacy.portlet.backend.controllers;
 
-import juzu.Action;
-import juzu.Path;
-import juzu.Response;
-import juzu.View;
+import juzu.*;
+import juzu.plugin.ajax.Ajax;
 import org.exoplatform.brandadvocacy.model.Manager;
 import org.exoplatform.brandadvocacy.model.Mission;
 import org.exoplatform.brandadvocacy.model.Program;
 import org.exoplatform.brandadvocacy.model.Role;
 import org.exoplatform.brandadvocacy.service.IService;
+import org.exoplatform.community.brandadvocacy.portlet.backend.JuZBackEndApplication_;
 import org.exoplatform.community.brandadvocacy.portlet.backend.models.ManagerDTO;
 import org.exoplatform.services.organization.OrganizationService;
 import org.exoplatform.services.organization.User;
@@ -29,6 +28,8 @@ public class ManagerController {
   MissionController missionController;
 
   @Inject
+  LoginController loginController;
+  @Inject
   @Path("manager/list.gtmpl")
   org.exoplatform.community.brandadvocacy.portlet.backend.templates.manager.list listTpl;
 
@@ -42,8 +43,10 @@ public class ManagerController {
     this.jcrService = iService;
   }
 
-  public Response.Content listProgramManagers(String programId){
-
+  @Ajax
+  @Resource
+  public Response listProgramManagers(){
+    String programId = loginController.getCurrentProgramId();
     Program program = this.jcrService.getProgramById(programId);
     if (null != program){
       List<Manager> managers = this.jcrService.getAllManagersInProgram(programId);
@@ -69,13 +72,14 @@ public class ManagerController {
 
 
   }
-
-  public Response.Content addProgramManagerForm(String programId){
-    return addTpl.with().set("programId",programId).set("roles",Role.values()).ok();
+  @View
+  public Response.Content addProgramManagerForm(){
+    return addTpl.with().set("roles",Role.values()).ok();
   }
   @Action
-  public Response add2Program(String progamId, String username, String role, String notif){
+  public Response add2Program(String username, String role, String notif){
     try {
+      String progamId = loginController.getCurrentProgramId();
       User exoUser = this.organizationService.getUserHandler().findUserByName(username);
       if(null != exoUser){
         Boolean mNotif = false;
@@ -88,7 +92,9 @@ public class ManagerController {
           manager.setParentId(program.getId());
           manager.setRole(Role.getRole(Integer.parseInt(role)));
           manager.setNotif(mNotif);
-          this.jcrService.addManager2Program(manager);
+          manager = this.jcrService.addManager2Program(manager);
+          if (null != manager)
+            return JuZBackEndApplication_.index("program_index");
         }
       }
       else
@@ -112,13 +118,18 @@ public class ManagerController {
     if(null != manager){
       manager.setRole(Role.getRole(Integer.parseInt(role)));
       manager.setNotif(mNotif);
-      this.jcrService.updateProgramManager(manager);
+      manager = this.jcrService.updateProgramManager(manager);
+      if (null != manager){
+        if (manager.getUserName().equals(loginController.getCurrentUserName())){
+          loginController.setRights(manager.getRole().getLabel());
+        }
+      }
     }
   }
 
   @Action
-  public void deleteProgramManager(String programId, String username){
+  public Response deleteProgramManager(String programId, String username){
     this.jcrService.removeManagerFromProgram(programId,username);
+    return JuZBackEndApplication_.index("program_index");
   }
-
 }

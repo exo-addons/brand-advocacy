@@ -48,7 +48,7 @@
         </div>
         <div class="text-center">
             <button class="btn btn-primary" type="submit">Save</button>
-            <a class="btn mgL20" href=@{JuZBackEndApplication.index(action="mission_index",programId=programId)}>Cancel</a>
+            <a class="btn mgL20" href=@{JuZBackEndApplication.index(action="mission_index")}>Cancel</a>
         </div>
     </div>
 

@@ -38,7 +38,7 @@
 				</div>
 				<div class="uiAction uiActionBorder">
 				    <button class="btn" type="submit">Save</button>
-                    <a class="btn mgL20" href="@{JuZBackEndApplication.index(action="mission_edit",programId=null,missionId=missionId)}">Cancel</a>
+                    <a class="btn mgL20" href="@{MissionController.editForm(missionId=missionId)}">Cancel</a>
 				  </div>
 			</div>
 		</div>

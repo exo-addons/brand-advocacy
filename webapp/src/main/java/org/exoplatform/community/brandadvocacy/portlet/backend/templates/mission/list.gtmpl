@@ -28,7 +28,7 @@
                     strActiveChkbox = "checked";
             %>
             <tr>
-                <td><a href="@{JuZBackEndApplication.index(action="mission_edit",programId=programId,missionId=mid)}">${mission.getTitle()}</a></td>
+                <td><a href="@{MissionController.editForm(missionId=mid)}">${mission.getTitle()}</a></td>
                 <td class="center">
                     <select name="priority" class="input-mini">
                         <% priorities.each { priority -> %>
@@ -54,10 +54,10 @@
                     </div>
                 </td>
                 <td class="center actionContainer">
-                    <a href="@{JuZBackEndApplication.index(action="mission_edit",programId=programId,missionId=mid)}" data-original-title="Edit" class="actionIcon" rel="tooltip" data-placement="bottom">
+                    <a href="@{MissionController.editForm(missionId=mid)}" data-original-title="Edit" class="actionIcon" rel="tooltip" data-placement="bottom">
                         <i class="uiIconViewUserInfo uiIconLightGray"></i>
                     </a>
-                    <a href="@{JuZBackEndApplication.index(action="mission_delete",programId=programId,missionId=mid)}" data-original-title="Delete" class="actionIcon" rel="tooltip" data-placement="bottom">
+                    <a href="@{MissionController.delete(missionId=mid)}" data-original-title="Delete" class="actionIcon" rel="tooltip" data-placement="bottom">
                         <i class="uiIconDeleteUser uiIconLightGray"></i>
                     </a>
                 </td>
@@ -68,7 +68,7 @@
 </div>
 <div class="control-group">
     <div class="controls text-right">
-        <a href="@{JuZBackEndApplication.index(action="mission_add",programId=programId)}" class="btn btn-primary">Add</a>
+        <a href="@{MissionController.addForm()}" class="btn btn-primary">Add</a>
     </div>
 </div>
 <!-- end part keeping for ajax -->

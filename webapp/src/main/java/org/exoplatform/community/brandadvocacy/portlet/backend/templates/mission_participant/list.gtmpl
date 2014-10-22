@@ -39,7 +39,7 @@
                          <td><a href="<%= missionParticipantDTO.getUrl_submitted()%>" target="_blank"><%= missionParticipantDTO.getUrl_submitted()%></a></td>
                          <td class="center"><%= missionParticipantDTO.getDate_submitted()%></td>
                          <td class="center">
-                             <a href="@{JuZBackEndApplication.index(action="mission_participant_view",programId="",missionId=missionParticipantId)}" data-placement="bottom" rel="tooltip" class="actionIcon" data-original-title="Preview" >
+                             <a href="@{MissionParticipantController.view(missionParticipantId=missionParticipantId)}" data-placement="bottom" rel="tooltip" class="actionIcon" data-original-title="Preview" >
                                  <i class="uiIconPreview uiIconLightGray"></i>
                              </a>
                          </td>

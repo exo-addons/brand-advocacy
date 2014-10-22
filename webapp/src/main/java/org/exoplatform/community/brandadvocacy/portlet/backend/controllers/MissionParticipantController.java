@@ -31,10 +31,12 @@ public class MissionParticipantController {
   IdentityManager identityManager;
   IService missionParticipantService;
 
-  String currentProgramId;
-  String currentMissionParticipantId;
   @Inject
   LoginController loginController;
+  @Inject
+  @Path("mission_participant/error.gtmpl")
+  org.exoplatform.community.brandadvocacy.portlet.backend.templates.mission_participant.error ErrorTpl;
+
   @Inject
   @Path("mission_participant/list.gtmpl")
   org.exoplatform.community.brandadvocacy.portlet.backend.templates.mission_participant.list listTpl;
@@ -49,38 +51,24 @@ public class MissionParticipantController {
     this.organizationService = organizationService;
     this.identityManager = identityManager;
     this.missionParticipantService = iService;
-    this.currentProgramId = null;
-    this.currentMissionParticipantId = null;
+
   }
 
-  public Response index(SecurityContext securityContext,String action,String programId){
-
-    loginController.setCurrentUserName(securityContext.getUserPrincipal().getName());
-    this.currentProgramId = programId;
-    if (null != programId && !"".equals(programId)){
+  public Response index(){
+    if (null != loginController.getCurrentProgramId())
       return this.list();
-    }
-    return JuZBackEndApplication_.index("cannot manage mission participant in program null");
+    else
+      return ErrorTpl.ok();
 
   }
 
-  public Response index(SecurityContext securityContext,String action,String programId,String missionParticipantId){
-
-    loginController.setCurrentUserName(securityContext.getUserPrincipal().getName());
-    this.currentProgramId = programId;
-    this.currentMissionParticipantId = missionParticipantId;
-    if (null != missionParticipantId && !"".equals(missionParticipantId)){
-      return this.view();
-    }
-    return JuZBackEndApplication_.index("cannot manage mission participant in program null");
-
-  }
   public Response list(){
 
+    String programId = loginController.getCurrentProgramId();
     List<MissionParticipantDTO> missionParticipantDTOs = new ArrayList<MissionParticipantDTO>();
     MissionParticipantDTO missionParticipantDTO;
     Mission mission;
-    List<MissionParticipant>  missionParticipants = this.missionParticipantService.getAllMissionParticipantsInProgram(this.currentProgramId);
+    List<MissionParticipant>  missionParticipants = this.missionParticipantService.getAllMissionParticipantsInProgram(programId);
     User exoUser;
     for (MissionParticipant missionParticipant : missionParticipants){
       try {
@@ -105,8 +93,9 @@ public class MissionParticipantController {
     return listTpl.with().set("missionParticipantDTOs",missionParticipantDTOs).set("states", Status.values()).ok();
   }
 
-  public Response view(){
-    MissionParticipant missionParticipant = this.missionParticipantService.getMissionParticipantById(this.currentMissionParticipantId);
+  @View
+  public Response view(String missionParticipantId){
+    MissionParticipant missionParticipant = this.missionParticipantService.getMissionParticipantById(missionParticipantId);
     if(null != missionParticipant){
       try {
         Mission mission = this.missionParticipantService.getMissionById(missionParticipant.getMission_id());
@@ -126,16 +115,19 @@ public class MissionParticipantController {
             participantDTO.setUrlProfile(identity.getProfile().getUrl());
             participantDTO.setEmail(identity.getProfile().getEmail());
             Address address = this.missionParticipantService.getAddressById(missionParticipant.getAddress_id());
+            if (null == address){
+              address = new Address("","","","","","");
+            }
             return viewTpl.with().set("missionParticipantDTO",missionParticipantDTO).set("address",address).set("participantDTO",participantDTO).set("states",Status.values()).ok();
 
           }
         }
 
       } catch (Exception e) {
-        return Response.ok("nok");
+        return JuZBackEndApplication_.showError("cannot view participant");
       }
     }
-    return Response.ok("nok");
+    return JuZBackEndApplication_.showError("cannot view participant");
   }
 
 

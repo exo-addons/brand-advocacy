@@ -31,8 +31,6 @@ public class MissionController {
   @Inject
   public MissionController(IService missionService){
     this.missionService = missionService;
-    this.currentProgramId = null;
-    this.currentMissionId = null;
   }
 
   @Inject
@@ -51,37 +49,21 @@ public class MissionController {
   @Path("mission/list.gtmpl")
   org.exoplatform.community.brandadvocacy.portlet.backend.templates.mission.list listTpl;
 
-
-  public Response index(SecurityContext securityContext,String action,String programId, String missionId){
-    loginController.setCurrentUserName(securityContext.getUserPrincipal().getName());
-
-    if (null != programId) {
-      this.currentProgramId = programId;
-    }
-    if(null == missionId){
-      if (action.equals("index")){
-        return this.list("",null,null);
-      }else if (action.equals("add")){
-        return this.addForm();
-      }
-    }else{
-      this.currentMissionId = missionId;
-      if (action.equals("edit")){
-        return this.editForm();
-      }
-      else
-        return this.delete();
-    }
-
-    return indexTpl.ok();
-
+  public Response index(){
+    if (null != loginController.getCurrentProgramId())
+      return this.list("",null,null);
+    else
+      return indexTpl.ok();
   }
+  @View
   public Response addForm(){
-    return addTpl.with().set("programId",this.currentProgramId).set("priorities", Priority.values()).ok();
-  }
-  public Response editForm(){
 
-    Mission mission =  this.missionService.getMissionById(this.currentMissionId);
+    return addTpl.with().set("programId",loginController.getCurrentProgramId()).set("priorities", Priority.values()).ok();
+  }
+  @View
+  public Response editForm(String missionId){
+
+    Mission mission =  this.missionService.getMissionById(missionId);
     if(null != mission){
       List<Proposition> propositions = this.missionService.getAllPropositions(mission.getId());
       return editTpl.with().set("priorities", Priority.values()).set("mission",mission).set("propositions",propositions).ok();
@@ -92,11 +74,10 @@ public class MissionController {
   public Response list(String keyword, String size, String page){
     int _size = size != null ? Integer.parseInt(size) : 5;
     int _page = page != null ? Integer.parseInt(page) : 0;
-    List<Mission> missions = this.missionService.getAllMissionsByProgramId(this.currentProgramId);
-    if (null!= missions && missions.size() > 0)
-      return listTpl.with().set("priorities", Priority.values()).set("programId",this.currentProgramId).set("missions",missions).ok();
+    String programId = loginController.getCurrentProgramId();
+    List<Mission> missions = this.missionService.getAllMissionsByProgramId(programId);
 
-    return JuZBackEndApplication_.index("something went wrong, please try later");
+      return listTpl.with().set("priorities", Priority.values()).set("programId",programId).set("missions",missions).ok();
   }
 
   @Action
@@ -105,15 +86,15 @@ public class MissionController {
     Boolean mActive = false;
     if (null != active)
       mActive = active.equals("1") ? true:false;
-    Mission mission = new Mission(this.currentProgramId,title);
+    Mission mission = new Mission(loginController.getCurrentProgramId(),title);
     mission.setThird_part_link(third_part_link);
     mission.setActive(mActive);
     mission.setPriority(Priority.getPriority(Integer.parseInt(priority)));
     mission = this.missionService.addMission2Program(mission);
     if(null != mission)
-      return JuZBackEndApplication_.index("mission_index",this.currentProgramId);
+      return JuZBackEndApplication_.index("mission_index");
     else
-      return JuZBackEndApplication_.index("can not add mission to program, please try later");
+      return JuZBackEndApplication_.showError("can not add mission to program, please try later");
   }
 
   @Action
@@ -130,19 +111,18 @@ public class MissionController {
       mission.setActive(mActive);
       mission = this.missionService.updateMission(mission);
       if(null != mission)
-        return JuZBackEndApplication_.index("mission_index",this.currentProgramId);
+        return JuZBackEndApplication_.index("mission_index");
       else
-        return JuZBackEndApplication_.index("can not update mission, please try later");
+        return JuZBackEndApplication_.showError("can not update mission, please try later");
     }
-    return JuZBackEndApplication_.index("something went wrong, cannot update mission not existing");
+    return JuZBackEndApplication_.showError("something went wrong, cannot update mission not existing");
 
 
   }
-  @View
   @Action
-  public Response delete(){
-    this.missionService.removeMissionById(this.currentMissionId);
-    return this.list("", null, null);
+  public Response delete(String missionId){
+    this.missionService.removeMissionById(missionId);
+    return JuZBackEndApplication_.index("mission_index");
   }
 
 

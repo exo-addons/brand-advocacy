@@ -1,5 +1,7 @@
 package org.exoplatform.community.brandadvocacy.portlet.backend.models;
 
+import org.exoplatform.brandadvocacy.model.Role;
+
 /**
  * Created by exoplatform on 10/20/14.
  */
@@ -7,12 +9,9 @@ public class ManagerDTO {
   private String username;
   private String fullName;
   private boolean isNotif;
-
+  private Role role;
   public ManagerDTO(String username){
-    this.setUsername(username);
-  }
-  public boolean isNotif() {
-    return isNotif;
+    this.setUserName(username);
   }
 
   public void setNotif(boolean isNotif) {
@@ -27,11 +26,23 @@ public class ManagerDTO {
     this.fullName = fullName;
   }
 
-  public String getUsername() {
+  public String getUserName() {
     return username;
   }
 
-  public void setUsername(String username) {
+  public void setUserName(String username) {
     this.username = username;
+  }
+
+  public Role getRole() {
+    return role;
+  }
+
+  public void setRole(Role role) {
+    this.role = role;
+  }
+
+  public boolean getNotif() {
+    return isNotif;
   }
 }

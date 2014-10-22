@@ -53,31 +53,15 @@ public class PropositionController {
     this.propositionService = iService;
   }
 
-  public Response index(SecurityContext securityContext, String action, String missionId, String propositionId){
-    loginController.setCurrentUserName(securityContext.getUserPrincipal().getName());
-    if (null != missionId && !"".equals(missionId)){
-      if (action.equals("add"))
-        return this.addForm(missionId);
-      else if (null != propositionId && !"".equals(propositionId)){
-        if (action.equals("edit")){
-          if (null != propositionId)
-            return this.editForm(propositionId);
-          else
-            return JuZBackEndApplication_.index("Error: cannot find proposition to update");
-        }
-        else if (action.equals("delete"))
-          return this.delete(propositionId);
-      }
-    }
-    return JuZBackEndApplication_.index("Error: cannot find mission to manage proposition");
-  }
-  public Response addForm(String mid){
-    return addTpl.with().set("missionId",mid).ok();
+  @View
+  public Response addForm(String missionId){
+    return addTpl.with().set("missionId",missionId).ok();
   }
 
-  public Response editForm(String id){
+  @View
+  public Response editForm(String propositionId){
 
-    Proposition proposition =  this.propositionService.getPropositionById(id);
+    Proposition proposition =  this.propositionService.getPropositionById(propositionId);
     if(null != proposition)
       return editTpl.with().proposition(proposition).ok();
 
@@ -90,7 +74,7 @@ public class PropositionController {
       List<Proposition> propositions = this.propositionService.getAllPropositions(mission.getId());
       return listTpl.with().set("priorities", Priority.values()).set("mission",mission).set("propositions",propositions).ok();
     }
-    return JuZBackEndApplication_.index("cannot find proposition to update");
+    return JuZBackEndApplication_.showError("cannot find proposition to update");
   }
 
   @Action
@@ -105,7 +89,7 @@ public class PropositionController {
       proposition.setActive(proposActive);
       proposition = this.propositionService.addProposition2Mission(proposition);
       if(null != proposition){
-        return JuZBackEndApplication_.index("mission_edit",mission.getProgramId(),missionId);
+        return MissionController_.editForm(missionId);
       }
     }
     else{
@@ -119,8 +103,8 @@ public class PropositionController {
   public Response delete(String propositionId){
     String missionId = this.propositionService.removeProposition(propositionId);
     if (null != missionId)
-      return this.list(missionId);
-    return JuZBackEndApplication_.index("mission doesnot exist anymore");
+      return MissionController_.editForm(missionId);
+    return JuZBackEndApplication_.showError("mission doesnot exist anymore");
   }
   @Action
   public Response update(String propositionId, String content, String active){
@@ -131,10 +115,11 @@ public class PropositionController {
         proposActive = active.equals("1") ? true:false;
       proposition.setContent(content);
       proposition.setActive(proposActive);
-      this.propositionService.updateProposition(proposition);
-      return this.list(proposition.getMission_id());
+      proposition = this.propositionService.updateProposition(proposition);
+      if (null != proposition)
+        return MissionController_.editForm(proposition.getMission_id());
     }
-    return JuZBackEndApplication_.index(" Proposition does not exist any more to update");
+    return JuZBackEndApplication_.showError(" Proposition does not exist any more to update");
 
   }
 

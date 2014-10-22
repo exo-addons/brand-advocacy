@@ -1,25 +1,93 @@
 #{decorate path=container.gtmpl/}
 #{param name=program/}
+#{param name=managers/}
+#{param name=roles/}
+
 <% if (null != program){ %>
-<form action="@{ProgramController.update()}" method="POST" role="form">
-<input type="hidden" name="programId" value="<%=program.getId() %>" >
+<% def programId = program.getId(); %>
     <div class="tab-pane fade in active" id="generalTab">
         <div class="form-horizontal">
             <div class="control-group">
                 <label class="control-label">Program Title:</label>
                 <div class="controls">
-                    <input class="full" type="text" name="title" value="<%= program.getTitle()%>"  placeholder="Win a free eXo T-Shirt !">
+                    <form action="@{ProgramController.update()}" method="POST" role="form" id="programForm">
+                        <input type="hidden" name="programId" value="<%=program.getId() %>" >
+                        <input class="full" type="text" name="title" value="<%= program.getTitle()%>"  placeholder="Win a free eXo T-Shirt !">
+                    </form>
                 </div>
             </div>
-            <div class="control-group list-managers-container">
-            list manager here
+            <div class="control-group">
+                <label class="control-label">Team roles:</label>
+                <div class="controls">
+                    <table class="uiGrid table table-hover table-striped">
+                        <thead>
+                            <tr>
+                                <th>User</th>
+                                <th class="center" style="width: 155px;">Role</th>
+                                <th class="center" style="width: 125px;">Email Notification</th>
+                                <th class="center actionContainer" style="width: 65px;">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+
+                            <% managers.each { manager -> %>
+                            <%
+                                def strActiveChkbox = "";
+                                if(manager.getNotif())
+                                    strActiveChkbox = "checked";
+                            %>
+                            <% def username = manager.getUserName() %>
+                            <form action="@{ManagerController.updateProgramManager()}" method="POST" role="form">
+                            <input type="hidden" name="username" id="username" value="<%=username%>"/>
+                            <input type="hidden" name="programId" id="programId" value="<%=programId%>"/>
+                            <tr>
+                                <td><%= manager.getFullName()%></td>
+                                <td class="center">
+                                    <select name="role" class="input-medium">
+                                    <% roles.each{ role -> %>
+                                        <option value="<%= role.getValue() %>" <% if(role.getValue() == manager.getRole().getValue() ) { %> selected  <% } %> ><%= role.getLabel() %></option>
+                                    <% } %>
+                                    </select>
+                                </td>
+                                <td class="center">
+                                    <div class="iPhoneCheckContainer" style="width: 60px;">
+                                        <input type="checkbox" name="notif" tabindex="3" <%= strActiveChkbox %> style="visibility: hidden;" name="rememberme" value="true" data-yes="Yes" data-no="No" class="yesno" id="rememberme">
+                                        <label class="iPhoneCheckLabelOff" style="width: 51px;">
+                                            <span style="margin-right: -41px;">No</span>
+                                        </label>
+                                        <label class="iPhoneCheckLabelOn" style="width: 51px;">
+                                            <span style="margin-left: 0px;">Yes</span>
+                                        </label>
+                                        <div class="iPhoneCheckHandle" style="left: 41px;">
+                                            <div class="iPhoneCheckHandleRight">
+                                                <div class="iPhoneCheckHandleCenter"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="center actionContainer">
+                                    <a href="@{ManagerController.deleteProgramManager(programId=programId,username=username)}" data-original-title="Delete" class="actionIcon" rel="tooltip" data-placement="bottom">
+                                        <i class="uiIconDeleteUser uiIconLightGray"></i>
+                                    </a>
+                                    <button type="submit">Update</button>
+                            </tr>
+                            </form>
+
+                            <% } %>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="control-group">
+                <div class="controls text-right">
+                    <a class="btn btn-primary" href="@{ManagerController.addProgramManagerForm()}">Add</a>
+                </div>
             </div>
         </div>
         <div class="control-group">
             <div class="controls text-right">
-                <button type="submit" class="btn btn-primary">Update</a>
+                <button type="button" class="btn btn-primary" onclick="document.getElementById('programForm').submit();">Update</a>
             </div>
         </div>
     </div>
-</form>
 <% } %>
