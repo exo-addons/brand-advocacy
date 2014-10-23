@@ -27,8 +27,7 @@ public enum Role {
   
   Admin(1),
   Validator(2),
-  Shipping_Manager(3),
-  Participant(4);
+  Shipping_Manager(3);
 
   private final int role;
 
@@ -46,10 +45,8 @@ public enum Role {
               return "Shipping Manager";
           case 2:
               return "Validator";
-          case 1:
-              return "Admin";
           default:
-              return "Participant";
+              return "Admin";
       }
   }
 
@@ -60,7 +57,7 @@ public enum Role {
           }
       }
 
-      return Participant;
+      return Admin;
   }
 }
 

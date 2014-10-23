@@ -37,9 +37,8 @@
                                     strActiveChkbox = "checked";
                             %>
                             <% def username = manager.getUserName() %>
-                            <form action="@{ManagerController.updateProgramManager()}" method="POST" role="form">
-                            <input type="hidden" name="username" id="username" value="<%=username%>"/>
-                            <input type="hidden" name="programId" id="programId" value="<%=programId%>"/>
+                            <form role="form">
+                            <input type="hidden" name="username" value="<%=username%>"/>
                             <tr>
                                 <td><%= manager.getFullName()%></td>
                                 <td class="center">
@@ -51,14 +50,13 @@
                                 </td>
                                 <td class="center">
                                     <div class="spaceIphoneChkBox">
-                                        <input type="checkbox" value="false" style="visibility: hidden;" checked="checked" data="<%=username%>"/>
+                                        <input type="checkbox" name="notif" value="false" style="visibility: hidden;" checked="checked" data-action="updateProgramManager"/>
                                     </div>
                                 </td>
                                 <td class="center actionContainer">
                                     <a href="@{ManagerController.deleteProgramManager(programId=programId,username=username)}" data-original-title="Delete" class="actionIcon" rel="tooltip" data-placement="bottom">
                                         <i class="uiIconDeleteUser uiIconLightGray"></i>
                                     </a>
-                                    <button type="submit">Update</button>
                             </tr>
                             </form>
 

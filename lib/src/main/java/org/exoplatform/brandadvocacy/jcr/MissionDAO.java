@@ -418,4 +418,49 @@ public class MissionDAO extends DAO {
     return missionIds;
   }
 
+  public Set<String> getMissionIdsAlreadyUsedByParticipant(String programId,String username){
+
+    Set<String> missionIds = new HashSet<String>();
+    ParticipantDAO participantDAO = this.getJcrImplService().getParticipantDAO();
+    Participant participant = participantDAO.getParticipantInProgramByUserName(programId,username);
+    if (null != participant){
+      missionIds = participant.getMission_ids();
+    }
+    return missionIds;
+  }
+  private List<String> getAllMissionIdsInProgram(String programId){
+    List<String> missionIds = new ArrayList<String>();
+    try {
+      Node missionHome = this.getOrCreateMissionHome(programId);
+      if (null != missionHome){
+        NodeIterator nodes =  missionHome.getNodes();
+        while (nodes.hasNext()){
+          if (nodes.nextNode().hasProperty(node_prop_active)){
+            if (nodes.nextNode().getProperty(node_prop_active).getBoolean()){
+              missionIds.add(nodes.nextNode().getProperty("jcr:uuid").getString());
+            }
+          }
+        }
+      }
+    } catch (RepositoryException e) {
+      log.error("ERROR cannot get all mission in "+programId);
+    }
+    return missionIds;
+
+  }
+  private List<String> generateMissionIds2BeUsed(String programId, String username){
+    List<String> missionIds = this.getAllMissionIdsInProgram(programId);
+    Set<String> missionIdsUsed = this.getMissionIdsAlreadyUsedByParticipant(programId,username);
+    List<String> missionIdsUsed_arraylist = new ArrayList<String>(missionIdsUsed);
+    missionIds.removeAll(missionIdsUsed_arraylist);
+    return missionIds;
+  }
+  public String getRandomMissionId(String programId, String username){
+    List<String>  missionIds = this.generateMissionIds2BeUsed(programId,username);
+    if (null != missionIds) {
+      Collections.shuffle(missionIds);
+      return missionIds.get(0);
+    }
+    return null;
+  }
 }

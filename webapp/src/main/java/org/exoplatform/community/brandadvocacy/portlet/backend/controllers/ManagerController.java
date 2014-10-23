@@ -109,10 +109,11 @@ public class ManagerController {
   }
 
   @Action
-  public void updateProgramManager(String programId, String username, String role, String notif){
+  public void updateProgramManager(String username, String role, String notif){
+    String programId = loginController.getCurrentProgramId();
     Boolean mNotif = false;
     if(null != notif){
-      mNotif = "1".equals(notif)? true:false;
+      mNotif = "yes".equals(notif)? true:false;
     }
     Manager manager = this.jcrService.getProgramManagerByUserName(programId,username);
     if(null != manager){

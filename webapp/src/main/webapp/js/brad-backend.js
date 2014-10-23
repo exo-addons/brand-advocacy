@@ -6,6 +6,9 @@ $(function() {
     var input = $(this).find("input:checkbox");
     var val = input.attr("value") == "true" ? "false" : "true";
     input.attr("value", val);
+    var username = input.attr("data");
+
+
   });
   $("div.spaceIphoneChkBox").children('input:checkbox').each(function () {
     $(this).iphoneStyle({

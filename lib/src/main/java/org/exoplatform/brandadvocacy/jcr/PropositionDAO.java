@@ -256,7 +256,7 @@ public class PropositionDAO extends DAO {
     StringBuilder sql = new StringBuilder("select * from "+ JCRImpl.PROPOSITION_NODE_TYPE +" where ");
     sql.append(node_prop_active).append("= 'true'");
     sql.append(" AND ").append(node_prop_mission_id).append("='").append(mid).append("'");
-    sql.append(" ORDER BY ").append(node_prop_numberUsed).append(" DESC ");
+    sql.append(" ORDER BY ").append(node_prop_numberUsed).append(" ASC ");
     List<Node> nodes =  this.getNodesByQuery(sql.toString(),0,1);
     try {
       if (nodes.size() > 0)
