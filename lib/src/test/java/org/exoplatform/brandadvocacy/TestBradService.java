@@ -251,6 +251,212 @@ public class TestBradService extends AbstractTest {
 
 
   }
+
+  public void testRandom(){
+
+    Program currentProgram = null;
+    List<Program> programs = this.service.getAllPrograms();
+    for (Program program:programs){
+      currentProgram = program;
+    }
+
+    Participant participant = new Participant("toto");
+
+    List<Manager> managers = new ArrayList<Manager>();
+    Manager manager = new Manager("toto");
+    manager.setRole(Role.Validator);
+    managers.add(manager);
+
+    this.service.addManagers2Program(currentProgram.getId(),managers);
+
+    Mission m_prio1 = new Mission(" mission prio 60% ");
+    m_prio1.setProgramId(currentProgram.getId());
+    m_prio1.setPriority(60);
+    m_prio1 = this.service.addMission2Program(m_prio1);
+    this.service.addManagers2Mission(m_prio1.getId(),managers);
+
+    Proposition proposition = new Proposition();
+    proposition.setContent("proposition 1 for mission prio 1 a");
+    proposition.setMission_id(m_prio1.getId());
+    this.service.addProposition2Mission(proposition);
+
+    Proposition proposition2 = new Proposition();
+    proposition2.setContent("proposition 2 for mission prio 1 a");
+    proposition2.setMission_id(m_prio1.getId());
+    this.service.addProposition2Mission(proposition2);
+
+    Proposition proposition3 = new Proposition();
+    proposition3.setContent("proposition 3 for mission prio 1 a");
+    proposition3.setMission_id(m_prio1.getId());
+    this.service.addProposition2Mission(proposition3);
+
+    Mission randomMission = this.service.getRandomMisson(currentProgram.getId(),participant.getUserName());
+    assertEquals("should have no random mission",null,randomMission);
+
+    m_prio1.setActive(true);
+    m_prio1 = this.service.updateMission(m_prio1);
+    randomMission = this.service.getRandomMisson(currentProgram.getId(),"toto");
+    assertEquals("should found a random mission",m_prio1.getId(),randomMission.getId());
+
+    Proposition randomProposition = this.service.getRandomProposition(randomMission.getId());
+    assertNotNull("should have a random proposition", randomProposition);
+
+
+    int nbParticipants = this.service.getAllParticipantsInProgram(currentProgram.getId()).size();
+
+    MissionParticipant missionParticipant = new MissionParticipant();
+    missionParticipant.setMission_id(randomMission.getId());
+    missionParticipant.setProposition_id(proposition.getId());
+    missionParticipant.setParticipant_username(participant.getUserName());
+    missionParticipant = this.service.addMissionParticipant2Program(currentProgram.getId(),missionParticipant);
+    missionParticipant.setStatus(Status.INPROGRESS);
+    missionParticipant = this.service.updateMissionParticipantInProgram(currentProgram.getId(),missionParticipant);
+    assertEquals("mp should have in progress status",Status.INPROGRESS,missionParticipant.getStatus());
+
+    participant.setProgramId(currentProgram.getId());
+    Set<String> mpIds = new HashSet<String>();
+    mpIds.add(missionParticipant.getId());
+    participant.setMission_participant_ids(mpIds);
+
+    Set<String> mIds = new HashSet<String>();
+    mIds.add(m_prio1.getId());
+    participant.setMission_ids(mIds);
+
+    participant =  this.service.addParticipant2Program(participant);
+
+    assertEquals("should have 1 more participant",nbParticipants+1,this.service.getAllParticipantsInProgram(currentProgram.getId()).size());
+
+    randomMission = this.service.getRandomMisson(currentProgram.getId(),participant.getUserName());
+    assertEquals("should have no random mission",null,randomMission);
+
+    Mission m_prio2 = new Mission(" mission prio 20% ");
+    m_prio2.setPriority(20);
+    m_prio2.setProgramId(currentProgram.getId());
+    m_prio2.setActive(true);
+    m_prio2 = this.service.addMission2Program(m_prio2);
+
+    randomMission = this.service.getRandomMisson(currentProgram.getId(), participant.getUserName());
+    assertEquals("should have 1 random mission", m_prio2.getId(), randomMission.getId());
+
+    proposition = new Proposition();
+    proposition.setContent("proposition 1 for mission prio 1 b");
+    proposition.setMission_id(m_prio2.getId());
+    this.service.addProposition2Mission(proposition);
+
+    proposition2 = new Proposition();
+    proposition2.setContent("proposition 2 for mission prio 1 b");
+    proposition2.setMission_id(m_prio2.getId());
+    this.service.addProposition2Mission(proposition2);
+
+    Mission m_prio3 = new Mission(" mission prio 10 % ");
+    m_prio3.setPriority(10);
+    m_prio3.setActive(true);
+    m_prio3.setProgramId(currentProgram.getId());
+    m_prio3 = this.service.addMission2Program(m_prio3);
+
+
+
+    proposition = new Proposition();
+    proposition.setContent("proposition 1 for mission prio 2");
+    proposition.setMission_id(m_prio3.getId());
+    this.service.addProposition2Mission(proposition);
+
+    proposition2 = new Proposition();
+    proposition2.setContent("proposition 2 for mission prio 2");
+    proposition2.setMission_id(m_prio3.getId());
+    this.service.addProposition2Mission(proposition2);
+
+
+    randomMission = this.service.getRandomMisson(currentProgram.getId(),participant.getUserName());
+    randomProposition = this.service.getRandomProposition(randomMission.getId());
+    missionParticipant = new MissionParticipant();
+    missionParticipant.setParticipant_username(participant.getUserName());
+    missionParticipant.setMission_id(randomMission.getId());
+    missionParticipant.setProposition_id(randomProposition.getId());
+    missionParticipant = this.service.addMissionParticipant2Program(currentProgram.getId(),missionParticipant);
+
+    missionParticipant.setStatus(Status.OPEN);
+    missionParticipant = this.service.updateMissionParticipantInProgram(currentProgram.getId(),missionParticipant);
+
+    Mission m_prio4 = new Mission(" mission prio 5% ");
+    m_prio4.setPriority(5);
+    m_prio4.setActive(true);
+    m_prio4.setProgramId(currentProgram.getId());
+    m_prio4 = this.service.addMission2Program(m_prio4);
+
+    proposition = new Proposition();
+    proposition.setContent("proposition 1 for mission prio 3");
+    proposition.setMission_id(m_prio4.getId());
+    this.service.addProposition2Mission(proposition);
+
+    proposition2 = new Proposition();
+    proposition2.setContent("proposition 2 for mission prio 3");
+    proposition2.setMission_id(m_prio4.getId());
+    this.service.addProposition2Mission(proposition2);
+
+    randomMission = this.service.getRandomMisson(currentProgram.getId(),participant.getUserName());
+    randomProposition = this.service.getRandomProposition(randomMission.getId());
+    missionParticipant = new MissionParticipant();
+    missionParticipant.setParticipant_username(participant.getUserName());
+    missionParticipant.setMission_id(randomMission.getId());
+    missionParticipant.setProposition_id(randomProposition.getId());
+    missionParticipant = this.service.addMissionParticipant2Program(currentProgram.getId(),missionParticipant);
+
+    missionParticipant.setStatus(Status.WAITING_FOR_VALIDATE);
+    missionParticipant = this.service.updateMissionParticipantInProgram(currentProgram.getId(),missionParticipant);
+
+    Mission m_prio5 = new Mission(" mission prio 5% false ");
+    m_prio5.setPriority(5);
+    m_prio5.setActive(true);
+    m_prio5.setProgramId(currentProgram.getId());
+    m_prio5 = this.service.addMission2Program(m_prio5);
+
+    proposition = new Proposition();
+    proposition.setContent("proposition 1 for mission prio 4");
+    proposition.setMission_id(m_prio5.getId());
+    this.service.addProposition2Mission(proposition);
+
+    proposition2 = new Proposition();
+    proposition2.setContent("proposition 2 for mission prio 4");
+    proposition2.setMission_id(m_prio5.getId());
+    this.service.addProposition2Mission(proposition2);
+
+    int nbMPs = this.service.getAllMissionParticipantsInProgram(currentProgram.getId()).size();
+    randomMission = this.service.getRandomMisson(currentProgram.getId(),participant.getUserName());
+    randomProposition = this.service.getRandomProposition(randomMission.getId());
+    missionParticipant = new MissionParticipant();
+    missionParticipant.setParticipant_username(participant.getUserName());
+    missionParticipant.setMission_id(randomMission.getId());
+    missionParticipant.setProposition_id(randomProposition.getId());
+    missionParticipant = this.service.addMissionParticipant2Program(currentProgram.getId(),missionParticipant);
+    assertEquals("shoule have 1 more mps",nbMPs+1,this.service.getAllMissionParticipantsInProgram(currentProgram.getId()).size());
+    missionParticipant.setStatus(Status.SHIPPED);
+    missionParticipant = this.service.updateMissionParticipantInProgram(currentProgram.getId(),missionParticipant);
+    assertEquals("mp should have shipped status",Status.SHIPPED,missionParticipant.getStatus());
+    assertEquals("should have 1 mp shipped",1,this.service.searchMissionParticipants(currentProgram.getId(),"",Status.SHIPPED,0,0).size());
+    assertEquals("should have 8 mission ",8,this.service.getAllMissionsByProgramId(currentProgram.getId()).size());
+
+//    this.showInfo();
+    this.showInfoRandom();
+  }
+  public void showInfoRandom(){
+
+    Program currentProgram = null;
+    List<Program> programs = this.service.getAllPrograms();
+    for (Program program:programs){
+      currentProgram = program;
+    }
+
+    Mission mission = this.service.getRandomMisson(currentProgram.getId(),"toto");
+    if(null != mission){
+      debug(" random mission "+mission.toString());
+      debug("========= list propositions  ================");
+      Proposition proposition = this.service.getRandomProposition(mission.getId());
+      if(null != proposition)
+        debug(" random proposition "+proposition.getContent());
+    }
+
+  }
   /*
   public void testAll(){
     int nbPrograms = 0;
@@ -417,149 +623,7 @@ public class TestBradService extends AbstractTest {
 //    showInfo();
   }
 
-  public void testRandom(){
 
-    Participant participant = new Participant("toto");
-
-    List<Manager> managers = new ArrayList<Manager>();
-    Manager manager = new Manager("toto");
-    manager.setRole(Role.Validator);
-    managers.add(manager);
-
-    Mission m_prio1 = new Mission(" mission prio 1 a");
-    managers = new ArrayList<Manager>();
-    manager = new Manager("manager2");
-    managers.add(manager);
-    m_prio1.setManagers(managers);
-    m_prio1.setPriority(Priority.PRIORITY_1);
-    m_prio1 = this.service.addMission(m_prio1);
-    this.service.addManagers2Mission(m_prio1.getId(),managers);
-
-    List<Proposition> propositions = new ArrayList<Proposition>();
-    Proposition proposition = new Proposition();
-    proposition.setContent("proposition 1 for mission prio 1 a");
-    propositions.add(proposition);
-
-    Proposition proposition2 = new Proposition();
-    proposition2.setContent("proposition 2 for mission prio 1 a");
-    propositions.add(proposition2);
-
-    Proposition proposition3 = new Proposition();
-    proposition3.setContent("proposition 3 for mission prio 1 a");
-    propositions.add(proposition3);
-    proposition3.setNumberUsed(1);
-    this.service.addProposition2Mission(m_prio1.getId(), propositions);
-
-
-
-    Mission m_prio2 = new Mission(" mission prio 1 b ");
-    managers = new ArrayList<Manager>();
-    manager = new Manager("manager2");
-    managers.add(manager);
-    m_prio2.setManagers(managers);
-    m_prio2.setPriority(Priority.PRIORITY_1);
-    m_prio2 = this.service.addMission(m_prio2);
-    this.service.addManagers2Mission(m_prio2.getId(),managers);
-
-    propositions = new ArrayList<Proposition>();
-    proposition = new Proposition();
-    proposition.setContent("proposition 1 for mission prio 1 b");
-    propositions.add(proposition);
-
-    proposition2 = new Proposition();
-    proposition2.setContent("proposition 2 for mission prio 1 b");
-    propositions.add(proposition2);
-    this.service.addProposition2Mission(m_prio2.getId(), propositions);
-
-    Mission m_prio3 = new Mission(" mission prio 2 ");
-    managers = new ArrayList<Manager>();
-    manager = new Manager("manager2");
-    managers.add(manager);
-    m_prio3.setManagers(managers);
-    m_prio3.setPriority(Priority.PRIORITY_2);
-    m_prio3 = this.service.addMission(m_prio3);
-    this.service.addManagers2Mission(m_prio3.getId(),managers);
-
-    propositions = new ArrayList<Proposition>();
-    proposition = new Proposition();
-    proposition.setContent("proposition 1 for mission prio 2");
-    propositions.add(proposition);
-    proposition2 = new Proposition();
-    proposition2.setContent("proposition 2 for mission prio 2");
-    propositions.add(proposition2);
-    this.service.addProposition2Mission(m_prio3.getId(), propositions);
-
-    Mission m_prio4 = new Mission(" mission prio 3 ");
-    managers = new ArrayList<Manager>();
-    manager = new Manager("manager2");
-    managers.add(manager);
-    m_prio4.setManagers(managers);
-    m_prio4.setPriority(Priority.PRIORITY_3);
-    m_prio4 = this.service.addMission(m_prio4);
-    this.service.addManagers2Mission(m_prio4.getId(),managers);
-
-    propositions = new ArrayList<Proposition>();
-    proposition = new Proposition();
-    proposition.setContent("proposition 1 for mission prio 3");
-    propositions.add(proposition);
-    proposition2 = new Proposition();
-    proposition2.setContent("proposition 2 for mission prio 3");
-    propositions.add(proposition2);
-    this.service.addProposition2Mission(m_prio4.getId(), propositions);
-
-    Mission m_prio5 = new Mission(" mission prio 4 ");
-    managers = new ArrayList<Manager>();
-    manager = new Manager("manager2");
-    managers.add(manager);
-    m_prio5.setManagers(managers);
-    m_prio5.setPriority(Priority.PRIORITY_1);
-    m_prio5 = this.service.addMission(m_prio5);
-    this.service.addManagers2Mission(m_prio5.getId(),managers);
-
-    propositions = new ArrayList<Proposition>();
-    proposition = new Proposition();
-    proposition.setContent("proposition 1 for mission prio 4");
-    propositions.add(proposition);
-    proposition2 = new Proposition();
-    proposition2.setContent("proposition 2 for mission prio 4");
-    propositions.add(proposition2);
-    this.service.addProposition2Mission(m_prio5.getId(), propositions);
-
-    Mission m_prio6 = new Mission(" mission prio 5 ");
-    managers = new ArrayList<Manager>();
-    manager = new Manager("manager2");
-    managers.add(manager);
-    m_prio6.setManagers(managers);
-    m_prio6.setPriority(Priority.PRIORITY_1);
-    m_prio6 = this.service.addMission(m_prio6);
-    this.service.addManagers2Mission(m_prio6.getId(),managers);
-
-    propositions = new ArrayList<Proposition>();
-    proposition = new Proposition();
-    proposition.setContent("proposition 1 for mission prio 5");
-    propositions.add(proposition);
-    proposition2 = new Proposition();
-    proposition2.setContent("proposition 2 for mission prio 5");
-    propositions.add(proposition2);
-    this.service.addProposition2Mission(m_prio6.getId(), propositions);
-
-    assertEquals("should have 8 mission ",8,this.service.getAllMissions().size());
-
-//    this.showInfo();
-    this.showInfoRandom();
-  }
-  public void showInfoRandom(){
-
-    Mission mission = this.service.getRandomMisson("participant_1");
-    if(null != mission){
-      debug(" random mission "+mission.getTitle() + " - "+mission.getPriority().getLabel());
-      debug("========= list propositions  ================");
-      Proposition proposition = this.service.getRandomProposition(mission.getId());
-      if(null != proposition)
-        debug(" random proposition "+proposition.getContent());
-    }
-
-  }
   public void showInfo(){
     List<Mission> missions = this.service.getAllMissions();
     debug("========= list missions ================");

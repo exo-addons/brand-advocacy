@@ -4,15 +4,11 @@ import juzu.Action;
 import juzu.Path;
 import juzu.Response;
 import juzu.View;
-import juzu.request.SecurityContext;
-import org.exoplatform.brandadvocacy.model.Mission;
-import org.exoplatform.brandadvocacy.model.Priority;
-import org.exoplatform.brandadvocacy.model.Proposition;
+import org.exoplatform.brandadvocacy.model.*;
 import org.exoplatform.brandadvocacy.service.IService;
 import org.exoplatform.community.brandadvocacy.portlet.backend.JuZBackEndApplication_;
 
 import javax.inject.Inject;
-import java.util.ArrayList;
 import java.util.List;
 
 /**

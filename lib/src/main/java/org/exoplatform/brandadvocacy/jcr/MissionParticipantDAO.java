@@ -150,17 +150,21 @@ public class MissionParticipantDAO extends DAO {
     });
     return result;
   }
-  public List<MissionParticipant> searchMissionParticipants(String programId, String keyword, int offset, int limit){
+  public List<MissionParticipant> searchMissionParticipants(String programId, String keyword, Status status, int offset, int limit){
     Program program = this.getJcrImplService().getProgramDAO().getProgramById(programId);
     if (null != program){
       StringBuilder sql = new StringBuilder("select * from "+ JCRImpl.MISSION_PARTICIPANT_NODE_TYPE +" where ");
       sql.append("jcr:path like '");
       sql.append(JCRImpl.EXTENSION_PATH).append("/").append(Utils.queryEscape(program.getLabelID())).append("/").append(ProgramDAO.node_prop_missionparticipants);
-      sql.append("'");
+      sql.append("/%'");
       sql.append(" AND ( ").append(node_prop_labelID).append(" like '%"+keyword+"%'");
-      sql.append(" OR "+node_prop_participant_username).append(" like '%"+keyword+"%' ) ");
+      sql.append(" OR ").append(node_prop_participant_username).append(" like '%"+keyword+"%' ) ");
+      if (null != status){
+        sql.append(" AND ").append(node_prop_status).append(" = '").append(status.getValue()).append("'");
+      }
+      sql.append(" ORDER BY "+node_prop_dateCreated+" DESC ");
       List<Node> nodes =  this.getNodesByQuery(sql.toString(),offset,limit);
-      return this.sortByDate(this.transferNodes2Objects(nodes));
+      return this.transferNodes2Objects(nodes);
     }
     return null;
   }

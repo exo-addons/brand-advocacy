@@ -33,7 +33,7 @@ public class Mission {
   private String programId;
   private String title;
   private String third_part_link;
-  private Priority priority;
+  private long priority;
   private Boolean active;
   List<Proposition> propositions;
   private long createdDate;
@@ -55,7 +55,7 @@ public class Mission {
    
   }
   public void init(){
-    this.setPriority(Priority.PRIORITY_1);
+    this.setPriority(0);
     this.setLabelID(UUID.randomUUID().toString());
     this.setCreatedDate(System.currentTimeMillis());
     this.setModifiedDate(System.currentTimeMillis());
@@ -88,11 +88,11 @@ public class Mission {
   public void setThird_part_link(String third_part_link) {
     this.third_part_link = third_part_link;
   }
-  public Priority getPriority() {
+  public long getPriority() {
     return priority;
   }
 
-  public void setPriority(Priority priority) {
+  public void setPriority(long priority) {
     this.priority = priority;
   }
   public Boolean getActive() {
@@ -136,7 +136,7 @@ public class Mission {
     }
   }
   public String toString(){
-    return this.getTitle()+" - "+this.getActive()+" - "+this.getPriority().getLabel();
+    return this.getTitle()+" - "+this.getActive()+" - "+this.getPriority();
   }
 
 

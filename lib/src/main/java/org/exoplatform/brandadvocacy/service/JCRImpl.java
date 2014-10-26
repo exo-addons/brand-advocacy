@@ -226,7 +226,7 @@ public class JCRImpl implements IService {
 
   @Override
   public List<Mission> getAllMissionsByProgramId(String programId) {
-    return this.getMissionDAO().getAllMissionsByProgramId(programId);
+    return this.getMissionDAO().getAllMissionsByProgramId(programId,null);
   }
 
   @Override
@@ -410,8 +410,8 @@ public class JCRImpl implements IService {
   }
 
   @Override
-  public List<MissionParticipant> searchMissionParticipants(String programId, String keyword, int offset, int limit) {
-    return this.getMissionParticipantDAO().searchMissionParticipants(programId,keyword,offset,limit);
+  public List<MissionParticipant> searchMissionParticipants(String programId, String keyword, Status status, int offset, int limit) {
+    return this.getMissionParticipantDAO().searchMissionParticipants(programId,keyword,status,offset,limit);
   }
 
 }

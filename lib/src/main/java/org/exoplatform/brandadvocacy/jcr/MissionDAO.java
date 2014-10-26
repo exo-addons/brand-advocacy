@@ -17,9 +17,7 @@
 package org.exoplatform.brandadvocacy.jcr;
 
 import com.google.common.collect.Lists;
-import org.exoplatform.brandadvocacy.model.Mission;
-import org.exoplatform.brandadvocacy.model.Participant;
-import org.exoplatform.brandadvocacy.model.Priority;
+import org.exoplatform.brandadvocacy.model.*;
 import org.exoplatform.brandadvocacy.service.BrandAdvocacyServiceException;
 import org.exoplatform.brandadvocacy.service.JCRImpl;
 import org.exoplatform.services.log.ExoLogger;
@@ -108,7 +106,7 @@ public class MissionDAO extends DAO {
       missionNode.setProperty(node_prop_labelID,m.getLabelID());
     missionNode.setProperty(node_prop_title, m.getTitle());
     missionNode.setProperty(node_prop_third_part_link, m.getThird_part_link());
-    missionNode.setProperty(node_prop_priority, m.getPriority().getValue());
+    missionNode.setProperty(node_prop_priority, m.getPriority());
     missionNode.setProperty(node_prop_active, m.getActive());
     if (0 != m.getCreatedDate())
       missionNode.setProperty(node_prop_dateCreated, m.getCreatedDate());
@@ -136,7 +134,7 @@ public class MissionDAO extends DAO {
       } else if (name.equals(node_prop_third_part_link)) {
         m.setThird_part_link(p.getString());
       } else if(name.equals(node_prop_priority)){
-        m.setPriority(Priority.getPriority((int) p.getLong()));
+        m.setPriority(p.getLong());
       } else if(name.equals(node_prop_active)){
         m.setActive(p.getBoolean());
       } else if (name.equals(node_prop_dateCreated)) {
@@ -153,14 +151,18 @@ public class MissionDAO extends DAO {
     return null;
   }
 
-  public List<Mission> transferNodes2Objects(List<Node> nodes) {
+  public List<Mission> transferNodes2Objects(List<Node> nodes, Boolean isActive) {
     List<Mission> missions = new ArrayList<Mission>(nodes.size());
     Mission mission;
     for (Node node:nodes){
       try {
         mission = this.transferNode2Object(node);
-        if (null != mission)
-          missions.add(mission);
+        if (null != mission ) {
+          if (null == isActive )
+            missions.add(mission);
+          else if (mission.getActive() == isActive)
+            missions.add(mission);
+        }
       } catch (RepositoryException e) {
         e.printStackTrace();
       }
@@ -185,13 +187,13 @@ public class MissionDAO extends DAO {
     }
     return null;
   }
-  public List<Mission> getAllMissionsByProgramId(String programId){
+  public List<Mission> getAllMissionsByProgramId(String programId,Boolean isActive){
     List<Mission> missions = new ArrayList<Mission>();
     try {
       Node missionHome = this.getOrCreateMissionHome(programId);
       if (null != missionHome){
         NodeIterator nodes =  missionHome.getNodes();
-        return this.transferNodes2Objects(Lists.newArrayList(nodes));
+        return this.transferNodes2Objects(Lists.newArrayList(nodes),isActive);
       }
     } catch (RepositoryException e) {
       log.error("ERROR cannot get all mission in "+programId);
@@ -282,61 +284,6 @@ public class MissionDAO extends DAO {
     }
     return this.getNodesByQuery(sql.toString(),0,0).size();
   }
-
-  public Mission getRandomMission(String programId, String username){
-
-    if(this.getTotalNumberMissions(programId,true,true,0) == 0)
-      return null;
-    List<String> mission_prio1_Ids = this.getMissionIdsByPriority(programId,Priority.PRIORITY_1.getValue());
-    if (mission_prio1_Ids.size() == 0)
-      mission_prio1_Ids = this.getMissionIdsByPriority(programId,Priority.PRIORITY_2.getValue());
-    if (mission_prio1_Ids.size() == 0)
-      mission_prio1_Ids = this.getMissionIdsByPriority(programId,Priority.PRIORITY_3.getValue());
-
-    List<String> missionIds = mission_prio1_Ids;
-    Map<Integer,List<String>> mission_used_ids = this.getMissionIdsByParticipant(programId,username);
-    if(mission_used_ids.size() > 0){
-
-      List<String> mission_used_prio1_ids = mission_used_ids.get(Priority.PRIORITY_1.getValue());
-      List<String> mission_used_prio2_ids = mission_used_ids.get(Priority.PRIORITY_2.getValue());
-      List<String> mission_used_prio3_ids = mission_used_ids.get(Priority.PRIORITY_3.getValue());
-      if(mission_used_prio1_ids.size() == mission_prio1_Ids.size()){
-
-        List<String> mission_prio2_Ids = this.getMissionIdsByPriority(programId,Priority.PRIORITY_2.getValue());
-        if(mission_used_prio2_ids.size() == mission_prio2_Ids.size()){
-          List<String> mission_prio3_Ids = this.getMissionIdsByPriority(programId,Priority.PRIORITY_3.getValue());
-          if(mission_prio3_Ids.size() == mission_used_prio3_ids.size()){
-            missionIds = mission_prio1_Ids;
-          }else{
-            if(mission_prio3_Ids.removeAll(mission_used_prio3_ids)){
-              missionIds = mission_prio3_Ids;
-            }
-          }
-
-        }else{
-          if(mission_prio2_Ids.removeAll(mission_used_prio2_ids)){
-            missionIds = mission_prio2_Ids;
-          }
-        }
-      }else{
-        if(mission_prio1_Ids.removeAll(mission_used_prio1_ids)){
-          missionIds = mission_prio1_Ids;
-        }
-      }
-    }
-    Random random = new Random();
-    int nb = missionIds.size();
-    if(nb > 0){
-      String mid = missionIds.get(random.nextInt(nb));
-      try {
-        Node missionNode = this.getNodeById(mid);
-        return this.transferNode2Object(missionNode);
-      } catch (RepositoryException e) {
-        log.error("cannot get random mission for "+username);
-      }
-    }
-    return null;
-  }
   public List<Mission> getAllMissionsInProgramByParticipant(String programId, String username){
 
     List<Mission> missions = new ArrayList<Mission>();
@@ -361,106 +308,37 @@ public class MissionDAO extends DAO {
     }
     return missions;
   }
-  private List<String> getMissionIdsByPriority(String programId, int priority){
-    List<String> missionIds = new ArrayList<String>();
-    StringBuilder sql = new StringBuilder("select jcr:uuid from "+ JCRImpl.MISSION_NODE_TYPE +" where ");
-    sql.append(node_prop_active).append("= 'true' ");
-    sql.append(" AND ").append(node_prop_program_id).append(" = '").append(programId).append("'");
-    sql.append(" AND ").append(node_prop_priority).append("=").append(priority);
+  public Mission getRandomMission(String programId, String username){
+    List<Mission> activeMissions = this.getAllMissionsByProgramId(programId,true);
+    List<Mission> missionsUsed = this.getAllMissionsInProgramByParticipant(programId,username);
+    List<String> ids = new ArrayList<String>();
 
-    List<Node> nodes =  this.getNodesByQuery(sql.toString(),0,0);
-    for (Node node:nodes){
-      try {
-          missionIds.add(node.getUUID());
-      } catch (RepositoryException e) {
-        log.error("ERROR cannot get mission ids by prio");
-      }
-    }
-    return missionIds;
-  }
-  private Map<Integer,List<String>> getMissionIdsByParticipant(String programId, String username){
-
-    Map<Integer,List<String>> missionIds = new HashMap<Integer, List<String>>();
-    ParticipantDAO participantDAO = this.getJcrImplService().getParticipantDAO();
-    Node participantNode = participantDAO.getNodeByUserName(programId,username);
-    if (null != participantNode){
-      Participant participant = null;
-      try {
-        participant = participantDAO.transferNode2Object(participantNode);
-        Set<String> mids = participant.getMission_ids();
-        Mission mission;
-        List<String> mission_prio1_ids = new ArrayList<String>();
-        List<String> mission_prio2_ids = new ArrayList<String>();
-        List<String> mission_prio3_ids = new ArrayList<String>();
-        for (String mid:mids){
-          mission = this.transferNode2Object(this.getNodeById(mid));
-          mission.checkValid();
-          if (mission.getPriority().equals(Priority.PRIORITY_1)){
-            mission_prio1_ids.add(mission.getId());
-          }else if (mission.getPriority().equals(Priority.PRIORITY_2)){
-            mission_prio2_ids.add(mission.getId());
-          }else if (mission.getPriority().equals(Priority.PRIORITY_3)){
-            mission_prio3_ids.add(mission.getId());
-          }
-        }
-        missionIds.put(Priority.PRIORITY_1.getValue(),mission_prio1_ids);
-        missionIds.put(Priority.PRIORITY_2.getValue(),mission_prio2_ids);
-        missionIds.put(Priority.PRIORITY_3.getValue(),mission_prio3_ids);
-
-      } catch (RepositoryException e) {
-        log.error("=== ERROR getMissionIdsByParticipant for "+username);
-        e.printStackTrace();
-      } catch (BrandAdvocacyServiceException brade){
-        log.error("ERROR "+brade.getMessage());
-      }
-
-    }
-    return missionIds;
-  }
-
-  public Set<String> getMissionIdsAlreadyUsedByParticipant(String programId,String username){
-
-    Set<String> missionIds = new HashSet<String>();
-    ParticipantDAO participantDAO = this.getJcrImplService().getParticipantDAO();
-    Participant participant = participantDAO.getParticipantInProgramByUserName(programId,username);
-    if (null != participant){
-      missionIds = participant.getMission_ids();
-    }
-    return missionIds;
-  }
-  private List<String> getAllMissionIdsInProgram(String programId){
-    List<String> missionIds = new ArrayList<String>();
-    try {
-      Node missionHome = this.getOrCreateMissionHome(programId);
-      if (null != missionHome){
-        NodeIterator nodes =  missionHome.getNodes();
-        while (nodes.hasNext()){
-          if (nodes.nextNode().hasProperty(node_prop_active)){
-            if (nodes.nextNode().getProperty(node_prop_active).getBoolean()){
-              missionIds.add(nodes.nextNode().getProperty("jcr:uuid").getString());
-            }
-          }
+    Iterator<Mission> iterator = activeMissions.iterator();
+    while (iterator.hasNext()){
+      Mission mission = iterator.next();
+      Boolean isDiff = true;
+      for (Mission missionUsed : missionsUsed){
+        if (mission.getId().equals(missionUsed.getId())){
+          iterator.remove();
+          isDiff = false;
         }
       }
-    } catch (RepositoryException e) {
-      log.error("ERROR cannot get all mission in "+programId);
+      if (isDiff){
+        for (int i= 0;i<mission.getPriority();i++){
+          ids.add(mission.getId());
+        }
+      }
     }
-    return missionIds;
-
-  }
-  private List<String> generateMissionIds2BeUsed(String programId, String username){
-    List<String> missionIds = this.getAllMissionIdsInProgram(programId);
-    Set<String> missionIdsUsed = this.getMissionIdsAlreadyUsedByParticipant(programId,username);
-    List<String> missionIdsUsed_arraylist = new ArrayList<String>(missionIdsUsed);
-    missionIds.removeAll(missionIdsUsed_arraylist);
-    return missionIds;
-  }
-  public String getRandomMissionId(String programId, String username){
-    List<String>  missionIds = this.generateMissionIds2BeUsed(programId,username);
-    if (null != missionIds) {
-      Collections.shuffle(missionIds);
-      return missionIds.get(0);
+    if (ids.size() > 0){
+      Collections.shuffle(ids);
+      return this.getMissionById(ids.get(0));
     }
     return null;
+  }
+
+  public List<Mission> sortAllMissionsInProgram(){
+    List<Mission> missions = new LinkedList<Mission>();
+
+    return missions;
   }
 }

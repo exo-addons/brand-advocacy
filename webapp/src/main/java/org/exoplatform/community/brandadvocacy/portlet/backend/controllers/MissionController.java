@@ -1,13 +1,12 @@
 package org.exoplatform.community.brandadvocacy.portlet.backend.controllers;
 
 import juzu.*;
-import juzu.request.SecurityContext;
 import org.exoplatform.brandadvocacy.model.*;
+import org.exoplatform.brandadvocacy.model.Priority;
 import org.exoplatform.brandadvocacy.service.IService;
 import org.exoplatform.community.brandadvocacy.portlet.backend.JuZBackEndApplication_;
 
 import javax.inject.Inject;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
