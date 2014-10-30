@@ -61,8 +61,13 @@ public class JuZFrontEndApplication {
     this.remoteUserName = securityContext.getUserPrincipal().getName();
     if (null == this.currentProgramId)
       this.loadCurrentProgram();
-    if (null != this.currentProgramId)
-      return indexTpl.ok();
+    if (null != this.currentProgramId) {
+      if (null != this.jcrService.getRandomMisson(this.currentProgramId,this.remoteUserName)){
+        return indexTpl.ok();
+      }else{
+        return Response.ok("no mission available");
+      }
+    }
     else
       return Response.ok("no program available");
   }

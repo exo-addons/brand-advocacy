@@ -84,7 +84,7 @@ public class ManagerController {
       if(null != exoUser){
         Boolean mNotif = false;
         if(null != notif){
-          mNotif = "1".equals(notif)? true:false;
+          mNotif = "true".equals(notif)? true:false;
         }
         Program program = this.jcrService.getProgramById(progamId);
         if (null != program){
@@ -107,7 +107,6 @@ public class ManagerController {
     return Response.ok("something went wrong, cannot add user like a manager");
 
   }
-
   @Action
   public void updateProgramManager(String username, String role, String notif){
     String programId = loginController.getCurrentProgramId();
@@ -126,6 +125,30 @@ public class ManagerController {
         }
       }
     }
+  }
+
+  @Ajax
+  @Resource
+  public Response updateAjaxProgramManagerInLine(String username, String action, String val){
+    String programId = loginController.getCurrentProgramId();
+    Manager manager = this.jcrService.getProgramManagerByUserName(programId,username);
+    if(null != manager){
+      if (action.equals("notif")){
+        Boolean mNotif = false;
+        mNotif = "true".equals(val)? true:false;
+        manager.setNotif(mNotif);
+      }else if (action.equals("role")){
+        manager.setRole(Role.getRole(Integer.parseInt(val)));
+      }
+      manager = this.jcrService.updateProgramManager(manager);
+      if (null != manager){
+        if (manager.getUserName().equals(loginController.getCurrentUserName())){
+          loginController.setRights(manager.getRole().getLabel());
+        }
+        return Response.ok("ok");
+      }
+    }
+    return Response.ok("nok");
   }
 
   @Action

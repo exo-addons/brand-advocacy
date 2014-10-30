@@ -1,6 +1,5 @@
 #{decorate path=container.gtmpl/}
 #{param name=missions/}
-#{param name=priorities/}
 #{param name=programId/}
 <!-- keep only this part for ajax -->
 <div class="tab-pane fade" id="generalTab">...</div>
@@ -24,33 +23,25 @@
             <%
                 def mid = mission.getId();
                 def strActiveChkbox = "";
-                if(mission.getActive())
+                def strActiveVal = false;
+                if(mission.getActive()){
                     strActiveChkbox = "checked";
+                    strActiveVal = true;
+                }
             %>
             <tr>
                 <td><a href="@{MissionController.editForm(missionId=mid)}">${mission.getTitle()}</a></td>
                 <td class="center">
-                    <select name="priority" class="input-mini">
-                        <% priorities.each { priority -> %>
-                        <option value="<%= priority.getValue() %>" <% if(mission.getPriority().getValue() == priority.getValue()){ %> selected  <% } %> ><%= priority.getValue() %></option>
+                    <select name="priority" id="priority"  class="input-mini priority">
+                        <% for(def i=1;i<= 100;i++){ %>
+                            <option value="<%=i%>" <% if (mission.getPriority() == i){%> selected <% } %>><%= i %>%</option>
                         <% } %>
                     </select>
                 </td>
-                <td><a href="<%= mission.getThird_part_link()%>"><%= mission.getThird_part_link()%></a></td>
+                <td><a href="<%= mission.getThird_part_link()%>" target="_blank"><%= mission.getThird_part_link()%></a></td>
                 <td class="center">
-                    <div style="width: 60px;" class="iPhoneCheckContainer">
-                        <input type="checkbox" class="yesno mission_active" data-no="No" data-yes="Yes" value="1" style="visibility: hidden;" checked="checked" tabindex="3">
-                        <label style="width: 51px;" class="iPhoneCheckLabelOff">
-                            <span style="margin-right: -41px;">No</span>
-                        </label>
-                        <label style="width: 51px;" class="iPhoneCheckLabelOn">
-                            <span style="margin-left: 0px;">Yes</span>
-                        </label>
-                        <div style="left: 41px;" class="iPhoneCheckHandle">
-                            <div class="iPhoneCheckHandleRight">
-                                <div class="iPhoneCheckHandleCenter"></div>
-                            </div>
-                        </div>
+                    <div class="spaceIphoneChkBox">
+                        <input type="checkbox" name="active" value="<%= strActiveVal%>" style="visibility: hidden;" <%=strActiveChkbox %> data-action="updateMissionInline" data-missionId="<%=mid%>" data-role/>
                     </div>
                 </td>
                 <td class="center actionContainer">

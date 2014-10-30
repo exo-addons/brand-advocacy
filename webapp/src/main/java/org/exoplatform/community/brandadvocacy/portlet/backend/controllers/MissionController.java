@@ -1,6 +1,7 @@
 package org.exoplatform.community.brandadvocacy.portlet.backend.controllers;
 
 import juzu.*;
+import juzu.plugin.ajax.Ajax;
 import org.exoplatform.brandadvocacy.model.*;
 import org.exoplatform.brandadvocacy.model.Priority;
 import org.exoplatform.brandadvocacy.service.IService;
@@ -57,7 +58,7 @@ public class MissionController {
   @View
   public Response addForm(){
 
-    return addTpl.with().set("programId",loginController.getCurrentProgramId()).set("priorities", Priority.values()).ok();
+    return addTpl.with().set("programId",loginController.getCurrentProgramId()).ok();
   }
   @View
   public Response editForm(String missionId){
@@ -88,7 +89,7 @@ public class MissionController {
     Mission mission = new Mission(loginController.getCurrentProgramId(),title);
     mission.setThird_part_link(third_part_link);
     mission.setActive(mActive);
-    mission.setPriority(Priority.getPriority(Integer.parseInt(priority)));
+    mission.setPriority(Integer.parseInt(priority));
     mission = this.missionService.addMission2Program(mission);
     if(null != mission)
       return JuZBackEndApplication_.index("mission_index");
@@ -97,16 +98,16 @@ public class MissionController {
   }
 
   @Action
-  public Response update(String id, String title, String third_part_link, String priority, String active){
+  public Response update(String id, String title, String third_part_link, String priority, String mission_active){
     Mission mission  = this.missionService.getMissionById(id);
     if (null != mission){
       mission.setTitle(title);
       mission.setThird_part_link(third_part_link);
       mission.setCreatedDate(0);
-      mission.setPriority(Priority.getPriority(Integer.parseInt(priority)));
+      mission.setPriority(Integer.parseInt(priority));
       Boolean mActive = false;
-      if (null != active)
-        mActive = active.equals("1") ? true:false;
+      if (null != mission_active)
+        mActive = mission_active.equals("true") ? true:false;
       mission.setActive(mActive);
       mission = this.missionService.updateMission(mission);
       if(null != mission)
@@ -115,8 +116,6 @@ public class MissionController {
         return JuZBackEndApplication_.showError("can not update mission, please try later");
     }
     return JuZBackEndApplication_.showError("something went wrong, cannot update mission not existing");
-
-
   }
   @Action
   public Response delete(String missionId){
@@ -124,6 +123,24 @@ public class MissionController {
     return JuZBackEndApplication_.index("mission_index");
   }
 
+  @Ajax
+  @Resource
+  public Response ajaxUpdateInline(String missionId,String action,String val){
+    Mission mission  = this.missionService.getMissionById(missionId);
+    if (null != mission){
+      if (action.equals("priority")){
+        mission.setPriority(Integer.parseInt(val));
+      }else if (action.equals("active") ){
+        Boolean mActive = false;
+        mActive = val.equals("true") ? true : false;
+        mission.setActive(mActive);
+      }
+      mission = this.missionService.updateMission(mission);
+      if(null != mission)
+        return Response.ok("ok");
+    }
+    return Response.ok("nok");
+  }
 
 }
 

@@ -9,6 +9,6 @@
     <% } %>
     </select>
     <br/>
-    <input type="checkbox" name="notif" id="notif" value="1" />
+    <input type="checkbox" name="notif" id="notif" value="true" />
     <button type="submit">add</button>
 </form>

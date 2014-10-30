@@ -1,9 +1,7 @@
 package org.exoplatform.community.brandadvocacy.portlet.backend.controllers;
 
-import juzu.Action;
-import juzu.Path;
-import juzu.Response;
-import juzu.View;
+import juzu.*;
+import juzu.plugin.ajax.Ajax;
 import org.exoplatform.brandadvocacy.model.*;
 import org.exoplatform.brandadvocacy.service.IService;
 import org.exoplatform.community.brandadvocacy.portlet.backend.JuZBackEndApplication_;
@@ -117,6 +115,23 @@ public class PropositionController {
     }
     return JuZBackEndApplication_.showError(" Proposition does not exist any more to update");
 
+  }
+
+  @Ajax
+  @Resource
+  public Response ajaxUpdatePropositionInline(String propositionId,String action, String val ){
+    Proposition proposition = this.propositionService.getPropositionById(propositionId);
+    if(null != proposition){
+      if (action.equals("active")){
+        Boolean proposActive = false;
+        proposActive = val.equals("true") ? true:false;
+        proposition.setActive(proposActive);
+      }
+      proposition = this.propositionService.updateProposition(proposition);
+      if (null != proposition)
+        return Response.ok("ok");
+    }
+    return Response.ok("nok");
   }
 
 }

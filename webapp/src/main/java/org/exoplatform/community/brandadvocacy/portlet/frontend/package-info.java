@@ -12,7 +12,7 @@
 )
 
 @Scripts({
-        @Script(id = "jquery", value = "jquery/1.10.2/jquery.js"),
+        @Script(id = "jquery", value = "jquery/1.7.2/jquery.js"),
         @Script(
                 id = "bradFTJS", value = "js/brad-frontend.js",location = AssetLocation.SERVER,depends = {"jquery"}
         )

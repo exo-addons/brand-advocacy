@@ -1,9 +1,7 @@
 package org.exoplatform.community.brandadvocacy.portlet.backend.controllers;
 
-import juzu.Path;
-import juzu.Response;
-import juzu.SessionScoped;
-import juzu.View;
+import juzu.*;
+import juzu.plugin.ajax.Ajax;
 import juzu.request.SecurityContext;
 import org.exoplatform.brandadvocacy.model.*;
 import org.exoplatform.brandadvocacy.service.IService;
@@ -103,6 +101,7 @@ public class MissionParticipantController {
           Identity identity = this.identityManager.getOrCreateIdentity(OrganizationIdentityProvider.NAME,missionParticipant.getParticipant_username(),true);
           if (null != identity){
             MissionParticipantDTO missionParticipantDTO = new MissionParticipantDTO();
+            missionParticipantDTO.setId(missionParticipantId);
             missionParticipantDTO.setMission_title(mission.getTitle()+" on "+mission.getThird_part_link());
             missionParticipantDTO.setSize(missionParticipant.getSize().getLabel());
             missionParticipantDTO.setDate_submitted(Utils.convertDateFromLong(missionParticipant.getModifiedDate()));
@@ -130,5 +129,19 @@ public class MissionParticipantController {
     return JuZBackEndApplication_.showError("cannot view participant");
   }
 
+  @Ajax
+  @Resource
+  public Response ajaxUpdateInline(String missionParticipantId,String action,String val){
+    MissionParticipant missionParticipant = this.missionParticipantService.getMissionParticipantById(missionParticipantId);
+    if (null != missionParticipant){
+      if (action.equals("status"))
+        missionParticipant.setStatus(Status.getStatus(Integer.parseInt(val)));
+
+      missionParticipant = this.missionParticipantService.updateMissionParticipantInProgram(loginController.getCurrentProgramId(),missionParticipant);
+      if (null != missionParticipant)
+        return Response.ok("ok");
+    }
+    return Response.ok("nok");
+  }
 
 }

@@ -33,7 +33,7 @@
                          <td><%= missionParticipantDTO.getParticipant_fullName()%></td>
                          <td><%= missionParticipantDTO.getMission_title()%></td>
                          <td class="center">
-                             <select name="status" class="input-medium">
+                             <select name="status" class="input-medium mission-participant-status" data-mission-participant-id="<%=missionParticipantId%>">
                                  <% states.each { status -> %>
                                  <option value="<%= status.getValue() %>" <% if(status.getValue() == missionParticipantDTO.getStatus().getValue() ) { %> selected  <% } %> ><%= status.getLabel() %></option>
                                  <% } %>

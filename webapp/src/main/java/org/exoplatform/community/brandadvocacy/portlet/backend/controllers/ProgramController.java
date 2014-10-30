@@ -70,7 +70,7 @@ public class ProgramController {
           e.printStackTrace();
         }
       }
-      return indexTpl.with().set("roles", Role.values()).set("program", program).set("managers",managerDTOs).ok();
+      return indexTpl.with().set("roles", Role.values()).set("program", program).set("managers",managerDTOs).set("currentUser",loginController.getCurrentUserName()).ok();
     }
     else
       return addTpl.ok();

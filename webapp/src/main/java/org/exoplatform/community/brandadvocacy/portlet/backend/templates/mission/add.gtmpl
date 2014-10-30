@@ -1,5 +1,4 @@
 #{decorate path=container.gtmpl/}
-#{param name=priorities/}
 #{param name=programId/}
 <form action="@{MissionController.add()}" method="POST" role="form">
 <!-- keep only this part for ajax -->
@@ -21,8 +20,8 @@
             <label class="control-label">Priority:</label>
             <div class="controls">
                     <select name="priority" id="priority"  class="input-mini">
-                        <% priorities.each { priority -> %>
-                        <option value="<%= priority.getValue() %>"><%= priority.getValue() %></option>
+                        <% for(def i=1;i<= 100;i++){ %>
+                            <option value="<%=i%>"><%= i %>%</option>
                         <% } %>
                     </select>
             </div>

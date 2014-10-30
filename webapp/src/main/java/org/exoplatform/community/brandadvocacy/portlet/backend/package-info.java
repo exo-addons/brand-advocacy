@@ -14,8 +14,8 @@
   }
 )
 @Scripts({
-//   @Script(id = "jquery", value = "jquery/1.10.2/jquery.js"),
-   @Script(id = "jquery", value = "js/jquery.1.7.2.min.js",location = AssetLocation.SERVER),
+   @Script(id = "jquery", value = "jquery/1.7.2/jquery.js"),
+//   @Script(id = "jquery-full", value = "js/jquery.1.7.2.min.js",location = AssetLocation.SERVER),
    @Script(
     id = "bradBKJS", value = "js/brad-backend.js",location = AssetLocation.SERVER,depends = {"jquery"}
     ),

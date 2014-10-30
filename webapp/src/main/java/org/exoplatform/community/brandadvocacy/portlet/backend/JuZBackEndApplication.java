@@ -1,6 +1,7 @@
 package org.exoplatform.community.brandadvocacy.portlet.backend;
 
 import juzu.*;
+import juzu.plugin.ajax.Ajax;
 import juzu.request.SecurityContext;
 import juzu.template.Template;
 import org.exoplatform.brandadvocacy.model.Manager;
@@ -82,4 +83,11 @@ public class JuZBackEndApplication {
       loginController.setRights(manager.getRole().getLabel());
     }
   }
+
+  @Ajax
+  @Resource
+  public Response ta(){
+    return Response.ok("tao");
+  }
+
 }

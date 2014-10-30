@@ -44,7 +44,7 @@ def strDateSubmitted = missionParticipantDTO.getDate_submitted()
 							<h4 class="ref-user-name"><a href="<%=urlProfile%>" target="_blank"><%= strUserAddress %></a></h4>
 							<div class="row-fluid">
 								<div class="span6">
-								    <% if(null != address){ %>
+								    <% if(null != address && "" != address.getfName()){ %>
                                         <p><b>Address:</b> <span><%= strAddress %></span></p>
                                         <p><b>Phone:</b> <span><%= strPhone%></span></p>
                                         <p><b>Email:</b> <span><%= strEmail%></span></p>
@@ -58,7 +58,7 @@ def strDateSubmitted = missionParticipantDTO.getDate_submitted()
 									<p><b>Submit Date:</b> <span><%= strDateSubmitted %></span></p>
 									<p>
 										<b>Status: </b>
-                                        <select name="status"  class="input-medium mgL10">
+                                        <select name="status" class="input-medium mgL10 mission-participant-status" data-mission-participant-id="<%=missionParticipantDTO.getId()%>">
                                             <% states.each { status -> %>
                                             <option value="<%= status.getValue() %>" <% if(status.getValue() == missionParticipantDTO.getStatus().getValue() ) { %> selected  <% } %> ><%= status.getLabel() %></option>
                                             <% } %>
