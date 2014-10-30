@@ -91,7 +91,9 @@
                                         </select>
                                     </td>
                                     <td class="center">
-                                        <input type="hidden" name="notif" value="true"  />
+                                        <div class="spaceIphoneChkBox">
+                                            <input type="checkbox" name="notif" style="visibility: hidden;"  data-action="" data-role/>
+                                        </div>
                                     </td>
                                     <td class="center actionContainer">
                                         <button class="btn btn-primary" type="submit">Add</button>

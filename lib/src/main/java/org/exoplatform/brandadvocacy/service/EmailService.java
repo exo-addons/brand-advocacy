@@ -39,9 +39,9 @@ public class EmailService {
 
     return body;
   }
-  public void sendNotif2Manager(String missionParticipantId){
+  public void sendNotif2Managers(MissionParticipant missionParticipant){
 
-    MissionParticipant missionParticipant = this.iService.getMissionParticipantById(missionParticipantId);
+//    MissionParticipant missionParticipant = this.iService.getMissionParticipantById(missionParticipantId);
     if (null != missionParticipant){
       Mission mission = this.iService.getMissionById(missionParticipant.getMission_id());
       if (null != mission && mission.getActive()){
@@ -52,7 +52,7 @@ public class EmailService {
           for (Manager manager:managers){
             if (manager.getNotif() && this.canSend2Manager(manager.getRole(),missionParticipant.getStatus())){
               eXoIdentity = this.identityManager.getOrCreateIdentity(OrganizationIdentityProvider.NAME, manager.getUserName(), true);
-
+              log.info("sending email to "+eXoIdentity.getProfile().getEmail()+" role "+manager.getRoleLabel());
             }
           }
         }

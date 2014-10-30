@@ -24,8 +24,8 @@ $(function() {
       $(input).jzAjax("MissionController.ajaxUpdateInline()",{
         data:{missionId:missionId,action:"active",val:active},
         success:function(data){
-          if (data == "nok"){
-            alert("something went wrong, cannot update mission");
+          if (null != data.error){
+            alert(data.msg);
           }
         }
       });
@@ -40,6 +40,8 @@ $(function() {
           }
         }
       });
+    } else if(action == "addNewProgramManager"){
+
     }
 
   });

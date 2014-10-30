@@ -28,21 +28,8 @@
         </div>
         <div class="control-group">
             <label class="control-label">Activated:</label>
-            <input type="checkbox" name="active" id="active" value="1" class="yesno" data-no="No" data-yes="Yes" style="visibility: hidden;" checked="checked" tabindex="3">
-            <div class="controls">
-                <div style="width: 60px;" class="iPhoneCheckContainer">
-                    <label style="width: 51px;" class="iPhoneCheckLabelOff">
-                        <span style="margin-right: -41px;">No</span>
-                    </label>
-                    <label style="width: 51px;" class="iPhoneCheckLabelOn">
-                        <span style="margin-left: 0px;">Yes</span>
-                    </label>
-                    <div style="left: 41px;" class="iPhoneCheckHandle">
-                        <div class="iPhoneCheckHandleRight">
-                            <div class="iPhoneCheckHandleCenter"></div>
-                        </div>
-                    </div>
-                </div>
+            <div class="spaceIphoneChkBox">
+                <input type="checkbox" name="active" style="visibility: hidden;"  data-action="" data-role/>
             </div>
         </div>
         <div class="text-center">

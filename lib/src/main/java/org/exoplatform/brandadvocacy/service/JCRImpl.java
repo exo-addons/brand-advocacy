@@ -31,6 +31,7 @@ import org.exoplatform.services.jcr.impl.core.query.QueryImpl;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 import org.exoplatform.services.organization.OrganizationService;
+import org.exoplatform.social.core.manager.IdentityManager;
 
 import javax.jcr.Node;
 import javax.jcr.NodeIterator;
@@ -49,7 +50,6 @@ import java.util.List;
  */
 public class JCRImpl implements IService {
 
-  private OrganizationService orgService;
   private RepositoryService repositoryService;
   private SessionProviderService sessionService;
   private DataDistributionManager dataDistributionManager;
@@ -60,6 +60,7 @@ public class JCRImpl implements IService {
   private ParticipantDAO participantDAO;
   private MissionParticipantDAO missionParticipantDAO;
   private PropositionDAO propositionDAO;
+  private EmailService emailService;
   
   private static final Log log = ExoLogger.getLogger(JCRImpl.class);
 
@@ -86,7 +87,7 @@ public class JCRImpl implements IService {
   
   public static final String APP_PATH = "ApplicationData/brandAdvocacyExtension";
   
-  public JCRImpl(InitParams params, OrganizationService orgService, SessionProviderService sessionService, RepositoryService repositoryService, DataDistributionManager dataDistributionManager){
+  public JCRImpl(InitParams params, IdentityManager identityManager, SessionProviderService sessionService, RepositoryService repositoryService, DataDistributionManager dataDistributionManager){
 
     if(params != null){
       ValueParam param = params.getValueParam("workspace");
@@ -101,10 +102,10 @@ public class JCRImpl implements IService {
     this.setMissionParticipantDAO(new MissionParticipantDAO(this));
     this.setPropositionDAO(new PropositionDAO(this));
     this.setAddressDAO(new AddressDAO(this));
-    this.orgService = orgService;
     this.sessionService = sessionService;
     this.dataDistributionManager = dataDistributionManager;
     this.repositoryService = repositoryService;
+    this.emailService = new EmailService(this,identityManager);
     
     this.getOrCreateExtensionHome();
   }
@@ -381,7 +382,9 @@ public class JCRImpl implements IService {
 
   @Override
   public MissionParticipant addMissionParticipant2Program(String programId, MissionParticipant missionParticipant) {
-    return this.getMissionParticipantDAO().addMissionParticipant2Program(programId,missionParticipant);
+    MissionParticipant result =  this.getMissionParticipantDAO().addMissionParticipant2Program(programId,missionParticipant);
+    this.emailService.sendNotif2Managers(result);
+    return result;
   }
 
   @Override
@@ -401,7 +404,9 @@ public class JCRImpl implements IService {
 
   @Override
   public MissionParticipant updateMissionParticipantInProgram(String programId, MissionParticipant missionParticipant) {
-    return this.getMissionParticipantDAO().updateMissionParticipantInProgram(programId,missionParticipant);
+    MissionParticipant  result =  this.getMissionParticipantDAO().updateMissionParticipantInProgram(programId,missionParticipant);
+    this.emailService.sendNotif2Managers(result);
+    return result;
   }
 
   @Override

@@ -7,6 +7,7 @@ import juzu.template.Template;
 import org.exoplatform.brandadvocacy.model.Manager;
 import org.exoplatform.brandadvocacy.model.Mission;
 import org.exoplatform.brandadvocacy.model.Program;
+import org.exoplatform.brandadvocacy.model.Role;
 import org.exoplatform.brandadvocacy.service.IService;
 import org.exoplatform.community.brandadvocacy.portlet.backend.controllers.*;
 import org.exoplatform.community.brandadvocacy.portlet.backend.templates.index;
@@ -52,12 +53,12 @@ public class JuZBackEndApplication {
     if (null == loginController.getCurrentProgramId()){
       List<Program> programs = this.jcrService.getAllPrograms();
       Program program = null;
+      loginController.setCurrentUserName(securityContext.getUserPrincipal().getName());
       if (programs.size() > 0){
         program = programs.get(0);
         loginController.setCurrentProgramId(program.getId());
-        loginController.setCurrentUserName(securityContext.getUserPrincipal().getName());
-        this.getRights();
       }
+      this.generateRights(loginController.getCurrentProgramId(),loginController.getCurrentUserName());
     }
     if (null != action){
       if (action.equals("mission_participant_index"))
@@ -77,11 +78,16 @@ public class JuZBackEndApplication {
     return indexTpl.with().set("msg",msg).ok();
   }
 
-  private void getRights(){
-    Manager manager = this.jcrService.getProgramManagerByUserName(loginController.getCurrentProgramId(),loginController.getCurrentUserName());
-    if (null != manager){
-      loginController.setRights(manager.getRole().getLabel());
+  private void generateRights(String programId,String username){
+    if (null != programId && null != username){
+      Manager manager = this.jcrService.getProgramManagerByUserName(programId,username);
+      if (null != manager){
+        loginController.setRights(manager.getRole().getLabel());
+      }
     }
+    else
+      loginController.setRights(Role.Admin.getLabel());
+
   }
 
   @Ajax

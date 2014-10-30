@@ -6,8 +6,13 @@ import org.exoplatform.brandadvocacy.model.*;
 import org.exoplatform.brandadvocacy.model.Priority;
 import org.exoplatform.brandadvocacy.service.IService;
 import org.exoplatform.community.brandadvocacy.portlet.backend.JuZBackEndApplication_;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import javax.inject.Inject;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
 
 /**
@@ -85,7 +90,7 @@ public class MissionController {
 
     Boolean mActive = false;
     if (null != active)
-      mActive = active.equals("1") ? true:false;
+      mActive = active.equals("true") ? true:false;
     Mission mission = new Mission(loginController.getCurrentProgramId(),title);
     mission.setThird_part_link(third_part_link);
     mission.setActive(mActive);
@@ -125,8 +130,12 @@ public class MissionController {
 
   @Ajax
   @Resource
+  @MimeType.JSON
   public Response ajaxUpdateInline(String missionId,String action,String val){
     Mission mission  = this.missionService.getMissionById(missionId);
+    JSONObject jsonObject = new JSONObject();
+    boolean doUpdate = true;
+    String errorMsg = "";
     if (null != mission){
       if (action.equals("priority")){
         mission.setPriority(Integer.parseInt(val));
@@ -134,13 +143,27 @@ public class MissionController {
         Boolean mActive = false;
         mActive = val.equals("true") ? true : false;
         mission.setActive(mActive);
+        if (this.missionService.getAllPropositions(missionId).size() == 0){
+          doUpdate = false;
+        }
       }
-      mission = this.missionService.updateMission(mission);
-      if(null != mission)
-        return Response.ok("ok");
+      if (doUpdate){
+        mission = this.missionService.updateMission(mission);
+        if(null != mission)
+          return Response.ok("ok");
+      }else {
+        errorMsg = "You cannot activate this mission, as there is no proposition";
+      }
+    }else {
+      errorMsg = "mission doesnot exist any more";
     }
-    return Response.ok("nok");
+    try {
+      jsonObject.put("error",true);
+      jsonObject.put("msg",errorMsg);
+    } catch (JSONException e) {
+      e.printStackTrace();
+    }
+    return Response.ok(jsonObject.toString().getBytes());
   }
-
 }
 
