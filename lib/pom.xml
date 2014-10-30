@@ -17,11 +17,11 @@
       <scope>test</scope>
     </dependency>
     
-    <dependency>
+    <!--dependency>
       <groupId>org.exoplatform.ws</groupId>
       <artifactId>exo.ws.rest.core</artifactId>
       <scope>provided</scope>
-    </dependency>
+    </dependency-->
     
     <dependency>
       <groupId>org.exoplatform.jcr</groupId>
@@ -35,9 +35,15 @@
       <scope>provided</scope>
     </dependency>
     
-    <dependency>
+    <!--dependency>
       <groupId>org.exoplatform.ecms</groupId>
       <artifactId>ecms-core-webui</artifactId>
+      <scope>provided</scope>
+    </dependency-->
+
+    <dependency>
+      <groupId>org.exoplatform.social</groupId>
+      <artifactId>social-component-core</artifactId>
       <scope>provided</scope>
     </dependency>
 
