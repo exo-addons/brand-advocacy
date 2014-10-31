@@ -78,8 +78,11 @@
                                     </tr>
                                 <% } %>
                             <% } %>
+                        </tbody>
+                    </table>
+                    <form action="@{ManagerController.add2Program()}" method="POST" role="form">
+                        <table class="uiGrid table table-hover table-striped">
                             <tr>
-                               <form action="@{ManagerController.add2Program()}" method="POST" role="form">
                                     <td>
                                         <input type="input" name="username"/>
                                     </td>
@@ -92,23 +95,17 @@
                                     </td>
                                     <td class="center">
                                         <div class="spaceIphoneChkBox">
-                                            <input type="checkbox" name="notif" style="visibility: hidden;"  data-action="" data-role/>
+                                            <input type="checkbox" name="notif" value="true" checked style="visibility: hidden;"  data-action="" data-role/>
                                         </div>
                                     </td>
                                     <td class="center actionContainer">
                                         <button class="btn btn-primary" type="submit">Add</button>
                                     </td>
-                                </form>
                             </tr>
-                        </tbody>
-                    </table>
+                        </table>
+                    </form>
                 </div>
             </div>
-            <!--div class="control-group">
-                <div class="controls text-right">
-                    <a class="btn btn-primary" href="@{ManagerController.addProgramManagerForm()}">Add</a>
-                </div>
-            </div-->
         </div>
         <div class="control-group">
             <div class="controls text-right">

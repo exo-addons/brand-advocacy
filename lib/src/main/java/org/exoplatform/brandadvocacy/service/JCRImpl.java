@@ -87,7 +87,7 @@ public class JCRImpl implements IService {
   
   public static final String APP_PATH = "ApplicationData/brandAdvocacyExtension";
   
-  public JCRImpl(InitParams params, IdentityManager identityManager, SessionProviderService sessionService, RepositoryService repositoryService, DataDistributionManager dataDistributionManager){
+  public JCRImpl(InitParams params, SessionProviderService sessionService, RepositoryService repositoryService, DataDistributionManager dataDistributionManager){
 
     if(params != null){
       ValueParam param = params.getValueParam("workspace");
@@ -105,7 +105,6 @@ public class JCRImpl implements IService {
     this.sessionService = sessionService;
     this.dataDistributionManager = dataDistributionManager;
     this.repositoryService = repositoryService;
-    this.emailService = new EmailService(this,identityManager);
     
     this.getOrCreateExtensionHome();
   }
@@ -351,8 +350,8 @@ public class JCRImpl implements IService {
   }
 
   @Override
-  public List<Proposition> getAllPropositions(String missionId) {
-    return this.getPropositionDAO().getAllPropositions(missionId);
+  public List<Proposition> getAllPropositions(String missionId,Boolean isActive) {
+    return this.getPropositionDAO().getAllPropositions(missionId,isActive);
   }
 
   @Override
@@ -383,7 +382,7 @@ public class JCRImpl implements IService {
   @Override
   public MissionParticipant addMissionParticipant2Program(String programId, MissionParticipant missionParticipant) {
     MissionParticipant result =  this.getMissionParticipantDAO().addMissionParticipant2Program(programId,missionParticipant);
-    this.emailService.sendNotif2Managers(result);
+//    this.emailService.sendNotif2Managers(result);
     return result;
   }
 
@@ -405,7 +404,7 @@ public class JCRImpl implements IService {
   @Override
   public MissionParticipant updateMissionParticipantInProgram(String programId, MissionParticipant missionParticipant) {
     MissionParticipant  result =  this.getMissionParticipantDAO().updateMissionParticipantInProgram(programId,missionParticipant);
-    this.emailService.sendNotif2Managers(result);
+//    this.emailService.sendNotif2Managers(result);
     return result;
   }
 

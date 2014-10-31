@@ -7,7 +7,7 @@
 		<!-- Popupp -->
 		<div class="uiPopup UIDragObject NormalStyle" style="display: block; left: 330px; top: 50px; visibility: visible; width: 540px; z-index: 4;">
 			<div class="popupHeader clearfix">
-				<a onclick="" title="Close Window" class="uiIconClose pull-right"></a>
+				<a href="@{MissionController.editForm(missionId=missionId)}" title="Close Window" class="uiIconClose pull-right"></a>
 				<span class="PopupTitle popupTitle">Add a new Proposition</span>
 			</div>
 			<div class="PopupContent popupContent">
@@ -21,18 +21,9 @@
 					<div class="row-fluid control-group">
 						<label class="control-label span2">Activated:</label>
 						<div class="controls">
-							<div class="iPhoneCheckContainer" style="width: 60px;">
-								<input type="checkbox" tabindex="3" checked="checked" style="visibility: hidden;"  name="active" id="active"  value="1" data-yes="Yes" data-no="No" class="yesno" >
-								<label class="iPhoneCheckLabelOff" style="width: 51px;">
-									<span style="margin-right: -1px;">No</span>
-									</label><label class="iPhoneCheckLabelOn" style="width: 11px;">
-									<span style="margin-left: -40px;">Yes</span>
-									</label><div class="iPhoneCheckHandle" style="left: 1px;">
-									<div class="iPhoneCheckHandleRight">
-										<div class="iPhoneCheckHandleCenter"></div>
-									</div>
-								</div>
-							</div>
+                            <div class="spaceIphoneChkBox">
+                                <input type="checkbox" name="active" value="true" checked style="visibility: hidden;"  data-action="" data-role/>
+                            </div>
 						</div>
 					</div>
 				</div>

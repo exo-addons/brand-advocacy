@@ -157,8 +157,10 @@ public class MissionParticipantDAO extends DAO {
       sql.append("jcr:path like '");
       sql.append(JCRImpl.EXTENSION_PATH).append("/").append(Utils.queryEscape(program.getLabelID())).append("/").append(ProgramDAO.node_prop_missionparticipants);
       sql.append("/%'");
-      sql.append(" AND ( ").append(node_prop_labelID).append(" like '%"+keyword+"%'");
-      sql.append(" OR ").append(node_prop_participant_username).append(" like '%"+keyword+"%' ) ");
+      if (null != keyword) {
+        sql.append(" AND ( ").append(node_prop_labelID).append(" like '%" + keyword + "%'");
+        sql.append(" OR ").append(node_prop_participant_username).append(" like '%" + keyword + "%' ) ");
+      }
       if (null != status){
         sql.append(" AND ").append(node_prop_status).append(" = '").append(status.getValue()).append("'");
       }

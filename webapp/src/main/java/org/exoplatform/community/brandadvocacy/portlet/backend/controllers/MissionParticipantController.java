@@ -2,11 +2,13 @@ package org.exoplatform.community.brandadvocacy.portlet.backend.controllers;
 
 import juzu.*;
 import juzu.plugin.ajax.Ajax;
+import juzu.request.RequestContext;
 import juzu.request.SecurityContext;
 import org.exoplatform.brandadvocacy.model.*;
 import org.exoplatform.brandadvocacy.service.IService;
 import org.exoplatform.brandadvocacy.service.Utils;
 import org.exoplatform.community.brandadvocacy.portlet.backend.JuZBackEndApplication_;
+import org.exoplatform.community.brandadvocacy.portlet.backend.models.MissionDTO;
 import org.exoplatform.community.brandadvocacy.portlet.backend.models.MissionParticipantDTO;
 import org.exoplatform.community.brandadvocacy.portlet.backend.models.ParticipantDTO;
 import org.exoplatform.services.organization.OrganizationService;
@@ -43,6 +45,10 @@ public class MissionParticipantController {
   @Path("mission_participant/view.gtmpl")
   org.exoplatform.community.brandadvocacy.portlet.backend.templates.mission_participant.view viewTpl;
 
+  @Inject
+  @Path("mission_participant/add.gtmpl")
+  org.exoplatform.community.brandadvocacy.portlet.backend.templates.mission_participant.add addTpl;
+
 
   @Inject
   public MissionParticipantController(OrganizationService organizationService,IdentityManager identityManager ,IService iService){
@@ -59,35 +65,10 @@ public class MissionParticipantController {
       return ErrorTpl.ok();
 
   }
-
   public Response list(){
-
     String programId = loginController.getCurrentProgramId();
-    List<MissionParticipantDTO> missionParticipantDTOs = new ArrayList<MissionParticipantDTO>();
-    MissionParticipantDTO missionParticipantDTO;
-    Mission mission;
     List<MissionParticipant>  missionParticipants = this.missionParticipantService.getAllMissionParticipantsInProgram(programId);
-    User exoUser;
-    for (MissionParticipant missionParticipant : missionParticipants){
-      try {
-        exoUser = this.organizationService.getUserHandler().findUserByName(missionParticipant.getParticipant_username());
-        if(null != exoUser){
-          mission = this.missionParticipantService.getMissionById(missionParticipant.getMission_id());
-          if (null != mission){
-            missionParticipantDTO = new MissionParticipantDTO();
-            missionParticipantDTO.setId(missionParticipant.getId());
-            missionParticipantDTO.setMission_title(mission.getTitle());
-            missionParticipantDTO.setParticipant_fullName(exoUser.getFirstName()+ " "+exoUser.getLastName());
-            missionParticipantDTO.setStatus(missionParticipant.getStatus());
-            missionParticipantDTO.setUrl_submitted(missionParticipant.getUrl_submitted());
-            missionParticipantDTO.setDate_submitted(Utils.convertDateFromLong(missionParticipant.getModifiedDate()));
-            missionParticipantDTOs.add(missionParticipantDTO);
-          }
-        }
-      } catch (Exception e) {
-        e.printStackTrace();
-      }
-    }
+    List<MissionParticipantDTO> missionParticipantDTOs = this.transfers2DTOs(missionParticipants);
     return listTpl.with().set("missionParticipantDTOs",missionParticipantDTOs).set("states", Status.values()).ok();
   }
 
@@ -131,7 +112,7 @@ public class MissionParticipantController {
 
   @Ajax
   @Resource
-  public Response ajaxUpdateInline(String missionParticipantId,String action,String val){
+  public Response ajaxUpdateMPInline(String missionParticipantId,String action,String val){
     MissionParticipant missionParticipant = this.missionParticipantService.getMissionParticipantById(missionParticipantId);
     if (null != missionParticipant){
       if (action.equals("status"))
@@ -144,4 +125,43 @@ public class MissionParticipantController {
     return Response.ok("nok");
   }
 
+  @Action
+  public Response search(String keyword){
+    String programId = loginController.getCurrentProgramId();
+    List<MissionParticipant>  missionParticipants = this.missionParticipantService.searchMissionParticipants(programId,keyword,null,0,0);
+    List<MissionParticipantDTO> missionParticipantDTOs = this.transfers2DTOs(missionParticipants);
+    return MissionParticipantController_.displayMissionParticipants(missionParticipantDTOs);
+  }
+  @View
+  public Response.Content displayMissionParticipants(List<MissionParticipantDTO> missionParticipantDTOs){
+    return addTpl.with().set("missionParticipantDTOs",missionParticipantDTOs).set("states", Status.values()).ok();
+  }
+
+  private List<MissionParticipantDTO> transfers2DTOs(List<MissionParticipant> missionParticipants){
+    List<MissionParticipantDTO> missionParticipantDTOs = new ArrayList<MissionParticipantDTO>();
+    MissionParticipantDTO missionParticipantDTO;
+    Mission mission;
+    User exoUser;
+    for (MissionParticipant missionParticipant : missionParticipants){
+      try {
+        exoUser = this.organizationService.getUserHandler().findUserByName(missionParticipant.getParticipant_username());
+        if(null != exoUser){
+          mission = this.missionParticipantService.getMissionById(missionParticipant.getMission_id());
+          if (null != mission){
+            missionParticipantDTO = new MissionParticipantDTO();
+            missionParticipantDTO.setId(missionParticipant.getId());
+            missionParticipantDTO.setMission_title(mission.getTitle());
+            missionParticipantDTO.setParticipant_fullName(exoUser.getFirstName()+ " "+exoUser.getLastName());
+            missionParticipantDTO.setStatus(missionParticipant.getStatus());
+            missionParticipantDTO.setUrl_submitted(missionParticipant.getUrl_submitted());
+            missionParticipantDTO.setDate_submitted(Utils.convertDateFromLong(missionParticipant.getModifiedDate()));
+            missionParticipantDTOs.add(missionParticipantDTO);
+          }
+        }
+      } catch (Exception e) {
+        e.printStackTrace();
+      }
+    }
+    return missionParticipantDTOs;
+  }
 }

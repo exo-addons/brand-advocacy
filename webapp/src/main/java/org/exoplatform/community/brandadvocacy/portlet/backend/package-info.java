@@ -17,6 +17,12 @@
    @Script(id = "jquery", value = "jquery/1.7.2/jquery.js"),
 //   @Script(id = "jquery-full", value = "js/jquery.1.7.2.min.js",location = AssetLocation.SERVER),
    @Script(
+    id = "ckeditor", value = "js/ckeditor/ckeditor.js",location = AssetLocation.SERVER,depends = {"jquery"}
+   ),
+   @Script(
+   id = "ckeditorAdapters", value = "js/ckeditor/adapters/jquery.js",location = AssetLocation.SERVER,depends = {"jquery"}
+   ),
+   @Script(
     id = "bradBKJS", value = "js/brad-backend.js",location = AssetLocation.SERVER,depends = {"jquery"}
     ),
    @Script(id="iphonePlugin", value="js/iphone-style-checkboxes.js",location = AssetLocation.SERVER,depends = {"jquery"})

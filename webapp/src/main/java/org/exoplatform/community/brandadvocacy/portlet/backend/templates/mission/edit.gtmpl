@@ -10,9 +10,8 @@ if(mission != null){
         strActiveVal = true;
     }
     def missionId = mission.getId();
-
     def programId = mission.getProgramId();
-
+    def canActivate = false;
 %>
 <form action="@{MissionController.update()}" method="POST" role="form">
     <input type ="hidden" name="id" id="id"  value="<%= missionId %>" />
@@ -52,6 +51,7 @@ if(mission != null){
                                         def strActiveChkboxProposition = "";
                                         def strPropositionActiveVal = false;
                                         if(proposition.getActive()){
+                                            canActivate = true;
                                             strActiveChkboxProposition = "checked";
                                             strPropositionActiveVal = true;
                                         }
@@ -105,9 +105,13 @@ if(mission != null){
                 <div class="control-group">
                     <label class="control-label">Activated:</label>
                     <div class="controls">
+                        <% if (canActivate){%>
                         <div class="spaceIphoneChkBox">
-                            <input type="checkbox" name="mission_active" id="mission_active" value="<%=strActiveVal%>" style="visibility: hidden;" <% if(mission.getActive()){ %> checked="checked" <% } %> tabindex="3">
+                            <input type="checkbox" name="mission_active" id="mission_active" value="<%=strActiveVal%>" style="visibility: hidden;" <% if(mission.getActive()){ %> checked <% } %> tabindex="3">
                         </div>
+                        <% }else{ %>
+                        Disabled<small>(there is no active proposition)</small>
+                        <% } %>
                     </div>
                 </div>
                 <div class="text-center">

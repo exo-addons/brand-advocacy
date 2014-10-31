@@ -65,7 +65,7 @@ public class PropositionController {
   public Response list(String mid){
     Mission mission =  this.propositionService.getMissionById(mid);
     if(null != mission){
-      List<Proposition> propositions = this.propositionService.getAllPropositions(mission.getId());
+      List<Proposition> propositions = this.propositionService.getAllPropositions(mission.getId(),null);
       return listTpl.with().set("priorities", Priority.values()).set("mission",mission).set("propositions",propositions).ok();
     }
     return JuZBackEndApplication_.showError("cannot find proposition to update");
@@ -77,7 +77,7 @@ public class PropositionController {
     if (null != mission){
       Boolean proposActive = false;
       if (null != active)
-        proposActive = active.equals("1") ? true:false;
+        proposActive = active.equals("true") ? true:false;
       Proposition proposition = new Proposition(content);
       proposition.setMission_id(missionId);
       proposition.setActive(proposActive);

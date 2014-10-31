@@ -16,6 +16,7 @@
  */
 package org.exoplatform.brandadvocacy.jcr;
 
+import com.google.common.collect.Lists;
 import org.exoplatform.brandadvocacy.model.Mission;
 import org.exoplatform.brandadvocacy.model.Program;
 import org.exoplatform.brandadvocacy.model.Proposition;
@@ -106,14 +107,17 @@ public class PropositionDAO extends DAO {
 
     return null;
   }
-  private List<Proposition> transferNodes2Objects(List<Node> nodes){
+  private List<Proposition> transferNodes2Objects(List<Node> nodes,Boolean isActive){
     List<Proposition> propositions = new ArrayList<Proposition>(nodes.size());
     Proposition aPropostion;
     for (Node node:nodes){
       try {
         aPropostion = this.transferNode2Object(node);
         if(null != aPropostion){
-          propositions.add(aPropostion);
+          if (null == isActive)
+            propositions.add(aPropostion);
+          else if (aPropostion.getActive() == isActive)
+            propositions.add(aPropostion);
         }
       } catch (RepositoryException e) {
         e.printStackTrace();
@@ -147,7 +151,7 @@ public class PropositionDAO extends DAO {
     sql.append(node_prop_labelID).append(" like '%"+keyword+"%'");
     sql.append(" OR "+node_prop_content).append(" like '%"+keyword+"%'");
     List<Node> nodes =  this.getNodesByQuery(sql.toString(),offset,limit);
-    return this.transferNodes2Objects(nodes);
+    return this.transferNodes2Objects(nodes,null);
   }
 
   public Proposition addProposition2Mission(Proposition proposition){
@@ -174,26 +178,29 @@ public class PropositionDAO extends DAO {
 
     return null;
   }
-  public List<Proposition> getAllPropositions(String mid){
-    List<Proposition> propositions = new ArrayList<Proposition>();
+  public List<Proposition> getAllPropositions(String mid,Boolean isActive){
+
     try {
 
       Node propositionHomeNode = this.getOrCreatePropositionHome(mid);
       if (null != propositionHomeNode){
         NodeIterator nodes = propositionHomeNode.getNodes();
+        return this.transferNodes2Objects(Lists.newArrayList(nodes),isActive);
+/*
         Node propositionNode = null;
         Proposition aProposition = null;
         while (nodes.hasNext()) {
           propositionNode = (Node) nodes.next();
-          aProposition = this.transferNode2Object(propositionNode);
+          aProposition = this.transferNode2Object(propositionNode,isActive);
           if (null != aProposition)
             propositions.add(aProposition);
         }
+*/
       }
     } catch (RepositoryException e) {
       log.error("==== ERROR get all propositions "+e.getMessage() );
     }
-    return propositions;
+    return null;
   }
   public Proposition updateProposition(Proposition proposition){
     try {

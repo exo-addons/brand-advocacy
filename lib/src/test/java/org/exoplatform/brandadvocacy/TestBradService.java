@@ -113,19 +113,19 @@ public class TestBradService extends AbstractTest {
     for (Mission mission:missions){
       currentMission = mission;
     }
-    int nbPropositions = this.service.getAllPropositions(currentMission.getId()).size();
+    int nbPropositions = this.service.getAllPropositions(currentMission.getId(),null).size();
     Proposition proposition1 = new Proposition();
     proposition1.setContent(" i am proposition 1");
     proposition1.setMission_id(currentMission.getId());
     proposition1 = this.service.addProposition2Mission(proposition1);
-    assertEquals("should have 1 more proposition",nbPropositions+1,this.service.getAllPropositions(currentMission.getId()).size());
+    assertEquals("should have 1 more proposition",nbPropositions+1,this.service.getAllPropositions(currentMission.getId(),null).size());
 
     proposition1.setContent("new content");
     proposition1 = this.service.updateProposition(proposition1);
     assertEquals("new content should be new content ","new content",proposition1.getContent());
-    nbPropositions = this.service.getAllPropositions(currentMission.getId()).size();
+    nbPropositions = this.service.getAllPropositions(currentMission.getId(),null).size();
     this.service.removeProposition(proposition1.getId());
-    assertEquals("should reduce 1 proposition",nbPropositions-1,this.service.getAllPropositions(currentMission.getId()).size());
+    assertEquals("should reduce 1 proposition",nbPropositions-1,this.service.getAllPropositions(currentMission.getId(),null).size());
 
     Proposition proposition2 = new Proposition();
     proposition2.setContent(" i am proposition 2");

@@ -6,6 +6,7 @@ import org.exoplatform.brandadvocacy.model.*;
 import org.exoplatform.brandadvocacy.model.Priority;
 import org.exoplatform.brandadvocacy.service.IService;
 import org.exoplatform.community.brandadvocacy.portlet.backend.JuZBackEndApplication_;
+import org.exoplatform.community.brandadvocacy.portlet.backend.models.MissionDTO;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -13,6 +14,7 @@ import javax.inject.Inject;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -70,8 +72,9 @@ public class MissionController {
 
     Mission mission =  this.missionService.getMissionById(missionId);
     if(null != mission){
-      List<Proposition> propositions = this.missionService.getAllPropositions(mission.getId());
-      return editTpl.with().set("priorities", Priority.values()).set("mission",mission).set("propositions",propositions).ok();
+      MissionDTO missionDTO = new MissionDTO(mission.getProgramId(),mission.getId(),mission.getTitle(),mission.getPriority(),mission.getThird_part_link(),mission.getActive());
+      List<Proposition> propositions = this.missionService.getAllPropositions(mission.getId(),null);
+      return editTpl.with().set("priorities", Priority.values()).set("mission",missionDTO).set("propositions",propositions).ok();
     }
     return Response.ok("mission not found").withMimeType("text/html; charset=UTF-8").withHeader("Cache-Control", "no-cache");
   }
@@ -81,8 +84,14 @@ public class MissionController {
     int _page = page != null ? Integer.parseInt(page) : 0;
     String programId = loginController.getCurrentProgramId();
     List<Mission> missions = this.missionService.getAllMissionsByProgramId(programId);
-
-      return listTpl.with().set("priorities", Priority.values()).set("programId",programId).set("missions",missions).ok();
+    List<MissionDTO> missionDTOs = new LinkedList<MissionDTO>();
+    MissionDTO missionDTO;
+    for (Mission mission:missions){
+      missionDTO = new MissionDTO(mission.getProgramId(),mission.getId(),mission.getTitle(),mission.getPriority(),mission.getThird_part_link(),mission.getActive());
+      missionDTO.setPropositions(this.missionService.getAllPropositions(mission.getId(),true));
+      missionDTOs.add(missionDTO);
+    }
+      return listTpl.with().set("priorities", Priority.values()).set("programId",programId).set("missions",missionDTOs).ok();
   }
 
   @Action
@@ -143,7 +152,7 @@ public class MissionController {
         Boolean mActive = false;
         mActive = val.equals("true") ? true : false;
         mission.setActive(mActive);
-        if (this.missionService.getAllPropositions(missionId).size() == 0){
+        if (this.missionService.getAllPropositions(missionId,true).size() == 0){
           doUpdate = false;
         }
       }

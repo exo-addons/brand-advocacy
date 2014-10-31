@@ -27,6 +27,9 @@ $(function() {
           if (null != data.error){
             alert(data.msg);
           }
+          else{
+
+          }
         }
       });
     } else if (action == "updatePropositionInline"){
@@ -90,7 +93,7 @@ $(function() {
     var jStatus = $(this);
     var missionParticipantId =jStatus.attr("data-mission-participant-id");
     var val = jStatus.val();
-    jStatus.jzAjax("MissionParticipantController.ajaxUpdateInline()",{
+    jStatus.jzAjax("MissionParticipantController.ajaxUpdateMPInline ()",{
       data:{missionParticipantId:missionParticipantId,action:"status",val:val},
       success:function(data){
         if (data == "nok"){
@@ -99,6 +102,11 @@ $(function() {
       }
     });
   });
+
+
+  $( document ).ready( function() {
+    $( 'textarea' ).ckeditor();
+  } );
 
   function bradBackend(){
 

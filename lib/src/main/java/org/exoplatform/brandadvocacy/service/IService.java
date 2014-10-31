@@ -67,7 +67,7 @@ public interface IService {
   public List<Manager> getAllManagersInProgram(String programId);
 
   public Proposition addProposition2Mission(Proposition proposition);
-  public List<Proposition> getAllPropositions(String missionId);
+  public List<Proposition> getAllPropositions(String missionId,Boolean isActive);
   public Proposition getPropositionById(String id);
   public Proposition getRandomProposition(String missionId);
   public String removeProposition(String propositionId);
