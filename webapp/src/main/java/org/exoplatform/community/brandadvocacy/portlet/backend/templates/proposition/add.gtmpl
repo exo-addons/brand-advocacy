@@ -22,7 +22,7 @@
 						<label class="control-label span2">Activated:</label>
 						<div class="controls">
                             <div class="spaceIphoneChkBox">
-                                <input type="checkbox" name="active" value="true" checked style="visibility: hidden;"  data-action="" data-role/>
+                                <input type="checkbox" name="active" value="false" style="visibility: hidden;"  data-action="" data-role/>
                             </div>
 						</div>
 					</div>

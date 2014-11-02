@@ -46,7 +46,7 @@ public class Proposition {
   private void init(){
     this.setLabelID(UUID.randomUUID().toString());
     this.setNumberUsed(0);
-    this.setActive(true);
+    this.setActive(false);
 
   }
   public String getLabelID() {

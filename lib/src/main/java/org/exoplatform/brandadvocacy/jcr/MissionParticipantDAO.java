@@ -150,25 +150,48 @@ public class MissionParticipantDAO extends DAO {
     });
     return result;
   }
-  public List<MissionParticipant> searchMissionParticipants(String programId, String keyword, Status status, int offset, int limit){
-    Program program = this.getJcrImplService().getProgramDAO().getProgramById(programId);
+  public List<MissionParticipant> searchMissionParticipants(org.exoplatform.brandadvocacy.model.Query query){
+    Program program = this.getJcrImplService().getProgramDAO().getProgramById(query.getProgramId());
     if (null != program){
       StringBuilder sql = new StringBuilder("select * from "+ JCRImpl.MISSION_PARTICIPANT_NODE_TYPE +" where ");
       sql.append("jcr:path like '");
       sql.append(JCRImpl.EXTENSION_PATH).append("/").append(Utils.queryEscape(program.getLabelID())).append("/").append(ProgramDAO.node_prop_missionparticipants);
       sql.append("/%'");
-      if (null != keyword) {
-        sql.append(" AND ( ").append(node_prop_labelID).append(" like '%" + keyword + "%'");
-        sql.append(" OR ").append(node_prop_participant_username).append(" like '%" + keyword + "%' ) ");
+      if (null != query.getKeyword()) {
+        sql.append(" AND ( ").append(node_prop_labelID).append(" like '%" + query.getKeyword() + "%'");
+        sql.append(" OR ").append(node_prop_participant_username).append(" like '%" + query.getKeyword() + "%' ");
+        sql.append(" ) ");
       }
-      if (null != status){
-        sql.append(" AND ").append(node_prop_status).append(" = '").append(status.getValue()).append("'");
+      if (query.getStatus() != 0){
+        sql.append(" AND ").append(node_prop_status).append(" = '").append(query.getStatus()).append("'");
       }
       sql.append(" ORDER BY "+node_prop_dateCreated+" DESC ");
-      List<Node> nodes =  this.getNodesByQuery(sql.toString(),offset,limit);
+      List<Node> nodes =  this.getNodesByQuery(sql.toString(),query.getOffset(),query.getLimit());
       return this.transferNodes2Objects(nodes);
     }
     return null;
+  }
+
+  public int getTotalMissionParticipants(org.exoplatform.brandadvocacy.model.Query query){
+
+    Program program = this.getJcrImplService().getProgramDAO().getProgramById(query.getProgramId());
+    if (null != program) {
+      StringBuilder sql = new StringBuilder("select * from " + JCRImpl.MISSION_PARTICIPANT_NODE_TYPE + " where ");
+      sql.append("jcr:path like '");
+      sql.append(JCRImpl.EXTENSION_PATH).append("/").append(Utils.queryEscape(program.getLabelID())).append("/").append(ProgramDAO.node_prop_missionparticipants);
+      sql.append("/%'");
+      if (null != query.getKeyword()) {
+        sql.append(" AND ( ").append(node_prop_labelID).append(" like '%" + query.getKeyword() + "%'");
+        sql.append(" OR ").append(node_prop_participant_username).append(" like '%" + query.getKeyword() + "%' ");
+        sql.append(" ) ");
+      }
+      if (query.getStatus() != 0) {
+        sql.append(" AND ").append(node_prop_status).append(" = '").append(query.getStatus()).append("'");
+      }
+      List<Node> nodes = this.getNodesByQuery(sql.toString(), 0, 0);
+      return nodes.size();
+    }
+    return 0;
   }
 
   public MissionParticipant addMissionParticipant2Program(String programId, MissionParticipant missionParticipant){

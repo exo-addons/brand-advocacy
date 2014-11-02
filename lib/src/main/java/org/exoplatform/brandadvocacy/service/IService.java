@@ -79,6 +79,7 @@ public interface IService {
   public List<MissionParticipant> getAllMissionParticipantsInProgramByParticipant(String programId,String username);
   public void removeMissionParticipant(String id);
   public MissionParticipant getMissionParticipantById(String mpId);
-  public List<MissionParticipant> searchMissionParticipants(String programId, String keyword,Status status, int offset, int limit);
+  public List<MissionParticipant> searchMissionParticipants(Query query);
   public MissionParticipant updateMissionParticipantInProgram(String programId, MissionParticipant missionParticipant);
+  public int getTotalMissionParticipants(Query query);
 }

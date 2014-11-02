@@ -409,13 +409,18 @@ public class JCRImpl implements IService {
   }
 
   @Override
+  public int getTotalMissionParticipants(Query query) {
+    return this.getMissionParticipantDAO().getTotalMissionParticipants(query);
+  }
+
+  @Override
   public void removeMissionParticipant(String id) {
     this.getMissionParticipantDAO().removeMissionParticipant(id);
   }
 
   @Override
-  public List<MissionParticipant> searchMissionParticipants(String programId, String keyword, Status status, int offset, int limit) {
-    return this.getMissionParticipantDAO().searchMissionParticipants(programId,keyword,status,offset,limit);
+  public List<MissionParticipant> searchMissionParticipants(Query query) {
+    return this.getMissionParticipantDAO().searchMissionParticipants(query);
   }
 
 }

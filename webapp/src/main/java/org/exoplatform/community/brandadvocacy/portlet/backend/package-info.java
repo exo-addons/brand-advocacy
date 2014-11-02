@@ -38,6 +38,7 @@
 package org.exoplatform.community.brandadvocacy.portlet.backend;
 import juzu.asset.AssetLocation;
 import juzu.plugin.asset.*;
+import juzu.plugin.servlet.Servlet;
 import juzu.plugin.webjars.WebJar;
 import juzu.plugin.webjars.WebJars;
 import juzu.Application;

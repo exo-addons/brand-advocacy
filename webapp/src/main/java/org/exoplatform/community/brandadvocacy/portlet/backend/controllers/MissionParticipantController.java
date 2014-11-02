@@ -1,8 +1,10 @@
 package org.exoplatform.community.brandadvocacy.portlet.backend.controllers;
 
 import juzu.*;
+import juzu.impl.request.Request;
 import juzu.plugin.ajax.Ajax;
 import juzu.request.RequestContext;
+import juzu.request.RequestParameter;
 import juzu.request.SecurityContext;
 import org.exoplatform.brandadvocacy.model.*;
 import org.exoplatform.brandadvocacy.service.IService;
@@ -10,16 +12,20 @@ import org.exoplatform.brandadvocacy.service.Utils;
 import org.exoplatform.community.brandadvocacy.portlet.backend.JuZBackEndApplication_;
 import org.exoplatform.community.brandadvocacy.portlet.backend.models.MissionDTO;
 import org.exoplatform.community.brandadvocacy.portlet.backend.models.MissionParticipantDTO;
+import org.exoplatform.community.brandadvocacy.portlet.backend.models.Pagination;
 import org.exoplatform.community.brandadvocacy.portlet.backend.models.ParticipantDTO;
 import org.exoplatform.services.organization.OrganizationService;
 import org.exoplatform.services.organization.User;
 import org.exoplatform.social.core.identity.model.Identity;
 import org.exoplatform.social.core.identity.provider.OrganizationIdentityProvider;
 import org.exoplatform.social.core.manager.IdentityManager;
+import org.exoplatform.webui.application.WebuiRequestContext;
+import org.json.JSONObject;
 
 import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by exoplatform on 10/12/14.
@@ -27,6 +33,7 @@ import java.util.List;
 @SessionScoped
 public class MissionParticipantController {
 
+  final static int NUMBER_RECORDS = 5;
   OrganizationService organizationService;
   IdentityManager identityManager;
   IService missionParticipantService;
@@ -46,8 +53,8 @@ public class MissionParticipantController {
   org.exoplatform.community.brandadvocacy.portlet.backend.templates.mission_participant.view viewTpl;
 
   @Inject
-  @Path("mission_participant/add.gtmpl")
-  org.exoplatform.community.brandadvocacy.portlet.backend.templates.mission_participant.add addTpl;
+  @Path("mission_participant/previous.gtmpl")
+  org.exoplatform.community.brandadvocacy.portlet.backend.templates.mission_participant.previous previousTPL;
 
 
   @Inject
@@ -58,11 +65,22 @@ public class MissionParticipantController {
 
   }
 
+
   public Response index(){
-    if (null != loginController.getCurrentProgramId())
-      return this.list();
-    else
-      return ErrorTpl.ok();
+    String action = WebuiRequestContext.getCurrentInstance().getRequestParameter("action");
+    String keyword = WebuiRequestContext.getCurrentInstance().getRequestParameter("keyword");
+    String status = WebuiRequestContext.getCurrentInstance().getRequestParameter("stt");
+    String page = WebuiRequestContext.getCurrentInstance().getRequestParameter("page");
+    String missionParticipantId = WebuiRequestContext.getCurrentInstance().getRequestParameter("id");
+    if (null != loginController.getCurrentProgramId()){
+      if (null == action || action.equals("mp_search")){
+        return this.search(keyword, status,page);
+      }else if (action.equals("mp_view") && null != missionParticipantId && !"".equals(missionParticipantId) ){
+        return this.view(missionParticipantId);
+      }
+    }
+
+    return ErrorTpl.with().set("msg","Cannot find mission participant").ok();
 
   }
   public Response list(){
@@ -73,7 +91,7 @@ public class MissionParticipantController {
   }
 
   @View
-  public Response view(String missionParticipantId){
+  public Response.Content view(String missionParticipantId){
     MissionParticipant missionParticipant = this.missionParticipantService.getMissionParticipantById(missionParticipantId);
     if(null != missionParticipant){
       try {
@@ -104,15 +122,47 @@ public class MissionParticipantController {
         }
 
       } catch (Exception e) {
-        return JuZBackEndApplication_.showError("cannot view participant");
+        return ErrorTpl.with().set("msg","Cannot find mission participant").ok();
       }
     }
-    return JuZBackEndApplication_.showError("cannot view participant");
+    return ErrorTpl.with().set("msg","Cannot find mission participant").ok();
+  }
+
+  @View
+  public Response.Content search(String keyword,String status,String page){
+    String programId = loginController.getCurrentProgramId();
+    Query query = new Query(programId);
+    query.setKeyword(keyword);
+    query.setStatus(status);
+    query.setOffset(page);
+    query.setLimit(NUMBER_RECORDS);
+    List<MissionParticipant>  missionParticipants = this.missionParticipantService.searchMissionParticipants(query);
+    List<MissionParticipantDTO> missionParticipantDTOs = this.transfers2DTOs(missionParticipants);
+    Pagination pagination = new Pagination(this.missionParticipantService.getTotalMissionParticipants(query),NUMBER_RECORDS,page);
+    return listTpl.with().set("missionParticipantDTOs",missionParticipantDTOs).set("states", Status.values()).set("keyword",query.getKeyword()).set("statusFilter",query.getStatus()).set("pagination",pagination).ok();
+
   }
 
   @Ajax
   @Resource
   public Response ajaxUpdateMPInline(String missionParticipantId,String action,String val){
+    Boolean hasError = false;
+    String msg = "";
+    if (loginController.isShippingManager()){
+
+      if (Status.SHIPPED.getValue() != Integer.parseInt(val)) {
+        hasError = true;
+        msg = "you have no rights for this change";
+      }
+    }else if (loginController.isValidator()){
+      if (Status.SHIPPED.getValue() == Integer.parseInt(val)){
+        hasError = true;
+        msg = "you have no rights for this change";
+      }
+    }
+    if (hasError){
+      return Response.ok(msg);
+    }
     MissionParticipant missionParticipant = this.missionParticipantService.getMissionParticipantById(missionParticipantId);
     if (null != missionParticipant){
       if (action.equals("status"))
@@ -122,19 +172,7 @@ public class MissionParticipantController {
       if (null != missionParticipant)
         return Response.ok("ok");
     }
-    return Response.ok("nok");
-  }
-
-  @Action
-  public Response search(String keyword){
-    String programId = loginController.getCurrentProgramId();
-    List<MissionParticipant>  missionParticipants = this.missionParticipantService.searchMissionParticipants(programId,keyword,null,0,0);
-    List<MissionParticipantDTO> missionParticipantDTOs = this.transfers2DTOs(missionParticipants);
-    return MissionParticipantController_.displayMissionParticipants(missionParticipantDTOs);
-  }
-  @View
-  public Response.Content displayMissionParticipants(List<MissionParticipantDTO> missionParticipantDTOs){
-    return addTpl.with().set("missionParticipantDTOs",missionParticipantDTOs).set("states", Status.values()).ok();
+    return Response.ok("something went wrong");
   }
 
   private List<MissionParticipantDTO> transfers2DTOs(List<MissionParticipant> missionParticipants){
@@ -163,5 +201,26 @@ public class MissionParticipantController {
       }
     }
     return missionParticipantDTOs;
+  }
+
+  @Ajax
+  @Resource
+  public Response getPreviousMissionParticipant(String username){
+    String programId = loginController.getCurrentProgramId();
+    List<MissionParticipant> missionParticipants = this.missionParticipantService.getAllMissionParticipantsInProgramByParticipant(programId,username);
+    List<MissionParticipantDTO> missionParticipantDTOs = new ArrayList<MissionParticipantDTO>();
+    MissionParticipantDTO missionParticipantDTO;
+    Mission mission;
+    for (MissionParticipant missionParticipant : missionParticipants){
+      mission = this.missionParticipantService.getMissionById(missionParticipant.getMission_id());
+      if (null != mission){
+        missionParticipantDTO = new MissionParticipantDTO();
+        missionParticipantDTO.setId(missionParticipant.getId());
+        missionParticipantDTO.setMission_title(mission.getTitle());
+        missionParticipantDTO.setDate_submitted(Utils.convertDateFromLong(missionParticipant.getModifiedDate()));
+        missionParticipantDTOs.add(missionParticipantDTO);
+      }
+    }
+    return previousTPL.with().set("missionParticipantDTOs",missionParticipantDTOs).ok();
   }
 }

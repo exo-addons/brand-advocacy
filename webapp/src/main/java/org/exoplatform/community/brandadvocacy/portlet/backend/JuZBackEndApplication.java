@@ -1,7 +1,10 @@
 package org.exoplatform.community.brandadvocacy.portlet.backend;
 
 import juzu.*;
+import juzu.impl.request.Request;
 import juzu.plugin.ajax.Ajax;
+import juzu.request.RequestContext;
+import juzu.request.RequestParameter;
 import juzu.request.SecurityContext;
 import juzu.template.Template;
 import org.exoplatform.brandadvocacy.model.Manager;
@@ -13,9 +16,11 @@ import org.exoplatform.community.brandadvocacy.portlet.backend.controllers.*;
 import org.exoplatform.community.brandadvocacy.portlet.backend.templates.index;
 import org.exoplatform.services.organization.OrganizationService;
 import org.exoplatform.social.core.manager.IdentityManager;
+import org.exoplatform.webui.application.WebuiRequestContext;
 
 import javax.inject.Inject;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by exoplatform on 01/10/14.
@@ -60,18 +65,20 @@ public class JuZBackEndApplication {
       }
       this.generateRights(loginController.getCurrentProgramId(),loginController.getCurrentUserName());
     }
-    if (null != action){
-      if (action.equals("mission_participant_index"))
+    if (null != loginController.getRights()){
+      if (null != action){
+        if (action.equals("mission_participant_index"))
+          return missionParticipantController.index();
+        else if (action.equals("mission_index"))
+          return missionController.index();
+      }
+      if (loginController.isAdmin()){
+        return programController.index();
+      }else{
         return missionParticipantController.index();
-      else if (action.equals("mission_index"))
-        return missionController.index();
+      }
     }
-    if (loginController.isAdmin()){
-      return programController.index();
-    }else{
-      return missionParticipantController.index();
-    }
-
+    return Response.ok("You have no rights");
   }
   @View
   public Response showError(String msg){

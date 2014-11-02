@@ -88,21 +88,22 @@ $(function() {
     });
   //  $(this).closest("div.spaceIphoneChkBox").trigger("click");
   });
-
-  $(document).on('change.juzBrad.nk.mission-participant.status','select.mission-participant-status',function(){
-    var jStatus = $(this);
+  $(document).on('focus.juzBrad.bk.mission-participant.status','select.mission-participant-status',function(){
+    bradBackend.currentMPStatus = $(this).val();
+  }).change(function(evt){
+    var jStatus = $(evt.srcElement);
     var missionParticipantId =jStatus.attr("data-mission-participant-id");
     var val = jStatus.val();
-    jStatus.jzAjax("MissionParticipantController.ajaxUpdateMPInline ()",{
+    jStatus.jzAjax("MissionParticipantController.ajaxUpdateMPInline()",{
       data:{missionParticipantId:missionParticipantId,action:"status",val:val},
       success:function(data){
-        if (data == "nok"){
-          alert("something went wrong, cannot update mission participant");
+        if (data != "ok"){
+          alert(data);
+          jStatus.val(bradBackend.currentMPStatus);
         }
       }
     });
   });
-
 
   $( document ).ready( function() {
     $( 'textarea' ).ckeditor();
@@ -110,10 +111,21 @@ $(function() {
 
   function bradBackend(){
 
+    this.currentMPStatus;
 
   };
-  bradBackend.prototype.update = function(){
+  bradBackend.prototype.loadPreviousMissionParticipant = function(username){
+
+    $(".previous-mission-participant").jzAjax("MissionParticipantController.getPreviousMissionParticipant()",{
+      data:{username:username},
+      success:function(data){
+        $(".previous-mission-participant").html(data);
+      }
+    });
 
   }
+
+  window.bradBackend = new bradBackend();
+  return window.bradBackend;
 
 });

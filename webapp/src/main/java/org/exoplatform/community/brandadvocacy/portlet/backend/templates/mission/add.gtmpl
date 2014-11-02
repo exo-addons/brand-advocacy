@@ -26,12 +26,12 @@
                     </select>
             </div>
         </div>
-        <div class="control-group">
+        <!--div class="control-group">
             <label class="control-label">Activated:</label>
             <div class="spaceIphoneChkBox">
                 <input type="checkbox" name="active" value="true" checked style="visibility: hidden;"  data-action="" data-role/>
             </div>
-        </div>
+        </div-->
         <div class="text-center">
             <button class="btn btn-primary" type="submit">Save</button>
             <a class="btn mgL20" href=@{JuZBackEndApplication.index(action="mission_index")}>Cancel</a>
