@@ -41,7 +41,7 @@ public interface IService {
   public Mission updateMission(Mission mission);
   public Mission getRandomMisson(String programId,String username);
   public List<Mission> getAllMissionsByParticipant(String programId, String username);
-
+  public List<Mission> searchMission(Query query);
   public Participant addParticipant2Program(Participant participant);
   public Participant getParticipantInProgramByUserName(String programId, String username);
   public List<Participant> getAllParticipantsInProgram(String programId);

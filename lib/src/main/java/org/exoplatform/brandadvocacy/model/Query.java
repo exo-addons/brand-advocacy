@@ -14,6 +14,8 @@ public class Query {
   private int offset;
   private int limit;
 
+  private Boolean isActive;
+
   public Query(String programId){
     this.setProgramId(programId);
     this.setStatus("0");
@@ -103,5 +105,13 @@ public class Query {
 
   public void setLimit(int limit) {
     this.limit = limit;
+  }
+
+  public Boolean getIsActive() {
+    return isActive;
+  }
+
+  public void setIsActive(Boolean isActive) {
+    this.isActive = isActive;
   }
 }

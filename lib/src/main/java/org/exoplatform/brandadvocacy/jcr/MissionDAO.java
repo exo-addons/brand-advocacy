@@ -20,6 +20,7 @@ import com.google.common.collect.Lists;
 import org.exoplatform.brandadvocacy.model.*;
 import org.exoplatform.brandadvocacy.service.BrandAdvocacyServiceException;
 import org.exoplatform.brandadvocacy.service.JCRImpl;
+import org.exoplatform.brandadvocacy.service.Utils;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 
@@ -216,6 +217,23 @@ public class MissionDAO extends DAO {
 
     return null;
   }
+  public List<Mission> search(Query query){
+    Program program = this.getJcrImplService().getProgramDAO().getProgramById(query.getProgramId());
+    List<Mission> missions = new ArrayList<Mission>();
+    if (null != program) {
+      StringBuilder sql = new StringBuilder("select * from " + JCRImpl.MISSION_NODE_TYPE + " where ");
+      sql.append("jcr:path like '");
+      sql.append(JCRImpl.EXTENSION_PATH).append("/").append(Utils.queryEscape(program.getLabelID())).append("/").append(ProgramDAO.node_prop_missions);
+      sql.append("/%'");
+      if(null != query.getIsActive()){
+        sql.append(" AND ").append(node_prop_active).append("='").append(query.getIsActive()).append("'");
+      }
+      sql.append(" ORDER BY ").append(node_prop_priority).append(" DESC ");
+      List<Node> nodes =  this.getNodesByQuery(sql.toString(),query.getOffset(),query.getLimit());
+      return this.transferNodes2Objects(nodes,query.getIsActive());
+    }
+    return missions;
+  }
   public Mission updateMission(Mission m){
     try {
       m.checkValid();      
@@ -252,21 +270,6 @@ public class MissionDAO extends DAO {
         }
     } catch (RepositoryException e) {
         log.error(" ERROR remove mission "+id+" === Exception "+e.getMessage());
-    }
-  }
-  
-  public void setActiveMission(String id,Boolean isActive){
-    try{
-      if(null == id || "".equals(id))
-        throw new BrandAdvocacyServiceException(BrandAdvocacyServiceException.ID_INVALID,"cannot set active for invalid id "+id);
-      Node aNode = this.getNodeById(id);
-      if(null == aNode)
-        throw new BrandAdvocacyServiceException(BrandAdvocacyServiceException.MISSION_NOT_EXISTS,"cannot set active for mission not exist "+id);
-      aNode.setProperty(node_prop_active, isActive);
-    }catch(BrandAdvocacyServiceException brade){
-      log.error(brade.getMessage());
-    }catch(RepositoryException re){
-      log.error(" ERROR set active mission "+re.getMessage());
     }
   }
 
@@ -324,8 +327,11 @@ public class MissionDAO extends DAO {
         }
       }
       if (isDiff){
-        for (int i= 0;i<mission.getPriority();i++){
-          ids.add(mission.getId());
+        Proposition proposition = this.getJcrImplService().getPropositionDAO().getRandomProposition(mission.getId());
+        if ( null != proposition){
+          for (int i= 0;i<mission.getPriority();i++){
+            ids.add(mission.getId());
+          }
         }
       }
     }
@@ -334,11 +340,5 @@ public class MissionDAO extends DAO {
       return this.getMissionById(ids.get(0));
     }
     return null;
-  }
-
-  public List<Mission> sortAllMissionsInProgram(){
-    List<Mission> missions = new LinkedList<Mission>();
-
-    return missions;
   }
 }

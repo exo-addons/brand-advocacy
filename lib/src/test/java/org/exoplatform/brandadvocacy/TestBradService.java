@@ -18,6 +18,7 @@ package org.exoplatform.brandadvocacy;
 
 import EDU.oswego.cs.dl.util.concurrent.FJTask;
 import org.exoplatform.brandadvocacy.model.*;
+import org.exoplatform.brandadvocacy.service.IService;
 
 import java.util.*;
 
@@ -27,6 +28,7 @@ import java.util.*;
  *          exo@exoplatform.com
  * Sep 22, 2014  
  */
+
 public class TestBradService extends AbstractTest {
 
   public void testProgram(){

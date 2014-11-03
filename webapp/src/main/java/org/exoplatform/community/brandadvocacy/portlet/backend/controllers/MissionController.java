@@ -83,7 +83,8 @@ public class MissionController {
     int _size = size != null ? Integer.parseInt(size) : 5;
     int _page = page != null ? Integer.parseInt(page) : 0;
     String programId = loginController.getCurrentProgramId();
-    List<Mission> missions = this.missionService.getAllMissionsByProgramId(programId);
+//    List<Mission> missions = this.missionService.getAllMissionsByProgramId(programId);
+    List<Mission> missions = this.missionService.searchMission(new Query(programId));
     List<MissionDTO> missionDTOs = new LinkedList<MissionDTO>();
     MissionDTO missionDTO;
     for (Mission mission:missions){

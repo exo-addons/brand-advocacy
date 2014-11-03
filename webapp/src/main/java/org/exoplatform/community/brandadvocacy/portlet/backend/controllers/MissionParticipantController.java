@@ -33,7 +33,7 @@ import java.util.Map;
 @SessionScoped
 public class MissionParticipantController {
 
-  final static int NUMBER_RECORDS = 5;
+  final static int NUMBER_RECORDS = 10;
   OrganizationService organizationService;
   IdentityManager identityManager;
   IService missionParticipantService;

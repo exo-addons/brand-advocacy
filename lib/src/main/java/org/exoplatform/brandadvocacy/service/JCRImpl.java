@@ -30,6 +30,7 @@ import org.exoplatform.services.jcr.ext.distribution.DataDistributionType;
 import org.exoplatform.services.jcr.impl.core.query.QueryImpl;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
+import org.exoplatform.services.mail.MailService;
 import org.exoplatform.services.organization.OrganizationService;
 import org.exoplatform.social.core.manager.IdentityManager;
 
@@ -87,7 +88,7 @@ public class JCRImpl implements IService {
   
   public static final String APP_PATH = "ApplicationData/brandAdvocacyExtension";
   
-  public JCRImpl(InitParams params, SessionProviderService sessionService, RepositoryService repositoryService, DataDistributionManager dataDistributionManager){
+  public JCRImpl(InitParams params, SessionProviderService sessionService, RepositoryService repositoryService, DataDistributionManager dataDistributionManager,IdentityManager identityManager,MailService mailService){
 
     if(params != null){
       ValueParam param = params.getValueParam("workspace");
@@ -105,7 +106,7 @@ public class JCRImpl implements IService {
     this.sessionService = sessionService;
     this.dataDistributionManager = dataDistributionManager;
     this.repositoryService = repositoryService;
-    
+    this.emailService = new EmailService(this,identityManager,mailService);
     this.getOrCreateExtensionHome();
   }
   public Session getSession() throws RepositoryException {
@@ -226,7 +227,7 @@ public class JCRImpl implements IService {
 
   @Override
   public List<Mission> getAllMissionsByProgramId(String programId) {
-    return this.getMissionDAO().getAllMissionsByProgramId(programId,null);
+    return this.getMissionDAO().getAllMissionsByProgramId(programId, null);
   }
 
   @Override
@@ -236,12 +237,17 @@ public class JCRImpl implements IService {
 
   @Override
   public Mission getRandomMisson(String programId, String username) {
-    return this.getMissionDAO().getRandomMission(programId,username);
+    return this.getMissionDAO().getRandomMission(programId, username);
   }
 
   @Override
   public List<Mission> getAllMissionsByParticipant(String programId, String username) {
-    return this.getMissionDAO().getAllMissionsInProgramByParticipant(programId,username);
+    return this.getMissionDAO().getAllMissionsInProgramByParticipant(programId, username);
+  }
+
+  @Override
+  public List<Mission> searchMission(Query query) {
+    return this.getMissionDAO().search(query);
   }
 
   @Override
@@ -251,7 +257,7 @@ public class JCRImpl implements IService {
 
   @Override
   public Participant getParticipantInProgramByUserName(String programId, String username) {
-    return this.getParticipantDAO().getParticipantInProgramByUserName(programId,username);
+    return this.getParticipantDAO().getParticipantInProgramByUserName(programId, username);
   }
 
   @Override
@@ -261,7 +267,7 @@ public class JCRImpl implements IService {
 
   @Override
   public Address addAddress2Participant(String programId, String username, Address address) {
-    return this.getAddressDAO().addAddress2Participant(programId,username,address);
+    return this.getAddressDAO().addAddress2Participant(programId, username, address);
   }
 
   @Override
@@ -291,12 +297,12 @@ public class JCRImpl implements IService {
 
   @Override
   public List<Manager> addManagers2Mission(String missionId, List<Manager> managers) {
-    return this.getManagerDAO().addManagers2Mission(missionId,managers);
+    return this.getManagerDAO().addManagers2Mission(missionId, managers);
   }
 
   @Override
   public Manager updateMissionManager(String missionId,Manager manager) {
-    return this.getManagerDAO().updateMissionManager(missionId,manager);
+    return this.getManagerDAO().updateMissionManager(missionId, manager);
   }
 
   @Override
@@ -321,7 +327,7 @@ public class JCRImpl implements IService {
 
   @Override
   public List<Manager> addManagers2Program(String programId, List<Manager> managers) {
-    return this.getManagerDAO().addManagers2Program(programId,managers);
+    return this.getManagerDAO().addManagers2Program(programId, managers);
   }
 
   @Override
@@ -351,7 +357,7 @@ public class JCRImpl implements IService {
 
   @Override
   public List<Proposition> getAllPropositions(String missionId,Boolean isActive) {
-    return this.getPropositionDAO().getAllPropositions(missionId,isActive);
+    return this.getPropositionDAO().getAllPropositions(missionId, isActive);
   }
 
   @Override
@@ -371,7 +377,7 @@ public class JCRImpl implements IService {
 
   @Override
   public List<Proposition> searchPropositions(String keyword, int offset, int limit) {
-    return this.getPropositionDAO().searchPropositions(keyword,offset,limit);
+    return this.getPropositionDAO().searchPropositions(keyword, offset, limit);
   }
 
   @Override
@@ -382,7 +388,8 @@ public class JCRImpl implements IService {
   @Override
   public MissionParticipant addMissionParticipant2Program(String programId, MissionParticipant missionParticipant) {
     MissionParticipant result =  this.getMissionParticipantDAO().addMissionParticipant2Program(programId,missionParticipant);
-//    this.emailService.sendNotif2Managers(result);
+    if (null != result)
+      this.emailService.sendNotif2Managers(result);
     return result;
   }
 
@@ -393,7 +400,7 @@ public class JCRImpl implements IService {
 
   @Override
   public List<MissionParticipant> getAllMissionParticipantsInProgramByParticipant(String programId, String username) {
-    return this.getMissionParticipantDAO().getAllMissionParticipantsInProgramByParticipant(programId,username);
+    return this.getMissionParticipantDAO().getAllMissionParticipantsInProgramByParticipant(programId, username);
   }
 
   @Override
@@ -404,7 +411,8 @@ public class JCRImpl implements IService {
   @Override
   public MissionParticipant updateMissionParticipantInProgram(String programId, MissionParticipant missionParticipant) {
     MissionParticipant  result =  this.getMissionParticipantDAO().updateMissionParticipantInProgram(programId,missionParticipant);
-//    this.emailService.sendNotif2Managers(result);
+    if (null != result)
+      this.emailService.sendNotif2Managers(result);
     return result;
   }
 

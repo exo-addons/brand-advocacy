@@ -93,16 +93,19 @@ $(function() {
   }).change(function(evt){
     var jStatus = $(evt.srcElement);
     var missionParticipantId =jStatus.attr("data-mission-participant-id");
-    var val = jStatus.val();
-    jStatus.jzAjax("MissionParticipantController.ajaxUpdateMPInline()",{
-      data:{missionParticipantId:missionParticipantId,action:"status",val:val},
-      success:function(data){
-        if (data != "ok"){
-          alert(data);
-          jStatus.val(bradBackend.currentMPStatus);
+    if (typeof missionParticipantId != "undefined"){
+      var val = jStatus.val();
+      jStatus.jzAjax("MissionParticipantController.ajaxUpdateMPInline()",{
+        data:{missionParticipantId:missionParticipantId,action:"status",val:val},
+        success:function(data){
+          if (data != "ok"){
+            alert(data);
+            jStatus.val(bradBackend.currentMPStatus);
+          }
         }
-      }
-    });
+      });
+    }
+
   });
 
   $( document ).ready( function() {
