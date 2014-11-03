@@ -1,26 +1,17 @@
 package org.exoplatform.community.brandadvocacy.portlet.backend;
 
 import juzu.*;
-import juzu.impl.request.Request;
-import juzu.plugin.ajax.Ajax;
-import juzu.request.RequestContext;
-import juzu.request.RequestParameter;
+
 import juzu.request.SecurityContext;
-import juzu.template.Template;
 import org.exoplatform.brandadvocacy.model.Manager;
-import org.exoplatform.brandadvocacy.model.Mission;
 import org.exoplatform.brandadvocacy.model.Program;
 import org.exoplatform.brandadvocacy.model.Role;
 import org.exoplatform.brandadvocacy.service.IService;
 import org.exoplatform.community.brandadvocacy.portlet.backend.controllers.*;
-import org.exoplatform.community.brandadvocacy.portlet.backend.templates.index;
 import org.exoplatform.services.organization.OrganizationService;
-import org.exoplatform.social.core.manager.IdentityManager;
-import org.exoplatform.webui.application.WebuiRequestContext;
 
 import javax.inject.Inject;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by exoplatform on 01/10/14.
@@ -96,11 +87,4 @@ public class JuZBackEndApplication {
       loginController.setRights(Role.Admin.getLabel());
 
   }
-
-  @Ajax
-  @Resource
-  public Response ta(){
-    return Response.ok("tao");
-  }
-
 }

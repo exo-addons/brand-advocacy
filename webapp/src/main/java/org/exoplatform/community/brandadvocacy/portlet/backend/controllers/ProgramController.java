@@ -1,7 +1,6 @@
 package org.exoplatform.community.brandadvocacy.portlet.backend.controllers;
 
 import juzu.*;
-import juzu.request.SecurityContext;
 import org.exoplatform.brandadvocacy.model.Manager;
 import org.exoplatform.brandadvocacy.model.Program;
 import org.exoplatform.brandadvocacy.model.Role;

@@ -1,16 +1,10 @@
 package org.exoplatform.community.brandadvocacy.portlet.backend.controllers;
 
 import juzu.*;
-import juzu.impl.request.Request;
 import juzu.plugin.ajax.Ajax;
-import juzu.request.RequestContext;
-import juzu.request.RequestParameter;
-import juzu.request.SecurityContext;
 import org.exoplatform.brandadvocacy.model.*;
 import org.exoplatform.brandadvocacy.service.IService;
 import org.exoplatform.brandadvocacy.service.Utils;
-import org.exoplatform.community.brandadvocacy.portlet.backend.JuZBackEndApplication_;
-import org.exoplatform.community.brandadvocacy.portlet.backend.models.MissionDTO;
 import org.exoplatform.community.brandadvocacy.portlet.backend.models.MissionParticipantDTO;
 import org.exoplatform.community.brandadvocacy.portlet.backend.models.Pagination;
 import org.exoplatform.community.brandadvocacy.portlet.backend.models.ParticipantDTO;
@@ -20,12 +14,9 @@ import org.exoplatform.social.core.identity.model.Identity;
 import org.exoplatform.social.core.identity.provider.OrganizationIdentityProvider;
 import org.exoplatform.social.core.manager.IdentityManager;
 import org.exoplatform.webui.application.WebuiRequestContext;
-import org.json.JSONObject;
-
 import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by exoplatform on 10/12/14.

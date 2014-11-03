@@ -140,8 +140,7 @@ public class MissionController {
 
   @Ajax
   @Resource
-  @MimeType.JSON
-  public Response ajaxUpdateInline(String missionId,String action,String val){
+  public void ajaxUpdateInline(String missionId,String action,String val){
     Mission mission  = this.missionService.getMissionById(missionId);
     JSONObject jsonObject = new JSONObject();
     boolean doUpdate = true;
@@ -160,7 +159,7 @@ public class MissionController {
       if (doUpdate){
         mission = this.missionService.updateMission(mission);
         if(null != mission)
-          return Response.ok("ok");
+          Response.ok("ok");
       }else {
         errorMsg = "You cannot activate this mission, as there is no proposition";
       }
@@ -173,7 +172,7 @@ public class MissionController {
     } catch (JSONException e) {
       e.printStackTrace();
     }
-    return Response.ok(jsonObject.toString().getBytes());
+    Response.ok(jsonObject.toString());
   }
 }
 

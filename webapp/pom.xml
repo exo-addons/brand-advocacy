@@ -22,21 +22,17 @@
     <dependency>
       <groupId>org.juzu</groupId>
       <artifactId>juzu-core</artifactId>
-      <version>1.0.0-cr2-SNAPSHOT</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.juzu</groupId>
+      <artifactId>juzu-bom-core</artifactId>
     </dependency>
 
     <dependency>
       <groupId>org.juzu</groupId>
       <artifactId>juzu-plugins-portlet</artifactId>
-      <version>1.0.0-cr2-SNAPSHOT</version>
     </dependency>
-
-    <dependency>
-      <groupId>org.juzu</groupId>
-      <artifactId>juzu-plugins-servlet</artifactId>
-      <version>1.0.0-cr2-SNAPSHOT</version>
-    </dependency>
-
     <!-- exo -->
     <dependency>
       <groupId>org.exoplatform.core</groupId>
@@ -61,80 +57,25 @@
         </exclusion>
       </exclusions>
     </dependency>
-    <!-- Servlet 3.x API -->
-    <dependency>
-      <groupId>javax.servlet</groupId>
-      <artifactId>javax.servlet-api</artifactId>
-      <version>3.0.1</version>
-      <scope>provided</scope>
-    </dependency>
 
     <!-- Groovy is shipped with GateIn -->
     <dependency>
       <groupId>org.codehaus.groovy</groupId>
       <artifactId>groovy-all</artifactId>
-      <version>1.8.9</version>
-      <!--scope>provided</scope-->
+      <scope>provided</scope>
     </dependency>
 
     <!-- Dependencies for Guice in GateIn portal -->
     <dependency>
       <groupId>javax.inject</groupId>
       <artifactId>javax.inject</artifactId>
-      <version>1</version>
       <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>com.google.inject</groupId>
       <artifactId>guice</artifactId>
-      <version>3.0</version>
       <scope>provided</scope>
     </dependency>
-
-    <dependency>
-      <groupId>javax.enterprise</groupId>
-      <artifactId>cdi-api</artifactId>
-      <version>1.0-SP4</version>
-    </dependency>
-
-    <!-- resources -->
-    <dependency>
-      <groupId>org.juzu</groupId>
-      <artifactId>juzu-plugins-webjars</artifactId>
-      <version>1.0.0-cr2-SNAPSHOT</version>
-    </dependency>
-    <dependency>
-      <groupId>org.webjars</groupId>
-      <artifactId>jquery</artifactId>
-      <version>1.7.2</version>
-    </dependency>
-    <!-- JCR -->
-    <dependency>
-      <groupId>org.exoplatform.jcr</groupId>
-      <artifactId>exo.jcr.component.core</artifactId>
-      <scope>provided</scope>
-    </dependency>
-
-    <!-- Junit for testing -->
-    <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
-      <version>4.10</version>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.juzu</groupId>
-      <artifactId>juzu-depchain-arquillian</artifactId>
-      <version>1.0.0-cr2-SNAPSHOT</version>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.juzu</groupId>
-      <artifactId>juzu-depchain-arquillian-tomcat7</artifactId>
-      <version>1.0.0-cr2-SNAPSHOT</version>
-      <scope>test</scope>
-    </dependency>
-
     <dependency>
       <groupId>${project.groupId}</groupId>
       <artifactId>brand-advocacy-lib</artifactId>
@@ -157,6 +98,7 @@
               <goal>compile</goal>
             </goals>
             <configuration>
+              <providerSelection>1.7</providerSelection>
               <sources>
                 <fileset>
                   <directory>${project.build.outputDirectory}</directory>
