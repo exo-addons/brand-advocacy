@@ -57,19 +57,19 @@ public class JuZFrontEndApplication {
   }
 
   @View
-  public void index(SecurityContext securityContext){
+  public Response.Content index(SecurityContext securityContext){
     this.remoteUserName = securityContext.getUserPrincipal().getName();
     if (null == this.currentProgramId)
       this.loadCurrentProgram();
     if (null != this.currentProgramId) {
       if (null != this.jcrService.getRandomMisson(this.currentProgramId,this.remoteUserName)){
-        indexTpl.render();
+        return indexTpl.ok();
       }else{
-        Response.ok("no mission available");
+        return Response.ok("no mission available");
       }
     }
     else
-      Response.ok("no program available");
+      return Response.ok("no program available");
   }
 
   private void loadCurrentProgram(){
