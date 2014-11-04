@@ -106,7 +106,7 @@ public class PropositionController {
     if(null != proposition){
       Boolean proposActive = false;
       if (null != active)
-        proposActive = active.equals("1") ? true:false;
+        proposActive = active.equals("true") ? true:false;
       proposition.setContent(content);
       proposition.setActive(proposActive);
       proposition = this.propositionService.updateProposition(proposition);

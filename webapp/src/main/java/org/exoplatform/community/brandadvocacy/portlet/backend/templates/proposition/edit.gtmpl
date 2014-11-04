@@ -1,4 +1,4 @@
-#{decorate path=container.gtmpl/}
+    #{decorate path=container.gtmpl/}
 #{param name=proposition/}
 
 <%
@@ -36,7 +36,7 @@ if(proposition != null){
 						<label class="control-label span2">Activated:</label>
 						<div class="controls">
                             <div class="spaceIphoneChkBox">
-                                <input type="checkbox" name="active" value="<%= strActiveVal%>" style="visibility: hidden;" <%=strActiveChkbox %> data-action="ajaxUpdatePropositionInline" data-propositionId="<%=proposition.getId()%>" data-role/>
+                                <input type="checkbox" name="active" value="<%= strActiveVal%>" style="visibility: hidden;" <%=strActiveChkbox %> data-action="" data-propositionId="<%=proposition.getId()%>" data-role/>
                             </div>
 						</div>
 					</div>

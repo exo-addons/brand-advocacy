@@ -15,7 +15,7 @@
                 @Script(src = "js/brad-frontend.js", depends = "juzu.ajax")
         },
         stylesheets = {
-                @Stylesheet(src = "css/brad-backend.css")
+                @Stylesheet(src = "css/brandadvocacy.css")
         },
         location = AssetLocation.SERVER
 )

@@ -5,6 +5,7 @@ package org.exoplatform.community.brandadvocacy.portlet.backend.models;
  */
 public class ParticipantDTO {
 
+  private String userName;
   private String fullName;
   private String urlProfile;
   private String urlAvatar;
@@ -39,6 +40,14 @@ public class ParticipantDTO {
 
   public void setEmail(String email) {
     this.email = email;
+  }
+
+  public String getUserName() {
+    return userName;
+  }
+
+  public void setUserName(String userName) {
+    this.userName = userName;
   }
 }
 

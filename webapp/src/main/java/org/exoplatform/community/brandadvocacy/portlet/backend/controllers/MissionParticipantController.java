@@ -99,6 +99,7 @@ public class MissionParticipantController {
             missionParticipantDTO.setUrl_submitted(missionParticipant.getUrl_submitted());
 
             ParticipantDTO participantDTO = new ParticipantDTO();
+            participantDTO.setUserName(missionParticipant.getParticipant_username());
             participantDTO.setFullName(identity.getProfile().getFullName());
             participantDTO.setUrlAvatar(identity.getProfile().getAvatarUrl());
             participantDTO.setUrlProfile(identity.getProfile().getUrl());

@@ -29,14 +29,6 @@ public class MissionController {
   LoginController loginController;
 
   @Inject
-  PropositionController propositionController;
-
-  @Inject
-  ManagerController managerController;
-
-  String currentProgramId;
-  String currentMissionId;
-  @Inject
   public MissionController(IService missionService){
     this.missionService = missionService;
   }

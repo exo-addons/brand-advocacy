@@ -4,7 +4,8 @@
 #{param name=participantDTO/}
 #{param name=states/}
 <%
-def username = participantDTO.getFullName();
+def username = participantDTO.getUserName();
+def fullName = participantDTO.getFullName();
 def urlProfile = participantDTO.getUrlProfile();
 def urlAvatar = participantDTO.getUrlAvatar();
 def strEmail = participantDTO.getEmail();
@@ -29,7 +30,7 @@ def strDateSubmitted = missionParticipantDTO.getDate_submitted()
     <div class="tab-pane fade in active" id="participantsTab">
         <ul class="breadcrumb">
             <li><a href="@{JuZBackEndApplication.index(action="mission_participant_index")}">Participants</a><span class="uiIconMiniArrowRight"></span></li>
-            <li class="active"><%= username %></li>
+            <li class="active"><%= fullName %></li>
         </ul>
         <br>
         <div class="ref-detail-user">
@@ -80,6 +81,6 @@ def strDateSubmitted = missionParticipantDTO.getDate_submitted()
 <!-- end keep this part for ajax -->
 <script type="text/javascript">
 $(document).ready(function(){
-    bradBackend.loadPreviousMissionParticipant('chun');
+    bradBackend.loadPreviousMissionParticipant('<%=username%>');
 });
 </script>
