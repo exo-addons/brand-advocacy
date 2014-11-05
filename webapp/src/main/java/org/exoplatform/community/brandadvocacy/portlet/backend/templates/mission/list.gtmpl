@@ -1,12 +1,18 @@
 #{decorate path=container.gtmpl/}
 #{param name=missions/}
 #{param name=programId/}
+#{param name=alertPriority/}
 <!-- keep only this part for ajax -->
 <div class="tab-pane fade" id="generalTab">...</div>
 <div class="tab-pane fade in active" id="missionsTab">
     <ul class="breadcrumb">
         <li><a href="#">Manager the missions</a><span class="uiIconMiniArrowRight"></span></li>
     </ul>
+    <% if (alertPriority != ""){%>
+    <div class="alert alert-error">
+    <%=alertPriority%>
+    </div>
+    <% } %>
     <br>
     <table class="uiGrid table table-hover table-striped mgB0">
         <thead>

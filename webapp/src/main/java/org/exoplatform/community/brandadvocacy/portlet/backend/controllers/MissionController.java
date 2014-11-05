@@ -73,19 +73,26 @@ public class MissionController {
   }
 
   public Response list(String keyword, String size, String page){
+    String alertPriority = "";
     int _size = size != null ? Integer.parseInt(size) : 5;
     int _page = page != null ? Integer.parseInt(page) : 0;
     String programId = loginController.getCurrentProgramId();
-//    List<Mission> missions = this.missionService.getAllMissionsByProgramId(programId);
     List<Mission> missions = this.missionService.searchMission(new Query(programId));
     List<MissionDTO> missionDTOs = new LinkedList<MissionDTO>();
     MissionDTO missionDTO;
+    int totalPriority = 0;
     for (Mission mission:missions){
       missionDTO = new MissionDTO(mission.getProgramId(),mission.getId(),mission.getTitle(),mission.getPriority(),mission.getThird_part_link(),mission.getActive());
       missionDTO.setPropositions(this.missionService.getAllPropositions(mission.getId(),true));
       missionDTOs.add(missionDTO);
+      if (mission.getActive()){
+        totalPriority +=(int)mission.getPriority();
+      }
     }
-      return listTpl.with().set("priorities", Priority.values()).set("programId",programId).set("missions",missionDTOs).ok();
+    if (totalPriority > 100){
+      alertPriority = "attention, the total priority is exceeded";
+    }
+    return listTpl.with().set("priorities", Priority.values()).set("programId",programId).set("missions",missionDTOs).set("alertPriority",alertPriority).ok();
   }
 
   @Action
@@ -140,6 +147,7 @@ public class MissionController {
     String errorMsg = "";
     if (null != mission){
       if (action.equals("priority")){
+        
         mission.setPriority(Integer.parseInt(val));
       }else if (action.equals("active") ){
         Boolean mActive = false;

@@ -47,5 +47,3 @@ setenv-dev.sh
 setenv-acceptance.sh
 setenv-preprod.sh
 setenv-prod.sh
-
-webapp/src/main/java/org/exoplatform/content/webui/component/UITaskListContainer.java
