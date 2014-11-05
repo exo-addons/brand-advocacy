@@ -86,8 +86,9 @@
   </dependencies>
   <build>
     <finalName>brand-advocacy-webapp</finalName>
+    <!-- Precompile the template class in maven (this is optional) -->
     <plugins>
-      <!-- Precompile the template class in maven (this is optional) -->
+
       <plugin>
         <groupId>org.codehaus.gmaven</groupId>
         <artifactId>gmaven-plugin</artifactId>

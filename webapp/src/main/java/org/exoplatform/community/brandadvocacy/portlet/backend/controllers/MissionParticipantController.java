@@ -5,6 +5,7 @@ import juzu.plugin.ajax.Ajax;
 import org.exoplatform.brandadvocacy.model.*;
 import org.exoplatform.brandadvocacy.service.IService;
 import org.exoplatform.brandadvocacy.service.Utils;
+import org.exoplatform.community.brandadvocacy.portlet.backend.Flash;
 import org.exoplatform.community.brandadvocacy.portlet.backend.models.MissionParticipantDTO;
 import org.exoplatform.community.brandadvocacy.portlet.backend.models.Pagination;
 import org.exoplatform.community.brandadvocacy.portlet.backend.models.ParticipantDTO;
@@ -31,6 +32,8 @@ public class MissionParticipantController {
 
   @Inject
   LoginController loginController;
+  @Inject
+  Flash flash;
   @Inject
   @Path("mission_participant/error.gtmpl")
   org.exoplatform.community.brandadvocacy.portlet.backend.templates.mission_participant.error ErrorTpl;
@@ -83,6 +86,7 @@ public class MissionParticipantController {
 
   @View
   public Response.Content view(String missionParticipantId){
+    flash.setStyleMissionParticipantMenu("active");
     MissionParticipant missionParticipant = this.missionParticipantService.getMissionParticipantById(missionParticipantId);
     if(null != missionParticipant){
       try {

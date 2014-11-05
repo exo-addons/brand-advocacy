@@ -8,7 +8,8 @@
     @Binding(value = org.exoplatform.services.organization.OrganizationService.class),
     @Binding(value = org.exoplatform.social.core.manager.IdentityManager.class),
     @Binding(value = org.exoplatform.brandadvocacy.service.IService.class),
-    @Binding(LoginController.class)
+    @Binding(LoginController.class),
+    @Binding(Flash.class)
   }
 )
 @Assets(

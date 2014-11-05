@@ -32,8 +32,7 @@ public class JuZBackEndApplication {
   @Inject
   ProgramController programController;
   @Inject
-  PropositionController propositionController;
-
+  Flash flash;
   @Inject
   MissionParticipantController missionParticipantController;
 
@@ -58,14 +57,20 @@ public class JuZBackEndApplication {
     }
     if (null != loginController.getRights()){
       if (null != action){
-        if (action.equals("mission_participant_index"))
+        if (action.equals("mission_participant_index")) {
+          flash.setStyleMissionParticipantMenu("active");
           return missionParticipantController.index();
-        else if (action.equals("mission_index"))
+        }
+        else if (action.equals("mission_index")) {
+          flash.setStyleMissionMenu("active");
           return missionController.index();
+        }
       }
       if (loginController.isAdmin()){
+        flash.setStyleGeneralMenu("active");
         return programController.index();
       }else{
+        flash.setStyleMissionParticipantMenu("active");
         return missionParticipantController.index();
       }
     }

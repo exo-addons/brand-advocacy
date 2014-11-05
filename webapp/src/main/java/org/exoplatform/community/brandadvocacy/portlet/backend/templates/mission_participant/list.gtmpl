@@ -4,9 +4,6 @@
 #{param name=keyword/}
 #{param name=statusFilter/}
 #{param name=pagination/}
-    <div id="myTabContent" class="tab-content">
-        <div class="tab-pane fade" id="generalTab">...</div>
-        <div class="tab-pane fade" id="missionsTab">...</div>
         <div class="tab-pane fade in active" id="participantsTab">
             <div class="uiSearchInput">
                 <form action="@{search()}" method="GET" role="form">
@@ -66,7 +63,6 @@
             </tfoot>
             </table>
         </div>
-    </div>
 	<!-- TAB 3 Step 1-->
 
 <!-- end part keeping for ajax -->

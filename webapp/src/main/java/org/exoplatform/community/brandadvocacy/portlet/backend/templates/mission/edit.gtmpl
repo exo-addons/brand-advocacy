@@ -17,8 +17,6 @@ if(mission != null){
     <input type ="hidden" name="id" id="id"  value="<%= missionId %>" />
     <!-- keep only this part for ajax -->
 
-    <div id="myTabContent" class="tab-content">
-        <div class="tab-pane fade" id="generalTab">...</div>
         <div class="tab-pane fade in active" id="missionsTab">
             <ul class="breadcrumb">
                 <li><a href="@{JuZBackEndApplication.index(action="mission_index")}">Manager the missions</a><span class="uiIconMiniArrowRight"></span></li>
@@ -120,7 +118,7 @@ if(mission != null){
                 </div>
             </div>
         </div>
-    </div>
+
 <!-- end part keeping for ajax -->
 </form>
 <%

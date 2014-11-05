@@ -5,7 +5,6 @@ import org.exoplatform.brandadvocacy.model.Manager;
 import org.exoplatform.brandadvocacy.model.Program;
 import org.exoplatform.brandadvocacy.model.Role;
 import org.exoplatform.brandadvocacy.service.IService;
-import org.exoplatform.community.brandadvocacy.portlet.backend.JuZBackEndApplication;
 import org.exoplatform.community.brandadvocacy.portlet.backend.JuZBackEndApplication_;
 import org.exoplatform.community.brandadvocacy.portlet.backend.models.ManagerDTO;
 import org.exoplatform.services.organization.OrganizationService;
