@@ -37,7 +37,7 @@ public interface IService {
   public Mission addMission2Program(Mission mission);
   public void removeMissionById(String missionId);
   public Mission getMissionById(String missionId);
-  public List<Mission> getAllMissionsByProgramId(String programId);
+  public List<Mission> getAllMissionsByProgramId(String programId,Boolean isActive);
   public Mission updateMission(Mission mission);
   public Mission getRandomMisson(String programId,String username);
   public List<Mission> getAllMissionsByParticipant(String programId, String username);

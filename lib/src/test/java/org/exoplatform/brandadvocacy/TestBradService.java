@@ -68,18 +68,18 @@ public class TestBradService extends AbstractTest {
     for (Program program:programs){
       currentProgram = program;
     }
-    int nbMission = this.service.getAllMissionsByProgramId(currentProgram.getId()).size();
+    int nbMission = this.service.getAllMissionsByProgramId(currentProgram.getId(),null).size();
     Mission mission1 = new Mission(currentProgram.getId()," mission 1 - prio 1");
     mission1.setActive(true);
     this.service.addMission2Program(mission1);
-    assertEquals("should have 1 mission",nbMission+1,this.service.getAllMissionsByProgramId(currentProgram.getId()).size());
+    assertEquals("should have 1 mission",nbMission+1,this.service.getAllMissionsByProgramId(currentProgram.getId(),null).size());
 
-    nbMission = this.service.getAllMissionsByProgramId(currentProgram.getId()).size();
+    nbMission = this.service.getAllMissionsByProgramId(currentProgram.getId(),null).size();
     Mission mission2 = new Mission(currentProgram.getId()," mission 2 - prio 1");
     mission2.setActive(true);
     mission2 = this.service.addMission2Program(mission2);
 
-    assertEquals("should have 1 more mission ",nbMission+1,this.service.getAllMissionsByProgramId(currentProgram.getId()).size());
+    assertEquals("should have 1 more mission ",nbMission+1,this.service.getAllMissionsByProgramId(currentProgram.getId(),null).size());
 
     List<Manager> mission2Managers = this.service.getAllMissionManagers(mission2.getId());
     int nbMissionManagers = 0;
@@ -100,9 +100,9 @@ public class TestBradService extends AbstractTest {
     assertEquals("should have new title","edit title",mission2.getTitle());
     assertEquals("should have third part link","google.com",mission2.getThird_part_link());
 
-    nbMission = this.service.getAllMissionsByProgramId(currentProgram.getId()).size();
+    nbMission = this.service.getAllMissionsByProgramId(currentProgram.getId(),null).size();
     this.service.removeMissionById(mission2.getId());
-    assertEquals("shoule reduce 1 mission",nbMission-1,this.service.getAllMissionsByProgramId(currentProgram.getId()).size());
+    assertEquals("shoule reduce 1 mission",nbMission-1,this.service.getAllMissionsByProgramId(currentProgram.getId(),null).size());
   }
   public void testProposition(){
     Program currentProgram = null;
@@ -111,7 +111,7 @@ public class TestBradService extends AbstractTest {
       currentProgram = program;
     }
     Mission currentMission = null;
-    List<Mission> missions = this.service.getAllMissionsByProgramId(currentProgram.getId());
+    List<Mission> missions = this.service.getAllMissionsByProgramId(currentProgram.getId(),null);
     for (Mission mission:missions){
       currentMission = mission;
     }
@@ -436,7 +436,7 @@ public class TestBradService extends AbstractTest {
     missionParticipant = this.service.updateMissionParticipantInProgram(currentProgram.getId(),missionParticipant);
     assertEquals("mp should have shipped status",Status.SHIPPED,missionParticipant.getStatus());
 //    assertEquals("should have 1 mp shipped",1,this.service.searchMissionParticipants(currentProgram.getId(),"",Status.SHIPPED,0,0).size());
-    assertEquals("should have 8 mission ",8,this.service.getAllMissionsByProgramId(currentProgram.getId()).size());
+    assertEquals("should have 8 mission ",8,this.service.getAllMissionsByProgramId(currentProgram.getId(),null).size());
 
 //    this.showInfo();
     this.showInfoRandom();

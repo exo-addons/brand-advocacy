@@ -24,12 +24,17 @@ $(function() {
       $(input).jzAjax("MissionController.ajaxUpdateInline()",{
         data:{missionId:missionId,action:"active",val:active},
         success:function(data){
-          if (null != data.error){
-            alert(data.msg);
-          }
-          else{
-
-          }
+          try{
+            var obj = data = $.parseJSON(data);
+            if($(".mission-prio-exceeded"))
+              $(".mission-prio-exceeded").hide();
+            if (obj.error){
+              if(obj.msg=="mission-prio-exceeded"){
+                $(".mission-prio-exceeded").show();
+              }else
+                alert(obj.msg);
+            }
+          }catch (e){}
         }
       });
     } else if (action == "updatePropositionInline"){
@@ -65,6 +70,7 @@ $(function() {
   });
 
   $(document).on('change.juzBrad.bk.mission.priority','select.priority',function(){
+
     var jPriority = $(this);
     var missionRow = jPriority.closest("tr");
     var checkBoxDOM = missionRow.find("input:checkbox");
@@ -73,9 +79,17 @@ $(function() {
     jPriority.jzAjax("MissionController.ajaxUpdateInline()",{
       data:{missionId:missionId,action:"priority",val:priority},
       success:function(data){
-        if (data == "nok"){
-          alert("something went wrong, cannot update mission");
-        }
+        try{
+          var obj = data = $.parseJSON(data);
+          if($(".mission-prio-exceeded"))
+            $(".mission-prio-exceeded").hide();
+          if (obj.error){
+            if(obj.msg=="mission-prio-exceeded"){
+              $(".mission-prio-exceeded").show();
+            }else
+              alert(obj.msg);
+          }
+        }catch (e){}
       }
     });
   });

@@ -140,14 +140,14 @@ public class MissionController {
 
   @Ajax
   @Resource
-  public void ajaxUpdateInline(String missionId,String action,String val){
+  public Response ajaxUpdateInline(String missionId,String action,String val){
+    Boolean error = false;
     Mission mission  = this.missionService.getMissionById(missionId);
     JSONObject jsonObject = new JSONObject();
     boolean doUpdate = true;
     String errorMsg = "";
     if (null != mission){
       if (action.equals("priority")){
-        
         mission.setPriority(Integer.parseInt(val));
       }else if (action.equals("active") ){
         Boolean mActive = false;
@@ -159,21 +159,33 @@ public class MissionController {
       }
       if (doUpdate){
         mission = this.missionService.updateMission(mission);
-        if(null != mission)
-          Response.ok("ok");
+        List<Mission> missions = this.missionService.getAllMissionsByProgramId(this.loginController.getCurrentProgramId(),true);
+        if (null != missions){
+          int totalPrio = 0;
+          for (Mission m:missions){
+            totalPrio +=(int)m.getPriority();
+          }
+          if (totalPrio > 100){
+            error = true;
+            errorMsg = "mission-prio-exceeded";
+          }
+        }
       }else {
         errorMsg = "You cannot activate this mission, as there is no proposition";
+        error = true;
       }
-    }else {
-      errorMsg = "mission doesnot exist any more";
+    }
+    if (null == mission){
+      errorMsg = "Something went wrong, cannot update mission";
+      error = true;
     }
     try {
-      jsonObject.put("error",true);
+      jsonObject.put("error",error);
       jsonObject.put("msg",errorMsg);
     } catch (JSONException e) {
       e.printStackTrace();
     }
-    Response.ok(jsonObject.toString());
+    return Response.ok(jsonObject.toString());
   }
 }
 

@@ -226,8 +226,8 @@ public class JCRImpl implements IService {
   }
 
   @Override
-  public List<Mission> getAllMissionsByProgramId(String programId) {
-    return this.getMissionDAO().getAllMissionsByProgramId(programId, null);
+  public List<Mission> getAllMissionsByProgramId(String programId,Boolean isActive) {
+    return this.getMissionDAO().getAllMissionsByProgramId(programId, isActive);
   }
 
   @Override
