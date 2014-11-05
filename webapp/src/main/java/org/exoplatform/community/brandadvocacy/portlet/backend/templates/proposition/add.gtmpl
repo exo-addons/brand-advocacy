@@ -1,0 +1,37 @@
+#{decorate path=container.gtmpl/}
+#{param name=missionId/}
+
+        <form action="@{PropositionController.add()}" method="POST" role="form">
+        <input type="hidden" name="missionId" id="missionId" value="<%=missionId%>" />
+
+		<!-- Popupp -->
+		<div class="uiPopup UIDragObject NormalStyle" style="display: block; left: 330px; top: 50px; visibility: visible; width: 540px; z-index: 4;">
+			<div class="popupHeader clearfix">
+				<a href="@{MissionController.editForm(missionId=missionId)}" title="Close Window" class="uiIconClose pull-right"></a>
+				<span class="PopupTitle popupTitle">Add a new Proposition</span>
+			</div>
+			<div class="PopupContent popupContent">
+				<div class="addNewProposition">
+					<div class="control-group">
+						<label class="control-label">Content:</label>
+						<div class="control row-fluid">
+							<textarea class="span12" style="min-height: 84px" name="content" id="content" cols="30" rows="15"></textarea>
+						</div>
+					</div>
+					<div class="row-fluid control-group">
+						<label class="control-label span2">Activated:</label>
+						<div class="controls">
+                            <div class="spaceIphoneChkBox">
+                                <input type="checkbox" name="active" value="false" style="visibility: hidden;"  data-action="" data-role/>
+                            </div>
+						</div>
+					</div>
+				</div>
+				<div class="uiAction uiActionBorder">
+				    <button class="btn" type="submit">Save</button>
+                    <a class="btn mgL20" href="@{MissionController.editForm(missionId=missionId)}">Cancel</a>
+				  </div>
+			</div>
+		</div>
+		<!-- Popupp -->
+        </form>

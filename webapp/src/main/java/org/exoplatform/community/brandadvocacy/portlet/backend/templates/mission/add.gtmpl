@@ -1,0 +1,42 @@
+#{decorate path=container.gtmpl/}
+#{param name=programId/}
+<form action="@{MissionController.add()}" method="POST" role="form">
+<!-- keep only this part for ajax -->
+
+    <div class="form-horizontal">
+        <div class="control-group">
+            <label class="control-label">Title:</label>
+            <div class="controls">
+                <input class="full" type="text" name="title" id="title" placeholder="Write a review on Sourceforge.com">
+            </div>
+        </div>
+        <div class="control-group">
+            <label class="control-label">Link:</label>
+            <div class="controls">
+                <input class="full" type="text" name="third_part_link" id="third_part_link"  placeholder="http://sourceforge.net/project/exo/">
+            </div>
+        </div>
+        <div class="control-group">
+            <label class="control-label">Priority:</label>
+            <div class="controls">
+                    <select name="priority" id="priority"  class="input-mini">
+                        <% for(def i=1;i<= 100;i++){ %>
+                            <option value="<%=i%>"><%= i %>%</option>
+                        <% } %>
+                    </select>
+            </div>
+        </div>
+        <!--div class="control-group">
+            <label class="control-label">Activated:</label>
+            <div class="spaceIphoneChkBox">
+                <input type="checkbox" name="active" value="true" checked style="visibility: hidden;"  data-action="" data-role/>
+            </div>
+        </div-->
+        <div class="text-center">
+            <button class="btn btn-primary" type="submit">Save</button>
+            <a class="btn mgL20" href=@{JuZBackEndApplication.index(action="mission_index")}>Cancel</a>
+        </div>
+    </div>
+
+<!-- end part keeping for ajax -->
+</form>

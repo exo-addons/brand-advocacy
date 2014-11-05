@@ -1,0 +1,75 @@
+#{decorate path=container.gtmpl/}
+#{param name=missions/}
+#{param name=programId/}
+#{param name=alertPriority/}
+<!-- keep only this part for ajax -->
+<div class="tab-pane fade" id="generalTab">...</div>
+<div class="tab-pane fade in active" id="missionsTab">
+    <ul class="breadcrumb">
+        <li><a href="#">Manager the missions</a><span class="uiIconMiniArrowRight"></span></li>
+    </ul>
+    <% if (alertPriority != ""){%>
+    <div class="alert alert-error">
+    <%=alertPriority%>
+    </div>
+    <% } %>
+    <br>
+    <table class="uiGrid table table-hover table-striped mgB0">
+        <thead>
+            <tr>
+                <th>Title</th>
+                <th class="center" style="width: 65px;">Priority</th>
+                <th>Link</th>
+                <th class="center" style="width: 65px;">Activated</th>
+                <th class="center actionContainer" style="width: 65px;">Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% missions.each { mission -> %>
+            <%
+                def mid = mission.getId();
+                def strActiveChkbox = "";
+                def strActiveVal = false;
+                if(mission.getActive()){
+                    strActiveChkbox = "checked";
+                    strActiveVal = true;
+                }
+            %>
+            <tr>
+                <td><a href="@{MissionController.editForm(missionId=mid)}">${mission.getTitle()}</a></td>
+                <td class="center">
+                    <select name="priority" id="priority"  class="input-mini priority">
+                        <% for(def i=1;i<= 100;i++){ %>
+                            <option value="<%=i%>" <% if (mission.getPriority() == i){%> selected <% } %>><%= i %>%</option>
+                        <% } %>
+                    </select>
+                </td>
+                <td><a href="<%= mission.getThird_part_link()%>" target="_blank"><%= mission.getThird_part_link()%></a></td>
+                <td class="center">
+                    <% if (mission.canActivate()){ %>
+                    <div class="spaceIphoneChkBox">
+                        <input type="checkbox" name="active" value="<%= strActiveVal%>" style="visibility: hidden;" <%=strActiveChkbox %> data-action="updateMissionInline" data-missionId="<%=mid%>" data-role/>
+                    </div>
+                    <% }else{ %>
+                        Disabled<small>(there is no active proposition)</small>
+                    <% } %>
+                </td>
+                <td class="center actionContainer">
+                    <a href="@{MissionController.editForm(missionId=mid)}" data-original-title="Edit" class="actionIcon" rel="tooltip" data-placement="bottom">
+                        <i class="uiIconViewUserInfo uiIconLightGray"></i>
+                    </a>
+                    <a href="@{MissionController.delete(missionId=mid)}" data-original-title="Delete" class="actionIcon" rel="tooltip" data-placement="bottom">
+                        <i class="uiIconDeleteUser uiIconLightGray"></i>
+                    </a>
+                </td>
+            </tr>
+            <% } %>
+        </tbody>
+    </table>
+</div>
+<div class="control-group">
+    <div class="controls text-right">
+        <a href="@{MissionController.addForm()}" class="btn btn-primary">Add</a>
+    </div>
+</div>
+<!-- end part keeping for ajax -->

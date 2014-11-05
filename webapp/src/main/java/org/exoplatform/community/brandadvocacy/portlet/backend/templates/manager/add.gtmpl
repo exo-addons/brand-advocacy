@@ -1,0 +1,14 @@
+#{decorate path=container.gtmpl/}
+#{param name=roles/}
+<form action="@{ManagerController.add2Program()}" method="POST" role="form">
+    <input type="text" name="username" id="username" value=""/>
+    <br/>
+    <select name="role" id="role">
+    <% roles.each{ role -> %>
+        <option value="<%= role.getValue() %>" ><%= role.getLabel() %></option>
+    <% } %>
+    </select>
+    <br/>
+    <input type="checkbox" name="notif" id="notif" value="true" />
+    <button type="submit">add</button>
+</form>

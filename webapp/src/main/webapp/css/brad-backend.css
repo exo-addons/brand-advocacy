@@ -1,0 +1,20 @@
+.referral-porlet {
+    padding: 20px;
+}
+.referral-porlet .addNewProposition textarea {
+    min-width: 100%;
+    max-width: 100%;
+}
+.referral-porlet .uiTabInPage {
+    position: relative;
+}
+.referral-porlet .text-center {
+    text-align: center;
+}
+.referral-porlet .ref-detail-user {
+    margin: 0 20px;
+}
+.referral-porlet .ref-detail-user .ref-user-name {
+    margin-top: 0;
+    color: #2f5e92;
+}
