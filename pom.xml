@@ -21,12 +21,12 @@
     <module>extension</module>
     <module>bundle</module>
   </modules>
-  <!--scm>
-    <connection></connection>
-    <developerConnection></developerConnection>
-    <tag></tag>
-    <url></url>
-  </scm-->
+  <scm>
+    <connection>scm:git:git://github.com/exo-addons/brand-advocacy.git</connection>
+    <developerConnection>scm:git:git@github.com:exo-addons/brand-advocacy.git</developerConnection>
+    <tag>HEAD</tag>
+    <url>https://github.com/exo-addons/brand-advocacy.git</url>
+  </scm>
   <properties>
     <exoplatform.version>4.1-M2</exoplatform.version>
 
