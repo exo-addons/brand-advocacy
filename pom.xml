@@ -113,22 +113,22 @@
       </dependency>
 
       <dependency>
-        <groupId>org.exoplatform.addons.brand-advocacy-addons</groupId>
+        <groupId>org.exoplatform.addons.brand-advocacy</groupId>
         <artifactId>brand-advocacy-lib</artifactId>
         <version>1.0.x-SNAPSHOT</version>
       </dependency>
       <dependency>
-        <groupId>org.exoplatform.addons.brand-advocacy-addons</groupId>
+        <groupId>org.exoplatform.addons.brand-advocacy</groupId>
         <artifactId>brand-advocacy-webapp</artifactId>
         <version>1.0.x-SNAPSHOT</version>
       </dependency>
       <dependency>
-        <groupId>org.exoplatform.addons.brand-advocacy-addons</groupId>
+        <groupId>org.exoplatform.addons.brand-advocacy</groupId>
         <artifactId>brand-advocacy-extension</artifactId>
         <version>1.0.x-SNAPSHOT</version>
       </dependency>
       <dependency>
-        <groupId>org.exoplatform.addons.brand-advocacy-addons</groupId>
+        <groupId>org.exoplatform.addons.brand-advocacy</groupId>
         <artifactId>brand-advocacy-config</artifactId>
         <version>1.0.x-SNAPSHOT</version>
       </dependency>
