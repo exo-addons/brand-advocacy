@@ -82,4 +82,5 @@ public interface IService {
   public List<MissionParticipant> searchMissionParticipants(Query query);
   public MissionParticipant updateMissionParticipantInProgram(String programId, MissionParticipant missionParticipant);
   public int getTotalMissionParticipants(Query query);
+  public MissionParticipant getCurrentMissionParticipantByUserName(String programId,String username);
 }

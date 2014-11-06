@@ -422,6 +422,11 @@ public class JCRImpl implements IService {
   }
 
   @Override
+  public MissionParticipant getCurrentMissionParticipantByUserName(String programId, String username) {
+    return this.getMissionParticipantDAO().getCurrentMissionParticipantByUserName(programId,username);
+  }
+
+  @Override
   public void removeMissionParticipant(String id) {
     this.getMissionParticipantDAO().removeMissionParticipant(id);
   }

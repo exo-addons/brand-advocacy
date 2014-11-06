@@ -345,4 +345,21 @@ public class MissionParticipantDAO extends DAO {
       log.error(brade.getMessage());
     }
   }
+  public MissionParticipant getCurrentMissionParticipantByUserName(String programId,String username){
+    Program program = this.getJcrImplService().getProgramDAO().getProgramById(programId);
+    if (null != program){
+      StringBuilder sql = new StringBuilder("select jcr:uuid from "+ JCRImpl.MISSION_PARTICIPANT_NODE_TYPE +" where ");
+      sql.append("jcr:path like '");
+      sql.append(JCRImpl.EXTENSION_PATH).append("/").append(Utils.queryEscape(program.getLabelID())).append("/").append(ProgramDAO.node_prop_missionparticipants);
+      sql.append("/%'");
+      sql.append(" AND ").append(node_prop_participant_username).append(" = '").append(username).append("'");
+      sql.append(" AND ").append(node_prop_address_id).append(" IS NULL ");
+      sql.append(" AND (").append(node_prop_status).append("=").append("1 OR " ).append(node_prop_status).append("=").append(" 2 ) ");
+      List<MissionParticipant> missionParticipants = this.transferNodes2Objects(this.getNodesByQuery(sql.toString(),0,1));
+      if (null != missionParticipants && missionParticipants.size() > 0){
+        return missionParticipants.get(0);
+      }
+    }
+    return null;
+  }
 }

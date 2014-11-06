@@ -94,14 +94,18 @@ $(function() {
     });
   });
 
-
-  $("div.spaceIphoneChkBox").children('input:checkbox').each(function () {
-    $(this).iphoneStyle({
-      checkedLabel:"Yes",
-      uncheckedLabel:"No"
+  try{
+    $("div.spaceIphoneChkBox").children('input:checkbox').each(function () {
+      $(this).iphoneStyle({
+        checkedLabel:"Yes",
+        uncheckedLabel:"No"
+      });
     });
-  //  $(this).closest("div.spaceIphoneChkBox").trigger("click");
-  });
+  }catch(e) {
+    $(".spaceIphoneChkBox").find(":checkbox").each(function(){
+      $(this).css("visibility", "visible");
+    });
+  }
   $(document).on('focus.juzBrad.bk.mission-participant.status','select.mission-participant-status',function(){
     bradBackend.currentMPStatus = $(this).val();
   }).change(function(evt){
@@ -123,7 +127,10 @@ $(function() {
   });
 
   $( document ).ready( function() {
-    $( 'textarea' ).ckeditor();
+    try{
+      $( 'textarea' ).ckeditor();
+    }catch (e){}
+
   } );
 
   function bradBackend(){

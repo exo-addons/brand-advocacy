@@ -2,6 +2,7 @@
  * Created by exoplatform on 13/10/14.
  */
 $(function() {
+  /*
   $(document).on('click.juzbrad.ft.discovery.view','#brad-ft-discovery',function(){
     var jDiscovery = $(this);
     jDiscovery.jzAjax("JuZFrontEndApplication.loadDiscoveryView()", {
@@ -16,6 +17,22 @@ $(function() {
       }
     });
   });
+  */
+  $(document).on('click.juzbrad.ft.discovery.view','#brad-ft-discovery',function(){
+    var jDiscovery = $(this);
+    jDiscovery.jzAjax("JuZFrontEndApplication.loadStepContainerView()", {
+      success: function (data) {
+        $("#brad-ft-container").html(data);
+        bradFrontend.ftStepDOM = $("#brad-ft-step");
+        bradFrontend.ftStepDOM.jzAjax("JuZFrontEndApplication.initView()", {
+          success: function (data) {
+            bradFrontend.ftStepDOM.html(data);
+          }
+        });
+      }
+    });
+  });
+
   $(document).on('click.juzbrad.ft.index.view','.btn-brad-close',function(){
     var jClose = $(this);
     jClose.jzAjax("JuZFrontEndApplication.loadIndexView()",{

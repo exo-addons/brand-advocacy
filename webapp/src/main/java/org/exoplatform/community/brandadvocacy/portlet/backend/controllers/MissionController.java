@@ -32,6 +32,7 @@ public class MissionController {
   Flash flash;
   @Inject
   public MissionController(IService missionService){
+
     this.missionService = missionService;
   }
 
