@@ -3,13 +3,18 @@
 #{param name=managers/}
 #{param name=roles/}
 #{param name=currentUser/}
-
 <% if (null != program){ %>
 <% def programId = program.getId(); %>
     <div class="tab-pane fade in active" id="generalTab">
         <div class="form-horizontal">
             <div class="control-group">
                 <label class="control-label">Program Title:</label>
+                <%if(flash.getMessage() != ""){%>
+                <div id="saveinfo" class="alert alert-success" style="display: inline-block;">
+                  <i class="uiIconSuccess"></i>Your changed have been saved.
+                </div>
+                <% } %>
+
                 <div class="controls">
                     <form action="@{ProgramController.update()}" method="POST" role="form" id="programForm">
                         <input type="hidden" name="programId" value="<%=program.getId() %>" >

@@ -1,0 +1,9 @@
+#{param name=type/}
+#{param name=icon/}
+#{param name=msg/}
+<div class="referral-porlet">
+	<h3>Brand Advocacy Admin</h3><br>
+    <div class="alert <%=type%>">
+        <i class="uiIcon<%=icon%>"></i><%=msg%>.
+    </div>
+</div>

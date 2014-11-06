@@ -5,6 +5,7 @@ import org.exoplatform.brandadvocacy.model.Manager;
 import org.exoplatform.brandadvocacy.model.Program;
 import org.exoplatform.brandadvocacy.model.Role;
 import org.exoplatform.brandadvocacy.service.IService;
+import org.exoplatform.community.brandadvocacy.portlet.backend.Flash;
 import org.exoplatform.community.brandadvocacy.portlet.backend.JuZBackEndApplication_;
 import org.exoplatform.community.brandadvocacy.portlet.backend.models.ManagerDTO;
 import org.exoplatform.services.organization.OrganizationService;
@@ -35,7 +36,8 @@ public class ProgramController {
 
   @Inject
   LoginController loginController;
-
+  @Inject
+  Flash flash;
   @Inject
   public ProgramController(OrganizationService organizationService,IService iService){
     this.organizationService = organizationService;
@@ -92,7 +94,9 @@ public class ProgramController {
     Program program = this.jcrService.getProgramById(programId);
     if (null != program){
       program.setTitle(title);
-      this.jcrService.updateProgram(program);
+      if (null != this.jcrService.updateProgram(program)){
+        flash.setMessage("program has been updated");
+      }
     }
     return JuZBackEndApplication_.index("program_index");
   }

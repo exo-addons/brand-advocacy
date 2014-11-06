@@ -22,6 +22,10 @@ public class JuZBackEndApplication {
   @Path("index.gtmpl")
   org.exoplatform.community.brandadvocacy.portlet.backend.templates.index indexTpl;
 
+  @Inject
+  @Path("error.gtmpl")
+  org.exoplatform.community.brandadvocacy.portlet.backend.templates.error errorTpl;
+
   OrganizationService organizationService;
   IService jcrService;
 
@@ -74,8 +78,13 @@ public class JuZBackEndApplication {
         return missionParticipantController.index();
       }
     }
-    return Response.ok("You have no rights");
+    return this.showError("alert-info","Info","You have no rights");
   }
+
+  public Response showError(String type,String icon,String msg){
+    return errorTpl.with().set("type",type).set("icon",icon).set("msg",msg).ok();
+  }
+
   @View
   public Response showError(String msg){
     return indexTpl.with().set("msg",msg).ok();

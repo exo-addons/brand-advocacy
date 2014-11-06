@@ -14,6 +14,7 @@ public class Flash {
   private String styleGeneralMenu="";
   private String styleMissionMenu="";
   private String styleMissionParticipantMenu="";
+  private String message="";
 
   public String getStyleGeneralMenu() {
     return styleGeneralMenu;
@@ -37,5 +38,13 @@ public class Flash {
 
   public void setStyleMissionParticipantMenu(String styleMissionParticipantMenu) {
     this.styleMissionParticipantMenu = styleMissionParticipantMenu;
+  }
+
+  public String getMessage() {
+    return message;
+  }
+
+  public void setMessage(String message) {
+    this.message = message;
   }
 }

@@ -73,11 +73,11 @@ public class JuZFrontEndApplication {
       if (null != this.currentMissionId){
         return indexTpl.ok();
       }else{
-        return Response.ok("no mission available");
+        return Response.ok("");
       }
     }
     else
-      return Response.ok("no program available");
+      return Response.ok("");
   }
 
   private void loadCurrentMission(){
@@ -121,7 +121,10 @@ public class JuZFrontEndApplication {
           return startTpl.ok();
         }
       }
-      return Response.ok("no prgram or mission ");
+    if (this.isFinished)
+      return Response.ok("We are preparing next mission, please come back later");
+    else
+      return Response.ok("");
   }
 
   @Ajax
@@ -130,7 +133,7 @@ public class JuZFrontEndApplication {
     if (null != this.currentProgramId)
       return indexTpl.ok();
     else
-      return Response.ok("no program available");
+      return Response.ok("We are preparing next mission, please come back later");
   }
 
   @Ajax

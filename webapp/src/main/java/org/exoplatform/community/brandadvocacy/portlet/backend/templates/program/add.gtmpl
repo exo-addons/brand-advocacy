@@ -8,9 +8,6 @@
                     <input class="full" type="text" name="title" placeholder="Win a free eXo T-Shirt !">
                 </div>
             </div>
-            <div class="control-group list-managers-container">
-            list manager here
-            </div>
         </div>
         <div class="control-group">
             <div class="controls text-right">
