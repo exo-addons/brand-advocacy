@@ -2,6 +2,43 @@
  * Created by exoplatform on 13/10/14.
  */
 (function($) {
+
+  function bradFrontend(){
+    this.ftStepDOM = null;
+  };
+
+  bradFrontend.prototype.checkFtForm = function(missionId, propositionId ){
+    var res = true;
+    if(null == missionId || 0 == missionId || typeof missionId == "undefined")
+      res = false;
+    else if(null == propositionId || 0 == propositionId || typeof propositionId == "undefined")
+      res = false;
+
+    if(!res)
+      alert(" something went wrong, cannot identify current mission");
+    return res;
+  }
+
+  bradFrontend.prototype.loadTerminateView = function(){
+    var jDoneBtn = $(".btn-brad-done");
+    $(".jz").jzAjax("JuZFrontEndApplication.loadTerminateView()",{
+      success: function(data){
+        if(typeof data == "string" && data != "nok")
+          bradFrontend.ftStepDOM.html(data);
+        else
+          alert("something went wrong");
+      }
+    });
+  }
+  bradFrontend.prototype.loadStartView = function () {
+    $("#brandadvocacy-ft").jzLoad("JuZFrontEndApplication.loadStartView()",
+      {},
+      function(data){
+        $("#brandadvocacy-ft").html(data);
+      });
+  }
+  window.bradFrontend = new bradFrontend();
+
   /*
   $(document).on('click.juzbrad.ft.discovery.view','#brad-ft-discovery',function(){
     var jDiscovery = $(this);
@@ -57,10 +94,28 @@
   $(document).on('click.juzbrad.ft.done.view','.btn-brad-done',function(){
     var missionId = $(".missionId").val();
     var propositionId = $(".propositionId").val();
-    var status = $(".mpStatus").val();
-    if(bradFrontend.checkFtForm(missionId,propositionId)){
-      bradFrontend.loadTerminateView();
+    //var status = $(".mpStatus").val();
+    //if(bradFrontend.checkFtForm(missionId,propositionId)){
+    var res = true;
+    if(null == missionId || 0 == missionId || typeof missionId == "undefined")
+      res = false;
+    else if(null == propositionId || 0 == propositionId || typeof propositionId == "undefined")
+      res = false;
+
+    if(!res){
+      alert(" something went wrong, cannot identify current mission");
+      return;
     }
+//    bradFrontend.loadTerminateView();
+    $(".jz").jzAjax("JuZFrontEndApplication.loadTerminateView()",{
+      success: function(data){
+        if(typeof data == "string" && data != "nok")
+          bradFrontend.ftStepDOM.html(data);
+        else
+          alert("something went wrong");
+      }
+    });
+    //}
   });
 
   $(document).on('click.juzbrad.ft.terminate.view','.btn-brad-terminate',function(){
@@ -82,41 +137,5 @@
       }
     });
   });
-
-  function bradFrontend(){
-    this.ftStepDOM = null;
-  };
-
-  bradFrontend.prototype.checkFtForm = function(missionId, propositionId ){
-    var res = true;
-    if(null == missionId || 0 == missionId || typeof missionId == "undefined")
-      res = false;
-    else if(null == propositionId || 0 == propositionId || typeof propositionId == "undefined")
-      res = false;
-
-    if(!res)
-      alert(" something went wrong, cannot identify current mission");
-    return res;
-  }
-
-  bradFrontend.prototype.loadTerminateView = function(){
-    var jDoneBtn = $(".btn-brad-done");
-    jDoneBtn.jzAjax("JuZFrontEndApplication.loadTerminateView()",{
-      success: function(data){
-        if(typeof data == "string" && data != "nok")
-          bradFrontend.ftStepDOM.html(data);
-        else
-          alert("something went wrong");
-      }
-    });
-  }
-  bradFrontend.prototype.loadStartView = function () {
-    $("#brandadvocacy-ft").jzLoad("JuZFrontEndApplication.loadStartView()",
-      {},
-      function(data){
-        $("#brandadvocacy-ft").html(data);
-      });
-  }
-  window.bradFrontend = new bradFrontend();
   return window.bradFrontend;
 })($);
