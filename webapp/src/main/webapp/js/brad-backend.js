@@ -1,7 +1,7 @@
 /**
  * Created by exoplatform on 08/10/14.
  */
-$(function() {
+(function($) {
   $(document).on('click.juzBrad.bk.chkBox','div .spaceIphoneChkBox',function(){
     var input = $(this).find("input:checkbox");
     var val = input.attr("value") == "true" ? "false" : "true";
@@ -152,4 +152,4 @@ $(function() {
   window.bradBackend = new bradBackend();
   return window.bradBackend;
 
-});
+})($);

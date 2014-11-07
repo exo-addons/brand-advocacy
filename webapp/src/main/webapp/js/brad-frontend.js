@@ -1,7 +1,7 @@
 /**
  * Created by exoplatform on 13/10/14.
  */
-$(function() {
+(function($) {
   /*
   $(document).on('click.juzbrad.ft.discovery.view','#brad-ft-discovery',function(){
     var jDiscovery = $(this);
@@ -117,5 +117,6 @@ $(function() {
         $("#brandadvocacy-ft").html(data);
       });
   }
-  var bradFrontend = new bradFrontend();
-});
+  window.bradFrontend = new bradFrontend();
+  return window.bradFrontend;
+})($);

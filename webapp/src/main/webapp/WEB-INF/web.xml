@@ -6,6 +6,18 @@
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd">
 		<display-name>brand-advocacy-webapp</display-name>
+    <!-- ================================================================== -->
+    <!-- = GateIn configuration = -->
+    <!-- ================================================================== -->
+    <servlet>
+      <servlet-name>GateInServlet</servlet-name>
+      <servlet-class>org.gatein.wci.api.GateInServlet</servlet-class>
+      <load-on-startup>0</load-on-startup>
+    </servlet>
+    <servlet-mapping>
+      <servlet-name>GateInServlet</servlet-name>
+      <url-pattern>/gateinservlet</url-pattern>
+    </servlet-mapping>
     <!-- Injection container to use: guice, spring, cdi or weld -->
     <context-param>
       <param-name>juzu.inject</param-name>
