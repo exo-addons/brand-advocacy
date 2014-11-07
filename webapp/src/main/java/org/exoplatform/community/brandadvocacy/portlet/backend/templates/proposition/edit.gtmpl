@@ -11,7 +11,6 @@ if(proposition != null){
         strActiveVal = true;
     }
 %>
-
     <form action="@{PropositionController.update()}" method="POST" role="form">
         <input type ="hidden" name="propositionId" id="propositionId"  value="<%= proposition.getId()%>" />
         <input type ="hidden" name="labelID" id="labelID" value="<%= proposition.getLabelID()%>" />
@@ -53,3 +52,8 @@ if(proposition != null){
 <%
 }
 %>
+<script src="/brand-advocacy-webapp/ckeditor/ckeditor.js" >
+</script>
+<script>
+ CKEDITOR.replace( 'content' );
+</script>

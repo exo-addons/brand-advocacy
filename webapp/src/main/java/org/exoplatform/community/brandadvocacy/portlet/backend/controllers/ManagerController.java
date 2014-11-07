@@ -19,6 +19,7 @@ import java.util.List;
 /**
  * Created by exoplatform on 10/12/14.
  */
+@SessionScoped
 public class ManagerController {
 
 

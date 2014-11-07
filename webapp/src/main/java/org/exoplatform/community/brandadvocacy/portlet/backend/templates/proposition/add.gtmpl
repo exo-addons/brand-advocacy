@@ -35,3 +35,8 @@
 		</div>
 		<!-- Popupp -->
         </form>
+<script src="/brand-advocacy-webapp/ckeditor/ckeditor.js" >
+</script>
+<script>
+ CKEDITOR.replace( 'content' );
+</script>

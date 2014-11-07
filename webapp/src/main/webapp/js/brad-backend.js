@@ -149,7 +149,7 @@
 
   }
 
-  window.bradBackend = new bradBackend();
-  return window.bradBackend;
+  window.bradAdvBackend = new bradBackend();
+  return window.bradAdvBackend;
 
 })($);

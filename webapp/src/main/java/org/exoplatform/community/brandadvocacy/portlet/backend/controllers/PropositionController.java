@@ -13,6 +13,7 @@ import java.util.List;
 /**
  * Created by exoplatform on 10/10/14.
  */
+@SessionScoped
 public class PropositionController {
 
   IService propositionService;
@@ -37,6 +38,8 @@ public class PropositionController {
     org.exoplatform.community.brandadvocacy.portlet.backend.templates.proposition.view viewTpl;
 
   */
+  @Inject
+  LoginController loginController;
   @Inject
   Flash flash;
   @Inject

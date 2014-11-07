@@ -64,6 +64,11 @@
         <version>${exoplatform.version}</version>
       </dependency>
       <dependency>
+        <groupId>org.exoplatform.commons</groupId>
+        <artifactId>commons-webui-resources</artifactId>
+        <version>${exoplatform.version}</version>
+      </dependency>
+      <dependency>
         <groupId>org.juzu</groupId>
         <artifactId>juzu-core</artifactId>
         <version>0.6.2</version>

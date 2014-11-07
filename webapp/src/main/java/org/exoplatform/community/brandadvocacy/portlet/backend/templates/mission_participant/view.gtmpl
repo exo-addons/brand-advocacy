@@ -22,8 +22,6 @@ def tshirtSize = missionParticipantDTO.getSize();
 def strMissionTitle = missionParticipantDTO.getMission_title();
 def strDateSubmitted = missionParticipantDTO.getDate_submitted()
 %>
-
-
 <!-- part for ajax -->
     <div class="tab-pane fade in active" id="participantsTab">
         <ul class="breadcrumb">
@@ -77,8 +75,3 @@ def strDateSubmitted = missionParticipantDTO.getDate_submitted()
         <!-- /.ref-detail-user -->
     </div>
 <!-- end keep this part for ajax -->
-<script type="text/javascript">
-$(document).ready(function(){
-    bradBackend.loadPreviousMissionParticipant('<%=username%>');
-});
-</script>
