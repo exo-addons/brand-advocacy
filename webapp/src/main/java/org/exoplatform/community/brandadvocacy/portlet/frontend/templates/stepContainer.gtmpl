@@ -7,7 +7,7 @@
                 <h3 class="fix-step-3">Win a free eXo tshirt !</h3>
             </div>
             <!-- step content here -->
-            <div id="brad-ft-step">
+            <div class="brad-container-step-container">
 
             </div>
         </div>

@@ -27,6 +27,7 @@ public class JuZFrontEndApplication {
   String currentMissionId;
   String currentProgramId;
   Boolean isFinished;
+
   @Inject
   @Path("index.gtmpl")
   org.exoplatform.community.brandadvocacy.portlet.frontend.templates.index indexTpl;
@@ -60,24 +61,23 @@ public class JuZFrontEndApplication {
     this.currentMissionParticipantId = null;
     this.currentPropositionId = null;
     this.currentMissionParticipantStatus = null;
-  }
-  @View
-  public Response.Content index(SecurityContext securityContext){
-    this.isFinished=false;
-    this.init();
-    this.remoteUserName = securityContext.getUserPrincipal().getName();
     if (null == this.currentProgramId)
       this.loadCurrentProgram();
     if (null != this.currentProgramId) {
       this.loadCurrentMission();
+    }
+  }
+  @View
+  public Response.Content index(SecurityContext securityContext){
+    this.isFinished = false;
+    this.remoteUserName = securityContext.getUserPrincipal().getName();
+    if (null != remoteUserName){
+      this.init();
       if (null != this.currentMissionId){
         return indexTpl.ok();
-      }else{
-        return Response.ok("");
       }
     }
-    else
-      return Response.ok("");
+    return Response.ok("");
   }
 
   private void loadCurrentMission(){
@@ -91,6 +91,13 @@ public class JuZFrontEndApplication {
       Mission mission = this.jcrService.getRandomMisson(this.currentProgramId,this.remoteUserName);
       if (null != mission){
         this.currentMissionId = mission.getId();
+        Proposition proposition = this.jcrService.getRandomProposition(this.currentMissionId);
+        if (null != proposition){
+          if (this.addMissionParticipant(this.currentMissionId,proposition.getId())) {
+            this.currentPropositionId = proposition.getId();
+            this.currentMissionParticipantStatus = Status.OPEN.getLabel();
+          }
+        }
       }
     }
   }
@@ -107,29 +114,28 @@ public class JuZFrontEndApplication {
   @Resource
   public Response.Content initView(){
     if (null != this.currentMissionId){
-        if (null != this.currentMissionParticipantId){
-          if (Status.OPEN.getLabel().equals(this.currentMissionParticipantStatus)){
-            Mission mission = this.getOrCreateRandomMission();
-            return processTpl.with().set("mission", mission).ok();
-          }else if (Status.INPROGRESS.getLabel().equals(this.currentMissionParticipantStatus)){
-              return terminateTpl.with().set("sizes", Size.values()).ok();
-          }else {
-            return this.startTpl.ok();
-          }
-        }
-        else{
-          return startTpl.ok();
+      if (null != this.currentMissionParticipantId){
+        if (Status.OPEN.getLabel().equals(this.currentMissionParticipantStatus)){
+          Mission mission = this.getCurrentMission();
+          return processTpl.with().set("mission", mission).ok();
+        }else if (Status.INPROGRESS.getLabel().equals(this.currentMissionParticipantStatus)){
+            return terminateTpl.with().set("sizes", Size.values()).ok();
+        }else {
+          return this.startTpl.ok();
         }
       }
-    if (this.isFinished)
-      return Response.ok("We are preparing next mission, please come back later");
-    else
-      return Response.ok("");
+      else{
+        return startTpl.ok();
+      }
+    }
+    return Response.ok("");
   }
 
   @Ajax
   @Resource
   public Response.Content loadIndexView(){
+    if (this.isFinished)
+      this.init();
     if (null != this.currentProgramId)
       return indexTpl.ok();
     else
@@ -151,7 +157,7 @@ public class JuZFrontEndApplication {
   @Ajax
   @Resource
   public Response loadProcessView(){
-    Mission missionRandom = this.getOrCreateRandomMission();
+    Mission missionRandom = this.getCurrentMission();
     if(null != missionRandom)
      return processTpl.with().set("mission", missionRandom).ok();
     else
@@ -187,7 +193,6 @@ public class JuZFrontEndApplication {
           missionParticipant.setAddress_id(addressObj.getId());
           missionParticipant.setSize(Size.getSize(Integer.parseInt(size)));
           if (null != this.jcrService.updateMissionParticipantInProgram(this.currentProgramId,missionParticipant) ){
-            this.init();
             this.isFinished = true;
             return thankyouTpl.ok();
           }
@@ -231,7 +236,7 @@ public class JuZFrontEndApplication {
     return false;
   }
 
-  private Mission getOrCreateRandomMission(){
+  private Mission getCurrentMission(){
     Mission randomMission = null;
     Proposition randomProposition = null;
     if (null != this.currentMissionId){
@@ -243,18 +248,6 @@ public class JuZFrontEndApplication {
           propositions.add(randomProposition);
           randomMission.setPropositions(propositions);
           return randomMission;
-        }
-
-      }
-      else{
-        randomProposition = this.jcrService.getRandomProposition(randomMission.getId());
-        if(null != randomProposition){
-          if (this.addMissionParticipant(randomMission.getId(),randomProposition.getId()) ){
-            this.currentMissionParticipantStatus = Status.OPEN.getLabel();
-            propositions.add(randomProposition);
-            randomMission.setPropositions(propositions);
-            return randomMission;
-          }
         }
       }
     }

@@ -1,3 +1,12 @@
+<%
+      import org.exoplatform.portal.webui.util.Util;
+      import org.exoplatform.webui.application.portlet.PortletRequestContext;
+      import org.exoplatform.web.application.JavascriptManager;
+
+      def pcontext = Util.getPortalRequestContext();
+      def jsManager = pcontext.getJavascriptManager();
+      jsManager.require("SHARED/jQueryJuzBrandAdvBackend", "brandAdvBackend").addScripts("brandAdvBackend.init();");
+%>
 <div class="referral-porlet">
 	<h3>Brand Advocacy Admin</h3><br>
 	<!-- TAB 1 -->
