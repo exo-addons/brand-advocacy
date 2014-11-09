@@ -1,4 +1,3 @@
-#{decorate path=container.gtmpl/}
 #{param name=missions/}
 #{param name=programId/}
 #{param name=alertPriority/}
@@ -54,10 +53,10 @@
                     <% } %>
                 </td>
                 <td class="center actionContainer">
-                    <a href="@{MissionController.editForm(missionId=mid)}" data-original-title="Edit" class="actionIcon" rel="tooltip" data-placement="bottom">
+                    <a href="#" data-original-title="Edit" class="actionIcon load-edit-mission-form" data-missionId="<%=mid%>" rel="tooltip" data-placement="bottom">
                         <i class="uiIconViewUserInfo uiIconLightGray"></i>
                     </a>
-                    <a href="@{MissionController.delete(missionId=mid)}" data-original-title="Delete" class="actionIcon" rel="tooltip" data-placement="bottom">
+                    <a href="#" data-original-title="Delete" class="actionIcon removeMission"  data-missionId="<%=mid%>" rel="tooltip" data-placement="bottom">
                         <i class="uiIconDeleteUser uiIconLightGray"></i>
                     </a>
                 </td>
@@ -68,7 +67,7 @@
 </div>
 <div class="control-group">
     <div class="controls text-right">
-        <a href="@{MissionController.addForm()}" class="btn btn-primary">Add</a>
+        <a href="#" class="btn btn-primary btn-load-add-mission-form">Add</a>
     </div>
 </div>
 <!-- end part keeping for ajax -->

@@ -5,6 +5,7 @@ import org.exoplatform.brandadvocacy.model.Manager;
 import org.exoplatform.brandadvocacy.model.Program;
 import org.exoplatform.brandadvocacy.model.Role;
 import org.exoplatform.brandadvocacy.service.IService;
+import org.exoplatform.commons.juzu.ajax.Ajax;
 import org.exoplatform.community.brandadvocacy.portlet.backend.Flash;
 import org.exoplatform.community.brandadvocacy.portlet.backend.JuZBackEndApplication_;
 import org.exoplatform.community.brandadvocacy.portlet.backend.models.ManagerDTO;
@@ -44,6 +45,8 @@ public class ProgramController {
     this.jcrService = iService;
   }
 
+  @Ajax
+  @Resource
   public Response index(){
     Program program = null;
     String programId = loginController.getCurrentProgramId();
@@ -52,53 +55,40 @@ public class ProgramController {
     }
 
     if (null != program){
-      List<Manager> managers = this.jcrService.getAllManagersInProgram(programId);
-      User exoUser;
-      List<ManagerDTO> managerDTOs = new ArrayList<ManagerDTO>(managers.size());
-      ManagerDTO managerDTO;
-      for (Manager manager:managers){
-        try {
-          exoUser = this.organizationService.getUserHandler().findUserByName(manager.getUserName());
-          if(null != exoUser){
-            managerDTO = new ManagerDTO(manager.getUserName());
-            managerDTO.setFullName(exoUser.getFirstName() + " "+exoUser.getLastName());
-            managerDTO.setRole(manager.getRole());
-            managerDTO.setNotif(manager.getNotif());
-            managerDTOs.add(managerDTO);
-          }
-        } catch (Exception e) {
-          e.printStackTrace();
-        }
-      }
-      return indexTpl.with().set("roles", Role.values()).set("program", program).set("managers",managerDTOs).set("currentUser",loginController.getCurrentUserName()).ok();
+      return indexTpl.with().set("program", program).ok();
     }
     else
       return addTpl.ok();
   }
-  @Action
+  @Ajax
+  @Resource
   public Response add(String title){
     Program program = new Program(title);
     program = this.jcrService.addProgram(program);
     if (null != program){
       Manager manager = new Manager(loginController.getCurrentUserName());
       manager.setParentId(program.getId());
-      this.jcrService.addManager2Program(manager);
-      return JuZBackEndApplication_.index("program_index");
-    }else
-      return JuZBackEndApplication_.showError("cannot add program, please retry later");
-
+      if (null != this.jcrService.addManager2Program(manager)) {
+        loginController.setCurrentProgramId(program.getId());
+        return Response.ok(program.getId());
+      }
+    }
+    return Response.ok("nok");
   }
 
-  @Action
-  public Response update(String programId,String title){
+  @Ajax
+  @Resource
+  public Response update(String title){
+    String programId = loginController.getCurrentProgramId();
     Program program = this.jcrService.getProgramById(programId);
     if (null != program){
       program.setTitle(title);
       if (null != this.jcrService.updateProgram(program)){
-        flash.setMessage("program has been updated");
+        return Response.ok("ok");
       }
     }
-    return JuZBackEndApplication_.index("program_index");
+    return Response.ok("nok");
   }
+
 
 }

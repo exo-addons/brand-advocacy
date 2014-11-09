@@ -313,7 +313,7 @@ public class ManagerDAO extends DAO{
     return null;
   }
 
-  public void removeManagerFromProgram(String programId, String username){
+  public Boolean removeManagerFromProgram(String programId, String username){
 
     Node managerNode = this.getProgramManagerNodeById(programId,username);
     if (null != managerNode){
@@ -321,10 +321,12 @@ public class ManagerDAO extends DAO{
         Session session = managerNode.getSession();
         managerNode.remove();
         session.save();
+        return true;
       } catch (RepositoryException e) {
         log.error("ERROR cannot remove manager from program "+e.getMessage());
       }
     }
+    return false;
   }
 
   public Manager updateProgramManager(Manager manager){

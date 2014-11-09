@@ -17,6 +17,9 @@
 package org.exoplatform.brandadvocacy.service;
 
 import org.exoplatform.brandadvocacy.model.*;
+import org.exoplatform.brandadvocacy.model.Query;
+import org.exoplatform.commons.utils.ListAccess;
+import org.exoplatform.services.organization.*;
 
 import javax.jcr.RepositoryException;
 import java.util.List;
@@ -62,7 +65,7 @@ public interface IService {
   public Manager addManager2Program(Manager manager);
   public List<Manager> addManagers2Program(String programId,List<Manager> managers);
   public Manager updateProgramManager(Manager manager);
-  public void removeManagerFromProgram(String programId, String username);
+  public Boolean removeManagerFromProgram(String programId, String username);
   public Manager getProgramManagerByUserName(String programId, String username);
   public List<Manager> getAllManagersInProgram(String programId);
 
@@ -83,4 +86,6 @@ public interface IService {
   public MissionParticipant updateMissionParticipantInProgram(String programId, MissionParticipant missionParticipant);
   public int getTotalMissionParticipants(Query query);
   public MissionParticipant getCurrentMissionParticipantByUserName(String programId,String username);
+
+  public ListAccess<org.exoplatform.services.organization.User> searchEXOUsers(String keyword);
 }

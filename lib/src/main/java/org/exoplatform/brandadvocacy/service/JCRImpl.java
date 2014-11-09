@@ -18,6 +18,8 @@ package org.exoplatform.brandadvocacy.service;
 
 import org.exoplatform.brandadvocacy.jcr.*;
 import org.exoplatform.brandadvocacy.model.*;
+import org.exoplatform.brandadvocacy.model.Query;
+import org.exoplatform.commons.utils.ListAccess;
 import org.exoplatform.container.xml.InitParams;
 import org.exoplatform.container.xml.ValueParam;
 import org.exoplatform.services.jcr.RepositoryService;
@@ -27,18 +29,16 @@ import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.services.jcr.ext.distribution.DataDistributionManager;
 import org.exoplatform.services.jcr.ext.distribution.DataDistributionMode;
 import org.exoplatform.services.jcr.ext.distribution.DataDistributionType;
-import org.exoplatform.services.jcr.impl.core.query.QueryImpl;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 import org.exoplatform.services.mail.MailService;
-import org.exoplatform.services.organization.OrganizationService;
+import org.exoplatform.services.organization.*;
 import org.exoplatform.social.core.manager.IdentityManager;
 
 import javax.jcr.Node;
-import javax.jcr.NodeIterator;
+
 import javax.jcr.RepositoryException;
 import javax.jcr.Session;
-import java.util.LinkedList;
 import java.util.List;
 
 
@@ -51,6 +51,7 @@ import java.util.List;
  */
 public class JCRImpl implements IService {
 
+  private OrganizationService organizationService;
   private RepositoryService repositoryService;
   private SessionProviderService sessionService;
   private DataDistributionManager dataDistributionManager;
@@ -88,7 +89,7 @@ public class JCRImpl implements IService {
   
   public static final String APP_PATH = "ApplicationData/brandAdvocacyExtension";
   
-  public JCRImpl(InitParams params, SessionProviderService sessionService, RepositoryService repositoryService, DataDistributionManager dataDistributionManager,IdentityManager identityManager,MailService mailService){
+  public JCRImpl(InitParams params, SessionProviderService sessionService, RepositoryService repositoryService, DataDistributionManager dataDistributionManager,IdentityManager identityManager,MailService mailService,OrganizationService organizationService){
 
     if(params != null){
       ValueParam param = params.getValueParam("workspace");
@@ -107,6 +108,7 @@ public class JCRImpl implements IService {
     this.dataDistributionManager = dataDistributionManager;
     this.repositoryService = repositoryService;
     this.emailService = new EmailService(this,identityManager,mailService);
+    this.setOrganizationService(organizationService);
     this.getOrCreateExtensionHome();
   }
   public Session getSession() throws RepositoryException {
@@ -124,22 +126,20 @@ public class JCRImpl implements IService {
       throw new RuntimeException(e);
     }
   }
-  public List<Node> getNodeByQuery(String strQuery, int offset, int limit) throws RepositoryException {
-    StringBuilder sql = new StringBuilder(strQuery);
-    Session session = this.getSession();
-    QueryImpl jcrQuery = (QueryImpl) session.getWorkspace().getQueryManager().createQuery(sql.toString(), javax.jcr.query.Query.SQL);
-    if (limit >= 0) {
-        jcrQuery.setOffset(offset);
-        jcrQuery.setLimit(limit);
+  public ListAccess<org.exoplatform.services.organization.User> searchEXOUsers(String keyword){
+    org.exoplatform.services.organization.Query query = new org.exoplatform.services.organization.Query();
+    query.setUserName(keyword+"*");
+/*    query.setFirstName(keyword);
+    query.setLastName(keyword);
+    query.setEmail(keyword);*/
+    UserHandler userHandler = this.getOrganizationService().getUserHandler();
+    try {
+      ListAccess<org.exoplatform.services.organization.User> userListAccess = userHandler.findUsersByQuery(query);
+      return userListAccess;
+    } catch (Exception e) {
     }
-    NodeIterator results = jcrQuery.execute().getNodes();
-
-    List<Node> nodes = new LinkedList<Node>();
-    while (results.hasNext()) {
-        nodes.add(results.nextNode());
-    }
-    return nodes;
-  }  
+    return null;
+  }
   public Node getOrCreateExtensionHome(){
     String path = String.format("%s", EXTENSION_PATH);
     return this.getOrCreateNode(path);
@@ -336,8 +336,8 @@ public class JCRImpl implements IService {
   }
 
   @Override
-  public void removeManagerFromProgram(String programId, String username) {
-    this.getManagerDAO().removeManagerFromProgram(programId,username);
+  public Boolean removeManagerFromProgram(String programId, String username) {
+    return this.getManagerDAO().removeManagerFromProgram(programId,username);
   }
 
   @Override
@@ -436,4 +436,11 @@ public class JCRImpl implements IService {
     return this.getMissionParticipantDAO().searchMissionParticipants(query);
   }
 
+  public OrganizationService getOrganizationService() {
+    return organizationService;
+  }
+
+  public void setOrganizationService(OrganizationService organizationService) {
+    this.organizationService = organizationService;
+  }
 }

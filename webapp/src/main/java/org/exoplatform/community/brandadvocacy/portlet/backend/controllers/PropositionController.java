@@ -84,7 +84,7 @@ public class PropositionController {
       proposition.setActive(proposActive);
       proposition = this.propositionService.addProposition2Mission(proposition);
       if(null != proposition){
-        return MissionController_.editForm(missionId);
+        return Response.ok("ok");
       }
     }
     else{
@@ -98,7 +98,7 @@ public class PropositionController {
   public Response delete(String propositionId){
     String missionId = this.propositionService.removeProposition(propositionId);
     if (null != missionId)
-      return MissionController_.editForm(missionId);
+      return Response.ok("ok");
     return JuZBackEndApplication_.showError("mission doesnot exist anymore");
   }
   @Action
@@ -112,7 +112,7 @@ public class PropositionController {
       proposition.setActive(proposActive);
       proposition = this.propositionService.updateProposition(proposition);
       if (null != proposition)
-        return MissionController_.editForm(proposition.getMission_id());
+        return Response.ok("ok");
     }
     return JuZBackEndApplication_.showError(" Proposition does not exist any more to update");
 

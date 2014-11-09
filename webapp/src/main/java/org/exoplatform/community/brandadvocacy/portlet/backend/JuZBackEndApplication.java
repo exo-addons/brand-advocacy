@@ -63,16 +63,16 @@ public class JuZBackEndApplication {
       if (null != action){
         if (action.equals("mission_participant_index")) {
           flash.setStyleMissionParticipantMenu("active");
-          return missionParticipantController.index();
+         // return missionParticipantController.index();
         }
         else if (action.equals("mission_index")) {
           flash.setStyleMissionMenu("active");
-          return missionController.index();
+        //  return missionController.index();
         }
       }
       if (loginController.isAdmin()){
         flash.setStyleGeneralMenu("active");
-        return programController.index();
+        return indexTpl.ok();
       }else{
         flash.setStyleMissionParticipantMenu("active");
         return missionParticipantController.index();

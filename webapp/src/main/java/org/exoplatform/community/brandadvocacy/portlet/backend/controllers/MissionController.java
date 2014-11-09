@@ -52,18 +52,22 @@ public class MissionController {
   @Path("mission/list.gtmpl")
   org.exoplatform.community.brandadvocacy.portlet.backend.templates.mission.list listTpl;
 
+  @Ajax
+  @Resource
   public Response index(){
     if (null != loginController.getCurrentProgramId())
       return this.list("",null,null);
     else
-      return indexTpl.ok();
+      return Response.ok("There is no program yet");
   }
-  @View
+  @Ajax
+  @Resource
   public Response addForm(){
-
-    return addTpl.with().set("programId",loginController.getCurrentProgramId()).ok();
+    return addTpl.with().ok();
   }
-  @View
+
+  @Ajax
+  @Resource
   public Response editForm(String missionId){
     this.flash.setStyleMissionMenu("active");
     Mission mission =  this.missionService.getMissionById(missionId);
@@ -72,7 +76,7 @@ public class MissionController {
       List<Proposition> propositions = this.missionService.getAllPropositions(mission.getId(),null);
       return editTpl.with().set("priorities", Priority.values()).set("mission",missionDTO).set("propositions",propositions).ok();
     }
-    return Response.ok("mission not found").withMimeType("text/html; charset=UTF-8").withHeader("Cache-Control", "no-cache");
+    return Response.ok("nok");
   }
 
   public Response list(String keyword, String size, String page){
@@ -115,7 +119,8 @@ public class MissionController {
       return JuZBackEndApplication_.showError("can not add mission to program, please try later");
   }
 
-  @Action
+  @Ajax
+  @Resource
   public Response update(String id, String title, String third_part_link, String priority, String mission_active){
     Mission mission  = this.missionService.getMissionById(id);
     if (null != mission){
