@@ -216,8 +216,8 @@ public class JCRImpl implements IService {
   }
 
   @Override
-  public void removeMissionById(String missionId) {
-    this.getMissionDAO().removeMissionById(missionId);
+  public Boolean removeMissionById(String missionId) {
+    return this.getMissionDAO().removeMissionById(missionId);
   }
 
   @Override
@@ -371,7 +371,7 @@ public class JCRImpl implements IService {
   }
 
   @Override
-  public String removeProposition(String propositionId) {
+  public Boolean removeProposition(String propositionId) {
     return this.getPropositionDAO().removeProposition(propositionId);
   }
 

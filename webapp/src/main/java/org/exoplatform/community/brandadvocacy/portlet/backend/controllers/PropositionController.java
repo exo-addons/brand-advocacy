@@ -17,9 +17,6 @@ import java.util.List;
 public class PropositionController {
 
   IService propositionService;
-  @Inject
-  @Path("proposition/index.gtmpl")
-  org.exoplatform.community.brandadvocacy.portlet.backend.templates.proposition.index indexTpl;
 
   @Inject
   @Path("proposition/add.gtmpl")
@@ -32,12 +29,7 @@ public class PropositionController {
   @Inject
   @Path("proposition/list.gtmpl")
   org.exoplatform.community.brandadvocacy.portlet.backend.templates.proposition.list listTpl;
-  /*
-    @Inject
-    @Path("proposition/view.gtmpl")
-    org.exoplatform.community.brandadvocacy.portlet.backend.templates.proposition.view viewTpl;
 
-  */
   @Inject
   LoginController loginController;
   @Inject
@@ -47,14 +39,21 @@ public class PropositionController {
     this.propositionService = iService;
   }
 
-  @View
-  public Response addForm(String missionId){
-    flash.setStyleMissionMenu("active");
+  @Ajax
+  @Resource
+  public Response indexProposition(String missionId){
+    return this.list(missionId);
+  }
+
+  @Ajax
+  @Resource
+  public Response loadAddPropositionForm(String missionId){
     return addTpl.with().set("missionId",missionId).ok();
   }
 
-  @View
-  public Response editForm(String propositionId){
+  @Ajax
+  @Resource
+  public Response loadEditPropositionForm(String propositionId){
     flash.setStyleMissionMenu("active");
     Proposition proposition =  this.propositionService.getPropositionById(propositionId);
     if(null != proposition)
@@ -69,11 +68,12 @@ public class PropositionController {
       List<Proposition> propositions = this.propositionService.getAllPropositions(mission.getId(),null);
       return listTpl.with().set("priorities", Priority.values()).set("mission",mission).set("propositions",propositions).ok();
     }
-    return JuZBackEndApplication_.showError("cannot find proposition to update");
+    return Response.ok("nok");
   }
 
-  @Action
-  public Response add(String missionId,String content,String active ){
+  @Ajax
+  @Resource
+  public Response addProposition(String missionId,String content,String active ){
     Mission mission = this.propositionService.getMissionById(missionId);
     if (null != mission){
       Boolean proposActive = false;
@@ -87,22 +87,19 @@ public class PropositionController {
         return Response.ok("ok");
       }
     }
-    else{
-      return JuZBackEndApplication_.index("mission doesnot exist anymore");
-    }
-
-    return Response.ok("something went wrong, cannot add proposition !!!");
+    return Response.ok("nok");
   }
 
-  @Action
-  public Response delete(String propositionId){
-    String missionId = this.propositionService.removeProposition(propositionId);
-    if (null != missionId)
+  @Ajax
+  @Resource
+  public Response deleteProposition(String propositionId){
+    if (this.propositionService.removeProposition(propositionId))
       return Response.ok("ok");
-    return JuZBackEndApplication_.showError("mission doesnot exist anymore");
+    return Response.ok("nok");
   }
-  @Action
-  public Response update(String propositionId, String content, String active){
+  @Ajax
+  @Resource
+  public Response updateProposition(String propositionId, String content, String active){
     Proposition proposition = this.propositionService.getPropositionById(propositionId);
     if(null != proposition){
       Boolean proposActive = false;
@@ -114,8 +111,7 @@ public class PropositionController {
       if (null != proposition)
         return Response.ok("ok");
     }
-    return JuZBackEndApplication_.showError(" Proposition does not exist any more to update");
-
+    return Response.ok("nok");
   }
 
   @Ajax

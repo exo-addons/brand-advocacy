@@ -75,7 +75,7 @@ public class JuZBackEndApplication {
         return indexTpl.ok();
       }else{
         flash.setStyleMissionParticipantMenu("active");
-        return missionParticipantController.index();
+       // return missionParticipantController.index();
       }
     }
     return this.showError("alert-info","Info","You have no rights");

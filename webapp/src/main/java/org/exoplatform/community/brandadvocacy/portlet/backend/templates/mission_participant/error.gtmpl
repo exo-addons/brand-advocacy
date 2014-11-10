@@ -1,3 +1,0 @@
-#{decorate path=container.gtmpl/}
-#{param name=mgs/}
-<%=msg%>

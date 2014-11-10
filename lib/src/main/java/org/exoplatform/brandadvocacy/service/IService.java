@@ -38,7 +38,7 @@ public interface IService {
   public List<Program> getAllPrograms();
 
   public Mission addMission2Program(Mission mission);
-  public void removeMissionById(String missionId);
+  public Boolean removeMissionById(String missionId);
   public Mission getMissionById(String missionId);
   public List<Mission> getAllMissionsByProgramId(String programId,Boolean isActive);
   public Mission updateMission(Mission mission);
@@ -73,7 +73,7 @@ public interface IService {
   public List<Proposition> getAllPropositions(String missionId,Boolean isActive);
   public Proposition getPropositionById(String id);
   public Proposition getRandomProposition(String missionId);
-  public String removeProposition(String propositionId);
+  public Boolean removeProposition(String propositionId);
   public List<Proposition> searchPropositions(String keyword, int offset, int limit);
   public Proposition updateProposition(Proposition proposition);
 

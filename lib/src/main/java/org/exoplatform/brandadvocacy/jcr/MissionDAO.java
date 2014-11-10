@@ -256,21 +256,26 @@ public class MissionDAO extends DAO {
     }
     return null;
   }
-  public void removeMissionById(String id){
+  public Boolean removeMissionById(String id){
     if (null == id || "".equals(id)) {
       log.error("ERROR cannot remove mission null");
-      return;
+      return false;
     }
     try {
-        Node aNode = this.getNodeById(id);
-        if (aNode != null) {
-            Session session = aNode.getSession();
-            aNode.remove();
-            session.save();
+      Node aNode = this.getNodeById(id);
+      Mission mission = this.transferNode2Object(aNode);
+      if (null != mission){
+        Node homeNode = this.getOrCreateMissionHome(mission.getProgramId());
+        if (homeNode.hasNode(mission.getLabelID())){
+          aNode.remove();
+          homeNode.save();
+          return true;
         }
+      }
     } catch (RepositoryException e) {
         log.error(" ERROR remove mission "+id+" === Exception "+e.getMessage());
     }
+    return false;
   }
 
   public int getTotalNumberMissions(String programId, Boolean isPublic, Boolean isActive,int priority){

@@ -54,7 +54,7 @@ public class MissionController {
 
   @Ajax
   @Resource
-  public Response index(){
+  public Response indexMission(){
     if (null != loginController.getCurrentProgramId())
       return this.list("",null,null);
     else
@@ -81,8 +81,6 @@ public class MissionController {
 
   public Response list(String keyword, String size, String page){
     String alertPriority = "";
-    int _size = size != null ? Integer.parseInt(size) : 5;
-    int _page = page != null ? Integer.parseInt(page) : 0;
     String programId = loginController.getCurrentProgramId();
     List<Mission> missions = this.missionService.searchMission(new Query(programId));
     List<MissionDTO> missionDTOs = new LinkedList<MissionDTO>();
@@ -99,51 +97,48 @@ public class MissionController {
     if (totalPriority > 100){
       alertPriority = "attention, the total priority is exceeded";
     }
-    return listTpl.with().set("priorities", Priority.values()).set("programId",programId).set("missions",missionDTOs).set("alertPriority",alertPriority).ok();
+    return listTpl.with().set("priorities", Priority.values()).set("missions",missionDTOs).set("alertPriority",alertPriority).ok();
   }
 
-  @Action
-  public Response add(String title,String third_part_link,String priority,String active){
+  @Ajax
+  @Resource
+  public Response addMission(String title,String third_part_link,String priority){
 
     Boolean mActive = false;
-    if (null != active)
-      mActive = active.equals("true") ? true:false;
     Mission mission = new Mission(loginController.getCurrentProgramId(),title);
     mission.setThird_part_link(third_part_link);
     mission.setActive(mActive);
     mission.setPriority(Integer.parseInt(priority));
     mission = this.missionService.addMission2Program(mission);
     if(null != mission)
-      return JuZBackEndApplication_.index("mission_index");
-    else
-      return JuZBackEndApplication_.showError("can not add mission to program, please try later");
+      return Response.ok("ok");
+    return Response.ok("nok");
   }
 
   @Ajax
   @Resource
-  public Response update(String id, String title, String third_part_link, String priority, String mission_active){
+  public Response updateMission(String id, String title, String third_part_link, String mission_active){
     Mission mission  = this.missionService.getMissionById(id);
     if (null != mission){
       mission.setTitle(title);
       mission.setThird_part_link(third_part_link);
       mission.setCreatedDate(0);
-      mission.setPriority(Integer.parseInt(priority));
       Boolean mActive = false;
       if (null != mission_active)
         mActive = mission_active.equals("true") ? true:false;
       mission.setActive(mActive);
       mission = this.missionService.updateMission(mission);
       if(null != mission)
-        return JuZBackEndApplication_.index("mission_index");
-      else
-        return JuZBackEndApplication_.showError("can not update mission, please try later");
+        return Response.ok("ok");
     }
-    return JuZBackEndApplication_.showError("something went wrong, cannot update mission not existing");
+    return Response.ok("nok");
   }
-  @Action
-  public Response delete(String missionId){
-    this.missionService.removeMissionById(missionId);
-    return JuZBackEndApplication_.index("mission_index");
+  @Ajax
+  @Resource
+  public Response deleteMission(String missionId){
+    if(this.missionService.removeMissionById(missionId))
+      return Response.ok("ok");
+    return Response.ok("nok");
   }
 
   @Ajax

@@ -56,20 +56,30 @@ public class Pagination {
   public String generatePagination(String params){
     StringBuilder strPagignation = new StringBuilder("<div class='pagination uiPageIterator clearfix'>");
     double lastPage = this.getTotalPages();
+    strPagignation.append("<div class=\"pagination uiPageIterator\">");
     if (lastPage > 1){
+/*
+      <li class="disabled"><a data-placement="bottom" rel="tooltip" data-original-title="Previous Page"><i class="uiIconPrevArrow"></i></a></li>
+      <li class="active"><a href="">1</a></li>
+      <li><a href="">2</a></li>
+      <li><a href="">3</a></li>
+      <li class="disabled"><a href="#">...</a></li>
+      <li><a href="">20</a></li>
+      <li><a data-placement="bottom" rel="tooltip" href="" data-original-title="Next Page"><i class="uiIconNextArrow"></i></a></li>
+*/
+
       strPagignation.append("<ul>");
       for (int i=1;i<=lastPage;i++){
-        strPagignation.append("<li>");
         if (i==this.getCurrentPage()){
-          strPagignation.append(i);
+          strPagignation.append("<li class=\"disabled\">").append(i);
         }else {
-          strPagignation.append("<a href='").append(params).append("&page=").append(i).append("'>").append(i).append("</a>");
+          strPagignation.append("<li class=\"search-mission-participant-page\" data-page='").append(i).append("'><a href='#'").append("'>").append(i).append("</a>");
         }
         strPagignation.append("</li>");
       }
       strPagignation.append("</ul>");
     }
-    strPagignation.append("</div>");
+    strPagignation.append("</ul></div>");
     return strPagignation.toString();
   }
 

@@ -1,0 +1,18 @@
+#{param name=states/}
+<div class="tab-pane fade in active" id="participantsTab">
+    <div class="uiSearchInput">
+        <input id="keyword" type="text" name="keyword" value="" class="keyword-search-mission-participant" placeholder="Search"/>
+        <select id="stt" name="stt" class="status-search-mission-participant">
+           <option value="0">All</option>
+           <% states.each { status -> %>
+           <option value="<%= status.getValue() %>"> ><%= status.getLabel() %></option>
+           <% } %>
+        </select>
+        <button type="button" class="btn btn-search-mission-participant">Search</button>
+    </div>
+    <br>
+    <div class="mission-participant-container"></div>
+</div>
+<!-- TAB 3 Step 1-->
+<!-- end part keeping for ajax -->
+

@@ -218,16 +218,14 @@ public class PropositionDAO extends DAO {
     }
     return null;
   }
-  public String removeProposition(String id){
-    String missionId = null;
+  public Boolean removeProposition(String id){
     try {
       Node propositionNode = this.getNodeById(id); //this.getNodeByLabelID(proposition.getMission_id(), proposition.getId());
       if(null != propositionNode){
-        Proposition proposition = this.transferNode2Object(propositionNode);
-        missionId = proposition.getMission_id();
         Session session = propositionNode.getSession();
         propositionNode.remove();
         session.save();
+        return true;
       }else
         throw new BrandAdvocacyServiceException(BrandAdvocacyServiceException.PROPOSITION_NOT_EXISTS," cannot remove proposition not exists");
     } catch (RepositoryException e) {
@@ -235,7 +233,7 @@ public class PropositionDAO extends DAO {
     } catch (BrandAdvocacyServiceException brade){
       log.error(brade.getMessage());
     }
-    return missionId;
+    return false;
   }
   public Proposition getPropositionById(String id){
     try {

@@ -1,69 +1,45 @@
-#{decorate path=container.gtmpl/}
 #{param name=missionParticipantDTOs/}
-#{param name=states/}
-#{param name=keyword/}
-#{param name=statusFilter/}
 #{param name=pagination/}
-        <div class="tab-pane fade in active" id="participantsTab">
-            <div class="uiSearchInput">
-                <form action="@{search()}" method="GET" role="form">
-                    <input type="hidden" name="action" value="mp_search"/>
-                    <input type="hidden" name="page" value="1" />
-                    <input id="keyword" type="text" name="keyword" value="<%=keyword%>" placeholder="Search"/>
-                    <select id="stt" name="stt">
-                       <option value="0">All</option>
-                       <% states.each { status -> %>
-                       <option value="<%= status.getValue() %>" <% if(status.getValue() == statusFilter ){%> selected <% } %> ><%= status.getLabel() %></option>
-                       <% } %>
-                    </select>
-                    <button type="submit" class="btn">Search</button>
-                </form>
-            </div>
-            <br>
-            <table class="uiGrid table table-hover table-striped mgB0">
-            <thead>
-                <tr>
-                    <th>Name</th>
-                    <th>Missions</th>
-                    <th  style="width: 150px;">Status</th>
-                    <th>Link</th>
-                    <th class="center" style="width: 80px;">Submit Date</th>
-                    <th class="center" style="width: 65px;">Action</th>
-                </tr>
-            </thead>
-            <tbody>
-                <% missionParticipantDTOs.each { missionParticipantDTO -> %>
-                <% def missionParticipantId = missionParticipantDTO.getId() %>
-                 <tr>
-                     <td><%= missionParticipantDTO.getParticipant_fullName()%></td>
-                     <td><%= missionParticipantDTO.getMission_title()%></td>
-                     <td class="center">
-                         <select name="status" class="input-medium mission-participant-status" data-mission-participant-id="<%=missionParticipantId%>">
-                             <% states.each { status -> %>
-                             <option value="<%= status.getValue() %>" <% if(status.getValue() == missionParticipantDTO.getStatus().getValue() ) { %> selected  <% } %> ><%= status.getLabel() %></option>
-                             <% } %>
-                         </select>
-                     </td>
-                     <td><a href="<%= missionParticipantDTO.getUrl_submitted()%>" target="_blank"><%= missionParticipantDTO.getUrl_submitted()%></a></td>
-                     <td class="center"><%= missionParticipantDTO.getDate_submitted()%></td>
-                     <td class="center">
-                         <!--a href="@{MissionParticipantController.view(missionParticipantId=missionParticipantId)}" data-placement="bottom" rel="tooltip" class="actionIcon" data-original-title="Preview" >
-                             <i class="uiIconPreview uiIconLightGray"></i>
-                         </a-->
-                        <a href="?action=mp_view&id=<%=missionParticipantId%>" data-placement="bottom" rel="tooltip" class="actionIcon" data-original-title="Preview" >
-                          <i class="uiIconPreview uiIconLightGray"></i>
-                        </a>
-                     </td>
-                 </tr>
-                <% } %>
-            </tbody>
-            <tfoot>
-            Total pages: <%=pagination.getTotalPages()%>
-            <%=pagination.generatePagination(params="?action=mp_search&keyword=&stt=0")%>
-            </tfoot>
-            </table>
-        </div>
-	<!-- TAB 3 Step 1-->
+    <table class="uiGrid table table-hover table-striped mgB0">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Missions</th>
+            <th  style="width: 150px;">Status</th>
+            <th>Link</th>
+            <th class="center" style="width: 80px;">Submit Date</th>
+            <th class="center" style="width: 65px;">Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        <% missionParticipantDTOs.each { missionParticipantDTO -> %>
+        <% def missionParticipantId = missionParticipantDTO.getId() %>
+         <tr>
+             <td><%= missionParticipantDTO.getParticipant_fullName()%></td>
+             <td><%= missionParticipantDTO.getMission_title()%></td>
+             <td class="center">
+                 <select name="status" class="input-medium mission-participant-status" data-mission-participant-id="<%=missionParticipantId%>">
+                     <% states.each { status -> %>
+                     <option value="<%= status.getValue() %>" <% if(status.getValue() == missionParticipantDTO.getStatus().getValue() ) { %> selected  <% } %> ><%= status.getLabel() %></option>
+                     <% } %>
+                 </select>
+             </td>
+             <td><a href="<%= missionParticipantDTO.getUrl_submitted()%>" target="_blank"><%= missionParticipantDTO.getUrl_submitted()%></a></td>
+             <td class="center"><%= missionParticipantDTO.getDate_submitted()%></td>
+             <td class="center">
+                <a href="#" data-placement="bottom" rel="tooltip" class="actionIcon mp-view" data-mission-participant-id="<%=missionParticipantId%>" data-participant-id="<%=missionParticipantDTO.getParticipant_id()%>" data-original-title="Preview" >
+                  <i class="uiIconPreview uiIconLightGray"></i>
+                </a>
+             </td>
+         </tr>
+        <% } %>
+    </tbody>
+    <tfoot>
+    Total pages: <%=pagination.getTotalPages()%>
+    <%=pagination.generatePagination(params="?action=mp_search&keyword=&stt=0")%>
+    </tfoot>
+    </table>
+    <!-- TAB 3 Step 1-->
 
 <!-- end part keeping for ajax -->
 

@@ -23,3 +23,12 @@
 		</div>
 	</div>
 </div>
+<div class="uiPopup UIDragObject NormalStyle" style="display: none; left: 330px; top: 50px; visibility: visible; width: 540px; z-index: 4;">
+    <div class="popupHeader clearfix">
+            <a href="#" title="Close Window" class="uiIconClose pull-right"></a>
+        <span class="PopupTitle popupTitle"></span>
+    </div>
+    <div class="PopupContent popupContent">
+
+    </div>
+</div>

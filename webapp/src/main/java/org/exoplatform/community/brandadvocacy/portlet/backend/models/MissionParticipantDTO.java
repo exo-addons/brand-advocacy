@@ -11,6 +11,7 @@ public class MissionParticipantDTO {
   private String mission_id;
   private String mission_title;
   private String participant_fullName;
+  private String participant_id;
   private String url_submitted;
   private Status status;
   private String size;
@@ -79,5 +80,13 @@ public class MissionParticipantDTO {
 
   public void setDate_submitted(String date_submitted) {
     this.date_submitted = date_submitted;
+  }
+
+  public String getParticipant_id() {
+    return participant_id;
+  }
+
+  public void setParticipant_id(String participant_id) {
+    this.participant_id = participant_id;
   }
 }

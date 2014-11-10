@@ -35,8 +35,8 @@ public class MissionParticipantController {
   @Inject
   Flash flash;
   @Inject
-  @Path("mission_participant/error.gtmpl")
-  org.exoplatform.community.brandadvocacy.portlet.backend.templates.mission_participant.error ErrorTpl;
+  @Path("mission_participant/index.gtmpl")
+  org.exoplatform.community.brandadvocacy.portlet.backend.templates.mission_participant.index indexTpl;
 
   @Inject
   @Path("mission_participant/list.gtmpl")
@@ -45,6 +45,10 @@ public class MissionParticipantController {
   @Inject
   @Path("mission_participant/view.gtmpl")
   org.exoplatform.community.brandadvocacy.portlet.backend.templates.mission_participant.view viewTpl;
+
+  @Inject
+  @Path("mission_participant/viewajax.gtmpl")
+  org.exoplatform.community.brandadvocacy.portlet.backend.templates.mission_participant.viewajax viewAjaxTpl;
 
   @Inject
   @Path("mission_participant/previous.gtmpl")
@@ -59,6 +63,11 @@ public class MissionParticipantController {
 
   }
 
+  @Ajax
+  @Resource
+  public Response indexMP(){
+    return indexTpl.with().set("states", Status.values()).ok();
+  }
 
   public Response index(){
     String action = WebuiRequestContext.getCurrentInstance().getRequestParameter("action");
@@ -68,14 +77,12 @@ public class MissionParticipantController {
     String missionParticipantId = WebuiRequestContext.getCurrentInstance().getRequestParameter("id");
     if (null != loginController.getCurrentProgramId()){
       if (null == action || action.equals("mp_search")){
-        return this.search(keyword, status,page);
+        return this.list();
       }else if (action.equals("mp_view") && null != missionParticipantId && !"".equals(missionParticipantId) ){
         return this.view(missionParticipantId);
       }
     }
-
-    return ErrorTpl.with().set("msg","Cannot find mission participant").ok();
-
+    return Response.ok("nok");
   }
   public Response list(){
     String programId = loginController.getCurrentProgramId();
@@ -85,8 +92,15 @@ public class MissionParticipantController {
   }
 
   @View
-  public Response.Content view(String missionParticipantId){
-    flash.setStyleMissionParticipantMenu("active");
+  public Response view(String missionParticipantId){
+    return this.detail(missionParticipantId,false);
+  }
+  @Ajax
+  @Resource
+  public Response loadDetail(String missionParticipantId){
+    return this.detail(missionParticipantId,true);
+  }
+  private Response detail(String missionParticipantId,Boolean isAjax){
     MissionParticipant missionParticipant = this.missionParticipantService.getMissionParticipantById(missionParticipantId);
     if(null != missionParticipant){
       try {
@@ -112,19 +126,22 @@ public class MissionParticipantController {
             if (null == address){
               address = new Address("","","","","","");
             }
-            return viewTpl.with().set("missionParticipantDTO",missionParticipantDTO).set("address",address).set("participantDTO",participantDTO).set("states",Status.values()).ok();
-
+            if (isAjax){
+              return viewAjaxTpl.with().set("missionParticipantDTO",missionParticipantDTO).set("address",address).set("participantDTO",participantDTO).set("states",Status.values()).ok();
+            }else
+              return viewTpl.with().set("missionParticipantDTO",missionParticipantDTO).set("address",address).set("participantDTO",participantDTO).set("states",Status.values()).ok();
           }
         }
 
       } catch (Exception e) {
-        return ErrorTpl.with().set("msg","Cannot find mission participant").ok();
+        return  Response.ok("nok");
       }
     }
-    return ErrorTpl.with().set("msg","Cannot find mission participant").ok();
+    return  Response.ok("nok");
   }
 
-  @View
+  @Ajax
+  @Resource
   public Response.Content search(String keyword,String status,String page){
     String programId = loginController.getCurrentProgramId();
     Query query = new Query(programId);
@@ -135,8 +152,7 @@ public class MissionParticipantController {
     List<MissionParticipant>  missionParticipants = this.missionParticipantService.searchMissionParticipants(query);
     List<MissionParticipantDTO> missionParticipantDTOs = this.transfers2DTOs(missionParticipants);
     Pagination pagination = new Pagination(this.missionParticipantService.getTotalMissionParticipants(query),NUMBER_RECORDS,page);
-    return listTpl.with().set("missionParticipantDTOs",missionParticipantDTOs).set("states", Status.values()).set("keyword",query.getKeyword()).set("statusFilter",query.getStatus()).set("pagination",pagination).ok();
-
+    return listTpl.with().set("missionParticipantDTOs",missionParticipantDTOs).set("states", Status.values()).set("pagination",pagination).ok();
   }
 
   @Ajax
@@ -186,6 +202,7 @@ public class MissionParticipantController {
             missionParticipantDTO.setId(missionParticipant.getId());
             missionParticipantDTO.setMission_title(mission.getTitle());
             missionParticipantDTO.setParticipant_fullName(exoUser.getFirstName()+ " "+exoUser.getLastName());
+            missionParticipantDTO.setParticipant_id(exoUser.getUserName());
             missionParticipantDTO.setStatus(missionParticipant.getStatus());
             missionParticipantDTO.setUrl_submitted(missionParticipant.getUrl_submitted());
             missionParticipantDTO.setDate_submitted(Utils.convertDateFromLong(missionParticipant.getModifiedDate()));
