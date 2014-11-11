@@ -10,13 +10,16 @@
             </tr>
         </thead>
         <tbody>
-            <% propositions.each { proposition -> %>
+            <%
+                int nbBradPropositionsActive = 0;
+                propositions.each { proposition ->
+            %>
                 <%
                     def pid = proposition.getId();
                     def strActiveChkboxProposition = "";
                     def strPropositionActiveVal = false;
                     if(proposition.getActive()){
-                        canActivate = true;
+                        nbBradPropositionsActive++;
                         strActiveChkboxProposition = "checked";
                         strPropositionActiveVal = true;
                     }
@@ -43,3 +46,6 @@
         </tbody>
     </table>
 </div>
+<script type="text/javascript">
+var nbBradPropositionsActive = <%=nbBradPropositionsActive%>;
+</script>

@@ -179,7 +179,6 @@
           _propositionContainerDOM = $('.proposition-container');
           _currentMissionId = missionId;
           _loadPropositions();
-          _addEventIPhoneStyle2CheckBox();
         }else{
           _messageConfirmCBController('unsuccessful','Cannot load mission detail view');
         }
@@ -244,7 +243,9 @@
           return;
         }
         _propositionContainerDOM.html(data);
+        _missionStatusCheckBoxController();
         _addEventIPhoneStyle2CheckBox();
+
       }
     });
   };
@@ -406,7 +407,14 @@
           data:{propositionId:propositionId,action:"active",val:propositionActive},
           success:function(data){
             if (data == "nok"){
-              alert("something went wrong, cannot update proposition");
+              _messageConfirmCBController('unsuccessful',"something went wrong, cannot update proposition");
+            }else{
+              if(data == "true"){
+                nbBradPropositionsActive++;
+              }else{
+                nbBradPropositionsActive--;
+              }
+              _missionStatusCheckBoxController();
             }
           }
         });
@@ -417,6 +425,23 @@
     });
   };
 
+  var _missionStatusCheckBoxController = function(){
+    var isDisabled = false;
+    if(nbBradPropositionsActive <= 0){
+      isDisabled = true;
+    }
+    var chkBoxDOM = $('input:checkbox.mission-status-checkbox');
+    var Mdisabled = chkBoxDOM.prop('disabled');
+    if(isDisabled){
+      if(!Mdisabled){
+        chkBoxDOM.prop('disabled',true);
+        chkBoxDOM.prop('checked',false);
+        chkBoxDOM.val(false);
+      }
+    }else {
+      chkBoxDOM.prop('disabled',false);
+    }
+  };
   var _addEvent2RoleSelect = function(){
     $(document).on('change.juzBrad.bk.manager.role','select.role',function(){
       var jRole = $(this);
@@ -506,7 +531,6 @@
     $(document).on('keypress.juzBrad.bk.searchmanager','input.manager-username',function(){
       var keyword = $(this).val();
       if(keyword.length >= 3){
-//        $(".jz").jzAjax('ManagerController.searchEXOUsers()',{
         $(".jz").jzAjax('ManagerController.searchEXOProfiles()',{
           data:{keyword:keyword},
           success:function(data){

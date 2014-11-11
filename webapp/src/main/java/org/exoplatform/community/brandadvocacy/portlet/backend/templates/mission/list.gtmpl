@@ -39,13 +39,9 @@
                 </td>
                 <td><a href="<%= mission.getThird_part_link()%>" target="_blank"><%= mission.getThird_part_link()%></a></td>
                 <td class="center">
-                    <% if (mission.canActivate()){ %>
                     <div class="spaceIphoneChkBox">
-                        <input type="checkbox" name="active" value="<%= strActiveVal%>" style="visibility: hidden;" <%=strActiveChkbox %> data-action="updateMissionInline" data-missionId="<%=mid%>" data-role/>
+                        <input type="checkbox" name="active" value="<%= strActiveVal%>" style="visibility: hidden;" <%=strActiveChkbox %> data-action="updateMissionInline" data-missionId="<%=mid%>" <% if (mission.canActivate()){ %> disabled <% } %> data-role/>
                     </div>
-                    <% }else{ %>
-                        Disabled<small>(there is no active proposition)</small>
-                    <% } %>
                 </td>
                 <td class="center actionContainer">
                     <a href="#" data-original-title="Edit" class="actionIcon load-edit-mission-form" data-missionId="<%=mid%>" rel="tooltip" data-placement="bottom">

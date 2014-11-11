@@ -53,13 +53,10 @@ if(mission != null){
                 <div class="control-group">
                     <label class="control-label">Status:</label>
                     <div class="controls">
-                        <% if (canActivate){%>
                         <div class="spaceIphoneChkBox">
-                            <input type="checkbox" name="mission_active" id="mission_active" value="<%=strActiveVal%>" style="visibility: hidden;" <% if(mission.getActive()){ %> checked <% } %> tabindex="3">
+                            <input class="mission-status-checkbox" type="checkbox" disabled  name="mission_active" id="mission_active" value="<%=strActiveVal%>" style="visibility: hidden;" <% if(mission.getActive()){ %> checked <% } %> tabindex="3">
                         </div>
-                        <% }else{ %>
-                        Disabled<small>(there is no active proposition)</small>
-                        <% } %>
+                        Add propositions to enable this mission
                     </div>
                 </div>
                 <div class="text-center">

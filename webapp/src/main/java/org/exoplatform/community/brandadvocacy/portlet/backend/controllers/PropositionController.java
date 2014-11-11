@@ -126,7 +126,7 @@ public class PropositionController {
       }
       proposition = this.propositionService.updateProposition(proposition);
       if (null != proposition)
-        return Response.ok("ok");
+        return Response.ok(val);
     }
     return Response.ok("nok");
   }
