@@ -5,7 +5,7 @@
         <thead>
             <tr>
                 <th>Proposition</th>
-                <th class="center" style="width: 65px">Activated</th>
+                <th class="center" style="width: 65px">Status</th>
                 <th class="center actionContainer" style="width: 65px">Actions</th>
             </tr>
         </thead>

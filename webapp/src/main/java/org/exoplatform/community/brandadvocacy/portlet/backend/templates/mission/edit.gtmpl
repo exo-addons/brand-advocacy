@@ -14,7 +14,7 @@ if(mission != null){
 
         <div class="tab-pane fade in active" id="missionsTab">
             <ul class="breadcrumb">
-                <li><a href="#">Manager the missions</a><span class="uiIconMiniArrowRight"></span></li>
+                <li><a href="#" class="back-to-missions">Missions</a><span class="uiIconMiniArrowRight"></span></li>
                 <li class="active"><%= mission.getTitle() %></li>
             </ul>
 
@@ -51,7 +51,7 @@ if(mission != null){
                     </div>
                 </div-->
                 <div class="control-group">
-                    <label class="control-label">Activated:</label>
+                    <label class="control-label">Status:</label>
                     <div class="controls">
                         <% if (canActivate){%>
                         <div class="spaceIphoneChkBox">
@@ -64,7 +64,7 @@ if(mission != null){
                 </div>
                 <div class="text-center">
                     <button class="btn btn-primary btn-update-mission" type="button">Save</button>
-                    <a class="btn mgL20 cancel-update-mission" href="#">Cancel</a>
+                    <a class="btn mgL20 back-to-missions" href="#">Cancel</a>
                 </div>
             </div>
         </div>

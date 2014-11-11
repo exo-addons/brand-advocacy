@@ -1,6 +1,6 @@
 #{param name=managers/}
 <ul>
     <% managers.each{ manager ->%>
-    <li><%= manager.getFullName()%></li>
+    <li class="add-manager-2-be-added" data-userName="<%=manager.getUserName()%>" data-fullName="<%=manager.getFullName()%>" ><%= manager.getFullName()%></li>
     <% } %>
 </ul>

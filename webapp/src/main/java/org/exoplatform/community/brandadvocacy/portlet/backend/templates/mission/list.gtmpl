@@ -3,10 +3,6 @@
 <!-- keep only this part for ajax -->
 <div class="tab-pane fade" id="generalTab">...</div>
 <div class="tab-pane fade in active" id="missionsTab">
-    <ul class="breadcrumb">
-        <li><a href="#">Manager the missions</a><span class="uiIconMiniArrowRight"></span></li>
-    </ul>
-
     <div class="alert alert-error mission-prio-exceeded" <% if (alertPriority == ""){%> style="display:none;" <% } %>>
     attention, the total priority is exceeded
     </div>
@@ -17,7 +13,7 @@
                 <th>Title</th>
                 <th class="center" style="width: 65px;">Priority</th>
                 <th>Link</th>
-                <th class="center" style="width: 65px;">Activated</th>
+                <th class="center" style="width: 65px;">Status</th>
                 <th class="center actionContainer" style="width: 65px;">Action</th>
             </tr>
         </thead>

@@ -9,6 +9,7 @@
   var _propositionContainerDOM;
   var _missionParticipantContainerDOM;
   var _currentMissionId;
+  var _managerBradList2BeAdded;
   var brandAdvBackend = {};
 
   var _menuStyleController = function(action){
@@ -77,6 +78,8 @@
         if(data !== 'nok'){
           _managerContainerDOM.html(data);
           _addEventIPhoneStyle2CheckBox();
+          _managerBradList2BeAdded = [];
+
         }
       }
     });
@@ -104,6 +107,60 @@
     });
   };
 
+  var _addManagerFromSearchManager = function(username,fullname) {
+    var found=false;
+    $.each(_managerBradList, function (i, v) {
+      if(v.username == username){
+        found=true;
+        return
+      }
+    });
+
+    if(!found){
+      $.each(_managerBradList2BeAdded, function (i, v) {
+        if(v.username == username){
+          found=true;
+          return
+        }
+      });
+    }
+    if(!found){
+      _managerBradList2BeAdded.push({'username':username,'fullname':fullname});
+      _displayManagerList2BeAdded();
+    }
+  };
+  var _removeManagerFromManagerList2BeAdded = function(username){
+
+    var arr = jQuery.grep(_managerBradList2BeAdded, function(a) {
+      return a.username !== username;
+    });
+    if(arr.length != _managerBradList2BeAdded.length){
+      _managerBradList2BeAdded = arr;
+      _displayManagerList2BeAdded();
+    }
+  };
+  var _displayManagerList2BeAdded = function(){
+    var str = "<ul>";
+    $.each(_managerBradList2BeAdded,function(i,v){
+      str += "<li class='remove-manager-2-be-added' data-userName='"+ v.username+"'>"+ v.fullname+"</li>";
+    });
+    str +="</ul>";
+    $('.result-add-manager').html(str);
+  };
+  var _addEvent2LinkAddManager2BeAdded = function(){
+    $(document).on('click.juzBrad.bk.addManager2BeAdded','li.add-manager-2-be-added',function(){
+      var username = $(this).attr('data-userName');
+      var fullname = $(this).attr('data-fullName');
+      _addManagerFromSearchManager(username,fullname);
+      $(".result-search-manager").html('');
+    });
+  };
+  var _addEvent2LinkRemoveManager2BeAdded = function(){
+    $(document).on('click.juzBrad.bk.removeManager2BeAdded','li.remove-manager-2-be-added',function(){
+      var username = $(this).attr('data-userName');
+      _removeManagerFromManagerList2BeAdded(username);
+    });
+  };
   var _loadMissions = function(){
     $('.jz').jzAjax('MissionController.indexMission()',{
       success:function(data){
@@ -449,12 +506,15 @@
     $(document).on('keypress.juzBrad.bk.searchmanager','input.manager-username',function(){
       var keyword = $(this).val();
       if(keyword.length >= 3){
-        $(".jz").jzAjax('ManagerController.searchEXOUsers()',{
+//        $(".jz").jzAjax('ManagerController.searchEXOUsers()',{
+        $(".jz").jzAjax('ManagerController.searchEXOProfiles()',{
           data:{keyword:keyword},
           success:function(data){
             $(".result-search-manager").html(data);
           }
         });
+      }else{
+        $(".result-search-manager").html('');
       }
     })
   };
@@ -509,10 +569,12 @@
   };
   var _addEvent2BtnAddProgramManager = function(){
     $(document).on('click.juzBrad.bk.addprogramuser','button.btn-add-program-manager',function(){
-      var username = $(".manager-username").val();
-      var role = $(".manager-role").val();
-      var notif = $(".manager-notif").val();
-      _addProgramManager(username,role,notif);
+      if(_managerBradList2BeAdded.length > 0){
+        var username = _managerBradList2BeAdded[0].username;
+        var role = $(".manager-role").val();
+        var notif = $(".manager-notif").val();
+        _addProgramManager(username,role,notif);
+      }
     });
   };
   var _addEvent2LinkLoadAddMissionForm = function(){
@@ -551,7 +613,7 @@
     });
   };
   var _addEvent2BtnCancelUpdateMisssion = function(){
-    $(document).on('click.juzbrad.bk.cancelupdatemission','a.cancel-update-mission',function(){
+    $(document).on('click.juzbrad.bk.cancelupdatemission','a.back-to-missions',function(){
       _loadMissions();
     });
   };
@@ -645,6 +707,8 @@
     _addEvent2BtnAddProgramManager();
     _addEvent2BtnRemoveProgramManager();
     _addEvent2InputUsername();
+    _addEvent2LinkAddManager2BeAdded();
+    _addEvent2LinkRemoveManager2BeAdded();
   };
   var _initMissionEvent = function(){
     _addEvent2MissionTabMenu();

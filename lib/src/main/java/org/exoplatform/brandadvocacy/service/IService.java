@@ -20,6 +20,7 @@ import org.exoplatform.brandadvocacy.model.*;
 import org.exoplatform.brandadvocacy.model.Query;
 import org.exoplatform.commons.utils.ListAccess;
 import org.exoplatform.services.organization.*;
+import org.exoplatform.social.core.identity.model.Profile;
 
 import javax.jcr.RepositoryException;
 import java.util.List;
@@ -88,4 +89,5 @@ public interface IService {
   public MissionParticipant getCurrentMissionParticipantByUserName(String programId,String username);
 
   public ListAccess<org.exoplatform.services.organization.User> searchEXOUsers(String keyword);
+  public List<Profile> searchEXOProfiles(String keyword);
 }

@@ -20,7 +20,7 @@ if(proposition != null){
             </div>
         </div>
         <div class="row-fluid control-group">
-            <label class="control-label span2">Activated:</label>
+            <label class="control-label span2">Status:</label>
             <div class="controls">
                 <div class="spaceIphoneChkBox">
                     <input type="checkbox" name="active" value="<%= strActiveVal%>" style="visibility: hidden;" <%=strActiveChkbox %> data-action="ajaxUpdatePropositionInline" data-propositionId="<%=proposition.getId()%>" data-role/>

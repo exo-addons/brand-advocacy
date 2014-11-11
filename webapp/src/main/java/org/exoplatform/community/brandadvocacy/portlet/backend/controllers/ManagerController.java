@@ -12,6 +12,7 @@ import org.exoplatform.community.brandadvocacy.portlet.backend.JuZBackEndApplica
 import org.exoplatform.community.brandadvocacy.portlet.backend.models.ManagerDTO;
 import org.exoplatform.services.organization.OrganizationService;
 import org.exoplatform.services.organization.User;
+import org.exoplatform.social.core.identity.model.Profile;
 
 import javax.inject.Inject;
 import java.util.ArrayList;
@@ -156,7 +157,34 @@ public class ManagerController {
             User user = users[0];
             if (null != user) {
               ManagerDTO managerDTO = new ManagerDTO(user.getUserName());
+              managerDTO.setUserName(user.getUserName());
               managerDTO.setFullName(user.getFirstName() + " " + user.getLastName());
+              managerDTOs.add(managerDTO);
+            }
+          }catch (Exception e){
+          }
+        }
+        if (managerDTOs.size() > 0)
+          return searchTpl.with().set("managers", managerDTOs).ok();
+      } catch (Exception e) {
+      }
+    }
+    return Response.ok("");
+  }
+  @Ajax
+  @Resource
+  public Response searchEXOProfiles(String keyword){
+    List<Profile> profiles = this.jcrService.searchEXOProfiles(keyword);
+    if (null != profiles) {
+      List<ManagerDTO> managerDTOs = new LinkedList<ManagerDTO>();
+      try {
+        Profile profile;
+        for (int i = 0; i < profiles.size(); i++) {
+          try{
+            profile = profiles.get(i);
+            if (null != profile) {
+              ManagerDTO managerDTO = new ManagerDTO(profile.getIdentity().getRemoteId());
+              managerDTO.setFullName(profile.getFullName());
               managerDTOs.add(managerDTO);
             }
           }catch (Exception e){

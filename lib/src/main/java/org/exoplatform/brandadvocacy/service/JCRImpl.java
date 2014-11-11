@@ -19,6 +19,7 @@ package org.exoplatform.brandadvocacy.service;
 import org.exoplatform.brandadvocacy.jcr.*;
 import org.exoplatform.brandadvocacy.model.*;
 import org.exoplatform.brandadvocacy.model.Query;
+import org.exoplatform.brandadvocacy.model.User;
 import org.exoplatform.commons.utils.ListAccess;
 import org.exoplatform.container.xml.InitParams;
 import org.exoplatform.container.xml.ValueParam;
@@ -33,12 +34,18 @@ import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 import org.exoplatform.services.mail.MailService;
 import org.exoplatform.services.organization.*;
+import org.exoplatform.social.core.identity.model.Identity;
+import org.exoplatform.social.core.identity.model.Profile;
+import org.exoplatform.social.core.identity.provider.OrganizationIdentityProvider;
 import org.exoplatform.social.core.manager.IdentityManager;
+import org.exoplatform.social.core.profile.ProfileFilter;
 
 import javax.jcr.Node;
 
 import javax.jcr.RepositoryException;
 import javax.jcr.Session;
+import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.List;
 
 
@@ -52,6 +59,7 @@ import java.util.List;
 public class JCRImpl implements IService {
 
   private OrganizationService organizationService;
+  private IdentityManager identityManager;
   private RepositoryService repositoryService;
   private SessionProviderService sessionService;
   private DataDistributionManager dataDistributionManager;
@@ -109,6 +117,7 @@ public class JCRImpl implements IService {
     this.repositoryService = repositoryService;
     this.emailService = new EmailService(this,identityManager,mailService);
     this.setOrganizationService(organizationService);
+    this.setIdentityManager(identityManager);
     this.getOrCreateExtensionHome();
   }
   public Session getSession() throws RepositoryException {
@@ -129,9 +138,6 @@ public class JCRImpl implements IService {
   public ListAccess<org.exoplatform.services.organization.User> searchEXOUsers(String keyword){
     org.exoplatform.services.organization.Query query = new org.exoplatform.services.organization.Query();
     query.setUserName(keyword+"*");
-/*    query.setFirstName(keyword);
-    query.setLastName(keyword);
-    query.setEmail(keyword);*/
     UserHandler userHandler = this.getOrganizationService().getUserHandler();
     try {
       ListAccess<org.exoplatform.services.organization.User> userListAccess = userHandler.findUsersByQuery(query);
@@ -139,6 +145,21 @@ public class JCRImpl implements IService {
     } catch (Exception e) {
     }
     return null;
+  }
+  public List<Profile> searchEXOProfiles(String keyword){
+    List<Profile> profiles = new LinkedList<Profile>();
+    ProfileFilter filter = new ProfileFilter();
+    filter.setName(keyword);
+    try {
+      List<Identity> identities = Arrays.asList(this.getIdentityManager().getIdentitiesByProfileFilter(
+              OrganizationIdentityProvider.NAME, filter, false).load(0,20));
+      for (Identity identity:identities){
+        profiles.add(identity.getProfile());
+      }
+      return profiles;
+    } catch (Exception e) {
+    }
+    return  null;
   }
   public Node getOrCreateExtensionHome(){
     String path = String.format("%s", EXTENSION_PATH);
@@ -442,5 +463,13 @@ public class JCRImpl implements IService {
 
   public void setOrganizationService(OrganizationService organizationService) {
     this.organizationService = organizationService;
+  }
+
+  public IdentityManager getIdentityManager() {
+    return identityManager;
+  }
+
+  public void setIdentityManager(IdentityManager identityManager) {
+    this.identityManager = identityManager;
   }
 }
