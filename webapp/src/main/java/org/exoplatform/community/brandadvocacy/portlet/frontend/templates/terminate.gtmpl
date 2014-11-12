@@ -1,57 +1,63 @@
 #{param name=sizes/}
 <!-- Step 2 -->
 <div class="tweetStepContent step-2">
-    <h5 class="titleStep">
-        <span class="numb">2</span><span class="textStep">Submit your personal address</span>
+    <h5 class="titleStep mgB15-ipt">
+        <span class="numb">2</span><span class="textStep">Where should we check the result ?</span>
     </h5>
-        <div class="control-group">
-            <div class="controls">
-                <input type="text" id="brad-participant-fname" placeholder="First Name ">
-            </div>
+    <div class="control-group mgB20">
+        <div class="controls">
+            <input type="text" id="brad-participant-url-submitted" placeholder="Url">
         </div>
-        <div class="control-group">
-            <div class="controls">
-                <input type="text" id="brad-participant-lname" placeholder="Last Name">
-            </div>
+    </div>
+    <h5 class="titleStep mgB15-ipt">
+        <span class="numb">2</span><span class="textStep">Submit your office address</span>
+    </h5>
+    <div class="control-group">
+        <div class="controls">
+            <input type="text" id="brad-participant-fname" placeholder="First Name ">
         </div>
-        <div class="control-group">
-            <div class="controls">
-                <input type="text" id="brad-participant-address" placeholder="Address">
-            </div>
+    </div>
+    <div class="control-group">
+        <div class="controls">
+            <input type="text" id="brad-participant-lname" placeholder="Last Name">
         </div>
-        <div class="control-group">
-            <div class="controls">
-                <input type="text" id="brad-participant-city" placeholder="City">
-            </div>
+    </div>
+    <div class="control-group">
+        <div class="controls">
+            <input type="text" id="brad-participant-address" placeholder="Address">
         </div>
-        <div class="control-group">
-            <div class="controls">
-                <input type="text" id="brad-participant-phone" placeholder="Phone">
-            </div>
+    </div>
+    <div class="control-group">
+        <div class="controls">
+            <input type="text" id="brad-participant-city" placeholder="City">
         </div>
-
-        <div class="control-group">
-            <label class="control-label" for="tweetCountry">Country</label>
-            <div class="controls">
-                <select name="tweetCountry" id="brad-participant-country">
-                    <option value="vietnam">Vietnam</option>
-                    <option value="laos">Laos</option>
-                    <option value="cambodia">Campuchia</option>
-                </select>
-            </div>
+    </div>
+    <div class="control-group">
+        <div class="controls">
+            <input type="text" id="brad-participant-phone" placeholder="Phone">
         </div>
-        <div class="control-group">
-            <label class="control-label" for="tweetSize">How would you like it:</label>
-            <div class="controls">
-                <select name="tweetSize" id="brad-participant-size">
-                   <% sizes.each { size -> %>
-                    <option value="<%= size.getValue() %>"><%= size.getLabel() %></option>
-                    <% } %>
-                </select>
-            </div>
+    </div>
+    <div class="control-group">
+        <div class="controls">
+            <select name="tweetCountry" id="tweetCountry">
+                <option value="vn">Country</option>
+                <option value="Vietnam">Vietnam</option>
+                <option value="Laos">Laos</option>
+                <option value="Campuchia">Campuchia</option>
+            </select>
         </div>
-        <div class="action">
-            <button class="btn btn-brad-terminate" >Submit</button>
+    </div>
+    <div class="control-group">
+        <div class="controls">
+            <select name="tweetSize" id="brad-participant-size">
+               <% sizes.each { size -> %>
+                <option value="<%= size.getValue() %>"><%= size.getLabel() %></option>
+                <% } %>
+            </select>
         </div>
+    </div>
+    <div class="action">
+        <button class="btn btn-brad-terminate" >Submit</button>
+    </div>
 </div>
 <!-- /.step-2 -->

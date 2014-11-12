@@ -3,11 +3,7 @@
 <!-- keep only this part for ajax -->
 <div class="tab-pane fade" id="generalTab">...</div>
 <div class="tab-pane fade in active" id="missionsTab">
-    <div class="alert alert-error mission-prio-exceeded" <% if (alertPriority == ""){%> style="display:none;" <% } %>>
-    attention, the total priority is exceeded
-    </div>
-    <br>
-    <table class="uiGrid table table-hover table-striped mgB0">
+    <table class="uiGrid table table-hover table-striped">
         <thead>
             <tr>
                 <th>Title</th>
@@ -40,7 +36,7 @@
                 <td><a href="<%= mission.getThird_part_link()%>" target="_blank"><%= mission.getThird_part_link()%></a></td>
                 <td class="center">
                     <div class="spaceIphoneChkBox">
-                        <input type="checkbox" name="active" value="<%= strActiveVal%>" style="visibility: hidden;" <%=strActiveChkbox %> data-action="updateMissionInline" data-missionId="<%=mid%>" <% if (mission.canActivate()){ %> disabled <% } %> data-role/>
+                        <input type="checkbox" name="active" value="<%= strActiveVal%>" style="visibility: hidden;" <%=strActiveChkbox %> data-action="updateMissionInline" data-missionId="<%=mid%>" <% if (!mission.canActivate()){ %> disabled <% } %> data-role/>
                     </div>
                 </td>
                 <td class="center actionContainer">

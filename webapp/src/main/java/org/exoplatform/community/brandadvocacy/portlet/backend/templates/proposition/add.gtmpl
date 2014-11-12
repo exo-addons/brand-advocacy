@@ -19,8 +19,3 @@
     <button class="btn btn-add-proposition" type="button" data-missionId=<%=missionId%>>Save</button>
     <a class="btn mgL20 uiIconClose" href="#">Cancel</a>
 </div>
-<!--script src="/brand-advocacy-webapp/ckeditor/ckeditor.js" >
-</script-->
-<script>
-// CKEDITOR.replace( 'content' );
-</script>

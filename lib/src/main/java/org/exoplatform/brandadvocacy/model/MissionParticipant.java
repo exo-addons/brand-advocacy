@@ -84,7 +84,9 @@ public class MissionParticipant {
     this.participant_username = participant_username;
   }
   public String getUrl_submitted() {
-    return url_submitted;
+    if(null != url_submitted && !"".equals(url_submitted))
+      return url_submitted;
+    return "not provided yet";
   }
   public void setUrl_submitted(String url_submitted) {
     this.url_submitted = url_submitted;

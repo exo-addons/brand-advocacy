@@ -2,11 +2,10 @@
 <div class="tweetStepContent step-3">
     <h5 class="thank-title">Thank You!</h5>
     <div class="thank-content">
-        <p>Someone from our team will check that the mission has been fulfilled successfully.</p>
-        <p>You will soon receive a confirmation email to know when your goodie will be shipped!</p>
+        <p>Our mission control will check you were successful. Once validated, you'll receive a confirmation email to let you know your goodie has been shipped.</p>
     </div>
     <form class="thank-form" action="">
-        <textarea>I’ve just won a free eXo Tshirt on http://community.exoplatform.com!! via @eXoPlatform #ILOVEMYESN</textarea>
+        <textarea placeholder="I just won a free t-shirt from @eXoPlatform on http://community.exoplatform.com #ILOVEMYESN"></textarea>
         <div class="text-right"><button class="btn"><i class="iconTweetBird">&nbsp;</i>Tweet !</button></div>
     </form>
 

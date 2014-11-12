@@ -54,9 +54,8 @@ if(mission != null){
                     <label class="control-label">Status:</label>
                     <div class="controls">
                         <div class="spaceIphoneChkBox">
-                            <input class="mission-status-checkbox" type="checkbox" disabled  name="mission_active" id="mission_active" value="<%=strActiveVal%>" style="visibility: hidden;" <% if(mission.getActive()){ %> checked <% } %> tabindex="3">
+                            <input class="mission-status-checkbox" type="checkbox" data-action="preUpdateMissionStatusInline"  name="mission_active" id="mission_active" value="<%=strActiveVal%>" style="visibility: hidden;" <% if(mission.getActive()){ %> checked <% } %> tabindex="3">
                         </div>
-                        Add propositions to enable this mission
                     </div>
                 </div>
                 <div class="text-center">

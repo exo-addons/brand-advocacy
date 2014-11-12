@@ -28,8 +28,27 @@
     }
   };
   var _messageConfirmCBController = function (type,message) {
-
+    var alertDOM =  $('.alert');
+    if(type != null && type != "") {
+      var icon = type.toUpperCase();
+      var strIcon = "<i class='uiIcon" + icon + "'></i>";
+      alertDOM.removeClass();
+      alertDOM.addClass('alert');
+      alertDOM.addClass('alert-' + type);
+      alertDOM.html(strIcon + message);
+      alertDOM.fadeIn(500).delay(1000).fadeOut(500);
+    }
   };
+  var _disPlayInfoMsgCB = function(msg){
+    _messageConfirmCBController('info',msg);
+  };
+  var _disPlayWarningMsgCB = function(msg){
+    _messageConfirmCBController('warning',msg);
+  };
+  var _disPlayErrorMsgCB = function(msg){
+    _messageConfirmCBController('error',msg);
+  };
+
   var _loadPopup = function(mode,title,content){
     var popupDOM = $('div.uiPopup');
     $('.popupTitle').html(title);
@@ -64,10 +83,10 @@
       data:{title:title},
       success:function(data){
         if(data != "nok"){
-          _messageConfirmCBController('success','program has been saved');
+          _disPlayInfoMsgCB('The program has been updated');
           return;
         }
-        _messageConfirmCBController('unsuccessful','');
+        _disPlayErrorMsgCB('something went wrong, cannot update the program');
       }
     });
   }
@@ -176,11 +195,12 @@
       success:function(data){
         if(data !== 'nok'){
           _bodyContainerDOM.html(data);
+          _addEventIPhoneStyle2CheckBox();
           _propositionContainerDOM = $('.proposition-container');
           _currentMissionId = missionId;
           _loadPropositions();
         }else{
-          _messageConfirmCBController('unsuccessful','Cannot load mission detail view');
+          _disPlayErrorMsgCB('Something went wrong, cannot load mission detail view');
         }
       }
     });
@@ -199,7 +219,7 @@
       data:{title:title,third_part_link:link,priority:priority},
       success:function(data){
         if(data === 'nok'){
-          _messageConfirmCBController('unsuccessful','cannot create mission')
+          _disPlayErrorMsgCB('Something went wrong, cannot create mission')
           return;
         }
         _loadMissions();
@@ -212,21 +232,36 @@
       data:{id:_currentMissionId,title:title,third_part_link:link,mission_active:active},
       success:function(data){
         if(data === 'nok'){
-          _messageConfirmCBController('unsuccessful','cannot update mission');
+          _disPlayErrorMsgCB('Something went wrong, cannot update mission');
         }
         else{
-          _messageConfirmCBController('success','Mission has been updated');
+          _disPlayInfoMsgCB('Mission has been updated');
         }
       }
     });
   };
-
+  var _updateMissionInline = function(missionId,action,val){
+    $('.jz').jzAjax("MissionController.ajaxUpdateInline()",{
+      data:{missionId:missionId,action:action,val:val},
+      success:function(data){
+        try{
+          var obj = data = $.parseJSON(data);
+          if (obj.error){
+            if(obj.msg=="mission-prio-exceeded"){
+              _disPlayWarningMsgCB('the total priorities has been exceeded');
+            }else
+              _disPlayErrorMsgCB(obj.msg);
+          }
+        }catch (e){}
+      }
+    });
+  };
   var _removeMission = function(missionId){
     $('.jz').jzAjax('MissionController.deleteMission()',{
       data:{missionId:missionId},
       success:function(data){
         if(data === 'nok'){
-          _messageConfirmCBController('unsuccessful','cannot remove mission');
+          _disPlayErrorMsgCB('Something went wrrong, cannot remove mission');
         }
         _loadMissions();
       }
@@ -239,12 +274,12 @@
       data:{missionId:missionId},
       success:function(data){
         if(data === 'nok'){
-          _messageConfirmCBController('unsuccessful','Cannot load proposition');
+          _disPlayErrorMsgCB('Something went wrong, cannot load proposition');
           return;
         }
         _propositionContainerDOM.html(data);
-        _missionStatusCheckBoxController();
         _addEventIPhoneStyle2CheckBox();
+        _missionStatusCheckBoxController(false);
 
       }
     });
@@ -255,7 +290,7 @@
       data:{missionId:missionId,content:content,active:active},
       success:function(data){
         if(data === 'nok'){
-          _messageConfirmCBController('unsuccessful','Cannot add proposition');
+          _disPlayErrorMsgCB('Something went wrong, cannot add proposition');
           return;
         }
         _loadPopup('off','','');
@@ -268,7 +303,7 @@
       data:{propositionId:propositionId},
       success:function(data){
         if(data === 'nok'){
-          _messageConfirmCBController('unsuccessful','Cannot remove proposition');
+          _disPlayErrorMsgCB('Something went wrong, cannot remove proposition');
           return;
         }
         _loadPropositions();
@@ -281,7 +316,7 @@
       data:{propositionId:propositionId,content:content,active:active},
       success:function(data){
         if(data === 'nok'){
-          _messageConfirmCBController('unsuccessful','Cannot remove proposition');
+          _disPlayErrorMsgCB('Something went wrong, cannot remove proposition');
           return;
         }
         _loadPopup('off','','');
@@ -295,7 +330,7 @@
       data:{missionId:missionId},
       success:function(data){
         if(data === 'nok'){
-          _messageConfirmCBController('unsuccessful','Cannot load form');
+          _disPlayErrorMsgCB('Something went wrong, cannot load form');
           return;
         }
         _loadPopup('on','Add a new proposition',data);
@@ -308,7 +343,7 @@
       data:{propositionId:propositionId},
       success:function(data){
         if(data === 'nok'){
-          _messageConfirmCBController('unsuccessful','Cannot load form');
+          _disPlayErrorMsgCB('Something went wrong, cannot load edit form');
           return;
         }
         _loadPopup('on','Edit proposition',data);
@@ -340,7 +375,7 @@
       data:{missionParticipantId:missionParticipantId},
       success:function(data){
         if(data === 'nok'){
-          _messageConfirmCBController('unsuccessful','Cannot load detail mission participant')
+          _disPlayErrorMsgCB('Something went wrong, cannot load detail mission participant')
           return;
         }
         _bodyContainerDOM.html(data);
@@ -363,7 +398,7 @@
     $(document).on('click.juzBrad.bk.closePopup','a.uiIconClose',function(){
       _loadPopup('off','','');
     });
-  }
+  };
   var _addEvent2BtnIphoneCheckbox = function(){
     $(document).on('click.juzBrad.bk.chkBox','div .spaceIphoneChkBox',function(){
       var input = $(this).find("input:checkbox");
@@ -377,29 +412,21 @@
           data:{username:username,action:"notif",val:notif},
           success:function(data){
             if (data == "nok"){
-              alert("something went wrong, cannot update manager");
+              _disPlayErrorMsgCB("Something went wrong, cannot update manager");
             }
           }
         });
       } else if(action == "updateMissionInline"){
-        var missionId = input.attr("data-missionId");
-        var active = val;
-        $(input).jzAjax("MissionController.ajaxUpdateInline()",{
-          data:{missionId:missionId,action:"active",val:active},
-          success:function(data){
-            try{
-              var obj = data = $.parseJSON(data);
-              if($(".mission-prio-exceeded"))
-                $(".mission-prio-exceeded").hide();
-              if (obj.error){
-                if(obj.msg=="mission-prio-exceeded"){
-                  $(".mission-prio-exceeded").show();
-                }else
-                  alert(obj.msg);
-              }
-            }catch (e){}
-          }
-        });
+        if($(input).prop('disabled')){
+          _disPlayInfoMsgCB('Add propositions to enable this mission');
+        }else{
+          var missionId = input.attr("data-missionId");
+          _updateMissionInline(missionId,"active",val);
+        }
+      } else if(action == "preUpdateMissionStatusInline"){
+        if(nbBradPropositionsActive<= 0){
+          _disPlayInfoMsgCB('Add propositions to enable this mission');
+        }
       } else if (action == "updatePropositionInline"){
         var propositionId = input.attr("data-propositionId");
         var propositionActive = val;
@@ -407,14 +434,14 @@
           data:{propositionId:propositionId,action:"active",val:propositionActive},
           success:function(data){
             if (data == "nok"){
-              _messageConfirmCBController('unsuccessful',"something went wrong, cannot update proposition");
+              _disPlayErrorMsgCB('something went wrong, cannot update proposition');
             }else{
               if(data == "true"){
                 nbBradPropositionsActive++;
               }else{
                 nbBradPropositionsActive--;
               }
-              _missionStatusCheckBoxController();
+              _missionStatusCheckBoxController(true);
             }
           }
         });
@@ -425,21 +452,21 @@
     });
   };
 
-  var _missionStatusCheckBoxController = function(){
-    var isDisabled = false;
-    if(nbBradPropositionsActive <= 0){
-      isDisabled = true;
-    }
+  var _missionStatusCheckBoxController = function(reload){
     var chkBoxDOM = $('input:checkbox.mission-status-checkbox');
-    var Mdisabled = chkBoxDOM.prop('disabled');
-    if(isDisabled){
-      if(!Mdisabled){
-        chkBoxDOM.prop('disabled',true);
-        chkBoxDOM.prop('checked',false);
-        chkBoxDOM.val(false);
+    var mDisable = chkBoxDOM.prop('disabled');
+    var mIsChecked = chkBoxDOM.prop('checked');
+    if(nbBradPropositionsActive > 0){
+      if(mDisable){
+        chkBoxDOM.prop('disabled',false);
       }
-    }else {
-      chkBoxDOM.prop('disabled',false);
+    }else{
+      if(mIsChecked && reload){
+        _updateMissionInline(_currentMissionId,'active',"false");
+        _loadEditMissionFormView(_currentMissionId);
+      }else{
+        chkBoxDOM.prop('disabled',true);
+      }
     }
   };
   var _addEvent2RoleSelect = function(){
@@ -453,9 +480,9 @@
         data:{username:username,action:"role",val:role},
         success:function(data){
           if (data == "nok"){
-            _messageConfirmCBController('unsuccess','something went wrong, cannot update manager');
+            _disPlayErrorMsgCB('Something went wrong, cannot update manager');
           }else{
-            _messageConfirmCBController('success','Manager role has been updated');
+            _disPlayInfoMsgCB('Manager role has been updated');
           }
         }
       });

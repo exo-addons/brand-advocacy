@@ -24,7 +24,7 @@ def strDateSubmitted = missionParticipantDTO.getDate_submitted()
 <!-- part for ajax -->
     <div class="tab-pane fade in active" id="participantsTab">
         <ul class="breadcrumb">
-            <li><a href="@{JuZBackEndApplication.index(action="mission_participant_index")}">Participants</a><span class="uiIconMiniArrowRight"></span></li>
+            <li class="mission-participant-tab"><a href="#">Participants</a><span class="uiIconMiniArrowRight"></span></li>
             <li class="active"><%= fullName %></li>
         </ul>
         <br>

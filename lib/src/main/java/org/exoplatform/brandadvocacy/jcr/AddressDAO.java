@@ -36,13 +36,13 @@ public class AddressDAO extends DAO{
   public AddressDAO(JCRImpl jcrImpl) {
     super(jcrImpl);
   }
-  private Node getOrCreateAddressHome(String prgoramId, String username){
+  private Node getOrCreateAddressHome(String programId, String username){
 
     if (null == username || "".equals(username)){
       log.error("ERROR cannot get or create address home in participant null");
       return null;
     }
-    Node participant = this.getJcrImplService().getParticipantDAO().getNodeByUserName(prgoramId,username);
+    Node participant = this.getJcrImplService().getParticipantDAO().getNodeByUserName(programId,username);
     if (null != participant){
       return this.getJcrImplService().getParticipantDAO().getOrCreateAddressHome(participant);
     }

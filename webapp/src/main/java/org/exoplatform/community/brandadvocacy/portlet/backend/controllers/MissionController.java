@@ -156,21 +156,23 @@ public class MissionController {
         Boolean mActive = false;
         mActive = val.equals("true") ? true : false;
         mission.setActive(mActive);
-        if (this.missionService.getAllPropositions(missionId,true).size() == 0){
+        if (mActive && this.missionService.getAllPropositions(missionId,true).size() == 0){
           doUpdate = false;
         }
       }
       if (doUpdate){
         mission = this.missionService.updateMission(mission);
-        List<Mission> missions = this.missionService.getAllMissionsByProgramId(this.loginController.getCurrentProgramId(),true);
-        if (null != missions){
-          int totalPrio = 0;
-          for (Mission m:missions){
-            totalPrio +=(int)m.getPriority();
-          }
-          if (totalPrio > 100){
-            error = true;
-            errorMsg = "mission-prio-exceeded";
+        if(null != mission){
+          List<Mission> missions = this.missionService.getAllMissionsByProgramId(this.loginController.getCurrentProgramId(),true);
+          if (null != missions){
+            int totalPrio = 0;
+            for (Mission m:missions){
+              totalPrio +=(int)m.getPriority();
+            }
+            if (totalPrio > 100){
+              error = true;
+              errorMsg = "mission-prio-exceeded";
+            }
           }
         }
       }else {

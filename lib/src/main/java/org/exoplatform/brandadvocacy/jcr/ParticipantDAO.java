@@ -121,8 +121,26 @@ public class ParticipantDAO extends DAO {
     return null;
   }
   public Node getNodeByUserName(String programId,String username){
+    Node programNode = null;
+    try {
+      programNode = this.getJcrImplService().getProgramDAO().getNodeById(programId);
+      if (null != programNode){
+        Node homeNode = this.getJcrImplService().getProgramDAO().getOrCreateParticipantHome(programNode);
+        if (null != homeNode && homeNode.hasNode(username)){
+          return homeNode.getNode(username);
+        }
+      }
+    } catch (RepositoryException e) {
+      e.printStackTrace();
+    }
+    return null;
+  }
+
+  public Node getNodeByQuery(String programId,String username){
     StringBuilder sql = new StringBuilder("select * from "+ JCRImpl.PARTICIPANT_NODE_TYPE);
-    sql.append(" WHERE ").append(node_prop_username).append(" like '").append(username).append("'");
+    sql.append(" WHERE ").append(" jcr:path like '/").append(JCRImpl.EXTENSION_PATH).append("/").append(programId);
+    sql.append("/").append(ProgramDAO.node_prop_participants).append("/%'");
+    sql.append(" AND ").append(node_prop_username).append(" like '").append(username).append("'");
     sql.append(" AND ").append(node_prop_program_id).append(" = '").append(programId).append("'");
     List<Node> nodes =  this.getNodesByQuery(sql.toString(),0,1);
     if (nodes.size() > 0) {
@@ -130,6 +148,7 @@ public class ParticipantDAO extends DAO {
     }
     return null;
   }
+
   public Participant addParticipant2Program(Participant participant){
     try{
       participant.checkValid();

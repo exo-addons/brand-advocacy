@@ -89,6 +89,7 @@
   var _addEventToBtnTerminate = function(){
     $(document).on('click.juzbrad.ft.terminate.view','.btn-brad-terminate',function(){
       var jTerminate = $(this);
+      var url = $("#brad-participant-url-submitted").val();
       var fname = $("#brad-participant-fname").val();
       var lname = $("#brad-participant-lname").val();
       var address = $("#brad-participant-address").val();
@@ -97,7 +98,7 @@
       var country = $("#brad-participant-country").val();
       var size = $("#brad-participant-size").val();
       jTerminate.jzAjax("JuZFrontEndApplication.loadThankyouView()",{
-        data:{fname:fname,lname:lname,address:address,city:city,phone:phone,country:country,size:size},
+        data:{'url':url,fname:fname,lname:lname,address:address,city:city,phone:phone,country:country,size:size},
         success: function(data){
           if(typeof data == "string" && data != "nok")
             _ftStepContainer.html(data);

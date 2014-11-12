@@ -7,6 +7,7 @@
       def jsManager = pcontext.getJavascriptManager();
       jsManager.require("SHARED/jQueryJuzBrandAdvBackend", "brandAdvBackend").addScripts("brandAdvBackend.init();");
 %>
+<script type="text/javascript" src="/brand-advocacy/ckeditor/cheditor.js"></script>
 <div class="referral-porlet">
 	<h3>Brand Advocacy Admin</h3><br>
 	<!-- TAB 1 -->
@@ -18,6 +19,8 @@
             <% } %>
             <li class="mission-participant-tab"><a href="#" data-toggle="tab">Participants</a></li>
 		</ul>
+        <div class="alert" style="display:none;">
+        </div>
 		<div id="myTabContent" class="tab-content">
             #{insert/}
 		</div>
@@ -32,3 +35,6 @@
 
     </div>
 </div>
+<script>
+// CKEDITOR.replace( 'content' );
+</script>

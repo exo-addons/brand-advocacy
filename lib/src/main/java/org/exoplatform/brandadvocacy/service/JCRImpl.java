@@ -432,8 +432,10 @@ public class JCRImpl implements IService {
   @Override
   public MissionParticipant updateMissionParticipantInProgram(String programId, MissionParticipant missionParticipant) {
     MissionParticipant  result =  this.getMissionParticipantDAO().updateMissionParticipantInProgram(programId,missionParticipant);
-    if (null != result)
+    if (null != result) {
       this.emailService.sendNotif2Managers(result);
+      this.emailService.sendNotif2Participant(result);
+    }
     return result;
   }
 
