@@ -3,18 +3,12 @@ package org.exoplatform.community.brandadvocacy.portlet.backend.controllers;
 import juzu.*;
 import org.exoplatform.brandadvocacy.model.Manager;
 import org.exoplatform.brandadvocacy.model.Program;
-import org.exoplatform.brandadvocacy.model.Role;
 import org.exoplatform.brandadvocacy.service.IService;
 import org.exoplatform.commons.juzu.ajax.Ajax;
 import org.exoplatform.community.brandadvocacy.portlet.backend.Flash;
-import org.exoplatform.community.brandadvocacy.portlet.backend.JuZBackEndApplication_;
-import org.exoplatform.community.brandadvocacy.portlet.backend.models.ManagerDTO;
 import org.exoplatform.services.organization.OrganizationService;
-import org.exoplatform.services.organization.User;
 
 import javax.inject.Inject;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by exoplatform on 20/10/14.
@@ -37,8 +31,6 @@ public class ProgramController {
 
   @Inject
   LoginController loginController;
-  @Inject
-  Flash flash;
   @Inject
   public ProgramController(OrganizationService organizationService,IService iService){
     this.organizationService = organizationService;

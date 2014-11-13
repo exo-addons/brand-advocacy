@@ -3,12 +3,10 @@ package org.exoplatform.community.brandadvocacy.portlet.backend.controllers;
 import juzu.*;
 import org.exoplatform.commons.juzu.ajax.Ajax;
 import org.exoplatform.brandadvocacy.model.Manager;
-import org.exoplatform.brandadvocacy.model.Mission;
 import org.exoplatform.brandadvocacy.model.Program;
 import org.exoplatform.brandadvocacy.model.Role;
 import org.exoplatform.brandadvocacy.service.IService;
 import org.exoplatform.commons.utils.ListAccess;
-import org.exoplatform.community.brandadvocacy.portlet.backend.JuZBackEndApplication_;
 import org.exoplatform.community.brandadvocacy.portlet.backend.models.ManagerDTO;
 import org.exoplatform.services.organization.OrganizationService;
 import org.exoplatform.services.organization.User;
@@ -28,8 +26,6 @@ public class ManagerController {
 
   IService jcrService;
   OrganizationService organizationService;
-  @Inject
-  MissionController missionController;
 
   @Inject
   LoginController loginController;

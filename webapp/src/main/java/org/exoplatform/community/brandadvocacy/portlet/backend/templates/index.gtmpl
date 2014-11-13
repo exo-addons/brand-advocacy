@@ -8,16 +8,19 @@ import org.exoplatform.web.application.JavascriptManager;
 
 def pcontext = Util.getPortalRequestContext();
 def jsManager = pcontext.getJavascriptManager();
+if(loginController.isAdmin()){
+    jsManager.require("SHARED/jQueryJuzBrandAdvBackend", "brandAdvBackend").addScripts("brandAdvBackend.init(true);");
+}
+else{
+    jsManager.require("SHARED/jQueryJuzBrandAdvBackend", "brandAdvBackend").addScripts("brandAdvBackend.init();");
+}
 if(mp_view){
     jsManager.require("SHARED/jQueryJuzBrandAdvBackend", "brandAdvBackend").addScripts("brandAdvBackend.initMissionParticipant('mp_view','"+missionParticipantId+"','"+username+"');");
 }else{
-
     if(loginController.isAdmin()){
-        jsManager.require("SHARED/jQueryJuzBrandAdvBackend", "brandAdvBackend").addScripts("brandAdvBackend.init(true);");
         jsManager.require("SHARED/jQueryJuzBrandAdvBackend", "brandAdvBackend").addScripts("brandAdvBackend.initProgram();");
     }
     else{
-        jsManager.require("SHARED/jQueryJuzBrandAdvBackend", "brandAdvBackend").addScripts("brandAdvBackend.init();");
         jsManager.require("SHARED/jQueryJuzBrandAdvBackend", "brandAdvBackend").addScripts("brandAdvBackend.initMissionParticipant('','','');");
     }
 }

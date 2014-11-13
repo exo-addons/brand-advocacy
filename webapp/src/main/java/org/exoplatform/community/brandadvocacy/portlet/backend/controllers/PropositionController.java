@@ -4,9 +4,6 @@ import juzu.*;
 import org.exoplatform.commons.juzu.ajax.Ajax;
 import org.exoplatform.brandadvocacy.model.*;
 import org.exoplatform.brandadvocacy.service.IService;
-import org.exoplatform.community.brandadvocacy.portlet.backend.Flash;
-import org.exoplatform.community.brandadvocacy.portlet.backend.JuZBackEndApplication_;
-
 import javax.inject.Inject;
 import java.util.List;
 
@@ -29,11 +26,6 @@ public class PropositionController {
   @Inject
   @Path("proposition/list.gtmpl")
   org.exoplatform.community.brandadvocacy.portlet.backend.templates.proposition.list listTpl;
-
-  @Inject
-  LoginController loginController;
-  @Inject
-  Flash flash;
   @Inject
   public PropositionController(IService iService){
     this.propositionService = iService;
@@ -54,7 +46,6 @@ public class PropositionController {
   @Ajax
   @Resource
   public Response loadEditPropositionForm(String propositionId){
-    flash.setStyleMissionMenu("active");
     Proposition proposition =  this.propositionService.getPropositionById(propositionId);
     if(null != proposition)
       return editTpl.with().proposition(proposition).ok();

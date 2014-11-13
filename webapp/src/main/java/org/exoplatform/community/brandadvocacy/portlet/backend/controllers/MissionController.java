@@ -6,16 +6,11 @@ import org.exoplatform.commons.juzu.ajax.Ajax;
 import org.exoplatform.brandadvocacy.model.*;
 import org.exoplatform.brandadvocacy.model.Priority;
 import org.exoplatform.brandadvocacy.service.IService;
-import org.exoplatform.community.brandadvocacy.portlet.backend.Flash;
-import org.exoplatform.community.brandadvocacy.portlet.backend.JuZBackEndApplication_;
 import org.exoplatform.community.brandadvocacy.portlet.backend.models.MissionDTO;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import javax.inject.Inject;
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -28,8 +23,6 @@ public class MissionController {
   IService missionService;
   @Inject
   LoginController loginController;
-  @Inject
-  Flash flash;
   @Inject
   public MissionController(IService missionService){
 
@@ -69,7 +62,6 @@ public class MissionController {
   @Ajax
   @Resource
   public Response editForm(String missionId){
-    this.flash.setStyleMissionMenu("active");
     Mission mission =  this.missionService.getMissionById(missionId);
     if(null != mission){
       MissionDTO missionDTO = new MissionDTO(mission.getProgramId(),mission.getId(),mission.getTitle(),mission.getPriority(),mission.getThird_part_link(),mission.getActive());

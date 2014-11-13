@@ -14,7 +14,6 @@ import org.exoplatform.services.organization.User;
 import org.exoplatform.social.core.identity.model.Identity;
 import org.exoplatform.social.core.identity.provider.OrganizationIdentityProvider;
 import org.exoplatform.social.core.manager.IdentityManager;
-import org.exoplatform.webui.application.WebuiRequestContext;
 import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.List;
@@ -32,8 +31,6 @@ public class MissionParticipantController {
 
   @Inject
   LoginController loginController;
-  @Inject
-  Flash flash;
   @Inject
   @Path("mission_participant/index.gtmpl")
   org.exoplatform.community.brandadvocacy.portlet.backend.templates.mission_participant.index indexTpl;
