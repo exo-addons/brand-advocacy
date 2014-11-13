@@ -107,6 +107,45 @@ public class ManagerController {
 
   @Ajax
   @Resource
+  public Response addManagers2Program(String[] usernames, String role, String notif){
+
+    try {
+      String progamId = loginController.getCurrentProgramId();
+      if (null == progamId || null == usernames || usernames.length <= 0)
+        return Response.ok("something went wrong, cannot add user like a manager");
+      Boolean mNotif = false;
+      mNotif = false;
+      if(null != notif){
+        mNotif = "true".equals(notif)? true:false;
+      }
+      List<Manager> managers = new ArrayList<Manager>();
+      for (String username:usernames){
+        try {
+          User exoUser = this.organizationService.getUserHandler().findUserByName(username);
+          if(null != exoUser){
+            Manager manager = new Manager(username);
+            manager.setParentId(progamId);
+            manager.setRole(Role.getRole(Integer.parseInt(role)));
+            manager.setNotif(mNotif);
+            manager.checkValid();
+            managers.add(manager);
+          }
+        }catch (Exception e){}
+      }
+      if (managers.size() > 0){
+        if (this.jcrService.addManagers2Program(progamId,managers).size() > 0){
+          return Response.ok("ok");
+        }
+      }
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+    return Response.ok("something went wrong, cannot add user like a manager");
+
+  }
+
+  @Ajax
+  @Resource
   public Response updateAjaxProgramManagerInLine(String username, String action, String val){
     String programId = loginController.getCurrentProgramId();
     Manager manager = this.jcrService.getProgramManagerByUserName(programId,username);

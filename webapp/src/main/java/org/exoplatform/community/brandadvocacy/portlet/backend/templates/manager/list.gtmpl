@@ -67,26 +67,30 @@
                 <% } %>
             <% } %>
                 <tr>
-                        <td>
-                            <div class="result-add-manager"></div>
-                            <input type="input" name="username" class="manager-username"/>
-                            <div class="result-search-manager"></div>
-                        </td>
-                        <td class="center">
-                            <select name="role" class="input-medium manager-role">
-                            <% roles.each{ role -> %>
-                                <option value="<%= role.getValue() %>"><%= role.getLabel() %></option>
-                            <% } %>
-                            </select>
-                        </td>
-                        <td class="center">
-                            <div class="spaceIphoneChkBox">
-                                <input class="manager-notif" type="checkbox" name="notif" value="true" checked style="visibility: hidden;"  data-action="" data-role/>
+                    <td>
+                        <div class="exo-mentions"><!-- ADD class .open to display dropdown-menu -->
+                            <div contenteditable="false" class="replaceTextArea editable result-add-manager hide">
                             </div>
-                        </td>
-                        <td class="center actionContainer">
-                            <button class="btn btn-primary btn-add-program-manager" type="submit">Add</button>
-                        </td>
+                        </div>
+                        <input type="input" name="username" class="manager-username"/>
+                        <div class="exo-mentions result-search-manager">
+                        </div>
+                    </td>
+                    <td class="center">
+                        <select name="role" class="input-medium manager-role">
+                        <% roles.each{ role -> %>
+                            <option value="<%= role.getValue() %>"><%= role.getLabel() %></option>
+                        <% } %>
+                        </select>
+                    </td>
+                    <td class="center">
+                        <div class="spaceIphoneChkBox">
+                            <input class="manager-notif" type="checkbox" name="notif" value="true" checked style="visibility: hidden;"  data-action="" data-role/>
+                        </div>
+                    </td>
+                    <td class="center actionContainer">
+                        <button class="btn btn-primary btn-add-program-manager" type="submit">Add</button>
+                    </td>
                 </tr>
 
         </tbody>

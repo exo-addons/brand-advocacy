@@ -38,7 +38,6 @@ public class EmailService {
     if(null == remoteUrl || "".equals(remoteUrl)){
       remoteUrl = "http://community.exoplatform.com";
     }
-    remoteUrl +="/brand-advocacy-webapp/img/email";
   }
 
   private String getBodyByTemplate(String fileTemplate, Map<String, String> templateProperties) {
@@ -82,22 +81,26 @@ public class EmailService {
     return body;
   }
   private String generateBodyGiftShipped(String fullName){
+    String remoteImgUrl =  remoteUrl;
+    remoteImgUrl+="/brand-advocacy-webapp/img/email";
     Map<String, String> props = new HashMap<String, String>();
     props.put("user.name", fullName);
-    props.put("imgUrlBase",remoteUrl);
+    props.put("imgUrlBase",remoteImgUrl);
     return this.getBodyByTemplate(email_gift_shipped_template, props);
   }
   private String generateBodyThankyou(String fullName){
+    String remoteImgUrl =  remoteUrl;
+    remoteImgUrl+="/brand-advocacy-webapp/img/email";
     Map<String, String> props = new HashMap<String, String>();
     props.put("user.name", fullName);
-    props.put("imgUrlBase",remoteUrl);
+    props.put("imgUrlBase",remoteImgUrl);
     return this.getBodyByTemplate(email_thankyou_template, props);
   }
   private String generateBodyMissionParticipantByStatus(Mission mission,MissionParticipant missionParticipant) {
     String body = null;
 
     body = "there is new change on referral program ";
-    body +="view on <b>?action=mp_view&id="+missionParticipant.getId();
+    body +="view on "+remoteUrl+"?action=mp_view&id="+missionParticipant.getId();
     return body;
   }
   public void sendNotif2Managers(MissionParticipant missionParticipant){

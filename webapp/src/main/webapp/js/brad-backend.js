@@ -115,9 +115,9 @@
     });
   };
 
-  var _addProgramManager = function(username,role,notif){
+  var _addProgramManager = function(usernames,role,notif){
     $('.jz').jzAjax('ManagerController.add2Program()',{
-      data:{username:username,role:role,notif:notif},
+      data:{username:usernames,role:role,notif:notif},
       success:function(data){
         if(data === 'ok'){
           _loadProgramManagers();
@@ -161,12 +161,19 @@
     }
   };
   var _displayManagerList2BeAdded = function(){
-    var str = "<ul>";
+    var str = '';
     $.each(_managerBradList2BeAdded,function(i,v){
-      str += "<li class='remove-manager-2-be-added' data-userName='"+ v.username+"'>"+ v.fullname+"</li>";
+      str +='<span contenteditable="false" class="remove-manager-2-be-added" data-userName="'+ v.username+'">';
+      str +=v.fullname;
+      str +='<i contenteditable="true" class="uiIconClose uiIconLightGray">x</i></span>';
     });
-    str +="</ul>";
     $('.result-add-manager').html(str);
+    if(str != ''){
+      $('.result-add-manager').removeClass('hide');
+    }else{
+      $('.result-add-manager').addClass('hide');
+    }
+    $(".result-search-manager").removeClass('open');
   };
   var _addEvent2LinkAddManager2BeAdded = function(){
     $(document).on('click.juzBrad.bk.addManager2BeAdded','li.add-manager-2-be-added',function(){
@@ -177,7 +184,7 @@
     });
   };
   var _addEvent2LinkRemoveManager2BeAdded = function(){
-    $(document).on('click.juzBrad.bk.removeManager2BeAdded','li.remove-manager-2-be-added',function(){
+    $(document).on('click.juzBrad.bk.removeManager2BeAdded','span.remove-manager-2-be-added',function(){
       var username = $(this).attr('data-userName');
       _removeManagerFromManagerList2BeAdded(username);
     });
@@ -564,10 +571,12 @@
           data:{keyword:keyword},
           success:function(data){
             $(".result-search-manager").html(data);
+            $(".result-search-manager").addClass('open');
           }
         });
       }else{
         $(".result-search-manager").html('');
+        $(".result-search-manager").removeClass('open');
       }
     })
   };
@@ -587,7 +596,7 @@
   };
 
   var _addEvent2MissionParticipantTabMenu = function(){
-    $(document).on('click.juzBrad.bk.tabmenu.missionparticipant','a.mission-participant-tab,button.mission-participant-tab',function(){
+    $(document).on('click.juzBrad.bk.tabmenu.missionparticipant','li.mission-participant-tab,button.mission-participant-tab',function(){
       _menuStyleController('mission-participant');
       _loadMissionParticipantContainer();
     });
@@ -623,6 +632,10 @@
   var _addEvent2BtnAddProgramManager = function(){
     $(document).on('click.juzBrad.bk.addprogramuser','button.btn-add-program-manager',function(){
       if(_managerBradList2BeAdded.length > 0){
+        var usernames = [];
+        $.each(_managerBradList2BeAdded,function(i,v){
+          usernames.push(v.username);
+        });
         var username = _managerBradList2BeAdded[0].username;
         var role = $(".manager-role").val();
         var notif = $(".manager-notif").val();
@@ -792,7 +805,6 @@
     _bodyContainerDOM = $(".tab-content");
     if(isAdmin){
       _addEvent2LinkClosePopup();
-      _menuStyleController('program');
       _initProgramEvent();
       _initManagerEvent();
       _initMissionEvent();
@@ -809,13 +821,18 @@
   };
   brandAdvBackend.initMissionParticipant = function(mode,missionParticipantId,username){
     _bodyContainerDOM = $(".tab-content");
-    if(mode == "view_mp"){
+    if(mode == "mp_view"){
+      _menuStyleController('participant');
       _loadMissionParticipantDetail(missionParticipantId,username);
-    }else
-    _loadMissionParticipantContainer();
+    }else{
+      _menuStyleController('participant');
+      _loadMissionParticipantContainer();
+    }
+
   };
   brandAdvBackend.initProgram = function(){
     _bodyContainerDOM = $(".tab-content");
+    _menuStyleController('program');
     _loadProgramContentView();
   };
 

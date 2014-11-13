@@ -165,7 +165,7 @@ public class MissionParticipantDAO extends DAO {
       if (query.getStatus() != 0){
         sql.append(" AND ").append(node_prop_status).append(" = '").append(query.getStatus()).append("'");
       }
-      sql.append(" ORDER BY "+node_prop_dateCreated+" DESC ");
+      sql.append(" ORDER BY "+node_prop_status+" DESC ");
       List<Node> nodes =  this.getNodesByQuery(sql.toString(),query.getOffset(),query.getLimit());
       return this.transferNodes2Objects(nodes);
     }
