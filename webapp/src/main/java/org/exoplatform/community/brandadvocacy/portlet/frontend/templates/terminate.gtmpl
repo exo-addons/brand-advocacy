@@ -39,11 +39,7 @@
     </div>
     <div class="control-group">
         <div class="controls">
-            <select name="tweetCountry" id="tweetCountry">
-                <option value="vn">Country</option>
-                <option value="Vietnam">Vietnam</option>
-                <option value="Laos">Laos</option>
-                <option value="Campuchia">Campuchia</option>
+            <select name="brad-participant-country" id="brad-participant-country">
             </select>
         </div>
     </div>

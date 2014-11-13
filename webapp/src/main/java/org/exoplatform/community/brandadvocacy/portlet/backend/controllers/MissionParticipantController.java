@@ -43,10 +43,6 @@ public class MissionParticipantController {
   org.exoplatform.community.brandadvocacy.portlet.backend.templates.mission_participant.list listTpl;
 
   @Inject
-  @Path("mission_participant/view.gtmpl")
-  org.exoplatform.community.brandadvocacy.portlet.backend.templates.mission_participant.view viewTpl;
-
-  @Inject
   @Path("mission_participant/viewajax.gtmpl")
   org.exoplatform.community.brandadvocacy.portlet.backend.templates.mission_participant.viewajax viewAjaxTpl;
 
@@ -69,21 +65,6 @@ public class MissionParticipantController {
     return indexTpl.with().set("states", Status.values()).ok();
   }
 
-  public Response index(){
-    String action = WebuiRequestContext.getCurrentInstance().getRequestParameter("action");
-    String keyword = WebuiRequestContext.getCurrentInstance().getRequestParameter("keyword");
-    String status = WebuiRequestContext.getCurrentInstance().getRequestParameter("stt");
-    String page = WebuiRequestContext.getCurrentInstance().getRequestParameter("page");
-    String missionParticipantId = WebuiRequestContext.getCurrentInstance().getRequestParameter("id");
-    if (null != loginController.getCurrentProgramId()){
-      if (null == action || action.equals("mp_search")){
-        return this.list();
-      }else if (action.equals("mp_view") && null != missionParticipantId && !"".equals(missionParticipantId) ){
-        return this.view(missionParticipantId);
-      }
-    }
-    return Response.ok("nok");
-  }
   public Response list(){
     String programId = loginController.getCurrentProgramId();
     List<MissionParticipant>  missionParticipants = this.missionParticipantService.getAllMissionParticipantsInProgram(programId);
@@ -128,8 +109,7 @@ public class MissionParticipantController {
             }
             if (isAjax){
               return viewAjaxTpl.with().set("missionParticipantDTO",missionParticipantDTO).set("address",address).set("participantDTO",participantDTO).set("states",Status.values()).ok();
-            }else
-              return viewTpl.with().set("missionParticipantDTO",missionParticipantDTO).set("address",address).set("participantDTO",participantDTO).set("states",Status.values()).ok();
+            }
           }
         }
 
@@ -228,6 +208,7 @@ public class MissionParticipantController {
       mission = this.missionParticipantService.getMissionById(missionParticipant.getMission_id());
       if (null != mission){
         missionParticipantDTO = new MissionParticipantDTO();
+        missionParticipantDTO.setParticipant_id(username);
         missionParticipantDTO.setId(missionParticipant.getId());
         missionParticipantDTO.setMission_title(mission.getTitle());
         missionParticipantDTO.setDate_submitted(Utils.convertDateFromLong(missionParticipant.getModifiedDate()));

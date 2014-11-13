@@ -28,7 +28,9 @@ public enum Size {
   
   Large(1),
   Medium(2),
-  Small(3);
+  Small(3),
+  Extra_Large(4),
+  Extra_Small(5);
 
   private final int size;
 
@@ -42,14 +44,18 @@ public enum Size {
 
   public String getLabel() {
       switch (this.size) {
-          case 3:
-              return "Size S";
-          case 2:
-              return "Size M";
-          case 1:
-              return "Size L";
-          default:
-              return "Customization";
+        case 5:
+          return "Size XS";
+        case 4:
+          return "Size XL";
+        case 3:
+            return "Size S";
+        case 2:
+            return "Size M";
+        case 1:
+            return "Size L";
+        default:
+            return "Customization";
       }
   }
 

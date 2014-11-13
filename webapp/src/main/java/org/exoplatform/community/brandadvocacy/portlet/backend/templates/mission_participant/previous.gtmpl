@@ -1,4 +1,4 @@
 #{param name=missionParticipantDTOs/}
 <% missionParticipantDTOs.each{ missionParticipantDTO -> %>
-    <a href="?action=mp_view&id=<%= missionParticipantDTO.getId()%>"><%= missionParticipantDTO.getMission_title()%></a> has been submitted <%= missionParticipantDTO.getDate_submitted() %><br>
+    <a href="#" class="actionIcon mp-view" data-mission-participant-id="<%=missionParticipantDTO.getId()%>" data-participant-id="<%=missionParticipantDTO.getParticipant_id()%>" ><%= missionParticipantDTO.getMission_title()%></a> has been submitted <%= missionParticipantDTO.getDate_submitted() %><br>
 <% } %>

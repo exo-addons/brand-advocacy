@@ -96,7 +96,7 @@ public class ManagerController {
           manager.setNotif(mNotif);
           manager = this.jcrService.addManager2Program(manager);
           if (null != manager)
-            return JuZBackEndApplication_.index("program_index");
+            return Response.ok("ok");
         }
       }
       else
@@ -105,7 +105,6 @@ public class ManagerController {
     } catch (Exception e) {
       e.printStackTrace();
     }
-
     return Response.ok("something went wrong, cannot add user like a manager");
 
   }

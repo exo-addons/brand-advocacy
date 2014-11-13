@@ -4,11 +4,13 @@ import juzu.*;
 
 import juzu.request.SecurityContext;
 import org.exoplatform.brandadvocacy.model.Manager;
+import org.exoplatform.brandadvocacy.model.MissionParticipant;
 import org.exoplatform.brandadvocacy.model.Program;
 import org.exoplatform.brandadvocacy.model.Role;
 import org.exoplatform.brandadvocacy.service.IService;
 import org.exoplatform.community.brandadvocacy.portlet.backend.controllers.*;
 import org.exoplatform.services.organization.OrganizationService;
+import org.exoplatform.webui.application.WebuiRequestContext;
 
 import javax.inject.Inject;
 import java.util.List;
@@ -30,15 +32,10 @@ public class JuZBackEndApplication {
   IService jcrService;
 
   @Inject
-  MissionController missionController;
-  @Inject
   LoginController loginController;
   @Inject
-  ProgramController programController;
-  @Inject
-  Flash flash;
-  @Inject
   MissionParticipantController missionParticipantController;
+
 
   @Inject
   public JuZBackEndApplication(OrganizationService organizationService,IService iService){
@@ -47,7 +44,10 @@ public class JuZBackEndApplication {
   }
 
   @View
-  public Response index(SecurityContext securityContext,String action) {
+  public Response index(SecurityContext securityContext) {
+
+    String action = WebuiRequestContext.getCurrentInstance().getRequestParameter("action");
+    String missionParticipantId = WebuiRequestContext.getCurrentInstance().getRequestParameter("id");
 
     if (null == loginController.getCurrentProgramId()){
       List<Program> programs = this.jcrService.getAllPrograms();
@@ -60,23 +60,14 @@ public class JuZBackEndApplication {
       this.generateRights(loginController.getCurrentProgramId(),loginController.getCurrentUserName());
     }
     if (null != loginController.getRights()){
-      if (null != action){
-        if (action.equals("mission_participant_index")) {
-          flash.setStyleMissionParticipantMenu("active");
-         // return missionParticipantController.index();
-        }
-        else if (action.equals("mission_index")) {
-          flash.setStyleMissionMenu("active");
-        //  return missionController.index();
+      if (null != action && action.equals("mp_view") && null != missionParticipantId && !"".equals(missionParticipantId) ){
+        MissionParticipant missionParticipant = this.jcrService.getMissionParticipantById(missionParticipantId);
+        if (null != missionParticipant){
+          return indexTpl.with().set("mp_view",true).set("username",missionParticipant.getParticipant_username()).set("missionParticipantId",missionParticipantId).ok();
         }
       }
-      if (loginController.isAdmin()){
-        flash.setStyleGeneralMenu("active");
-        return indexTpl.ok();
-      }else{
-        flash.setStyleMissionParticipantMenu("active");
-       // return missionParticipantController.index();
-      }
+      return indexTpl.with().set("mp_view",false).set("username","").set("missionParticipantId","").ok();
+
     }
     return this.showError("alert-info","Info","You have no rights");
   }

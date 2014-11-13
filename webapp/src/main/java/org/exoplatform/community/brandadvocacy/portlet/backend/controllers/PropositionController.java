@@ -59,7 +59,7 @@ public class PropositionController {
     if(null != proposition)
       return editTpl.with().proposition(proposition).ok();
 
-    return JuZBackEndApplication_.index("cannot find proposition to update");
+    return Response.ok("cannot find proposition to update");
   }
 
   public Response list(String mid){

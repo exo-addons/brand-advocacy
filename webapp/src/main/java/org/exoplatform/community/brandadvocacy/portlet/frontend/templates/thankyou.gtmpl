@@ -4,10 +4,10 @@
     <div class="thank-content">
         <p>Our mission control will check you were successful. Once validated, you'll receive a confirmation email to let you know your goodie has been shipped.</p>
     </div>
-    <form class="thank-form" action="">
-        <textarea placeholder="I just won a free t-shirt from @eXoPlatform on http://community.exoplatform.com #ILOVEMYESN"></textarea>
-        <div class="text-right"><button class="btn"><i class="iconTweetBird">&nbsp;</i>Tweet !</button></div>
-    </form>
-
+        <textarea id="txt-brad-tweet" placeholder="I just won a free t-shirt from @eXoPlatform on http://community.exoplatform.com #ILOVEMYESN"></textarea>
+	    <div class="text-right"><a class="btn btnTweet btn-brad-tweet"><i class="iconTweetBird">&nbsp;</i>Tweet !</button></a>
+        <div class="brad-errors" style="color: red; font-size: 16px; margin-bottom: 10px;display:none;">
+         <span>You have exceeded the number of characters.</span>
+        </div>
 </div>
 <!-- /.step-3 -->

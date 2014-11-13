@@ -119,8 +119,10 @@
     $('.jz').jzAjax('ManagerController.add2Program()',{
       data:{username:username,role:role,notif:notif},
       success:function(data){
-        if(data !== 'nok'){
+        if(data === 'ok'){
           _loadProgramManagers();
+        }else{
+          _disPlayErrorMsgCB(data);
         }
       }
     });
@@ -585,7 +587,7 @@
   };
 
   var _addEvent2MissionParticipantTabMenu = function(){
-    $(document).on('click.juzBrad.bk.tabmenu.missionparticipant','li.mission-participant-tab,button.mission-participant-tab',function(){
+    $(document).on('click.juzBrad.bk.tabmenu.missionparticipant','a.mission-participant-tab,button.mission-participant-tab',function(){
       _menuStyleController('mission-participant');
       _loadMissionParticipantContainer();
     });
@@ -786,25 +788,36 @@
     _addEvent2LinkPageSearchMissionParticipant();
   };
 
-  brandAdvBackend.init = function(){
+  brandAdvBackend.init = function(isAdmin){
     _bodyContainerDOM = $(".tab-content");
-    _addEvent2LinkClosePopup();
-    _menuStyleController('program');
-    _loadProgramContentView();
-    _initProgramEvent();
-    _initManagerEvent();
-    _initMissionEvent();
-    _initPropositionEvent();
+    if(isAdmin){
+      _addEvent2LinkClosePopup();
+      _menuStyleController('program');
+      _initProgramEvent();
+      _initManagerEvent();
+      _initMissionEvent();
+      _initPropositionEvent();
+      _addEventIPhoneStyle2CheckBox();
+      _addEvent2BtnIphoneCheckbox();
+      _addEvent2RoleSelect();
+      _addEvent2PrioritySelect();
+    }else{
+      _menuStyleController('participant');
+    }
     _initMissionParticipantEvent();
-    _addEventIPhoneStyle2CheckBox();
-    _addEvent2BtnIphoneCheckbox();
-    _addEvent2RoleSelect();
-    _addEvent2PrioritySelect();
     _addEvent2MPStatus();
   };
-  brandAdvBackend.load = function(){
-    console.info('test');
-  }
+  brandAdvBackend.initMissionParticipant = function(mode,missionParticipantId,username){
+    _bodyContainerDOM = $(".tab-content");
+    if(mode == "view_mp"){
+      _loadMissionParticipantDetail(missionParticipantId,username);
+    }else
+    _loadMissionParticipantContainer();
+  };
+  brandAdvBackend.initProgram = function(){
+    _bodyContainerDOM = $(".tab-content");
+    _loadProgramContentView();
+  };
 
   return brandAdvBackend;
 })($);

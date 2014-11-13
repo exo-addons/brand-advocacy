@@ -17,6 +17,7 @@ public class LoginController implements Serializable {
   private String currentProgramId;
   private String currentUserName;
   private String rights;
+  private Boolean isMPDetail;
   public String getCurrentUserName() {
     return currentUserName;
   }
@@ -49,5 +50,13 @@ public class LoginController implements Serializable {
   }
   public Boolean isShippingManager(){
     return this.getRights().equals(Role.Shipping_Manager.getLabel());
+  }
+
+  public Boolean getIsMPDetail() {
+    return isMPDetail;
+  }
+
+  public void setIsMPDetail(Boolean isMPDetail) {
+    this.isMPDetail = isMPDetail;
   }
 }
