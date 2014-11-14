@@ -317,10 +317,11 @@ public class MissionDAO extends DAO {
     return missions;
   }
   public Mission getRandomMission(String programId, String username){
+    List<Mission> randomMissions = new LinkedList<Mission>();
+    List<Proposition> randomPropositions;
     List<Mission> activeMissions = this.getAllMissionsByProgramId(programId,true);
     List<Mission> missionsUsed = this.getAllMissionsInProgramByParticipant(programId,username);
     List<String> ids = new ArrayList<String>();
-
     Iterator<Mission> iterator = activeMissions.iterator();
     while (iterator.hasNext()){
       Mission mission = iterator.next();
@@ -332,8 +333,12 @@ public class MissionDAO extends DAO {
         }
       }
       if (isDiff){
+        randomPropositions = new ArrayList<Proposition>();
         Proposition proposition = this.getJcrImplService().getPropositionDAO().getRandomProposition(mission.getId());
         if ( null != proposition){
+          randomPropositions.add(proposition);
+          mission.setPropositions(randomPropositions);
+          randomMissions.add(mission);
           for (int i= 0;i<mission.getPriority();i++){
             ids.add(mission.getId());
           }
@@ -342,7 +347,13 @@ public class MissionDAO extends DAO {
     }
     if (ids.size() > 0){
       Collections.shuffle(ids);
-      return this.getMissionById(ids.get(0));
+      String missionRandomId = ids.get(0);
+      for (Mission randomMission:randomMissions){
+        if(missionRandomId.equals(randomMission.getId())){
+          return randomMission;
+        }
+      }
+//      return this.getMissionById(ids.get(0));
     }
     return null;
   }

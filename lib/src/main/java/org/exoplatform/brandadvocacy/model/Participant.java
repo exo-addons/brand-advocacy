@@ -61,8 +61,10 @@ public class Participant extends User {
       throw new BrandAdvocacyServiceException(BrandAdvocacyServiceException.PARTICIPANT_INVALID,"participant must have username");
     if (0 == this.getMission_participant_ids().size())
       throw new BrandAdvocacyServiceException(BrandAdvocacyServiceException.PARTICIPANT_INVALID,"participant must have at least 1 mission participant");
+/*
+    dont need this condition as we store only complete mission to participant
     if (0 == this.getMission_ids().size())
-      throw new BrandAdvocacyServiceException(BrandAdvocacyServiceException.PARTICIPANT_INVALID,"participant must participate to 1 mission");
+      throw new BrandAdvocacyServiceException(BrandAdvocacyServiceException.PARTICIPANT_INVALID,"participant must participate to 1 mission");*/
   }
   public String toString(){
     return getClass().getName()+" - username = "+this.getUserName()+" - number missions "+this.getMission_participant_ids().size();

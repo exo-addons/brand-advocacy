@@ -443,7 +443,7 @@
             if (data == "nok"){
               _disPlayErrorMsgCB("Something went wrong, cannot update manager");
             }else{
-              _disPlayInfoMsgCB("Your changes has been successful");
+              _disPlayInfoMsgCB("Your change has successfully been updated");
             }
           }
         });
@@ -472,7 +472,7 @@
               }else{
                 nbBradPropositionsActive--;
               }
-              _disPlayInfoMsgCB("Your changes has been successful");
+              _disPlayInfoMsgCB("Your changes has successfully been updated");
               _missionStatusCheckBoxController(true);
             }
           }
@@ -578,9 +578,10 @@
           data:{missionParticipantId:missionParticipantId,action:"status",val:val},
           success:function(data){
             if (data != "ok"){
-              alert(data);
+              _disPlayErrorMsgCB(data);
               jStatus.val(_currentMPStatus);
-            }
+            }else
+              _disPlayInfoMsgCB("your change has successfully been updated");
           }
         });
       }

@@ -71,7 +71,7 @@ public class Pagination {
       strPagignation.append("<ul>");
       for (int i=1;i<=lastPage;i++){
         if (i==this.getCurrentPage()){
-          strPagignation.append("<li class=\"disabled\"><a href=\"#\">").append(i).append("</a>");
+          strPagignation.append("<li class=\"active\"><a href=\"#\">").append(i).append("</a>");
         }else {
           strPagignation.append("<li class=\"search-mission-participant-page\" data-page='").append(i).append("'><a href='#'").append("'>").append(i).append("</a>");
         }

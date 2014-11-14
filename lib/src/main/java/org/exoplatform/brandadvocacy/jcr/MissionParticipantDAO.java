@@ -279,6 +279,9 @@ public class MissionParticipantDAO extends DAO {
 
   }
   public List<MissionParticipant> getAllMissionParticipantsInProgramByParticipant(String programId,String username){
+    return this.getAllMissionParticipantsInProgramByStatus(programId,username,null);
+  }
+  public List<MissionParticipant> getAllMissionParticipantsInProgramByStatus(String programId,String username,String status){
 
     List<MissionParticipant> missionParticipants = new ArrayList<MissionParticipant>();
     try {
@@ -288,8 +291,13 @@ public class MissionParticipantDAO extends DAO {
         MissionParticipant missionParticipant;
         for (String mpid:mpids){
           missionParticipant = this.transferNode2Object(this.getNodeById(mpid));
-          if (null != missionParticipant)
-            missionParticipants.add(missionParticipant);
+          if (null != missionParticipant){
+            if(null == status){
+              missionParticipants.add(missionParticipant);
+            }else if (!status.equals(Status.OPEN.getLabel()) && !status.equals(Status.INPROGRESS.getLabel())){
+              missionParticipants.add(missionParticipant);
+            }
+          }
         }
         return this.sortByDate(missionParticipants);
       }

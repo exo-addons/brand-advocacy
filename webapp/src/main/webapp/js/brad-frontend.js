@@ -33,7 +33,17 @@
   var _loadStartView = function () {
     $(".jz").jzLoad("JuZFrontEndApplication.loadStartView()",
     function(data){
-      $("#brandadvocacy-ft").html(data);
+      _ftStepContainer.html(data);
+    });
+  };
+
+  // for old logic: load current mission for participant
+  var _initView = function(){
+    $(".jz").jzAjax("JuZFrontEndApplication.initView()", {
+      success: function (data) {
+        _ftStepContainer.html(data);
+        _addOptionCountries();
+      }
     });
   };
 
@@ -44,12 +54,7 @@
         success: function (data) {
           $("#brad-ft-container").html(data);
           _ftStepContainer = $(".brad-container-step-container");
-          $(".jz").jzAjax("JuZFrontEndApplication.initView()", {
-            success: function (data) {
-              _ftStepContainer.html(data);
-              _addOptionCountries();
-            }
-          });
+          _loadStartView();
         }
       });
     });
@@ -67,7 +72,7 @@
   };
 
   var _addEventToBtnStart = function(){
-    $(document).on('click.juzbrad.ft.start.view','.btn-start',function(){
+    $(document).on('click.juzbrad.ft.start.view','.btn-brad-start',function(){
       var jStart = $(this);
       jStart.jzAjax("JuZFrontEndApplication.loadProcessView()",{
         success: function(data){
@@ -84,7 +89,7 @@
     $(document).on('click.juzbrad.ft.done.view','.btn-brad-done',function(){
       var missionId = $(".missionId").val();
       var propositionId = $(".propositionId").val();
-      if(-_checkFtForm(missionId,propositionId)) {
+      if(_checkFtForm(missionId,propositionId)) {
         _loadTerminateView();
       }
     });
@@ -108,8 +113,10 @@
             _ftStepContainer.html(data);
             _tweetController();
           }
-          else
-            _ftStepContainer.html("something went wrong, please reload this page");
+          else{
+            alert("something went wrong, please reload this page");
+            return;
+          }
         }
       });
     });
