@@ -3,7 +3,7 @@
     <div class="control-group">
         <label class="control-label">Content:</label>
         <div class="control row-fluid">
-            <textarea class="span12" style="min-height: 84px" name="content" id="content" cols="30" rows="15"></textarea>
+            <textarea class="span12" style="min-height: 84px" name="bradAdvPropositionContent" id="bradAdvPropositionContent" cols="30" rows="15"></textarea>
         </div>
     </div>
     <div class="row-fluid control-group">
@@ -17,5 +17,5 @@
 </div>
 <div class="uiAction uiActionBorder">
     <button class="btn btn-add-proposition" type="button" data-missionId=<%=missionId%>>Save</button>
-    <a class="btn mgL20 uiIconClose" href="#">Cancel</a>
+    <a class="btn mgL20 brandAdvPopupClose" href="#">Cancel</a>
 </div>

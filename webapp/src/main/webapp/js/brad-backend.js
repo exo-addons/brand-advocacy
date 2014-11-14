@@ -10,6 +10,7 @@
   var _missionParticipantContainerDOM;
   var _currentMissionId;
   var _managerBradList2BeAdded;
+  var _textAreaContentId;
   var brandAdvBackend = {};
 
   var _menuStyleController = function(action){
@@ -28,9 +29,9 @@
     }
   };
   var _messageConfirmCBController = function (type,message) {
-    var alertDOM =  $('.alert');
+    var alertDOM =  $('#brandAdvAlertContainer');
     if(type != null && type != "") {
-      var icon = type.toUpperCase();
+      var icon = type.charAt(0).toUpperCase() + type.slice(1);
       var strIcon = "<i class='uiIcon" + icon + "'></i>";
       alertDOM.removeClass();
       alertDOM.addClass('alert');
@@ -50,13 +51,17 @@
   };
 
   var _loadPopup = function(mode,title,content){
-    var popupDOM = $('div.uiPopup');
-    $('.popupTitle').html(title);
-    $('.popupContent').html(content);
-    if(mode === 'on'){
+    var popupDOM = $('#iuBrandAdvPopupContainer');
+    var contentDOM = popupDOM.children(".popupContent");
+    if(mode == 'on'){
+      var titleDOM = popupDOM.children(".popupTitle");
+      titleDOM.html(title);
+      contentDOM.html(content);
       popupDOM.show();
-    }else
+    }else{
+      contentDOM.html('');
       popupDOM.hide();
+    }
   };
   var _loadProgramContentView = function(){
     $(".jz").jzAjax("ProgramController.index()",{
@@ -343,6 +348,7 @@
           return;
         }
         _loadPopup('on','Add a new proposition',data);
+        _addCkEditor2Textarea();
         _addEventIPhoneStyle2CheckBox();
       }
     });
@@ -356,9 +362,23 @@
           return;
         }
         _loadPopup('on','Edit proposition',data);
+        _addCkEditor2Textarea();
         _addEventIPhoneStyle2CheckBox();
       }
     });
+  };
+
+  var _addCkEditor2Textarea = function(){
+    try{
+      CKEDITOR.replace(_textAreaContentId,{toolbar:'Basic'} );
+    }catch(e) {}
+  };
+  var _getDataFromCkEditor = function(){
+    try{
+      var instance = CKEDITOR.instances[_textAreaContentId];
+      return instance.getData();
+    }catch(e) {}
+    return "";
   };
 
   var _loadMissionParticipantContainer = function(){
@@ -404,7 +424,7 @@
 
 
   var _addEvent2LinkClosePopup = function(){
-    $(document).on('click.juzBrad.bk.closePopup','a.uiIconClose',function(){
+    $(document).on('click.juzBrad.bk.closePopup','a.brandAdvPopupClose',function(){
       _loadPopup('off','','');
     });
   };
@@ -422,6 +442,8 @@
           success:function(data){
             if (data == "nok"){
               _disPlayErrorMsgCB("Something went wrong, cannot update manager");
+            }else{
+              _disPlayInfoMsgCB("Your changes has been successful");
             }
           }
         });
@@ -450,6 +472,7 @@
               }else{
                 nbBradPropositionsActive--;
               }
+              _disPlayInfoMsgCB("Your changes has been successful");
               _missionStatusCheckBoxController(true);
             }
           }
@@ -506,7 +529,9 @@
       var checkBoxDOM = missionRow.find("input:checkbox");
       var missionId =  checkBoxDOM.attr("data-missionId");
       var priority = missionRow.find("select[name=priority]").val();
-      jPriority.jzAjax("MissionController.ajaxUpdateInline()",{
+      _updateMissionInline(missionId,'priority',priority);
+
+/*      jPriority.jzAjax("MissionController.ajaxUpdateInline()",{
         data:{missionId:missionId,action:"priority",val:priority},
         success:function(data){
           try{
@@ -515,13 +540,14 @@
               $(".mission-prio-exceeded").hide();
             if (obj.error){
               if(obj.msg=="mission-prio-exceeded"){
+                _disPlayWarningMsgCB('');
                 $(".mission-prio-exceeded").show();
               }else
                 alert(obj.msg);
             }
           }catch (e){}
         }
-      });
+      });*/
     });
   };
 
@@ -692,7 +718,10 @@
   var _addEvent2BtnAddProposition = function(){
     $(document).on('click.juzBrad.bk.addProposition','button.btn-add-proposition',function(){
       var formDOM = $('.uiPopup').find('.addNewProposition');
-      var content = formDOM.find('textarea').val();
+      var content = _getDataFromCkEditor();
+      if(content == ""){
+        content = formDOM.find('textarea').val();
+      }
       var active = formDOM.find(':checkbox').val();
       _addProposition(content,active);
     })
@@ -707,7 +736,10 @@
     $(document).on('click.juzBrad.bk.updateProposition','button.btn-update-proposition',function(){
       var propositionId = $(this).attr('data-propositionId');
       var formDOM = $('.uiPopup').find('.addNewProposition');
-      var content = formDOM.find('textarea').val();
+      var content = _getDataFromCkEditor();
+      if(content == ""){
+        content = formDOM.find('textarea').val();
+      }
       var active = formDOM.find(':checkbox').val();
       _updateProposition(propositionId,content,active);
     });
@@ -801,8 +833,12 @@
     _addEvent2LinkPageSearchMissionParticipant();
   };
 
-  brandAdvBackend.init = function(isAdmin){
+  var _initVar = function(){
+    _textAreaContentId = "bradAdvPropositionContent";
     _bodyContainerDOM = $(".tab-content");
+  }
+  brandAdvBackend.init = function(isAdmin){
+    _initVar();
     if(isAdmin){
       _addEvent2LinkClosePopup();
       _initProgramEvent();
@@ -820,7 +856,7 @@
     _addEvent2MPStatus();
   };
   brandAdvBackend.initMissionParticipant = function(mode,missionParticipantId,username){
-    _bodyContainerDOM = $(".tab-content");
+    _initVar();
     if(mode == "mp_view"){
       _menuStyleController('participant');
       _loadMissionParticipantDetail(missionParticipantId,username);
@@ -831,7 +867,7 @@
 
   };
   brandAdvBackend.initProgram = function(){
-    _bodyContainerDOM = $(".tab-content");
+    _initVar();
     _menuStyleController('program');
     _loadProgramContentView();
   };

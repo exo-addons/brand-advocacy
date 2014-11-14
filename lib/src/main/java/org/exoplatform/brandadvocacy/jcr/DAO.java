@@ -88,4 +88,9 @@ public abstract class DAO {
     }
     return child;
   }
+  protected String getProgramJcrPath(String programId){
+    StringBuilder stringBuilder = new StringBuilder("");
+    stringBuilder.append("/").append(JCRImpl.EXTENSION_PATH).append("/").append(programId).append("/");
+    return stringBuilder.toString();
+  }
 }

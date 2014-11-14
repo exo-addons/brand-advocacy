@@ -31,7 +31,7 @@
         </div-->
         <div class="text-center">
             <button class="btn btn-primary btn-add-mission" type="button">Save</button>
-            <a class="btn mgL20 add-mission-cancel" href="#">Cancel</a>
+            <a class="btn mgL20 back-to-missions" href="#">Cancel</a>
         </div>
     </div>
 

@@ -27,7 +27,7 @@ if(mp_view){
 %>
 <script type="text/javascript" src="/brand-advocacy-webapp/ckeditor/ckeditor.js"></script>
 <div class="referral-porlet">
-    <div class="alert" style="display:none;">
+    <div class="alert" id="brandAdvAlertContainer" style="display:none;">
     </div>
 	<h3>Brand Advocacy Admin</h3><br>
 	<!-- TAB 1 -->
@@ -44,9 +44,9 @@ if(mp_view){
 
 	</div>
 </div>
-<div class="uiPopup UIDragObject NormalStyle" style="display: none; left: 330px; top: 50px; visibility: visible; width: 540px; z-index: 4;">
+<div id="iuBrandAdvPopupContainer" class="uiPopup UIDragObject NormalStyle" style="display: none; left: 330px; top: 50px; visibility: visible; width: 540px; z-index: 4;">
     <div class="popupHeader clearfix">
-            <a href="#" title="Close Window" class="uiIconClose pull-right"></a>
+            <a href="#" title="Close Window" class="uiIconClose pull-right brandAdvPopupClose"></a>
         <span class="PopupTitle popupTitle"></span>
     </div>
     <div class="PopupContent popupContent">

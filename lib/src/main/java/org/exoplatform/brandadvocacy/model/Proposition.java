@@ -99,7 +99,7 @@ public class Proposition {
     int maxLeng = this.getContent().length();
     if(maxLeng < length)
       return this.getContent();
-    return this.getContent().substring(0,length);
+    return this.getContent().substring(0,length)+" ... ";
 
   }
   public String toString(){

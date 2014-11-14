@@ -138,7 +138,7 @@ public class ParticipantDAO extends DAO {
 
   public Node getNodeByQuery(String programId,String username){
     StringBuilder sql = new StringBuilder("select * from "+ JCRImpl.PARTICIPANT_NODE_TYPE);
-    sql.append(" WHERE ").append(" jcr:path like '/").append(JCRImpl.EXTENSION_PATH).append("/").append(programId);
+    sql.append(" WHERE ").append(" jcr:path like '/").append( JCRImpl.EXTENSION_PATH).append("/").append(programId);
     sql.append("/").append(ProgramDAO.node_prop_participants).append("/%'");
     sql.append(" AND ").append(node_prop_username).append(" like '").append(username).append("'");
     sql.append(" AND ").append(node_prop_program_id).append(" = '").append(programId).append("'");
