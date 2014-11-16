@@ -53,8 +53,11 @@
     </table>
 </div>
 <div class="control-group">
-    <div class="controls text-right">
+    <!--div class="controls text-right">
         <a href="#" class="btn btn-primary btn-load-add-mission-form">Add</a>
+    </div-->
+    <div class="controls text-right">
+        <a href="#" class="btn btn-primary pre-add-mission">Add</a>
     </div>
 </div>
 <!-- end part keeping for ajax -->

@@ -103,7 +103,7 @@ public class MissionController {
     mission.setPriority(Integer.parseInt(priority));
     mission = this.missionService.addMission2Program(mission);
     if(null != mission)
-      return Response.ok("ok");
+      return Response.ok(mission.getId());
     return Response.ok("nok");
   }
 

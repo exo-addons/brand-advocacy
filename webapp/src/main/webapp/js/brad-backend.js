@@ -240,6 +240,24 @@
       }
     });
   };
+  var _preAddMission = function(){
+    var title = 'Write a review about eXo';
+    var link = '';
+    var priority = 0;
+    $('.jz').jzAjax('MissionController.addMission()',{
+      data:{title:title,third_part_link:link,priority:priority},
+      success:function(data){
+        if(data === 'nok'){
+          _disPlayErrorMsgCB('Something went wrong, cannot create mission')
+          return;
+        }else{
+          var missionId = data;
+          _loadEditMissionFormView(missionId);
+        }
+
+      }
+    });
+  };
 
   var _updateMission = function(title,link,active){
     $('.jz').jzAjax('MissionController.updateMission()',{
@@ -265,6 +283,8 @@
               _disPlayWarningMsgCB('the total priorities has been exceeded');
             }else
               _disPlayErrorMsgCB(obj.msg);
+          }else{
+            _disPlayInfoMsgCB('Mission has been updated')
           }
         }catch (e){}
       }
@@ -386,7 +406,7 @@
       success:function(data){
         _bodyContainerDOM.html(data);
         _missionParticipantContainerDOM = $('.mission-participant-container');
-        _loadMissionParticipants('','',0);
+        _loadMissionParticipants('','',1);
       }
     });
   };
@@ -637,10 +657,10 @@
   };
 
   var _addEvent2MissionParticipantTabMenu = function(){
-    $(document).on('click.juzBrad.bk.tabmenu.missionparticipant','li.mission-participant-tab,button.mission-participant-tab',function(){
+    $(document).on('click.juzBrad.bk.tabmenu.missionparticipant','li.mission-participant-tab,button.mission-participant-tab',function(e){
       _menuStyleController('mission-participant');
       _loadMissionParticipantContainer();
-      return false;
+      e.preventDefault();
     });
   };
 
@@ -685,9 +705,16 @@
       }
     });
   };
+
   var _addEvent2LinkLoadAddMissionForm = function(){
     $(document).on('click.juzBrad.bk.loadAddMissionFormView','a.btn-load-add-mission-form',function(){
       _loadAddMissionFormView();
+    });
+  };
+  var _addEvent2LinkPreAddMission = function(){
+    $(document).on('click.juzBrad.bk.preAddMission','a.pre-add-mission',function(e){
+      _preAddMission();
+      e.preventDefault();
     });
   };
   var _addEvent2BtnAddMission = function(){
@@ -818,7 +845,7 @@
       var missionParticipantId = $(this).attr('data-mission-participant-id');
       var username = $(this).attr('data-participant-id');
       _removeMissionParticipant(username,missionParticipantId);
-      return false;
+      e.preventDefault();
     });
   };
   var _initProgramEvent = function(){
@@ -841,6 +868,7 @@
     _addEvent2LinkRemoveMission();
     _addEvent2BtnUpdateMission();
     _addEvent2BtnCancelUpdateMisssion();
+    _addEvent2LinkPreAddMission();
   };
   var _initPropositionEvent = function(){
     _addEvent2LinkLoadAddPropositionForm();
