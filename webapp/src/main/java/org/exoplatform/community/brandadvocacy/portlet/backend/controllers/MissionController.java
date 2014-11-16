@@ -155,6 +155,9 @@ public class MissionController {
       if (doUpdate){
         mission = this.missionService.updateMission(mission);
         if(null != mission){
+          if(!mission.getActive()){
+            errorMsg = "readonly";
+          }
           List<Mission> missions = this.missionService.getAllMissionsByProgramId(this.loginController.getCurrentProgramId(),true);
           if (null != missions){
             int totalPrio = 0;
@@ -179,10 +182,43 @@ public class MissionController {
     try {
       jsonObject.put("error",error);
       jsonObject.put("msg",errorMsg);
+      jsonObject.put("mid",missionId);
     } catch (JSONException e) {
       e.printStackTrace();
     }
     return Response.ok(jsonObject.toString());
+  }
+
+  @Ajax
+  @Resource
+  public Response updateMissionPriority(String missionId, String priority){
+    Mission mission  = this.missionService.getMissionById(missionId);
+    if (null != mission){
+      int prio = Integer.parseInt(priority);
+      if (mission.getPriority() != prio){
+        List<Mission> missions = this.missionService.getAllMissionsByProgramId(this.loginController.getCurrentProgramId(),true);
+        if (null != missions){
+          int totalPrio = 0;
+          for (Mission m:missions){
+            totalPrio +=(int)m.getPriority();
+          }
+          if (prio+totalPrio > 100){
+            return Response.ok("priority must be inferior to 100");
+          }else{
+            mission.setPriority(prio);
+            if(null != this.missionService.updateMission(mission)){
+              return Response.ok("Mission has been updated");
+            }else{
+              return Response.ok("Something went wrong, cannot update mission");
+            }
+          }
+        }
+        else{
+          return Response.ok("Mission no longer exist");
+        }
+      }
+    }
+    return Response.ok("ok");
   }
 }
 

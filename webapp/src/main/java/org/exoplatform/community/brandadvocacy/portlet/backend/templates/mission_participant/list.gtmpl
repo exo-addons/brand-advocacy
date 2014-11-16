@@ -27,11 +27,11 @@
              <td><a href="<%= missionParticipantDTO.getUrl_submitted()%>" target="_blank"><%= missionParticipantDTO.getUrl_submitted()%></a></td>
              <td class="center"><%= missionParticipantDTO.getDate_submitted()%></td>
              <td class="center">
-                <a href="#" data-placement="bottom" rel="tooltip" class="actionIcon mp-view" data-mission-participant-id="<%=missionParticipantId%>" data-participant-id="<%=missionParticipantDTO.getParticipant_id()%>" data-original-title="Preview" >
+                <a href="javascript:void(0)" data-placement="bottom" rel="tooltip" class="actionIcon mp-view" data-mission-participant-id="<%=missionParticipantId%>" data-participant-id="<%=missionParticipantDTO.getParticipant_id()%>" data-original-title="Preview" >
                   <i class="uiIconPreview uiIconLightGray"></i>
                 </a>
                 <% if(loginController.isAdmin()){ %>
-                <a href="#" data-original-title="Delete" class="actionIcon removeMissionParticipant"  data-mission-participant-id="<%=missionParticipantId%>" data-participant-id="<%=missionParticipantDTO.getParticipant_id()%>">
+                <a href="javascript:void(0)" data-original-title="Delete" class="actionIcon removeMissionParticipant"  data-mission-participant-id="<%=missionParticipantId%>" data-participant-id="<%=missionParticipantDTO.getParticipant_id()%>">
                     <i class="uiIconDeleteUser uiIconLightGray"></i>
                 </a>
                 <% } %>

@@ -37,7 +37,13 @@
       alertDOM.addClass('alert');
       alertDOM.addClass('alert-' + type);
       alertDOM.html(strIcon + message);
-      alertDOM.fadeIn(500).delay(1000).fadeOut(500);
+/*      if(alertDOM.is(':visible')){
+        alertDOM.css('visibility', 'hidden');
+      }else*/
+      alertDOM.css('visibility', 'visible');
+      setTimeout(function() {
+        alertDOM.css("visibility" , "hidden");
+      }, 5000);
     }
   };
   var _disPlayInfoMsgCB = function(msg){
@@ -284,11 +290,34 @@
             }else
               _disPlayErrorMsgCB(obj.msg);
           }else{
-            _disPlayInfoMsgCB('Mission has been updated')
+            _disPlayInfoMsgCB('Mission has been updated');
+            if(obj.msg == "readonly" && typeof obj.mid !== "undefined"){
+              _putPriorityText2Readonly(obj.mid,true);
+            }else{
+              _putPriorityText2Readonly(obj.mid,false);
+            }
           }
         }catch (e){}
       }
     });
+  };
+  var _updateMissionPriority = function(missionId,priority){
+    $('.jz').jzAjax("MissionController.updateMissionPriority()", {
+      data: {missionId: missionId, priority: priority},
+      success: function (data) {
+        if(data != "ok")
+          _disPlayInfoMsgCB(data);
+      }
+    });
+  };
+  var _putPriorityText2Readonly = function(missionId,b){
+    var row = $('#mLine-'+missionId);
+    if(row.length > 0){
+      var prioInput = row.find(':text.brad-mission-priority');
+      if(typeof prioInput != "undefined"){
+        $(prioInput).prop('readonly',b);
+      }
+    }
   };
   var _removeMission = function(missionId){
     $('.jz').jzAjax('MissionController.deleteMission()',{
@@ -562,24 +591,6 @@
       var missionId =  checkBoxDOM.attr("data-missionId");
       var priority = missionRow.find("select[name=priority]").val();
       _updateMissionInline(missionId,'priority',priority);
-
-/*      jPriority.jzAjax("MissionController.ajaxUpdateInline()",{
-        data:{missionId:missionId,action:"priority",val:priority},
-        success:function(data){
-          try{
-            var obj = data = $.parseJSON(data);
-            if($(".mission-prio-exceeded"))
-              $(".mission-prio-exceeded").hide();
-            if (obj.error){
-              if(obj.msg=="mission-prio-exceeded"){
-                _disPlayWarningMsgCB('');
-                $(".mission-prio-exceeded").show();
-              }else
-                alert(obj.msg);
-            }
-          }catch (e){}
-        }
-      });*/
     });
   };
 
@@ -623,7 +634,7 @@
 
   var _addEvent2InputUsername = function(){
     var termTemplate = "<span class='ui-autocomplete-term'>%s</span>";
-    $(document).on('keypress.juzBrad.bk.searchmanager','input.manager-username',function(){
+    $(document).on('keypress keyup.juzBrad.bk.searchmanager','input.manager-username',function(){
       var keyword = $(this).val();
       if(keyword.length >= 3){
         $(".jz").jzAjax('ManagerController.searchEXOProfiles()',{
@@ -641,18 +652,18 @@
   };
 
   var _addEvent2ProgramTabMenu = function(){
-    $(document).on('click.juzBrad.bk.tabmenu.program','li.program-tab',function(){
+    $(document).on('click.juzBrad.bk.tabmenu.program','li.program-tab',function(e){
       _menuStyleController('program');
       _loadProgramContentView();
-      return false;
+      e.preventDefault();
     });
   };
 
   var _addEvent2MissionTabMenu = function(){
-    $(document).on('click.juzBrad.bk.tabmenu.mission','li.mission-tab',function(){
+    $(document).on('click.juzBrad.bk.tabmenu.mission','li.mission-tab',function(e){
       _menuStyleController('mission');
       _loadMissions();
-      return false;
+      e.preventDefault();
     });
   };
 
@@ -715,6 +726,25 @@
     $(document).on('click.juzBrad.bk.preAddMission','a.pre-add-mission',function(e){
       _preAddMission();
       e.preventDefault();
+    });
+  };
+  var _addEvent2InputTextMissionPriority = function(){
+    $(document).on('click keypress.juzBrad.bk.missionPriority',':text.brad-mission-priority',function(event){
+      if($(this).prop('readonly')){
+        _disPlayInfoMsgCB('Activate mission to edit its priority');
+      }
+      $(this).val($(this).val().replace(/[^\d].+/, ""));
+      if ((event.which < 48 || event.which > 57)) {
+        event.preventDefault();
+      }
+      var prio = $(this).val();
+      var old = $(this).attr('data-val');
+      if(old != prio){
+        if(prio > 0 && prio <= 100){
+          var missionId = $(this).attr('data-missionId');
+          _updateMissionPriority(missionId,prio);
+        }
+      }
     });
   };
   var _addEvent2BtnAddMission = function(){
@@ -794,10 +824,11 @@
     });
   };
   var _addEvent2BtnViewMissionParticipant = function(){
-    $(document).on('click.juzBrad.bk.viewMP','a.mp-view',function(){
+    $(document).on('click.juzBrad.bk.viewMP','a.mp-view',function(e){
       var missionParticipantId = $(this).attr('data-mission-participant-id');
       var username = $(this).attr('data-participant-id');
       _loadMissionParticipantDetail(missionParticipantId,username);
+      e.preventDefault();
     })
   };
 
@@ -810,7 +841,7 @@
     });
   };
   var _addEvent2InputTextKeywordSearchMissionParticipant = function(){
-    $(document).on('keypress.juzBrad.bk.searchMissionParticipant.keyword','input.keyword-search-mission-participant',function(e){
+    $(document).on('keypress keyup.juzBrad.bk.searchMissionParticipant.keyword','input.keyword-search-mission-participant',function(e){
       var key = e.which;
       if(key == 13)
       {
@@ -869,6 +900,7 @@
     _addEvent2BtnUpdateMission();
     _addEvent2BtnCancelUpdateMisssion();
     _addEvent2LinkPreAddMission();
+    _addEvent2InputTextMissionPriority();
   };
   var _initPropositionEvent = function(){
     _addEvent2LinkLoadAddPropositionForm();

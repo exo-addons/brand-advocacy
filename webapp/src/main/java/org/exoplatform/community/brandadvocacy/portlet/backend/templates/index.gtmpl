@@ -27,7 +27,7 @@ if(mp_view){
 %>
 <script type="text/javascript" src="/brand-advocacy-webapp/ckeditor/ckeditor.js"></script>
 <div class="referral-porlet">
-    <div class="alert" id="brandAdvAlertContainer" style="display:none;">
+    <div class="alert" id="brandAdvAlertContainer" style="visibility:hidden;">
     </div>
 	<h3>Brand Advocacy Admin</h3><br>
 	<!-- TAB 1 -->
