@@ -9,14 +9,14 @@ if(null != mission) {
         <h5 class="titleStep">
             <span class="numb">1</span><span class="textStep">Here is your mission:</span>
         </h5>
-        <p class="write-review"><%= mission.getTitle()%> on <a target="_blank" href="<%= mission.getThird_part_link()%>"><%= mission.getThird_part_link()%></a></p>
+        <p class="write-review"><%= mission.getTitle()%></p>
         <div class="quote-popup">
             <% propositions.each{ proposition -> %>
                 <input type="hidden" name="propositionId" class="propositionId" value="<%= proposition.getId()%>"/>
                 <%= proposition.getContent() %>
             <% } %>
         </div>
-        <button class="button-flat-balck btn-brad-done">Go!</button>
+        <button class="button-flat-balck btn-brad-done" data-url="<%=mission.getThird_part_link()%>">Go!</button>
     </div>
     <!-- /.step-1 -->
 

@@ -18,16 +18,11 @@
       _ftStepContainer.html(" something went wrong, cannot identify current mission");
     return res;
   };
-/*  var _addEventValidate2TerminateForm = function(){
-    $("#brandadv-participant-info").validate({
-      rules: {
-        brad_participant_url_submitted:"required"
-      },
-      messages:{
-        brad_participant_url_submitted: "Hãy điền họ và tên của bạn"
-      }
+  var _validateTerminateForm = function(frm){
+    $.each(frm,function(){
+
     });
-  };*/
+  };
   var _loadTerminateView = function(){
     $(".jz").jzAjax("JuZFrontEndApplication.loadTerminateView()",{
       success: function(data){
@@ -98,10 +93,17 @@
 
   var _addEventToBtnDone = function(){
     $(document).on('click.juzbrad.ft.done.view','.btn-brad-done',function(){
-      var missionId = $(".missionId").val();
-      var propositionId = $(".propositionId").val();
-      if(_checkFtForm(missionId,propositionId)) {
-        _loadTerminateView();
+      var label = $(this).text();
+      if(label == "Next"){
+        var missionId = $(".missionId").val();
+        var propositionId = $(".propositionId").val();
+        if(_checkFtForm(missionId,propositionId)) {
+          _loadTerminateView();
+        }
+      }else{
+        var third_part_link = $(this).attr('data-url');
+        $(this).text('Next');
+        window.open(third_part_link, '_blank');
       }
     });
   };
