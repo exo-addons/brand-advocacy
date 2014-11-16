@@ -46,9 +46,11 @@ public interface IService {
   public Mission getRandomMisson(String programId,String username);
   public List<Mission> getAllMissionsByParticipant(String programId, String username);
   public List<Mission> searchMission(Query query);
+
   public Participant addParticipant2Program(Participant participant);
   public Participant getParticipantInProgramByUserName(String programId, String username);
   public List<Participant> getAllParticipantsInProgram(String programId);
+  public Boolean removeMissionParticipantInParticipant(String programId,String username, String missionParticipantId);
 
   public Address addAddress2Participant(String programId, String username,Address address);
   public Address updateAddress(Address address);
@@ -81,7 +83,7 @@ public interface IService {
   public MissionParticipant addMissionParticipant2Program(String programId, MissionParticipant missionParticipant);
   public List<MissionParticipant> getAllMissionParticipantsInProgram(String programId);
   public List<MissionParticipant> getAllMissionParticipantsInProgramByParticipant(String programId,String username);
-  public void removeMissionParticipant(String id);
+  public Boolean removeMissionParticipant(String missionParticipantId);
   public MissionParticipant getMissionParticipantById(String mpId);
   public List<MissionParticipant> searchMissionParticipants(Query query);
   public MissionParticipant updateMissionParticipantInProgram(String programId, MissionParticipant missionParticipant);

@@ -287,6 +287,11 @@ public class JCRImpl implements IService {
   }
 
   @Override
+  public Boolean removeMissionParticipantInParticipant(String programId, String username, String missionParticipantId) {
+    return this.getParticipantDAO().removeMissionParticipant(programId,username,missionParticipantId);
+  }
+
+  @Override
   public Address addAddress2Participant(String programId, String username, Address address) {
     return this.getAddressDAO().addAddress2Participant(programId, username, address);
   }
@@ -303,7 +308,7 @@ public class JCRImpl implements IService {
 
   @Override
   public List<Address> getAllAddressesByParticipantInProgram(String programId, String username) {
-    return this.getAddressDAO().getAllAddressesByParticipantInProgram(programId,username);
+    return this.getAddressDAO().getAllAddressesByParticipantInProgram(programId, username);
   }
 
   @Override
@@ -338,7 +343,7 @@ public class JCRImpl implements IService {
 
   @Override
   public Manager getMissionManagerByUserName(String missionId, String username) {
-    return this.getManagerDAO().getMissionManagerByUserName(missionId,username);
+    return this.getManagerDAO().getMissionManagerByUserName(missionId, username);
   }
 
   @Override
@@ -358,12 +363,12 @@ public class JCRImpl implements IService {
 
   @Override
   public Boolean removeManagerFromProgram(String programId, String username) {
-    return this.getManagerDAO().removeManagerFromProgram(programId,username);
+    return this.getManagerDAO().removeManagerFromProgram(programId, username);
   }
 
   @Override
   public Manager getProgramManagerByUserName(String programId, String username) {
-    return this.getManagerDAO().getProgramManagerByUserName(programId,username);
+    return this.getManagerDAO().getProgramManagerByUserName(programId, username);
   }
 
   @Override
@@ -425,6 +430,11 @@ public class JCRImpl implements IService {
   }
 
   @Override
+  public Boolean removeMissionParticipant(String missionParticipantId) {
+    return this.getMissionParticipantDAO().removeMissionParticipant(missionParticipantId);
+  }
+
+  @Override
   public MissionParticipant getMissionParticipantById(String mpId) {
     return this.getMissionParticipantDAO().getMissionParticipantById(mpId);
   }
@@ -447,11 +457,6 @@ public class JCRImpl implements IService {
   @Override
   public MissionParticipant getCurrentMissionParticipantByUserName(String programId, String username) {
     return this.getMissionParticipantDAO().getCurrentMissionParticipantByUserName(programId,username);
-  }
-
-  @Override
-  public void removeMissionParticipant(String id) {
-    this.getMissionParticipantDAO().removeMissionParticipant(id);
   }
 
   @Override

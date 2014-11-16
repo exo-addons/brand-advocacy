@@ -421,7 +421,19 @@
       }
     });
   };
-
+  var _removeMissionParticipant = function(username,missionParticipantId){
+    $('.jz').jzAjax('MissionParticipantController.removeMissionParticipant()',{
+      data:{missionParticipantId:missionParticipantId,username:username},
+      success:function(data){
+        if(data == 'ok'){
+          _disPlayInfoMsgCB('mission participant has been successfully removed');
+          _loadMissionParticipants('','',1);
+        }else{
+          _disPlayErrorMsgCB(data);
+        }
+      }
+    });
+  };
 
   var _addEvent2LinkClosePopup = function(){
     $(document).on('click.juzBrad.bk.closePopup','a.brandAdvPopupClose',function(){
@@ -612,6 +624,7 @@
     $(document).on('click.juzBrad.bk.tabmenu.program','li.program-tab',function(){
       _menuStyleController('program');
       _loadProgramContentView();
+      return false;
     });
   };
 
@@ -619,6 +632,7 @@
     $(document).on('click.juzBrad.bk.tabmenu.mission','li.mission-tab',function(){
       _menuStyleController('mission');
       _loadMissions();
+      return false;
     });
   };
 
@@ -626,6 +640,7 @@
     $(document).on('click.juzBrad.bk.tabmenu.missionparticipant','li.mission-participant-tab,button.mission-participant-tab',function(){
       _menuStyleController('mission-participant');
       _loadMissionParticipantContainer();
+      return false;
     });
   };
 
@@ -787,6 +802,7 @@
       var statusFilter = searchForm.find('select').val();
       var page = $(this).attr('data-page');
       _loadMissionParticipants(keyword,statusFilter,page);
+      return false;
     });
   };
   var _addEvent2SelectStatusSearchMissionParticipant = function(){
@@ -795,6 +811,14 @@
       var keyword = searchForm.find(':text').val();
       var statusFilter = searchForm.find('select').val();
       _loadMissionParticipants(keyword,statusFilter,1);
+    });
+  };
+  var _addEvent2LinkRemoveMissionParticipant = function(){
+    $(document).on('click.juzBrad.bk.removeMissionParticipant','a.removeMissionParticipant',function(e){
+      var missionParticipantId = $(this).attr('data-mission-participant-id');
+      var username = $(this).attr('data-participant-id');
+      _removeMissionParticipant(username,missionParticipantId);
+      return false;
     });
   };
   var _initProgramEvent = function(){
@@ -832,6 +856,7 @@
     _addEvent2InputTextKeywordSearchMissionParticipant();
     _addEvent2SelectStatusSearchMissionParticipant();
     _addEvent2LinkPageSearchMissionParticipant();
+    _addEvent2LinkRemoveMissionParticipant();
   };
 
   var _initVar = function(){

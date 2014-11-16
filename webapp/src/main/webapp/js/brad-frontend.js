@@ -18,11 +18,22 @@
       _ftStepContainer.html(" something went wrong, cannot identify current mission");
     return res;
   };
+/*  var _addEventValidate2TerminateForm = function(){
+    $("#brandadv-participant-info").validate({
+      rules: {
+        brad_participant_url_submitted:"required"
+      },
+      messages:{
+        brad_participant_url_submitted: "Hãy điền họ và tên của bạn"
+      }
+    });
+  };*/
   var _loadTerminateView = function(){
     $(".jz").jzAjax("JuZFrontEndApplication.loadTerminateView()",{
       success: function(data){
         if(typeof data == "string" && data != "nok"){
           _ftStepContainer.html(data);
+       //   _addEventValidate2TerminateForm();
           _addOptionCountries();
         }
         else
@@ -31,12 +42,12 @@
     });
   };
   var _loadStartView = function () {
-    $(".jz").jzLoad("JuZFrontEndApplication.loadStartView()",
-    function(data){
-      _ftStepContainer.html(data);
+    $(".jz").jzAjax("JuZFrontEndApplication.loadStartView()",{
+     success:function(data){
+       _ftStepContainer.html(data);
+     }
     });
   };
-
   // for old logic: load current mission for participant
   var _initView = function(){
     $(".jz").jzAjax("JuZFrontEndApplication.initView()", {
@@ -72,7 +83,7 @@
   };
 
   var _addEventToBtnStart = function(){
-    $(document).on('click.juzbrad.ft.start.view','.btn-brad-start',function(){
+    $(document).on('click.juzbrad.ft.start.view','.btn-brad-start',function(e){
       var jStart = $(this);
       jStart.jzAjax("JuZFrontEndApplication.loadProcessView()",{
         success: function(data){
@@ -98,7 +109,7 @@
   var _addEventToBtnTerminate = function(){
     $(document).on('click.juzbrad.ft.terminate.view','.btn-brad-terminate',function(){
       var jTerminate = $(this);
-      var url = $("#brad-participant-url-submitted").val();
+      var url = $("#brad_participant_url_submitted").val();
       var fname = $("#brad-participant-fname").val();
       var lname = $("#brad-participant-lname").val();
       var address = $("#brad-participant-address").val();

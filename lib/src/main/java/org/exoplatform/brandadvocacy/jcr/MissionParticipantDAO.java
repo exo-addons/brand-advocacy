@@ -338,20 +338,22 @@ public class MissionParticipantDAO extends DAO {
     return 0;
   }
 
-  public void removeMissionParticipant(String id){
+  public Boolean removeMissionParticipant(String id){
     try {
       Node node = this.getNodeById(id); //this.getNodeByLabelID(proposition.getMission_id(), proposition.getId());
-      if(null != node){
+      if (null != node) {
         Session session = node.getSession();
         node.remove();
         session.save();
-      }else
-        throw new BrandAdvocacyServiceException(BrandAdvocacyServiceException.PROPOSITION_NOT_EXISTS," cannot remove proposition not exists");
-    } catch (RepositoryException e) {
+        return true;
+      } else
+        throw new BrandAdvocacyServiceException(BrandAdvocacyServiceException.PROPOSITION_NOT_EXISTS, " cannot remove proposition not exists");
+    }catch (RepositoryException e) {
       log.error("==== ERROR cannot removeMissionParticipant "+e.getMessage() );
-    } catch (BrandAdvocacyServiceException brade){
+    }catch (BrandAdvocacyServiceException brade){
       log.error(brade.getMessage());
     }
+    return false;
   }
   public MissionParticipant getCurrentMissionParticipantByUserName(String programId,String username){
     Program program = this.getJcrImplService().getProgramDAO().getProgramById(programId);

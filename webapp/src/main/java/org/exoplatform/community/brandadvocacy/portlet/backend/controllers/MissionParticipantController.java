@@ -214,4 +214,21 @@ public class MissionParticipantController {
     }
     return previousTPL.with().set("missionParticipantDTOs",missionParticipantDTOs).ok();
   }
+
+  @Ajax
+  @Resource
+  public Response removeMissionParticipant(String username,String missionParticipantId){
+    if(loginController.isAdmin()){
+      if (this.missionParticipantService.removeMissionParticipantInParticipant(loginController.getCurrentProgramId(),username,missionParticipantId)){
+        if (this.missionParticipantService.removeMissionParticipant(missionParticipantId)){
+          return Response.ok("ok");
+        }else {
+          return Response.ok("Something went wrong, cannot remove this mission participant");
+        }
+      }else {
+        return Response.ok("Something went wrong, cannot remove this mission participant in participant");
+      }
+    }else
+      return Response.ok("you have no rights to do this task");
+  }
 }

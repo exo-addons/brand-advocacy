@@ -230,13 +230,14 @@ public class JuZFrontEndApplication {
 
   // store mission only when user complete his mission
   private Boolean completeMission(){
-    if (null != currentMissionId && null != currentPropositionId){
+    if (null != currentMissionId && null != currentPropositionId && null != this.currentMissionParticipantId){
       Participant participant = new Participant(this.remoteUserName);
       participant.setProgramId(this.currentProgramId);
       Set<String> missionIds = new HashSet<String>();
       missionIds.add(currentMissionId);
       participant.setMission_ids(missionIds);
       Set<String> missionParticipantIds = new HashSet<String>();
+      missionParticipantIds.add(currentMissionParticipantId);
       participant.setMission_participant_ids(missionParticipantIds);
       if (null != this.jcrService.addParticipant2Program(participant)) {
         return true;
