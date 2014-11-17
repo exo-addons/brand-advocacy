@@ -7,6 +7,7 @@ public class Query {
 
   private String programId;
   private String username;
+  private String missionId;
   private String title;
   private String content;
   private int status;
@@ -32,7 +33,9 @@ public class Query {
 
 
   public String getUsername() {
-    return username;
+    if (null != username  && !"".equals(username) )
+      return username;
+    return null;
   }
 
   public void setUsername(String username) {
@@ -113,5 +116,15 @@ public class Query {
 
   public void setIsActive(Boolean isActive) {
     this.isActive = isActive;
+  }
+
+  public String getMissionId() {
+    if (null != missionId && !"".equals(missionId))
+      return missionId;
+    return null;
+  }
+
+  public void setMissionId(String missionId) {
+    this.missionId = missionId;
   }
 }

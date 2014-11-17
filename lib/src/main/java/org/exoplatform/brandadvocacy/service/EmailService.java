@@ -100,7 +100,7 @@ public class EmailService {
     String body = null;
 
     body = "there is new change on referral program ";
-    body +="view on "+remoteUrl+"?action=mp_view&id="+missionParticipant.getId();
+    body +="view on "+remoteUrl+"/portal/intranet/brand-advocacy?action=mp_view&id="+missionParticipant.getId();
     return body;
   }
   public void sendNotif2Managers(MissionParticipant missionParticipant){

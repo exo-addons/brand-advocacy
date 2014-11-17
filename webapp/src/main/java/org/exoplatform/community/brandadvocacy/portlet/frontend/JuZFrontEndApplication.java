@@ -130,7 +130,7 @@ public class JuZFrontEndApplication {
 
     if (null != this.currentMissionId && null != this.currentPropositionId){
       if(null == this.currentMissionParticipantId){
-        if(!this.addMissionParticipant(this.currentMissionId,this.currentPropositionId)){
+        if(!this.getOrCreateMissionParticipant(this.currentMissionId)){
           return Response.ok("something went wrong, please come back later");
         }else{
           return startTpl.ok();
@@ -170,7 +170,7 @@ public class JuZFrontEndApplication {
     if(null == this.currentMissionId || null == this.currentPropositionId){
       return Response.ok("We are preparing next mission, please come back later");
     }
-    if(!this.addMissionParticipant(this.currentMissionId,this.currentPropositionId)){
+    if(!this.getOrCreateMissionParticipant(this.currentMissionId)){
       return Response.ok("something went wrong, please come back later");
     }else{
       return startTpl.ok();
@@ -209,6 +209,7 @@ public class JuZFrontEndApplication {
     if(null != this.currentMissionParticipantId){
       MissionParticipant missionParticipant = this.jcrService.getMissionParticipantById(this.currentMissionParticipantId);
       if(null != missionParticipant){
+        missionParticipant.setProposition_id(this.currentPropositionId);
         Address addressObj = new Address(fname,lname,address,city,country,phone);
         addressObj = this.jcrService.addAddress2Participant(this.currentProgramId,this.remoteUserName,addressObj);
         if(null != addressObj ){
@@ -217,13 +218,15 @@ public class JuZFrontEndApplication {
           missionParticipant.setAddress_id(addressObj.getId());
           missionParticipant.setSize(Size.getSize(Integer.parseInt(size)));
           if (null != this.jcrService.updateMissionParticipantInProgram(this.currentProgramId,missionParticipant) ){
-            this.isFinished = true;
-            this.completeMission();
-            return thankyouTpl.ok();
+            if (this.completeMission()){
+              this.isFinished = true;
+              return thankyouTpl.ok();
+            }
           }
         }
       }
     }
+    this.jcrService.removeMissionParticipant(currentMissionParticipantId);
     return Response.ok("nok");
 
   }
@@ -239,51 +242,56 @@ public class JuZFrontEndApplication {
       Set<String> missionParticipantIds = new HashSet<String>();
       missionParticipantIds.add(currentMissionParticipantId);
       participant.setMission_participant_ids(missionParticipantIds);
-      if (null != this.jcrService.addParticipant2Program(participant)) {
+      if (null != this.jcrService.addParticipant2Program(participant) && null != this.updateCurrentProposition()) {
         return true;
       }
     }
     return false;
   }
-  private Boolean addMissionParticipant(String missionId, String propositionId){
+  private Boolean getOrCreateMissionParticipant(String missionId){
 
-    MissionParticipant missionParticipant = new MissionParticipant();
-    missionParticipant.setMission_id(missionId);
-    missionParticipant.setProposition_id(propositionId);
-    missionParticipant.setParticipant_username(this.remoteUserName);
-    missionParticipant = this.jcrService.addMissionParticipant2Program(this.currentProgramId,missionParticipant);
-    if(null != missionParticipant){
+    MissionParticipant missionParticipant = this.jcrService.getCurrentMissionParticipantByMissionId(currentProgramId,missionId);
+    if (null == missionParticipant) {
+      missionParticipant = new MissionParticipant();
+      missionParticipant.setMission_id(missionId);
+      missionParticipant.setParticipant_username(this.remoteUserName);
+      missionParticipant = this.jcrService.addMissionParticipant2Program(this.currentProgramId,missionParticipant);
+      if(null != missionParticipant){
 
-      Participant participant = new Participant(this.remoteUserName);
-      participant.setProgramId(this.currentProgramId);
-      Set<String> missionIds = new HashSet<String>();
-/*
-      // store mission only when user complete his mission
-      missionIds.add(missionId);
- */
-      participant.setMission_ids(missionIds);
-      Set<String> missionParticipantIds = new HashSet<String>();
-      missionParticipantIds.add(missionParticipant.getId());
-      participant.setMission_participant_ids(missionParticipantIds);
+        Participant participant = new Participant(this.remoteUserName);
+        participant.setProgramId(this.currentProgramId);
+        Set<String> missionIds = new HashSet<String>();
+        participant.setMission_ids(missionIds);
+        Set<String> missionParticipantIds = new HashSet<String>();
+        missionParticipantIds.add(missionParticipant.getId());
+        participant.setMission_participant_ids(missionParticipantIds);
 
-      if (null != this.jcrService.addParticipant2Program(participant)) {
-        Proposition proposition = this.jcrService.getPropositionById(missionParticipant.getProposition_id());
-        if(null != proposition){
-          proposition.setNumberUsed(proposition.getNumberUsed()+1);
-          if (null != this.jcrService.updateProposition(proposition)){
-            this.currentMissionParticipantId = missionParticipant.getId();
-            this.currentMissionParticipantStatus = Status.OPEN.getLabel();
-            return true;
-          }
+        if (null != this.jcrService.addParticipant2Program(participant)) {
+          this.currentMissionParticipantId = missionParticipant.getId();
+          this.currentMissionParticipantStatus = Status.OPEN.getLabel();
+          return true;
+        }
+        if (null == this.currentMissionParticipantId){
+          this.jcrService.removeMissionParticipant(missionParticipant.getId());
         }
       }
-      if (null == this.currentMissionParticipantId){
-        this.jcrService.removeMissionParticipant(missionParticipant.getId());
-      }
+    }
+    else{
+      this.currentMissionParticipantId = missionParticipant.getId();
+      this.currentMissionParticipantStatus = Status.OPEN.getLabel();
+      return true;
     }
     return false;
   }
 
+  private Proposition updateCurrentProposition(){
+    Proposition proposition = this.jcrService.getPropositionById(this.currentPropositionId);
+    if(null != proposition){
+      proposition.setNumberUsed(proposition.getNumberUsed()+1);
+      return this.jcrService.updateProposition(proposition);
+    }
+    return null;
+  }
   private Mission getCurrentMission(){
     Mission randomMission = null;
     Proposition randomProposition = null;

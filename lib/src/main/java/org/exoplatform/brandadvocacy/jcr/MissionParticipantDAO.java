@@ -355,14 +355,17 @@ public class MissionParticipantDAO extends DAO {
     }
     return false;
   }
-  public MissionParticipant getCurrentMissionParticipantByUserName(String programId,String username){
-    Program program = this.getJcrImplService().getProgramDAO().getProgramById(programId);
+  private MissionParticipant getCurrentMissionParticipantByQuery(org.exoplatform.brandadvocacy.model.Query query){
+    Program program = this.getJcrImplService().getProgramDAO().getProgramById(query.getProgramId());
     if (null != program){
       StringBuilder sql = new StringBuilder("select jcr:uuid from "+ JCRImpl.MISSION_PARTICIPANT_NODE_TYPE +" where ");
       sql.append("jcr:path like '");
       sql.append(JCRImpl.EXTENSION_PATH).append("/").append(Utils.queryEscape(program.getLabelID())).append("/").append(ProgramDAO.node_prop_missionparticipants);
       sql.append("/%'");
-      sql.append(" AND ").append(node_prop_participant_username).append(" = '").append(username).append("'");
+      if(null != query.getUsername())
+        sql.append(" AND ").append(node_prop_participant_username).append(" = '").append(query.getUsername()).append("'");
+      if(null != query.getMissionId())
+        sql.append(" AND ").append(node_prop_mission_id).append(" ='").append(query.getMissionId()).append("'");
       sql.append(" AND ").append(node_prop_address_id).append(" IS NULL ");
       sql.append(" AND (").append(node_prop_status).append("=").append("1 OR " ).append(node_prop_status).append("=").append(" 2 ) ");
       List<MissionParticipant> missionParticipants = this.transferNodes2Objects(this.getNodesByQuery(sql.toString(),0,1));
@@ -371,5 +374,16 @@ public class MissionParticipantDAO extends DAO {
       }
     }
     return null;
+  }
+  public MissionParticipant getCurrentMissionParticipantByUserName(String programId,String username){
+    org.exoplatform.brandadvocacy.model.Query query = new org.exoplatform.brandadvocacy.model.Query(programId);
+    query.setUsername(username);
+    return this.getCurrentMissionParticipantByQuery(query);
+
+  }
+  public MissionParticipant getCurrentMissionParticipantByMissionId(String programId, String missionId){
+    org.exoplatform.brandadvocacy.model.Query query = new org.exoplatform.brandadvocacy.model.Query(programId);
+    query.setMissionId(missionId);
+    return this.getCurrentMissionParticipantByQuery(query);
   }
 }
