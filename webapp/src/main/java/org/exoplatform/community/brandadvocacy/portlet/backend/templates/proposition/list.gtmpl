@@ -29,7 +29,7 @@ import org.apache.commons.lang.StringEscapeUtils;
                 %>
                 <tr>
                     <td>
-                        <%= StringEscapeUtils.escapeHtml(proposition.getShortContent(50))%>
+                        <%=proposition.getShortContent(50)%>
                     </td>
                     <td class="center">
                         <div class="spaceIphoneChkBox">

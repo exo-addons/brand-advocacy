@@ -343,8 +343,9 @@
     $('.jz').jzAjax("MissionController.updateMissionPriority()", {
       data: {missionId: missionId, priority: priority},
       success: function (data) {
-        if(data != "ok")
+        if(data != "ok"){
           _disPlayInfoMsgCB(data);
+        }
         _displayLoading(false);
       }
     });
@@ -803,22 +804,38 @@
       e.preventDefault();
     });
   };
+  var _MissionPriorityEventTimeout;
+  var _preSetMissionPriorityTimeout = function(missionId,priority){
+    if(typeof missionId != "undefined" && typeof priority != "undefined"){
+      _MissionPriorityEventTimeout = setTimeout(function(){
+        if(priority > 0 && priority <= 100){
+          _updateMissionPriority(missionId,priority);
+        }
+      },1000);
+    }
+  };
   var _addEvent2InputTextMissionPriority = function(){
-    $(document).on('click keypress.juzBrad.bk.missionPriority',':text.brad-mission-priority',function(event){
+    $(document).on('keypress.juzBrad.bk.missionPriority',':text.brad-mission-priority',function(event){
+      // only number
+      $(this).val($(this).val().replace(/[^\d].+/, ""));
+      // Allow: backspace, delete, tab, escape, enter,left,right
+      if($.inArray(event.which, [46, 8 ,13,37,39]) !== -1)
+        event.preventDefault();
+      if ((event.which >= 48 && event.which <= 57) ){
+        if(_MissionPriorityEventTimeout)
+          clearTimeout(_MissionPriorityEventTimeout);
+      }
+    });
+  };
+  var _addEventKeyUp2InputTextMissionPriority = function(){
+    $(document).on('keyup.juzBrad.bk.missionPriorityKeyup',':text.brad-mission-priority',function(event){
+      _preSetMissionPriorityTimeout( $(this).attr('data-missionId'),$(this).val());
+    });
+  };
+  var _addEventClick2InputTextMissionPriority = function(){
+    $(document).on('click.juzBrad.bk.missionPriorityClick',':text.brad-mission-priority',function(event){
       if($(this).prop('readonly')){
         _disPlayInfoMsgCB('Activate mission to edit its priority');
-      }
-      $(this).val($(this).val().replace(/[^\d].+/, ""));
-      if ((event.which < 48 || event.which > 57)) {
-        event.preventDefault();
-      }
-      var prio = $(this).val();
-      var old = $(this).attr('data-val');
-      if(old != prio){
-        if(prio > 0 && prio <= 100){
-          var missionId = $(this).attr('data-missionId');
-          _updateMissionPriority(missionId,prio);
-        }
       }
     });
   };
@@ -989,6 +1006,8 @@
     _addEvent2BtnCancelUpdateMisssion();
     _addEvent2LinkPreAddMission();
     _addEvent2InputTextMissionPriority();
+    _addEventClick2InputTextMissionPriority();
+    _addEventKeyUp2InputTextMissionPriority();
   };
   var _initPropositionEvent = function(){
     _addEvent2LinkLoadAddPropositionForm();
@@ -1010,6 +1029,7 @@
   var _initVar = function(){
     _textAreaContentId = "bradAdvPropositionContent";
     _bodyContainerDOM = $(".tab-content");
+    _MissionPriorityEventTimeout = false;
   }
   brandAdvBackend.init = function(isAdmin){
     _initVar();
