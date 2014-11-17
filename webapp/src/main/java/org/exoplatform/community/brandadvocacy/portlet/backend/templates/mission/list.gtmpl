@@ -4,8 +4,8 @@
 <div class="tab-pane fade" id="generalTab">...</div>
 <div class="tab-pane fade in active" id="missionsTab">
     <% if (alertPriority != ""){%>
-    <div class="alert alert-error">
-        <i class="uiIconError"></i>The total priorities has been exceeded
+    <div class="alert alert-error mission-priority-exceeded">
+        <i class="uiIconWarning"></i>The total priorities has been exceeded
     </div>
     <br/>
     <% } %>

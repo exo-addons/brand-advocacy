@@ -69,27 +69,40 @@
       popupDOM.hide();
     }
   };
+  var _displayLoading = function(b){
+    var loadingDOM = $('#BrandAdvAjaxLoadingMask');
+    if(loadingDOM.length > 0){
+      if(b)
+        loadingDOM.show();
+      else
+        loadingDOM.hide();
+    }
+  };
   var _loadProgramContentView = function(){
+    _displayLoading(true);
     $(".jz").jzAjax("ProgramController.index()",{
       success:function(data){
         _bodyContainerDOM.html(data);
         _managerContainerDOM = $('.program-list-managers');
         _loadProgramManagers();
-
+        _displayLoading(false);
       }
     });
   };
   var _addProgram = function(title){
+    _displayLoading(true);
     $(".jz").jzAjax("ProgramController.add()",{
       data:{title:title},
       success:function(data){
         if(data != "nok"){
           _loadProgramContentView();
         }
+        _displayLoading(false);
       }
     });
   };
   var _updateProgram = function(title){
+    _displayLoading(true);
     $('.jz').jzAjax('ProgramController.update()',{
       data:{title:title},
       success:function(data){
@@ -98,11 +111,13 @@
           return;
         }
         _disPlayErrorMsgCB('something went wrong, cannot update the program');
+        _displayLoading(false);
       }
     });
   }
 
   var _loadProgramManagers = function(){
+    _displayLoading(true);
     $('.jz').jzAjax('ManagerController.listProgramManagers()',{
       success:function(data){
         if(data !== 'nok'){
@@ -111,22 +126,26 @@
           _managerBradList2BeAdded = [];
 
         }
+        _displayLoading(false);
       }
     });
   };
 
   var _removeProgramManager = function(username){
+    _displayLoading(true);
     $('.jz').jzAjax('ManagerController.removeProgramManager()',{
       data:{username:username},
       success:function(data){
         if(data !== 'nok'){
           _loadProgramManagers();
         }
+        _displayLoading(false);
       }
     });
   };
 
   var _addProgramManager = function(usernames,role,notif){
+    _displayLoading(true);
     $('.jz').jzAjax('ManagerController.add2Program()',{
       data:{username:usernames,role:role,notif:notif},
       success:function(data){
@@ -135,6 +154,7 @@
         }else{
           _disPlayErrorMsgCB(data);
         }
+        _displayLoading(false);
       }
     });
   };
@@ -190,6 +210,7 @@
     $(document).on('click.juzBrad.bk.addManager2BeAdded','li.add-manager-2-be-added',function(){
       var username = $(this).attr('data-userName');
       var fullname = $(this).attr('data-fullName');
+      _displayLoading(true);
       _addManagerFromSearchManager(username,fullname);
       $(".result-search-manager").html('');
     });
@@ -197,19 +218,23 @@
   var _addEvent2LinkRemoveManager2BeAdded = function(){
     $(document).on('click.juzBrad.bk.removeManager2BeAdded','span.remove-manager-2-be-added',function(){
       var username = $(this).attr('data-userName');
+      _displayLoading(true);
       _removeManagerFromManagerList2BeAdded(username);
     });
   };
   var _loadMissions = function(){
+    _displayLoading(true);
     $('.jz').jzAjax('MissionController.indexMission()',{
       success:function(data){
         _bodyContainerDOM.html(data);
         _addEventIPhoneStyle2CheckBox();
+        _displayLoading(false);
       }
     });
   };
 
   var _loadEditMissionFormView = function(missionId){
+    _displayLoading(true);
     $('.jz').jzAjax('MissionController.editForm()',{
       data:{missionId:missionId},
       success:function(data){
@@ -222,6 +247,7 @@
         }else{
           _disPlayErrorMsgCB('Something went wrong, cannot load mission detail view');
         }
+        _displayLoading(false);
       }
     });
   };
@@ -230,11 +256,13 @@
     $('.jz').jzAjax('MissionController.addForm()',{
       success:function(data){
         _bodyContainerDOM.html(data);
+        _displayLoading(false);
       }
     });
   };
 
   var _addMission = function(title,link,priority){
+    _displayLoading(true);
     $('.jz').jzAjax('MissionController.addMission()',{
       data:{title:title,third_part_link:link,priority:priority},
       success:function(data){
@@ -243,6 +271,7 @@
           return;
         }
         _loadMissions();
+        _displayLoading(false);
       }
     });
   };
@@ -250,6 +279,7 @@
     var title = 'Write a review about eXo';
     var link = '';
     var priority = 0;
+    _displayLoading(true);
     $('.jz').jzAjax('MissionController.addMission()',{
       data:{title:title,third_part_link:link,priority:priority},
       success:function(data){
@@ -260,12 +290,13 @@
           var missionId = data;
           _loadEditMissionFormView(missionId);
         }
-
+        _displayLoading(false);
       }
     });
   };
 
   var _updateMission = function(title,link,active){
+    _displayLoading(true);
     $('.jz').jzAjax('MissionController.updateMission()',{
       data:{id:_currentMissionId,title:title,third_part_link:link,mission_active:active},
       success:function(data){
@@ -275,10 +306,12 @@
         else{
           _disPlayInfoMsgCB('Mission has been updated');
         }
+        _displayLoading(false);
       }
     });
   };
   var _updateMissionInline = function(missionId,action,val){
+    _displayLoading(true);
     $('.jz').jzAjax("MissionController.ajaxUpdateInline()",{
       data:{missionId:missionId,action:action,val:val},
       success:function(data){
@@ -286,10 +319,13 @@
           var obj = data = $.parseJSON(data);
           if (obj.error){
             if(obj.msg=="mission-prio-exceeded"){
+              $('.mission-priority-exceeded').show();
               _disPlayWarningMsgCB('the total priorities has been exceeded');
-            }else
+            }else{
               _disPlayErrorMsgCB(obj.msg);
+            }
           }else{
+            $('.mission-priority-exceeded').hide();
             _disPlayInfoMsgCB('Mission has been updated');
             if(obj.msg == "readonly" && typeof obj.mid !== "undefined"){
               _putPriorityText2Readonly(obj.mid,true);
@@ -298,15 +334,18 @@
             }
           }
         }catch (e){}
+        _displayLoading(false);
       }
     });
   };
   var _updateMissionPriority = function(missionId,priority){
+    _displayLoading(true);
     $('.jz').jzAjax("MissionController.updateMissionPriority()", {
       data: {missionId: missionId, priority: priority},
       success: function (data) {
         if(data != "ok")
           _disPlayInfoMsgCB(data);
+        _displayLoading(false);
       }
     });
   };
@@ -320,6 +359,7 @@
     }
   };
   var _removeMission = function(missionId){
+    _displayLoading(true);
     $('.jz').jzAjax('MissionController.deleteMission()',{
       data:{missionId:missionId},
       success:function(data){
@@ -327,11 +367,13 @@
           _disPlayErrorMsgCB('Something went wrrong, cannot remove mission');
         }
         _loadMissions();
+        _displayLoading(false);
       }
     });
 
   };
   var _loadPropositions = function(){
+    _displayLoading(true);
     var missionId = _currentMissionId;
     $('.jz').jzAjax('PropositionController.indexProposition()',{
       data:{missionId:missionId},
@@ -343,12 +385,13 @@
         _propositionContainerDOM.html(data);
         _addEventIPhoneStyle2CheckBox();
         _missionStatusCheckBoxController(false);
-
+        _displayLoading(false);
       }
     });
   };
   var _addProposition = function(content,active){
     var missionId = _currentMissionId;
+    _displayLoading(true);
     $('.jz').jzAjax('PropositionController.addProposition()',{
       data:{missionId:missionId,content:content,active:active},
       success:function(data){
@@ -358,10 +401,12 @@
         }
         _loadPopup('off','','');
         _loadPropositions();
+        _displayLoading(false);
       }
     });
   };
   var _removeProposition = function(propositionId){
+    _displayLoading(true);
     $('.jz').jzAjax('PropositionController.deleteProposition()',{
       data:{propositionId:propositionId},
       success:function(data){
@@ -370,11 +415,13 @@
           return;
         }
         _loadPropositions();
+        _displayLoading(false);
       }
     });
   };
 
   var _updateProposition = function(propositionId,content,active){
+    _displayLoading(true);
     $('.jz').jzAjax('PropositionController.updateProposition()',{
       data:{propositionId:propositionId,content:content,active:active},
       success:function(data){
@@ -384,11 +431,13 @@
         }
         _loadPopup('off','','');
         _loadPropositions();
+        _displayLoading(false);
       }
     });
   };
   var _loadAddPropositionForm = function(){
     var missionId = _currentMissionId;
+    _displayLoading(true);
     $('.jz').jzAjax('PropositionController.loadAddPropositionForm()',{
       data:{missionId:missionId},
       success:function(data){
@@ -399,10 +448,12 @@
         _loadPopup('on','Add a new proposition',data);
         _addCkEditor2Textarea();
         _addEventIPhoneStyle2CheckBox();
+        _displayLoading(false);
       }
     });
   };
   var _loadEditPropositionForm = function(propositionId){
+    _displayLoading(true);
     $('.jz').jzAjax('PropositionController.loadEditPropositionForm()',{
       data:{propositionId:propositionId},
       success:function(data){
@@ -413,6 +464,7 @@
         _loadPopup('on','Edit proposition',data);
         _addCkEditor2Textarea();
         _addEventIPhoneStyle2CheckBox();
+        _displayLoading(false);
       }
     });
   };
@@ -431,24 +483,29 @@
   };
 
   var _loadMissionParticipantContainer = function(){
+    _displayLoading(true);
     $('.jz').jzAjax('MissionParticipantController.indexMP()',{
       success:function(data){
         _bodyContainerDOM.html(data);
         _missionParticipantContainerDOM = $('.mission-participant-container');
         _loadMissionParticipants('','',1);
+        _displayLoading(false);
       }
     });
   };
 
   var _loadMissionParticipants = function(keyword,status,page){
+    _displayLoading(true);
     $('.jz').jzAjax('MissionParticipantController.search()',{
       data:{keyword:keyword,status:status,page:page},
       success:function(data){
         _missionParticipantContainerDOM.html(data);
+        _displayLoading(false);
       }
     });
   };
   var _loadMissionParticipantDetail = function(missionParticipantId,username){
+    _displayLoading(true);
     $('.jz').jzAjax('MissionParticipantController.loadDetail()',{
       data:{missionParticipantId:missionParticipantId},
       success:function(data){
@@ -458,19 +515,23 @@
         }
         _bodyContainerDOM.html(data);
         _loadPreviousMissionParticipant(username);
+        _displayLoading(false);
+
       }
     });
   };
   var _loadPreviousMissionParticipant = function(username){
-
+    _displayLoading(true);
     $(".previous-mission-participant").jzAjax("MissionParticipantController.getPreviousMissionParticipant()",{
       data:{username:username},
       success:function(data){
         $(".previous-mission-participant").html(data);
+        _displayLoading(false);
       }
     });
   };
   var _removeMissionParticipant = function(username,missionParticipantId){
+    _displayLoading(true);
     $('.jz').jzAjax('MissionParticipantController.removeMissionParticipant()',{
       data:{missionParticipantId:missionParticipantId,username:username},
       success:function(data){
@@ -480,6 +541,7 @@
         }else{
           _disPlayErrorMsgCB(data);
         }
+        _displayLoading(false);
       }
     });
   };
@@ -498,6 +560,7 @@
       if (action == "updateProgramManager"){
         var username =  input.attr("data-username");
         var notif = val;
+        _displayLoading(true);
         $(input).jzAjax("ManagerController.updateAjaxProgramManagerInLine()",{
           data:{username:username,action:"notif",val:notif},
           success:function(data){
@@ -506,6 +569,7 @@
             }else{
               _disPlayInfoMsgCB("Your change has successfully been updated");
             }
+            _displayLoading(false);
           }
         });
       } else if(action == "updateMissionInline"){
@@ -522,6 +586,7 @@
       } else if (action == "updatePropositionInline"){
         var propositionId = input.attr("data-propositionId");
         var propositionActive = val;
+        _displayLoading(true);
         $(input).jzAjax("PropositionController.ajaxUpdatePropositionInline()",{
           data:{propositionId:propositionId,action:"active",val:propositionActive},
           success:function(data){
@@ -536,6 +601,7 @@
               _disPlayInfoMsgCB("Your changes has successfully been updated");
               _missionStatusCheckBoxController(true);
             }
+            _displayLoading(false);
           }
         });
       } else if(action == "addNewProgramManager"){
@@ -569,6 +635,7 @@
       var checkBoxDOM = managerRow.find("input:checkbox");
       var username =  checkBoxDOM.attr("data-username");
       var role = managerRow.find("select[name=role]").val();
+      _displayLoading(true);
       jRole.jzAjax("ManagerController.updateAjaxProgramManagerInLine()",{
         data:{username:username,action:"role",val:role},
         success:function(data){
@@ -577,6 +644,7 @@
           }else{
             _disPlayInfoMsgCB('Manager role has been updated');
           }
+          _displayLoading(false );
         }
       });
     });
@@ -617,6 +685,7 @@
       var missionParticipantId =jStatus.attr("data-mission-participant-id");
       if (typeof missionParticipantId != "undefined"){
         var val = jStatus.val();
+        _displayLoading(true);
         jStatus.jzAjax("MissionParticipantController.ajaxUpdateMPInline()",{
           data:{missionParticipantId:missionParticipantId,action:"status",val:val},
           success:function(data){
@@ -625,6 +694,7 @@
               jStatus.val(_currentMPStatus);
             }else
               _disPlayInfoMsgCB("your change has successfully been updated");
+            _displayLoading(false);
           }
         });
       }
@@ -676,34 +746,37 @@
   };
 
   var _addEvent2BtnAddProgram = function(){
-    $(document).on('click.juzBrad.bk.btn.addprogram','button.btn-add-program',function(){
+    $(document).on('click.juzBrad.bk.btn.addprogram','button.btn-add-program',function(e){
       var title = $(".program-title").val();
       if(title.length === 0){
         return;
       }
       _addProgram(title);
+      e.preventDefault();
     });
   }
 
   var _addEvent2BtnUpdateProgram = function(){
-    $(document).on('click.juzBrad.bk.updateprogram','button.btn-update-program',function(){
+    $(document).on('click.juzBrad.bk.updateprogram','button.btn-update-program',function(e){
       var title = $(".program-title").val();
       if(title.length === 0){
         return;
       }
       _updateProgram(title);
+      e.preventDefault();
     });
   };
 
 
   var _addEvent2BtnRemoveProgramManager = function(){
-    $(document).on('click.juzBrad.bk.removeprogramuser','a.removeProgramUser',function(){
+    $(document).on('click.juzBrad.bk.removeprogramuser','a.removeProgramUser',function(e){
       var username = $(this).attr("data-username");
       _removeProgramManager(username);
+      e.preventDefault();
     });
   };
   var _addEvent2BtnAddProgramManager = function(){
-    $(document).on('click.juzBrad.bk.addprogramuser','button.btn-add-program-manager',function(){
+    $(document).on('click.juzBrad.bk.addprogramuser','button.btn-add-program-manager',function(e){
       if(_managerBradList2BeAdded.length > 0){
         var usernames = [];
         $.each(_managerBradList2BeAdded,function(i,v){
@@ -713,13 +786,15 @@
         var role = $(".manager-role").val();
         var notif = $(".manager-notif").val();
         _addProgramManager(username,role,notif);
+        e.preventDefault();
       }
     });
   };
 
   var _addEvent2LinkLoadAddMissionForm = function(){
-    $(document).on('click.juzBrad.bk.loadAddMissionFormView','a.btn-load-add-mission-form',function(){
+    $(document).on('click.juzBrad.bk.loadAddMissionFormView','a.btn-load-add-mission-form',function(e){
       _loadAddMissionFormView();
+      e.preventDefault();
     });
   };
   var _addEvent2LinkPreAddMission = function(){
@@ -748,48 +823,54 @@
     });
   };
   var _addEvent2BtnAddMission = function(){
-    $(document).on('click.juzBrad.bk.addMission','button.btn-add-mission',function(){
+    $(document).on('click.juzBrad.bk.addMission','button.btn-add-mission',function(e){
       var title = $('#title').val();
       var link = $('#third_part_link').val();
       var priority = $('#priority').val();
       _addMission(title,link,priority);
+      e.preventDefault();
     });
   };
   var _addEvent2BtnLoadEditMissionForm = function(){
-    $(document).on('click.juzBrad.bk.editmission','a.load-edit-mission-form',function(){
+    $(document).on('click.juzBrad.bk.editmission','a.load-edit-mission-form',function(e){
       var missionId = $(this).attr('data-missionId');
       _loadEditMissionFormView(missionId);
+      e.preventDefault();
     });
   };
   var _addEvent2BtnUpdateMission = function(){
-    $(document).on('click.juzBrad.bk.updateMission','button.btn-update-mission',function(){
+    $(document).on('click.juzBrad.bk.updateMission','button.btn-update-mission',function(e){
       var title = $('#title').val();
       var link = $('#third_part_link').val();
       var active = null;
       if($('#mission_active').length > 0)
         active = $('#mission_active').val();
       _updateMission(title,link,active);
+      e.preventDefault();
     });
   };
   var _addEvent2LinkRemoveMission = function(){
-    $(document).on('click.juzBrad.bk.removeMission','a.removeMission',function(){
+    $(document).on('click.juzBrad.bk.removeMission','a.removeMission',function(e){
       var missionId = $(this).attr('data-missionId');
       _removeMission(missionId);
+      e.preventDefault();
     });
   };
   var _addEvent2BtnCancelUpdateMisssion = function(){
-    $(document).on('click.juzbrad.bk.cancelupdatemission','a.back-to-missions',function(){
+    $(document).on('click.juzbrad.bk.cancelupdatemission','a.back-to-missions',function(e){
       _loadMissions();
+      e.preventDefault();
     });
   };
 
   var _addEvent2LinkLoadAddPropositionForm = function(){
-    $(document).on('click.juzBrad.bk.loadAddPropositionForm','a.a-load-add-proposition-form',function(){
+    $(document).on('click.juzBrad.bk.loadAddPropositionForm','a.a-load-add-proposition-form',function(e){
       _loadAddPropositionForm();
+      e.preventDefault();
     });
   };
   var _addEvent2BtnAddProposition = function(){
-    $(document).on('click.juzBrad.bk.addProposition','button.btn-add-proposition',function(){
+    $(document).on('click.juzBrad.bk.addProposition','button.btn-add-proposition',function(e){
       var formDOM = $('.uiPopup').find('.addNewProposition');
       var content = _getDataFromCkEditor();
       if(content == ""){
@@ -797,16 +878,18 @@
       }
       var active = formDOM.find(':checkbox').val();
       _addProposition(content,active);
+      e.preventDefault();
     })
   };
   var _addEvent2LinkLoadEditPropositionForm = function(){
-    $(document).on('click.juzBrad.bk.loadEditPropositionForm','a.a-load-edit-proposition-form',function(){
+    $(document).on('click.juzBrad.bk.loadEditPropositionForm','a.a-load-edit-proposition-form',function(e){
       var propositionId = $(this).attr('data-propositionId');
       _loadEditPropositionForm(propositionId);
+      e.preventDefault();
     });
   };
   var _addEvent2BtnUpdateProposition = function(){
-    $(document).on('click.juzBrad.bk.updateProposition','button.btn-update-proposition',function(){
+    $(document).on('click.juzBrad.bk.updateProposition','button.btn-update-proposition',function(e){
       var propositionId = $(this).attr('data-propositionId');
       var formDOM = $('.uiPopup').find('.addNewProposition');
       var content = _getDataFromCkEditor();
@@ -815,12 +898,14 @@
       }
       var active = formDOM.find(':checkbox').val();
       _updateProposition(propositionId,content,active);
+      e.preventDefault();
     });
   };
   var _addEvent2LinkRemoveProposition = function(){
-    $(document).on('click.juzBrad.bk.removeProposition','a.remove-proposition',function(){
+    $(document).on('click.juzBrad.bk.removeProposition','a.remove-proposition',function(e){
       var propositionId = $(this).attr('data-propositionId');
       _removeProposition(propositionId);
+      e.preventDefault();
     });
   };
   var _addEvent2BtnViewMissionParticipant = function(){
@@ -833,11 +918,12 @@
   };
 
   var _addEvent2BtnSearchMissionParticipant = function(){
-    $(document).on('click.juzBrad.bk.searchMissionParticipant.btn','button.btn-search-mission-participant',function(){
+    $(document).on('click.juzBrad.bk.searchMissionParticipant.btn','button.btn-search-mission-participant',function(e){
       var searchForm = $(this).parent('.uiSearchInput');
       var keyword = searchForm.find(':text').val();
       var statusFilter = searchForm.find('select').val();
       _loadMissionParticipants(keyword,statusFilter,1);
+      e.preventDefault();
     });
   };
   var _addEvent2InputTextKeywordSearchMissionParticipant = function(){
@@ -849,26 +935,28 @@
         var keyword = searchForm.find(':text').val();
         var statusFilter = searchForm.find('select').val();
         _loadMissionParticipants(keyword,statusFilter,1);
+        e.preventDefault();
       }
     });
   };
 
   var _addEvent2LinkPageSearchMissionParticipant = function(){
-    $(document).on('click.juzBrad.bk.searchMissionParticipant.page','li.search-mission-participant-page',function(){
+    $(document).on('click.juzBrad.bk.searchMissionParticipant.page','li.search-mission-participant-page',function(e){
       var searchForm = $(this).parent('.uiSearchInput');
       var keyword = searchForm.find(':text').val();
       var statusFilter = searchForm.find('select').val();
       var page = $(this).attr('data-page');
       _loadMissionParticipants(keyword,statusFilter,page);
-      return false;
+      e.preventDefault();
     });
   };
   var _addEvent2SelectStatusSearchMissionParticipant = function(){
-    $(document).on('change.juzBrad.bk.searchMissionParticipant.status','select.status-search-mission-participant',function(){
+    $(document).on('change.juzBrad.bk.searchMissionParticipant.status','select.status-search-mission-participant',function(e){
       var searchForm = $(this).parent('.uiSearchInput');
       var keyword = searchForm.find(':text').val();
       var statusFilter = searchForm.find('select').val();
       _loadMissionParticipants(keyword,statusFilter,1);
+      e.preventDefault();
     });
   };
   var _addEvent2LinkRemoveMissionParticipant = function(){

@@ -27,6 +27,11 @@ if(mp_view){
 %>
 <script type="text/javascript" src="/brand-advocacy-webapp/ckeditor/ckeditor.js"></script>
 <div class="referral-porlet">
+	<div style="margin: auto; z-index: 1600; position: absolute; left: 683px; top: 320.5px;" id="BrandAdvAjaxLoadingMask" class="ajaxLoadingMask clearfix">
+		<a class="uiIconClose uiIconWhite pull-right" onclick="javascript:ajaxAbort();"></a>
+		<i class="loadingProgressBar pull-left"></i>
+		<div class="loadingText">Loading...</div>
+	</div>
     <div class="alert" id="brandAdvAlertContainer" style="visibility:hidden;">
     </div>
 	<h3>Brand Advocacy Admin</h3><br>
@@ -53,6 +58,3 @@ if(mp_view){
 
     </div>
 </div>
-<script>
-// CKEDITOR.replace( 'content' );
-</script>
