@@ -5,7 +5,6 @@
 import org.exoplatform.portal.webui.util.Util;
 import org.exoplatform.webui.application.portlet.PortletRequestContext;
 import org.exoplatform.web.application.JavascriptManager;
-
 def pcontext = Util.getPortalRequestContext();
 def jsManager = pcontext.getJavascriptManager();
 if(loginController.isAdmin()){

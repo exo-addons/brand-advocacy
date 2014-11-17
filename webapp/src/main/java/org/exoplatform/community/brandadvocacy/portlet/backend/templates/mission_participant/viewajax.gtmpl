@@ -3,6 +3,9 @@
 #{param name=participantDTO/}
 #{param name=states/}
 <%
+import org.apache.commons.lang.StringEscapeUtils;
+%>
+<%
 def username = participantDTO.getUserName();
 def fullName = participantDTO.getFullName();
 def urlProfile = participantDTO.getUrlProfile();
@@ -36,20 +39,20 @@ def strDateSubmitted = missionParticipantDTO.getDate_submitted()
                 </a>
                 </div>
                 <div class="media-body">
-                    <h4 class="ref-user-name"><a href="<%=urlProfile%>" target="_blank"><%= strUserAddress %></a></h4>
+                    <h4 class="ref-user-name"><a href="<%=urlProfile%>" target="_blank"><%= StringEscapeUtils.escapeHtml(strUserAddress) %></a></h4>
                     <div class="row-fluid">
                         <div class="span6">
                             <% if(null != address && "" != address.getfName()){ %>
-                                <p><b>Address:</b> <span><%= strAddress %></span></p>
-                                <p><b>Phone:</b> <span><%= strPhone%></span></p>
-                                <p><b>Email:</b> <span><%= strEmail%></span></p>
+                                <p><b>Address:</b> <span><%= StringEscapeUtils.escapeHtml(strAddress) %></span></p>
+                                <p><b>Phone:</b> <span><%= StringEscapeUtils.escapeHtml(strPhone)%></span></p>
+                                <p><b>Email:</b> <span><%= StringEscapeUtils.escapeHtml(strEmail)%></span></p>
                                 <p><b>T-Shirt Size:</b> <span><%= tshirtSize%></span></p>
                             <% }else{ %>
                                 no address yet
                             <% } %>
                         </div>
                         <div class="span6">
-                            <p><b>Missions:</b> <span><%= strMissionTitle %></span></p>
+                            <p><b>Missions:</b> <span><%= StringEscapeUtils.escapeHtml(strMissionTitle) %></span></p>
                             <p><b>Submit Date:</b> <span><%= strDateSubmitted %></span></p>
                             <p>
                                 <b>Status: </b>
@@ -59,7 +62,7 @@ def strDateSubmitted = missionParticipantDTO.getDate_submitted()
                                     <% } %>
                                 </select>
                             </p>
-                            <p><b>Link:</b> <a href="<%= missionParticipantDTO.getUrl_submitted() %>" target="_blank"><%= missionParticipantDTO.getUrl_submitted() %></a></p>
+                            <p><b>Link:</b> <a href="<%= StringEscapeUtils.escapeHtml(missionParticipantDTO.getUrl_submitted()) %>" target="_blank"><%= StringEscapeUtils.escapeHtml(missionParticipantDTO.getUrl_submitted()) %></a></p>
                             <p>
                                 <b>Previous Missions:</b><br>
                                 <span class="previous-mission-participant">

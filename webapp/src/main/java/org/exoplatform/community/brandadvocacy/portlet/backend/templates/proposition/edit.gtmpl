@@ -1,5 +1,7 @@
 #{param name=proposition/}
-
+<%
+import org.apache.commons.lang.StringEscapeUtils;
+%>
 <%
 if(proposition != null){
     def missionId = proposition.getMission_id();
@@ -15,7 +17,7 @@ if(proposition != null){
             <label class="control-label">Content:</label>
             <div class="control row-fluid">
                 <textarea class="span12" style="min-height: 84px" name="bradAdvPropositionContent" id="bradAdvPropositionContent" cols="30" rows="15">
-                    <%= proposition.getContent()%>
+                    <%= StringEscapeUtils.escapeHtml(proposition.getContent())%>
                 </textarea>
             </div>
         </div>

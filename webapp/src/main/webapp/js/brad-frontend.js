@@ -18,17 +18,38 @@
       _ftStepContainer.html(" something went wrong, cannot identify current mission");
     return res;
   };
-  var _validateTerminateForm = function(frm){
-    $.each(frm,function(){
-
-    });
+  var _validatePhoneNumber = function(phone){
+      intRegex = /[0-9 -()+]+$/;
+    if((phone.length < 6) || (!intRegex.test(phone)))
+    {
+      return false;
+    }
+  };
+  var _validateTerminateForm = function(){
+    if($("#brad_participant_url_submitted").val().length < 1) {
+      return false;
+    } else if($("#brad-participant-fname").val().length < 1) {
+      return false;
+    } else if($("#brad-participant-lname").val().length < 1) {
+      return false;
+    } else if($("#brad-participant-address").val()) {
+      return false;
+    } else if($("#brad-participant-city").val().length < 1) {
+      return false;
+    } else if(!_validatePhoneNumber($("#brad-participant-phone").val())) {
+      return false;
+    } else if($("#brad-participant-country").val().length < 1) {
+      return false;
+    } else if($("#brad-participant-size").val().length < 1) {
+      return false;
+    }
+    return true;
   };
   var _loadTerminateView = function(){
     $(".jz").jzAjax("JuZFrontEndApplication.loadTerminateView()",{
       success: function(data){
         if(typeof data == "string" && data != "nok"){
           _ftStepContainer.html(data);
-       //   _addEventValidate2TerminateForm();
           _addOptionCountries();
         }
         else
@@ -110,31 +131,34 @@
 
   var _addEventToBtnTerminate = function(){
     $(document).on('click.juzbrad.ft.terminate.view','.btn-brad-terminate',function(){
-      var jTerminate = $(this);
-      var url = $("#brad_participant_url_submitted").val();
-      var fname = $("#brad-participant-fname").val();
-      var lname = $("#brad-participant-lname").val();
-      var address = $("#brad-participant-address").val();
-      var city = $("#brad-participant-city").val();
-      var phone = $("#brad-participant-phone").val();
-      var country = $("#brad-participant-country").val();
-      var size = $("#brad-participant-size").val();
-      jTerminate.jzAjax("JuZFrontEndApplication.loadThankyouView()",{
-        data:{'url':url,fname:fname,lname:lname,address:address,city:city,phone:phone,country:country,size:size},
-        success: function(data){
-          if(typeof data == "string" && data != "nok"){
-            _ftStepContainer.html(data);
-            _tweetController();
+      if(_validateTerminateForm()){
+        var jTerminate = $(this);
+        var url = $("#brad_participant_url_submitted").val();
+        var fname = $("#brad-participant-fname").val();
+        var lname = $("#brad-participant-lname").val();
+        var address = $("#brad-participant-address").val();
+        var city = $("#brad-participant-city").val();
+        var phone = $("#brad-participant-phone").val();
+        var country = $("#brad-participant-country").val();
+        var size = $("#brad-participant-size").val();
+        jTerminate.jzAjax("JuZFrontEndApplication.loadThankyouView()",{
+          data:{'url':url,fname:fname,lname:lname,address:address,city:city,phone:phone,country:country,size:size},
+          success: function(data){
+            if(typeof data == "string" && data != "nok"){
+              _ftStepContainer.html(data);
+              _tweetController();
+            }
+            else{
+              alert("something went wrong, please reload this page");
+              return;
+            }
           }
-          else{
-            alert("something went wrong, please reload this page");
-            return;
-          }
-        }
-      });
+        });
+      }else{
+        alert('Please fill all informations!')
+      }
     });
   };
-
   var _addOptionCountries = function() {
     if($('#brad-participant-country').length > 0){
       var strOptions = '<option value="">Country</option>';

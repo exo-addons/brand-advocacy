@@ -1,5 +1,8 @@
 #{param name=missions/}
 #{param name=alertPriority/}
+<%
+import org.apache.commons.lang.StringEscapeUtils;
+%>
 <!-- keep only this part for ajax -->
 <div class="tab-pane fade" id="generalTab">...</div>
 <div class="tab-pane fade in active" id="missionsTab">
@@ -31,11 +34,11 @@
                 }
             %>
             <tr id="mLine-<%=mid%>">
-                <td><a href="#" class="load-edit-mission-form" data-missionId="<%=mid%>">${mission.getTitle()}</a></td>
+                <td><a href="#" class="load-edit-mission-form" data-missionId="<%=mid%>"><%=StringEscapeUtils.escapeHtml(mission.getTitle())%></a></td>
                 <td class="center">
                     <input type="text" <%if(!strActiveVal){%> readonly <%}%> name="priority" id="priority"  class="brad-mission-priority" value="<%=mission.getPriority()%>" data-val="<%=mission.getPriority()%>" data-missionId="<%=mid%>"  />
                 </td>
-                <td><a href="<%= mission.getThird_part_link()%>" target="_blank"><%= mission.getThird_part_link()%></a></td>
+                <td><a href="<%= StringEscapeUtils.escapeHtml(mission.getThird_part_link())%>" target="_blank"><%= StringEscapeUtils.escapeHtml(mission.getThird_part_link())%></a></td>
                 <td class="center">
                     <div class="spaceIphoneChkBox">
                         <input type="checkbox" name="active" value="<%= strActiveVal%>" style="visibility: hidden;" <%=strActiveChkbox %> data-action="updateMissionInline" data-missionId="<%=mid%>" <% if (!mission.canActivate()){ %> disabled <% } %> data-role/>

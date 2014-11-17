@@ -49,6 +49,7 @@ public class JuZBackEndApplication {
     String action = WebuiRequestContext.getCurrentInstance().getRequestParameter("action");
     String missionParticipantId = WebuiRequestContext.getCurrentInstance().getRequestParameter("id");
 
+
     if (null == loginController.getCurrentProgramId()){
       List<Program> programs = this.jcrService.getAllPrograms();
       Program program = null;

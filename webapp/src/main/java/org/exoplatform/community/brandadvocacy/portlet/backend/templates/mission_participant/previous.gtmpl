@@ -1,4 +1,7 @@
 #{param name=missionParticipantDTOs/}
+<%
+import org.apache.commons.lang.StringEscapeUtils;
+%>
 <% missionParticipantDTOs.each{ missionParticipantDTO -> %>
-    <a href="#" class="actionIcon mp-view" data-mission-participant-id="<%=missionParticipantDTO.getId()%>" data-participant-id="<%=missionParticipantDTO.getParticipant_id()%>" ><%= missionParticipantDTO.getMission_title()%></a> has been submitted <%= missionParticipantDTO.getDate_submitted() %><br>
+    <a href="javascript:void(0)" class="actionIcon mp-view" data-mission-participant-id="<%=missionParticipantDTO.getId()%>" data-participant-id="<%=missionParticipantDTO.getParticipant_id()%>" ><%= StringEscapeUtils.escapeHtml(missionParticipantDTO.getMission_title())%></a> has been submitted <%= missionParticipantDTO.getDate_submitted() %><br>
 <% } %>

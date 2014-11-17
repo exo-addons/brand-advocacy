@@ -1,5 +1,8 @@
 #{param name=missionParticipantDTOs/}
 #{param name=pagination/}
+<%
+import org.apache.commons.lang.StringEscapeUtils;
+%>
     <table class="uiGrid table table-hover table-striped mgB0">
     <thead>
         <tr>
@@ -16,7 +19,7 @@
         <% def missionParticipantId = missionParticipantDTO.getId() %>
          <tr>
              <td><%= missionParticipantDTO.getParticipant_fullName()%></td>
-             <td><%= missionParticipantDTO.getMission_title()%></td>
+             <td><%= StringEscapeUtils.escapeHtml(missionParticipantDTO.getMission_title())%></td>
              <td class="center">
                  <select name="status" class="input-medium mission-participant-status" data-mission-participant-id="<%=missionParticipantId%>">
                      <% states.each { status -> %>
@@ -24,7 +27,7 @@
                      <% } %>
                  </select>
              </td>
-             <td><a href="<%= missionParticipantDTO.getUrl_submitted()%>" target="_blank"><%= missionParticipantDTO.getUrl_submitted()%></a></td>
+             <td><a href="<%= StringEscapeUtils.escapeHtml(missionParticipantDTO.getUrl_submitted())%>" target="_blank"><%= StringEscapeUtils.escapeHtml(missionParticipantDTO.getUrl_submitted())%></a></td>
              <td class="center"><%= missionParticipantDTO.getDate_submitted()%></td>
              <td class="center">
                 <a href="javascript:void(0)" data-placement="bottom" rel="tooltip" class="actionIcon mp-view" data-mission-participant-id="<%=missionParticipantId%>" data-participant-id="<%=missionParticipantDTO.getParticipant_id()%>" data-original-title="Preview" >

@@ -1,4 +1,7 @@
 #{param name=program/}
+<%
+import org.apache.commons.lang.StringEscapeUtils;
+%>
 <% if (null != program){ %>
 <% def programId = program.getId(); %>
     <div class="tab-pane fade in active" id="generalTab">
@@ -12,7 +15,7 @@
                 <% } %>
 
                 <div class="controls">
-                        <input class="full program-title" type="text" name="title" value="<%= program.getTitle()%>"  placeholder="Win a free eXo T-Shirt !">
+                        <input class="full program-title" type="text" name="title" value="<%= StringEscapeUtils.escapeHtml(program.getTitle())%>"  placeholder="Win a free eXo T-Shirt !">
                 </div>
             </div>
             <div class="control-group program-list-managers">
