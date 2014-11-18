@@ -45,7 +45,7 @@
                             </div>
                         </td>
                         <td class="center actionContainer">
-                            <a href="#" class="removeProgramUser" data-username="<%=username%>" data-original-title="Delete" class="actionIcon" rel="tooltip" data-placement="bottom">
+                            <a href="#" class="removeProgramUser" data-fullname="<%=manager.getFullName()%>" data-username="<%=username%>" data-original-title="Delete" class="actionIcon" rel="tooltip" data-placement="bottom">
                                 <i class="uiIconDeleteUser uiIconLightGray"></i>
                             </a>
                         </td>

@@ -1,0 +1,22 @@
+#{param name=action/}
+#{param name=id/}
+#{param name=msg/}
+<div class="popupHeader ClearFix">
+    <a data-dismiss="modal" class="uiIconClose pull-right brandAdvConfirmPopupClose" title="Close Window"></a>
+    <span class="PopupTitle popupTitle">
+        Confirmation
+    </span>
+</div>
+<div class="PopupContent popupContent">
+    <ul class="singleMessage popupMessage resizable">
+        <li>
+            <span class="confirmationIcon">
+            <%=msg%>
+            </span>
+        </li>
+    </ul>
+    <div class="uiAction uiActionBorder">
+        <a data-dismiss="modal" data-action="<%=action%>" data-id="<%=id%>" href="javascript:void(0);" class="btn btn-brad-Confirm-Yes">OK</a>
+        <a data-dismiss="modal" href="javascript:void(0);" class="btn btn-brad-Confirm-No">Cancel</a>
+    </div>
+</div>

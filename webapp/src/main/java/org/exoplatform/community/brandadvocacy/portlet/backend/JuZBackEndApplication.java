@@ -8,6 +8,7 @@ import org.exoplatform.brandadvocacy.model.MissionParticipant;
 import org.exoplatform.brandadvocacy.model.Program;
 import org.exoplatform.brandadvocacy.model.Role;
 import org.exoplatform.brandadvocacy.service.IService;
+import org.exoplatform.commons.juzu.ajax.Ajax;
 import org.exoplatform.community.brandadvocacy.portlet.backend.controllers.*;
 import org.exoplatform.services.organization.OrganizationService;
 import org.exoplatform.webui.application.WebuiRequestContext;
@@ -27,6 +28,10 @@ public class JuZBackEndApplication {
   @Inject
   @Path("error.gtmpl")
   org.exoplatform.community.brandadvocacy.portlet.backend.templates.error errorTpl;
+
+  @Inject
+  @Path("confirmpopup.gtmpl")
+  org.exoplatform.community.brandadvocacy.portlet.backend.templates.confirmpopup confirmpopupTpl;
 
   OrganizationService organizationService;
   IService jcrService;
@@ -92,5 +97,11 @@ public class JuZBackEndApplication {
     else
       loginController.setRights(Role.Admin.getLabel());
 
+  }
+
+  @Ajax
+  @Resource
+  public Response loadConfirmPopupContent(String action,String id,String msg){
+    return confirmpopupTpl.with().set("action",action).set("id",id).set("msg",msg).ok();
   }
 }

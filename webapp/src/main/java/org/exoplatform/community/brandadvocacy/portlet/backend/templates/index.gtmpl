@@ -57,3 +57,5 @@ if(mp_view){
 
     </div>
 </div>
+<div id="iuBrandAdvConfirmPopupContainer" class="UIPopupWindow UIDragObject uiPopup modal hide fade" style="display: none;position: fixed; top: 140px; visibility: visible; width: 550px;" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" id="myModal3">
+</div>

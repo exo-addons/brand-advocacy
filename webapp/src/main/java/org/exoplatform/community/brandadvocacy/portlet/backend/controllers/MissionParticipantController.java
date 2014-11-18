@@ -14,6 +14,9 @@ import org.exoplatform.services.organization.User;
 import org.exoplatform.social.core.identity.model.Identity;
 import org.exoplatform.social.core.identity.provider.OrganizationIdentityProvider;
 import org.exoplatform.social.core.manager.IdentityManager;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.List;
@@ -135,33 +138,45 @@ public class MissionParticipantController {
   @Ajax
   @Resource
   public Response ajaxUpdateMPInline(String missionParticipantId,String action,String val){
+    JSONObject jsonObject = new JSONObject();
     Boolean hasError = false;
     String msg = "";
-    if (loginController.isShippingManager()){
-
-      if (Status.SHIPPED.getValue() != Integer.parseInt(val)) {
-        hasError = true;
-        msg = "you have no rights for this change";
-      }
-    }else if (loginController.isValidator()){
-      if (Status.SHIPPED.getValue() == Integer.parseInt(val)){
-        hasError = true;
-        msg = "you have no rights for this change";
-      }
-    }
-    if (hasError){
-      return Response.ok(msg);
-    }
+    int oldStatus = 0;
     MissionParticipant missionParticipant = this.missionParticipantService.getMissionParticipantById(missionParticipantId);
     if (null != missionParticipant){
-      if (action.equals("status"))
+      oldStatus = missionParticipant.getStatus().getValue();
+      if (loginController.isShippingManager()){
+        if (Status.SHIPPED.getValue() != Integer.parseInt(val)) {
+          hasError = true;
+          msg = "you have no rights for this change";
+        }
+      }else if (loginController.isValidator()){
+        if (Status.SHIPPED.getValue() == Integer.parseInt(val)){
+          hasError = true;
+          msg = "you have no rights for this change";
+        }
+      }
+      if (!hasError && action.equals("status"))
         missionParticipant.setStatus(Status.getStatus(Integer.parseInt(val)));
-
-      missionParticipant = this.missionParticipantService.updateMissionParticipantInProgram(loginController.getCurrentProgramId(),missionParticipant);
-      if (null != missionParticipant)
-        return Response.ok("ok");
+      if (null != this.missionParticipantService.updateMissionParticipantInProgram(loginController.getCurrentProgramId(),missionParticipant)){
+        hasError = false;
+        msg = "Status has been successfully updated";
+      }else{
+        hasError = true;
+        msg = "Something went wrong,cannot update status";
+      }
+    }else{
+      hasError = true;
+      msg = "mission participant does not exist any more";
     }
-    return Response.ok("something went wrong");
+    try {
+      jsonObject.put("error",hasError);
+      jsonObject.put("msg",msg);
+      jsonObject.put("status",oldStatus);
+    } catch (JSONException e) {
+      return Response.ok("something went wrong");
+    }
+    return Response.ok(jsonObject.toString());
   }
 
   private List<MissionParticipantDTO> transfers2DTOs(List<MissionParticipant> missionParticipants){
@@ -217,16 +232,22 @@ public class MissionParticipantController {
 
   @Ajax
   @Resource
-  public Response removeMissionParticipant(String username,String missionParticipantId){
-    if(loginController.isAdmin()){
-      if (this.missionParticipantService.removeMissionParticipantInParticipant(loginController.getCurrentProgramId(),username,missionParticipantId)){
-        if (this.missionParticipantService.removeMissionParticipant(missionParticipantId)){
-          return Response.ok("ok");
-        }else {
-          return Response.ok("Something went wrong, cannot remove this mission participant");
+  public Response removeMissionParticipant(String missionParticipantId){
+    if(loginController.isAdmin()) {
+      MissionParticipant missionParticipant = this.missionParticipantService.getMissionParticipantById(missionParticipantId);
+      if (null != missionParticipant) {
+        String username = missionParticipant.getParticipant_username();
+        if (this.missionParticipantService.removeMissionParticipantInParticipant(loginController.getCurrentProgramId(), username, missionParticipantId)) {
+          if (this.missionParticipantService.removeMissionParticipant(missionParticipantId)) {
+            return Response.ok("ok");
+          } else {
+            return Response.ok("Something went wrong, cannot remove this mission participant");
+          }
+        } else {
+          return Response.ok("Something went wrong, cannot remove this mission participant in participant");
         }
-      }else {
-        return Response.ok("Something went wrong, cannot remove this mission participant in participant");
+      }else{
+        return Response.ok("this mission participant does not exist anymore");
       }
     }else
       return Response.ok("you have no rights to do this task");
