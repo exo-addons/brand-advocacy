@@ -142,28 +142,36 @@ public class MissionParticipantController {
     Boolean hasError = false;
     String msg = "";
     int oldStatus = 0;
+    String mpId = "";
     MissionParticipant missionParticipant = this.missionParticipantService.getMissionParticipantById(missionParticipantId);
     if (null != missionParticipant){
       oldStatus = missionParticipant.getStatus().getValue();
-      if (loginController.isShippingManager()){
-        if (Status.SHIPPED.getValue() != Integer.parseInt(val)) {
-          hasError = true;
-          msg = "you have no rights for this change";
-        }
-      }else if (loginController.isValidator()){
-        if (Status.SHIPPED.getValue() == Integer.parseInt(val)){
-          hasError = true;
-          msg = "you have no rights for this change";
-        }
-      }
-      if (!hasError && action.equals("status"))
-        missionParticipant.setStatus(Status.getStatus(Integer.parseInt(val)));
-      if (null != this.missionParticipantService.updateMissionParticipantInProgram(loginController.getCurrentProgramId(),missionParticipant)){
+      if (oldStatus == Integer.parseInt(val)){
         hasError = false;
-        msg = "Status has been successfully updated";
+        msg = "Status has already been updated ";
       }else{
-        hasError = true;
-        msg = "Something went wrong,cannot update status";
+        if (loginController.isShippingManager()){
+          if (Status.SHIPPED.getValue() != Integer.parseInt(val)) {
+            hasError = true;
+            msg = "you have no rights for this change";
+          }
+        }else if (loginController.isValidator()){
+          if (Status.SHIPPED.getValue() == Integer.parseInt(val)){
+            hasError = true;
+            msg = "you have no rights for this change";
+          }
+        }
+        if (!hasError && action.equals("status"))
+          missionParticipant.setStatus(Status.getStatus(Integer.parseInt(val)));
+        missionParticipant = this.missionParticipantService.updateMissionParticipantInProgram(loginController.getCurrentProgramId(),missionParticipant);
+        if (null != missionParticipant){
+          hasError = false;
+          msg = "Status has been successfully updated";
+          mpId = missionParticipant.getId();
+        }else{
+          hasError = true;
+          msg = "Something went wrong,cannot update status";
+        }
       }
     }else{
       hasError = true;
@@ -173,6 +181,7 @@ public class MissionParticipantController {
       jsonObject.put("error",hasError);
       jsonObject.put("msg",msg);
       jsonObject.put("status",oldStatus);
+      jsonObject.put("mpId",mpId);
     } catch (JSONException e) {
       return Response.ok("something went wrong");
     }

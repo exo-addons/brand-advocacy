@@ -108,9 +108,8 @@
 
   var _addEventToBtnStart = function(){
     $(document).on('click.juzbrad.ft.start.view','.btn-brad-start',function(e){
-      var jStart = $(this);
       _displayProcessing();
-      jStart.jzAjax("JuZFrontEndApplication.loadProcessView()",{
+      $('.jz').jzAjax("JuZFrontEndApplication.loadProcessView()",{
         success: function(data){
           if(typeof data == "string" && data != "nok")
             _ftStepContainer.html(data);
@@ -120,7 +119,21 @@
       });
     });
   };
-
+  var _sendNotifNewMissionParticipant = function(){
+    $('.jz').jzAjax('JuZFrontEndApplication.sendNotifEmail()',{
+      success:function(data){
+        if(data == "ok"){
+          _sendNotifAlmostMissionDoneEmail();
+        }
+      }
+    });
+  };
+  var _sendNotifAlmostMissionDoneEmail = function(){
+    $('.jz').jzAjax('JuZFrontEndApplication.sendNotifAlmostMissionDoneEmail()',{
+      success:function(data){
+      }
+    });
+  };
   var _addEventToBtnDone = function(){
     $(document).on('click.juzbrad.ft.done.view','.btn-brad-done',function(){
       var label = $(this).text();
@@ -156,6 +169,7 @@
             if(typeof data == "string" && data != "nok"){
               _ftStepContainer.html(data);
               _tweetController();
+              _sendNotifNewMissionParticipant();
             }
             else{
               alert("something went wrong, please reload this page");
@@ -237,6 +251,7 @@
       return false;
     });
   };
+
   bradObj.init = function(){
     _isValidTweetMsg = true;
     _addEventToBtnDiscovery();

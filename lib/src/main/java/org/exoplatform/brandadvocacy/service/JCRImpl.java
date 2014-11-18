@@ -161,6 +161,43 @@ public class JCRImpl implements IService {
     }
     return  null;
   }
+
+  @Override
+  public Boolean sendNotifNewMissionParticipant(String missionParticipantId) {
+    MissionParticipant missionParticipant = this.getMissionParticipantDAO().getMissionParticipantById(missionParticipantId);
+    if (null != missionParticipant){
+      this.emailService.sendNotif2Managers(missionParticipant);
+      return true;
+    }
+    return false;
+  }
+
+  @Override
+  public Boolean sendNotifUpdateMissionParticipantEmail(String missionParticipantId) {
+    MissionParticipant missionParticipant = this.getMissionParticipantDAO().getMissionParticipantById(missionParticipantId);
+    if (null != missionParticipant){
+      this.emailService.sendNotif2Managers(missionParticipant);
+      this.emailService.sendNotif2Participant(missionParticipant);
+      return true;
+    }
+    return false;
+  }
+
+  @Override
+  public Boolean sendNotifAlmostMissionDoneEmail(String programId, String username) {
+    Participant participant = this.getParticipantDAO().getParticipantInProgramByUserName(programId,username);
+    if (null != participant){
+      int nbMissions = this.getMissionDAO().getTotalNumberMissions(programId,true,true,0);
+      if(nbMissions >= participant.getMission_ids().size()){
+        if(nbMissions - participant.getMission_ids().size() <= 3){
+          this.emailService.sendNotifAlmostMissionDone2Managers(programId);
+          return true;
+        }
+      }
+    }
+    return false;
+  }
+
   public Node getOrCreateExtensionHome(){
     String path = String.format("%s", EXTENSION_PATH);
     return this.getOrCreateNode(path);
@@ -413,10 +450,7 @@ public class JCRImpl implements IService {
 
   @Override
   public MissionParticipant addMissionParticipant2Program(String programId, MissionParticipant missionParticipant) {
-    MissionParticipant result =  this.getMissionParticipantDAO().addMissionParticipant2Program(programId,missionParticipant);
-    if (null != result)
-      this.emailService.sendNotif2Managers(result);
-    return result;
+    return this.getMissionParticipantDAO().addMissionParticipant2Program(programId,missionParticipant);
   }
 
   @Override
@@ -442,10 +476,6 @@ public class JCRImpl implements IService {
   @Override
   public MissionParticipant updateMissionParticipantInProgram(String programId, MissionParticipant missionParticipant) {
     MissionParticipant  result =  this.getMissionParticipantDAO().updateMissionParticipantInProgram(programId,missionParticipant);
-    if (null != result) {
-      this.emailService.sendNotif2Managers(result);
-      this.emailService.sendNotif2Participant(result);
-    }
     return result;
   }
 

@@ -149,9 +149,8 @@
           _managerContainerDOM.html(data);
           _addEventIPhoneStyle2CheckBox();
           _managerBradList2BeAdded = [];
-
+          _displayLoading(false);
         }
-        _displayLoading(false);
       }
     });
   };
@@ -373,6 +372,14 @@
       }
     });
   };
+  var _sendNotifUpdateMissionParticipantEmail = function(missionParticipantId){
+    $('.jz').jzAjax("JuZBackEndApplication.sendNotifUpdateMissionParticipantEmail()",{
+      data:{missionParticipantId:missionParticipantId},
+      success:function(){
+
+      }
+    });
+  };
   var _updateMissionParticipantStatusInline = function(missionParticipantId,val){
     _displayLoading(true);
     $('.jz').jzAjax("MissionParticipantController.ajaxUpdateMPInline()",{
@@ -383,9 +390,11 @@
           if (obj.error){
             _disPlayErrorMsgCB(obj.msg);
             jStatus.val(obj.status);
-          }else
+          }else{
+            if(obj.mpId != "")
+              _sendNotifUpdateMissionParticipantEmail(obj.mpId);
             _disPlayInfoMsgCB(obj.msg);
-
+          }
         }catch (e){
           _disPlayErrorMsgCB('something went wrong to update mission participant status');
         }
@@ -516,13 +525,17 @@
   var _addCkEditor2Textarea = function(){
     try{
       CKEDITOR.replace(_textAreaContentId,{toolbar:'Basic'} );
-    }catch(e) {}
+    }catch(e) {
+      alert('Something went wrong,please reload this page');
+    }
   };
   var _getDataFromCkEditor = function(){
     try{
       var instance = CKEDITOR.instances[_textAreaContentId];
       return instance.getData();
-    }catch(e) {}
+    }catch(e) {
+      alert('Something went wrong,please reload this page');
+    }
     return "";
   };
 

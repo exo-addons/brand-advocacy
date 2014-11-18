@@ -189,4 +189,30 @@ public class EmailService {
     }
     return null;
   }
+  public void sendNotifAlmostMissionDone2Managers(String programId){
+    List<Manager> managers = this.iService.getAllManagersInProgram(programId);
+    Identity eXoIdentity;
+    String body = "Almost missions have been done, pls create new one";
+    if (null != body){
+      Message message;
+      for (Manager manager:managers){
+        if (manager.getNotif()){
+          eXoIdentity = this.identityManager.getOrCreateIdentity(OrganizationIdentityProvider.NAME, manager.getUserName(), true);
+          if (null != eXoIdentity){
+            log.info("sending email to "+eXoIdentity.getProfile().getEmail()+" role "+manager.getRoleLabel());
+            message = new Message();
+            message.setTo(eXoIdentity.getProfile().getEmail());
+            message.setSubject("new message from referral program");
+            message.setBody(body);
+            message.setMimeType("text/html");
+            try {
+              this.exoMailService.sendMessage(message);
+            } catch (Exception e) {
+              log.error("cannot send referral email "+e.getMessage());
+            }
+          }
+        }
+      }
+    }
+  }
 }

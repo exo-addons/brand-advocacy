@@ -104,4 +104,9 @@ public class JuZBackEndApplication {
   public Response loadConfirmPopupContent(String action,String id,String msg){
     return confirmpopupTpl.with().set("action",action).set("id",id).set("msg",msg).ok();
   }
+  @Ajax
+  @Resource
+  public void sendNotifUpdateMissionParticipantEmail(String missionParticipantId){
+    this.jcrService.sendNotifUpdateMissionParticipantEmail(missionParticipantId);
+  }
 }

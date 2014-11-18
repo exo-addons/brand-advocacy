@@ -41,4 +41,68 @@
       </init-params>
     </component-plugin>
   </external-component-plugins>
+
+  <!--external-component-plugins>
+    <target-component>org.exoplatform.services.organization.OrganizationService</target-component>
+    <component-plugin>
+      <name>init.service.listener</name>
+      <set-method>addListenerPlugin</set-method>
+      <type>org.gatein.portal.installer.SetupOrganizationDatabaseInitializer</type>
+      <description>this listener populate organization data for the first launch</description>
+      <init-params>
+        <value-param>
+          <name>checkDatabaseAlgorithm</name>
+          <description>check database</description>
+          <value>entry</value>
+        </value-param>
+        <value-param>
+          <name>printInformation</name>
+          <description>Print information init database</description>
+          <value>false</value>
+        </value-param>
+        <object-param>
+          <name>configuration</name>
+          <description>description</description>
+          <object type="org.exoplatform.services.organization.OrganizationConfig">
+            <field name="group">
+            <collection type="java.util.ArrayList">
+            <value>
+              <object type="org.exoplatform.services.organization.OrganizationConfig$Group">
+                <field name="name">
+                  <string>brandadvocacy</string>
+                </field>
+                <field name="parentId">
+                  <string>organization</string>
+                </field>
+                <field name="description">
+                  <string>the /organization/brandadvocacy group</string>
+                </field>
+                <field name="label">
+                  <string>Brand Advocacy</string>
+                </field>
+              </object>
+            </value>
+            </collection>
+            </field>
+          </object>
+        </object-param>
+      </init-params>
+    </component-plugin>
+  </external-component-plugins-->
+
+  <external-component-plugins>
+    <target-component>org.exoplatform.platform.common.service.MenuConfiguratorService</target-component>
+    <component-plugin>
+      <name>Weemo MenuConfigurationService Plugin</name>
+      <set-method>addNavigation</set-method>
+      <type>org.exoplatform.platform.common.service.plugin.MenuConfiguratorAddNodePlugin</type>
+      <init-params>
+        <value-param>
+          <name>extended.setup.navigation.file</name>
+          <value>war:/conf/brandadvocacy/setup-navigation.xml</value>
+        </value-param>
+      </init-params>
+    </component-plugin>
+  </external-component-plugins>
+
 </configuration>

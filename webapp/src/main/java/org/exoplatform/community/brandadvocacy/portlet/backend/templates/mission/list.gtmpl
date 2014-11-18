@@ -36,7 +36,7 @@ import org.apache.commons.lang.StringEscapeUtils;
             <tr id="mLine-<%=mid%>">
                 <td><a href="#" class="load-edit-mission-form" data-missionId="<%=mid%>"><%=StringEscapeUtils.escapeHtml(mission.getTitle())%></a></td>
                 <td class="center">
-                    <input type="text" <%if(!strActiveVal){%> readonly <%}%> name="priority" id="priority"  class="brad-mission-priority" value="<%=mission.getPriority()%>" data-val="<%=mission.getPriority()%>" data-missionId="<%=mid%>"  />
+                    <input type="text" <%if(!strActiveVal){%> readonly <%}%> name="priority" id="priority"  class="brad-mission-priority" value="<%=mission.getPriority()%>" data-val="<%=mission.getPriority()%>" data-missionId="<%=mid%>" maxlength="3"  />
                 </td>
                 <td><a href="<%= StringEscapeUtils.escapeHtml(mission.getThird_part_link())%>" target="_blank"><%= StringEscapeUtils.escapeHtml(mission.getThird_part_link())%></a></td>
                 <td class="center">

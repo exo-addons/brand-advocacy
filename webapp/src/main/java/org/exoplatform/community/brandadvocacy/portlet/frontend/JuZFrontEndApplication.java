@@ -310,5 +310,19 @@ public class JuZFrontEndApplication {
     return null;
 
   }
+  @Ajax
+  @Resource
+  public Response sendNotifEmail(){
+    if (this.jcrService.sendNotifNewMissionParticipant(this.currentMissionParticipantId))
+      return Response.ok("ok");
+    return Response.ok("nok");
+  }
+  @Ajax
+  @Resource
+  public Response sendNotifAlmostMissionDoneEmail(){
+    if (this.jcrService.sendNotifAlmostMissionDoneEmail(this.currentProgramId,this.remoteUserName))
+      return Response.ok("ok");
+    return Response.ok("nok");
+  }
 
 }

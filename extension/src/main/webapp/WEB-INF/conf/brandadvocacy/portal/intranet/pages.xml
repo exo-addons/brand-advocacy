@@ -7,7 +7,7 @@
   <page>
     <name>brand-advocacy</name>
     <title>Referral Program</title>
-    <access-permissions>*:/platform/users</access-permissions>
+      <access-permissions>*:/platform/administrators</access-permissions>
     <edit-permission>*:/platform/administrators</edit-permission>
     <show-max-window>false</show-max-window>
     <portlet-application>
@@ -15,7 +15,7 @@
           <application-ref>brand-advocacy-webapp</application-ref>
           <portlet-ref>JuzBrandAdvocacyBackendPortlet</portlet-ref>
        </portlet>
-       <access-permissions>Everyone</access-permissions>
+      <access-permissions>*:/platform/administrators</access-permissions>
        <show-info-bar>false</show-info-bar>
     </portlet-application>
   </page>
