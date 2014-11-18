@@ -11,6 +11,7 @@
   var _currentMissionId;
   var _managerBradList2BeAdded;
   var _textAreaContentId;
+  var _MissionPriorityEventTimeout;
   var brandAdvBackend = {};
 
   var _menuStyleController = function(action){
@@ -804,14 +805,13 @@
       e.preventDefault();
     });
   };
-  var _MissionPriorityEventTimeout;
   var _preSetMissionPriorityTimeout = function(missionId,priority){
     if(typeof missionId != "undefined" && typeof priority != "undefined"){
       _MissionPriorityEventTimeout = setTimeout(function(){
         if(priority > 0 && priority <= 100){
           _updateMissionPriority(missionId,priority);
         }
-      },1000);
+      },2000);
     }
   };
   var _addEvent2InputTextMissionPriority = function(){

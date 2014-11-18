@@ -151,7 +151,6 @@ public class JuZFrontEndApplication {
   @Resource
   public Response.Content loadIndexView(){
     //if (this.isFinished)
-    this.init();
     if (null != this.currentProgramId)
       return indexTpl.ok();
     else
@@ -167,6 +166,7 @@ public class JuZFrontEndApplication {
   @Ajax
   @Resource
   public Response.Content loadStartView(){
+    this.init();
     if(null == this.currentMissionId || null == this.currentPropositionId){
       return Response.ok("We are preparing next mission, please come back later");
     }

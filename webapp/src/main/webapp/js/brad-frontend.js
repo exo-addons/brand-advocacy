@@ -26,6 +26,12 @@
     }
     return true;
   };
+  var _displayLoading = function(){
+    _ftStepContainer.html('We are searching a mission for you ...');
+  };
+  var _displayProcessing = function(){
+    _ftStepContainer.html('Processing ...');
+  };
   var _validateTerminateForm = function(){
     if($("#brad_participant_url_submitted").val().length < 1) {
       return false;
@@ -45,6 +51,7 @@
     return true;
   };
   var _loadTerminateView = function(){
+    _displayProcessing();
     $(".jz").jzAjax("JuZFrontEndApplication.loadTerminateView()",{
       success: function(data){
         if(typeof data == "string" && data != "nok"){
@@ -57,6 +64,7 @@
     });
   };
   var _loadStartView = function () {
+    _displayLoading();
     $(".jz").jzAjax("JuZFrontEndApplication.loadStartView()",{
      success:function(data){
        _ftStepContainer.html(data);
@@ -65,6 +73,7 @@
   };
   // for old logic: load current mission for participant
   var _initView = function(){
+    _displayLoading();
     $(".jz").jzAjax("JuZFrontEndApplication.initView()", {
       success: function (data) {
         _ftStepContainer.html(data);
@@ -100,6 +109,7 @@
   var _addEventToBtnStart = function(){
     $(document).on('click.juzbrad.ft.start.view','.btn-brad-start',function(e){
       var jStart = $(this);
+      _displayProcessing();
       jStart.jzAjax("JuZFrontEndApplication.loadProcessView()",{
         success: function(data){
           if(typeof data == "string" && data != "nok")
