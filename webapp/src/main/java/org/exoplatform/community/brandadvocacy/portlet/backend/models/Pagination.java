@@ -58,15 +58,6 @@ public class Pagination {
     double lastPage = this.getTotalPages();
     strPagignation.append("<div class=\"pagination uiPageIterator\">");
     if (lastPage > 1){
-/*
-      <li class="disabled"><a data-placement="bottom" rel="tooltip" data-original-title="Previous Page"><i class="uiIconPrevArrow"></i></a></li>
-      <li class="active"><a href="">1</a></li>
-      <li><a href="">2</a></li>
-      <li><a href="">3</a></li>
-      <li class="disabled"><a href="#">...</a></li>
-      <li><a href="">20</a></li>
-      <li><a data-placement="bottom" rel="tooltip" href="" data-original-title="Next Page"><i class="uiIconNextArrow"></i></a></li>
-*/
 
       strPagignation.append("<ul>");
       for (int i=1;i<=lastPage;i++){

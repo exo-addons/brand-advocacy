@@ -202,17 +202,16 @@ public class MissionController {
           for (Mission m:missions){
             totalPrio +=(int)m.getPriority();
           }
-          if (prio+totalPrio > 100){
-            return Response.ok("priority must be inferior to 100");
-          }else{
-            mission.setPriority(prio);
-            if(null != this.missionService.updateMission(mission)){
+          mission.setPriority(prio);
+          if(null != this.missionService.updateMission(mission)){
+            if (prio+totalPrio > 100){
+              return Response.ok("Mission has been updated, total priority should be inferior to 100");
+            }else
               return Response.ok("Mission has been updated");
-            }else{
-              return Response.ok("Something went wrong, cannot update mission");
-            }
+          }else{
+            return Response.ok("Something went wrong, cannot update mission");
           }
-        }
+       }
         else{
           return Response.ok("Mission no longer exist");
         }

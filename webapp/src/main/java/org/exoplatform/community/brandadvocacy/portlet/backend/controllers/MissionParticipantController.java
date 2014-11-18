@@ -24,7 +24,7 @@ import java.util.List;
 @SessionScoped
 public class MissionParticipantController {
 
-  final static int NUMBER_RECORDS = 10;
+  final static int NUMBER_RECORDS = 5;
   OrganizationService organizationService;
   IdentityManager identityManager;
   IService missionParticipantService;

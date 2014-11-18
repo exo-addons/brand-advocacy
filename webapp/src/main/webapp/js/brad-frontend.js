@@ -24,6 +24,7 @@
     {
       return false;
     }
+    return true;
   };
   var _validateTerminateForm = function(){
     if($("#brad_participant_url_submitted").val().length < 1) {
@@ -32,15 +33,13 @@
       return false;
     } else if($("#brad-participant-lname").val().length < 1) {
       return false;
-    } else if($("#brad-participant-address").val()) {
+    } else if($("#brad-participant-address").val().length < 1 ) {
       return false;
     } else if($("#brad-participant-city").val().length < 1) {
       return false;
     } else if(!_validatePhoneNumber($("#brad-participant-phone").val())) {
       return false;
     } else if($("#brad-participant-country").val().length < 1) {
-      return false;
-    } else if($("#brad-participant-size").val().length < 1) {
       return false;
     }
     return true;

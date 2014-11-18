@@ -959,7 +959,7 @@
 
   var _addEvent2LinkPageSearchMissionParticipant = function(){
     $(document).on('click.juzBrad.bk.searchMissionParticipant.page','li.search-mission-participant-page',function(e){
-      var searchForm = $(this).parent('.uiSearchInput');
+      var searchForm = $('.uiSearchInput');
       var keyword = searchForm.find(':text').val();
       var statusFilter = searchForm.find('select').val();
       var page = $(this).attr('data-page');
