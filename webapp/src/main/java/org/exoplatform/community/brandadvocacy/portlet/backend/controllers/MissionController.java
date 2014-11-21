@@ -81,15 +81,15 @@ public class MissionController {
     for (Mission mission:missions){
       missionDTO = new MissionDTO(mission.getProgramId(),mission.getId(),mission.getTitle(),mission.getPriority(),mission.getThird_part_link(),mission.getActive());
       missionDTO.setPropositions(this.missionService.getAllPropositions(mission.getId(),true));
-      missionDTOs.add(missionDTO);
       if (mission.getActive()){
         totalPriority +=(int)mission.getPriority();
       }
+      missionDTOs.add(missionDTO);
     }
     if (totalPriority > 100){
       alertPriority = "attention, the total priority is exceeded";
     }
-    return listTpl.with().set("priorities", Priority.values()).set("missions",missionDTOs).set("alertPriority",alertPriority).ok();
+    return listTpl.with().set("priorities", Priority.values()).set("missions",missionDTOs).set("alertPriority",alertPriority).set("totalPriority",totalPriority).ok();
   }
 
   @Ajax
@@ -154,22 +154,6 @@ public class MissionController {
       }
       if (doUpdate){
         mission = this.missionService.updateMission(mission);
-        if(null != mission){
-          if(!mission.getActive()){
-            errorMsg = "readonly";
-          }
-          List<Mission> missions = this.missionService.getAllMissionsByProgramId(this.loginController.getCurrentProgramId(),true);
-          if (null != missions){
-            int totalPrio = 0;
-            for (Mission m:missions){
-              totalPrio +=(int)m.getPriority();
-            }
-            if (totalPrio > 100){
-              error = true;
-              errorMsg = "mission-prio-exceeded";
-            }
-          }
-        }
       }else {
         errorMsg = "You cannot activate this mission, as there is no proposition";
         error = true;
@@ -196,28 +180,17 @@ public class MissionController {
     if (null != mission){
       int prio = Integer.parseInt(priority);
       if (mission.getPriority() != prio){
-        List<Mission> missions = this.missionService.getAllMissionsByProgramId(this.loginController.getCurrentProgramId(),true);
-        if (null != missions){
-          int totalPrio = 0;
-          for (Mission m:missions){
-            totalPrio +=(int)m.getPriority();
-          }
           mission.setPriority(prio);
           if(null != this.missionService.updateMission(mission)){
-            if (prio+totalPrio > 100){
-              return Response.ok("Mission has been updated, total priority should be inferior to 100");
-            }else
-              return Response.ok("Mission has been updated");
+              return Response.ok("Priority has been updated");
           }else{
-            return Response.ok("Something went wrong, cannot update mission");
+            return Response.ok("Something went wrong, cannot update priority");
           }
-       }
-        else{
-          return Response.ok("Mission no longer exist");
-        }
-      }
+      }else
+        return Response.ok("Priority has been updated");
+    }else{
+      return Response.ok("Mission no longer exist");
     }
-    return Response.ok("ok");
   }
 }
 

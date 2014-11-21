@@ -5,6 +5,7 @@
 
   var _ftStepContainer;
   var _isValidTweetMsg;
+  var _msgError;
   var bradObj = {};
 
   var _checkFtForm = function(missionId, propositionId ){
@@ -19,12 +20,23 @@
     return res;
   };
   var _validatePhoneNumber = function(phone){
-      intRegex = /[0-9 -()+]+$/;
+    intRegex = /[0-9 -()+]+$/;
     if((phone.length < 6) || (!intRegex.test(phone)))
     {
       return false;
     }
     return true;
+  };
+  var _validateUrlFormat = function(uri) {
+    var urlPattern = /(http|ftp|https):\/\/[\w-]+(\.[\w-]+)+([\w.,@?^=%&amp;:\/~+#-]*[\w@?^=%&amp;\/~+#-])?/;
+
+    if (urlPattern.test(uri)) {
+      // Successful match
+      return true;
+    } else {
+      return false;
+      // Match attempt failed
+    }
   };
   var _displayLoading = function(){
     _ftStepContainer.html('We are searching a mission for you ...');
@@ -33,22 +45,83 @@
     _ftStepContainer.html('Processing ...');
   };
   var _validateTerminateForm = function(){
-    if($("#brad_participant_url_submitted").val().length < 1) {
-      return false;
-    } else if($("#brad-participant-fname").val().length < 1) {
-      return false;
-    } else if($("#brad-participant-lname").val().length < 1) {
-      return false;
-    } else if($("#brad-participant-address").val().length < 1 ) {
-      return false;
-    } else if($("#brad-participant-city").val().length < 1) {
-      return false;
-    } else if(!_validatePhoneNumber($("#brad-participant-phone").val())) {
-      return false;
-    } else if($("#brad-participant-country").val().length < 1) {
-      return false;
+    _msgError = "";
+    var urlDOM = $("#brad_participant_url_submitted");
+    var fNameDOM = $("#brad-participant-fname");
+    var lNameDOM = $("#brad-participant-lname");
+    var adrsDOM  =  $("#brad-participant-address");
+    var phoneDOM = $("#brad-participant-phone");
+    var cityDOM = $("#brad-participant-city");
+    var errorClass = 'error';
+
+    var urlParent = urlDOM.closest('.control-group');
+    urlParent.removeClass(errorClass);
+    var fNameParent = fNameDOM.closest('.control-group');
+    fNameParent.removeClass(errorClass);
+    var lNameParent = lNameDOM.closest('.control-group');
+    lNameParent.removeClass(errorClass);
+    var adrsParent = adrsDOM.closest('.control-group');
+    adrsParent.removeClass(errorClass);
+    var phoneParent = phoneDOM.closest('.control-group')
+    phoneParent.removeClass(errorClass);
+    var cityParent = cityDOM.closest('.control-group')
+    cityParent.removeClass(errorClass);
+
+    if(urlDOM.val().length < 1 || !_validateUrlFormat(urlDOM.val())) {
+      _msgError += "Please fill-in the correct url\n";
+      urlParent.addClass(errorClass);
     }
-    return true;
+    if(fNameDOM.val().length < 1) {
+      _msgError += "Please fill-in your first name\n";
+      fNameParent.addClass(errorClass);
+    }
+    if(lNameDOM.val().length < 1) {
+      _msgError += "Please fill-in your last name\n";
+      lNameParent.addClass(errorClass);
+    }
+    if(adrsDOM.val().length < 1 ) {
+      _msgError += "Please fill-in your address\n";
+      adrsParent.addClass(errorClass);
+    }
+    if(cityDOM.val().length < 1) {
+      _msgError += "Please fill-in your city\n";
+      cityParent.addClass(errorClass);
+    }
+    if(!_validatePhoneNumber(phoneDOM.val())) {
+      _msgError += "Please fill-in correct the phone\n";
+      phoneParent.addClass(errorClass);
+    }
+    if($("#brad-participant-country").val().length < 1) {
+      _msgError += "Please select your country\n";
+    }
+    return _msgError;
+  };
+  var _loadDiscoveryView = function(){
+    $(".jz").jzAjax("JuZFrontEndApplication.loadDiscoveryView()",{
+      success: function(data){
+        if(typeof data == "string" && data != "nok"){
+          $("#brad-ft-container").html(data);
+          $(window).scroll(function (event) {
+            var scroll = $(window).scrollTop();
+            if(scroll > 45) {
+              $(".tweetPopup").addClass('scroll-down');
+            } else {
+              $(".tweetPopup").removeClass('scroll-down');
+            }
+          });
+        }
+        else
+          $("#brad-ft-container").html("something went wrong, please retry it later");
+      }
+    });
+  };
+  var _loadStartView = function () {
+    _displayLoading();
+    $(".jz").jzAjax("JuZFrontEndApplication.loadStartView()",{
+      success:function(data){
+        _ftStepContainer.html(data);
+      }
+    });
   };
   var _loadTerminateView = function(){
     _displayProcessing();
@@ -63,14 +136,7 @@
       }
     });
   };
-  var _loadStartView = function () {
-    _displayLoading();
-    $(".jz").jzAjax("JuZFrontEndApplication.loadStartView()",{
-     success:function(data){
-       _ftStepContainer.html(data);
-     }
-    });
-  };
+
   // for old logic: load current mission for participant
   var _initView = function(){
     _displayLoading();
@@ -87,6 +153,7 @@
       var jDiscovery = $(this);
       jDiscovery.jzAjax("JuZFrontEndApplication.loadStepContainerView()", {
         success: function (data) {
+//          $("#brad-ft-container").fadeIn('1000');
           $("#brad-ft-container").html(data);
           _ftStepContainer = $(".brad-container-step-container");
           _loadStartView();
@@ -97,12 +164,8 @@
 
   var _addEventToBtnClose = function(){
     $(document).on('click.juzbrad.ft.index.view','.btn-brad-close',function(){
-      var jClose = $(this);
-      jClose.jzAjax("JuZFrontEndApplication.loadIndexView()",{
-        success: function(data){
-          $("#brad-ft-container").html(data);
-        }
-      });
+      $(".tweetPopup").removeClass('scroll-down');
+      _loadDiscoveryView();
     });
   };
 
@@ -111,10 +174,11 @@
       _displayProcessing();
       $('.jz').jzAjax("JuZFrontEndApplication.loadProcessView()",{
         success: function(data){
-          if(typeof data == "string" && data != "nok")
+          if(typeof data == "string" && data != "nok"){
             _ftStepContainer.html(data);
+          }
           else
-            _ftStepContainer.html("something went wrong !!!, please try later");
+          _ftStepContainer.html("something went wrong !!!, please try later");
         }
       });
     });
@@ -153,7 +217,7 @@
 
   var _addEventToBtnTerminate = function(){
     $(document).on('click.juzbrad.ft.terminate.view','.btn-brad-terminate',function(){
-      if(_validateTerminateForm()){
+      if(_validateTerminateForm().length == 0){
         var jTerminate = $(this);
         var url = $("#brad_participant_url_submitted").val();
         var fname = $("#brad-participant-fname").val();
@@ -169,6 +233,7 @@
             if(typeof data == "string" && data != "nok"){
               _ftStepContainer.html(data);
               _tweetController();
+              _addFocusEvent2Input();
               _sendNotifNewMissionParticipant();
             }
             else{
@@ -178,7 +243,7 @@
           }
         });
       }else{
-        alert('Please fill all informations!')
+        alert(_msgError);
       }
     });
   };
@@ -224,9 +289,9 @@
         return;
       }
       var tweetMessage = '';
-      var defaultTweetMsg = "I just downloaded @eXoPlatform, Check it out!";
+      var defaultTweetMsg = "I just won a free t-shirt from @eXoPlatform on ";
       var textareaMessage = $("#txt-brad-tweet").val();
-      var strTweet = "http://twitter.com/share?url=http://bit.ly/1jBHRA6&hashtags=oss,esn&text=";
+      var strTweet = "http://twitter.com/share?url=http://community.exoplatform.com&hashtags=ILOVEMYESN&text=";
 
       if(textareaMessage.length > 0)  {
         tweetMessage = strTweet + encodeURI(textareaMessage);
@@ -251,9 +316,12 @@
       return false;
     });
   };
-
+  var _addFocusEvent2Input = function(){
+    $("#txt-brad-tweet").focus(function() { $(this).select(); } );
+  };
   bradObj.init = function(){
     _isValidTweetMsg = true;
+    _loadDiscoveryView();
     _addEventToBtnDiscovery();
     _addEventToBtnStart();
     _addEventToBtnDone();

@@ -1,4 +1,5 @@
 .referral-porlet {
+    position: relative;
     padding: 20px;
 }
 .referral-porlet .addNewProposition textarea {
@@ -17,4 +18,27 @@
 .referral-porlet .ref-detail-user .ref-user-name {
     margin-top: 0;
     color: #2f5e92;
+}
+.referral-porlet .alert-float {
+    left: 50%;
+    position: absolute;
+    top: 0;
+    -webkit-transform: translate(-50%, 0);
+    -moz-transform: translate(-50%, 0);
+    -ms-transform: translate(-50%, 0);
+    -o-transform: translate(-50%, 0);
+    transform: translate(-50%, 0);
+}
+.referral-porlet .exo-mentions .replaceTextArea {
+    height: 24px;
+    padding: 5px;
+}
+.referral-tab-group .tab-content {
+    overflow: visible;
+}
+.ajaxLoadingMask .uiIconWhite:hover {
+    background-image: url("/brand-advocacy-webapp/img/uiIconsWhite.png") !important;
+}
+.referral-porlet .table a{
+    word-break: break-all;
 }

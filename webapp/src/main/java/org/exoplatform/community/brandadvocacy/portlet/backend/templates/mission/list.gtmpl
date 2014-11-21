@@ -1,5 +1,6 @@
 #{param name=missions/}
 #{param name=alertPriority/}
+#{param name=totalPriority/}
 <%
 import org.apache.commons.lang.StringEscapeUtils;
 %>
@@ -19,6 +20,7 @@ import org.apache.commons.lang.StringEscapeUtils;
                 <th class="center" style="width: 65px;">Priority</th>
                 <th>Link</th>
                 <th class="center" style="width: 65px;">Status</th>
+                <th class="center" style="width: 65px;">Probability</th>
                 <th class="center actionContainer" style="width: 65px;">Action</th>
             </tr>
         </thead>
@@ -36,13 +38,16 @@ import org.apache.commons.lang.StringEscapeUtils;
             <tr id="mLine-<%=mid%>">
                 <td><a href="#" class="load-edit-mission-form" data-missionId="<%=mid%>"><%=StringEscapeUtils.escapeHtml(mission.getTitle())%></a></td>
                 <td class="center">
-                    <input type="text" <%if(!strActiveVal){%> readonly <%}%> name="priority" id="priority"  class="brad-mission-priority" value="<%=mission.getPriority()%>" data-val="<%=mission.getPriority()%>" data-missionId="<%=mid%>" maxlength="3"  />
+                    <input type="text" <%if(!strActiveVal){%> readonly <%}%> name="priority"  class="brad-mission-priority input-small" value="<%=mission.getPriority()%>" data-val="<%=mission.getPriority()%>" data-missionId="<%=mid%>" maxlength="3"  />
                 </td>
                 <td><a href="<%= StringEscapeUtils.escapeHtml(mission.getThird_part_link())%>" target="_blank"><%= StringEscapeUtils.escapeHtml(mission.getThird_part_link())%></a></td>
                 <td class="center">
                     <div class="spaceIphoneChkBox">
                         <input type="checkbox" name="active" value="<%= strActiveVal%>" style="visibility: hidden;" <%=strActiveChkbox %> data-action="updateMissionInline" data-missionId="<%=mid%>" <% if (!mission.canActivate()){ %> disabled <% } %> data-role/>
                     </div>
+                </td>
+                <td class="center">
+                    <%= mission.getProbability(totalPriority)%>
                 </td>
                 <td class="center actionContainer">
                     <a href="#" data-original-title="Edit" class="actionIcon load-edit-mission-form" data-missionId="<%=mid%>" rel="tooltip" data-placement="bottom">

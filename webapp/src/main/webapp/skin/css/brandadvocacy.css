@@ -8,6 +8,11 @@
 .UIWorkingWorkspace {
     z-index: 1!important;
 }
+/* Fix z-index for Top-Bar*/
+.UIToolbarContainerDark .NormalContainerBlock .ToolbarContainer {
+    z-index: 4;
+    position: relative;
+}
 /* Tweet Popup */
 .LightBoxContainer.tweetPopup {
     font-size: 14px;
@@ -20,8 +25,12 @@
     bottom: 0;
     color: #fff;
     width: 265px;
-    padding: 20px;
-    z-index: 2000;
+    padding: 60px 20px 20px;
+    z-index: 2;
+    -webkit-transition: padding 200ms ease-in;
+    -moz-transition: padding 200ms ease-in;
+    -o-transition: padding 200ms ease-in;
+    transition: padding 200ms ease-in;
 }
 .LightBoxContainer.tweetPopup .closepopup {
     background-color: #474747;
@@ -31,16 +40,17 @@
     position: absolute;
     right: 0;
     text-align: center;
-    top: 0;
+    top: 41px;
     width: 27px;
 }
 .LightBoxContainer.tweetPopup .closepopup:hover .uiIconWhite,
 .LightBoxContainer.tweetPopup .closepopup .uiIconWhite:hover {
-    background-image: url("/brand-advocacy-webapp/img/uiIconsWhite.png") !important;
+    background-image: url("/eXoResources/skin/images/Icons/uiIconsWhite.png") !important;
 }
 .LightBoxContainer.tweetPopup .BgContent {
     background: none;
     padding: 0;
+    position: static;
 }
 .LightBoxContainer.tweetPopup .introBox > h3 {
     margin: 30px 0 45px;
@@ -159,6 +169,13 @@
     text-align: left;
     color: #fff;
 }
+.LightBoxContainer.tweetPopup .tweetAddrForm .help-block,
+.LightBoxContainer.tweetPopup .tweetAddrForm .help-inline {
+    text-align: left;
+    margin: 5px 0 0;
+    font-size: 13px;
+    color: #fff;
+}
 .LightBoxContainer.tweetPopup .tweetStepContent {
     padding: 0 23px;
 }
@@ -213,6 +230,7 @@
     max-width: 100%;
     min-width: 100%;
     min-height: 123px;
+    resize: none;
 }
 .LightBoxContainer.tweetPopup .tweetStepContent.step-3 .thank-form .btn {
     position: relative;
@@ -226,4 +244,10 @@
     position: relative;
     top: 3px;
     left: -3px;
+}
+.LightBoxContainer.tweetPopup.scroll-down {
+    padding-top: 20px;
+}
+.LightBoxContainer.tweetPopup.scroll-down .closepopup {
+    top: 0;
 }

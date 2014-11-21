@@ -27,13 +27,16 @@ public class EmailService {
   MailService exoMailService;
   final String email_gift_shipped_template="/html/email_gift_shipped_template.html";
   final String email_thankyou_template="/html/email_thankyou_template.html";
+  final String email_mission_failed_template="/html/email_mission_failed_template.html";
   String remoteUrl = "";
+  String senderEmail;
   private static final Log log = ExoLogger.getLogger(EmailService.class);
 
   public EmailService(IService iService,IdentityManager identityManager,MailService mailService){
     this.iService = iService;
     this.identityManager = identityManager;
     this.exoMailService = mailService;
+    this.senderEmail = "community@exoplatform.com";
     this.remoteUrl = System.getProperty("EXO_DEPLOYMENT_URL");
     if(null == remoteUrl || "".equals(remoteUrl)){
       remoteUrl = "http://community.exoplatform.com";
@@ -42,12 +45,11 @@ public class EmailService {
 
   private String getBodyByTemplate(String fileTemplate, Map<String, String> templateProperties) {
     InputStream is = this.getClass().getResourceAsStream(fileTemplate);
-    String body;
+    String body = null;
     try {
       body = resolveTemplate(is, templateProperties);
     } catch (FileNotFoundException ex) {
       ex.printStackTrace();
-      body = "";
     }
     return body;
   }
@@ -70,64 +72,159 @@ public class EmailService {
     }
     return templateContent;
   }
-  private String generateBodyMissionSubmitted(String missionId){
-    String body = null;
-    Mission mission = this.iService.getMissionById(missionId);
-    if (null != mission){
-      body = "Mission " + mission.getTitle();
-      body +=" has been submitted ";
+  private String generateMissionParticipantUrl(String mpid){
+    return remoteUrl+"/portal/intranet/brand-advocacy/?action=mp_view&id="+mpid;
+  }
+  private Map<String,String> getCommonMisionInfo(Mission mission, MissionParticipant missionParticipant){
+    Map<String,String> infos = null;
+    if (null != mission && null != missionParticipant){
+      infos = new HashMap<String, String>();
+      String username = missionParticipant.getParticipant_username();
+      infos.put("username",username);
+      infos.put("mission_title",mission.getTitle());
+      infos.put("status",missionParticipant.getStatus().getLabel());
+      infos.put("mpid",missionParticipant.getId());
     }
-
-    return body;
+    return infos;
   }
-  private String generateBodyGiftShipped(String fullName){
-    String remoteImgUrl =  remoteUrl;
-    remoteImgUrl+="/brand-advocacy-webapp/img/email";
-    Map<String, String> props = new HashMap<String, String>();
-    props.put("user.name", fullName);
-    props.put("imgUrlBase",remoteImgUrl);
-    return this.getBodyByTemplate(email_gift_shipped_template, props);
-  }
-  private String generateBodyThankyou(String fullName){
-    String remoteImgUrl =  remoteUrl;
-    remoteImgUrl+="/brand-advocacy-webapp/img/email";
-    Map<String, String> props = new HashMap<String, String>();
-    props.put("user.name", fullName);
-    props.put("imgUrlBase",remoteImgUrl);
-    return this.getBodyByTemplate(email_thankyou_template, props);
-  }
-  private String generateBodyMissionParticipantByStatus(Mission mission,MissionParticipant missionParticipant) {
+  private String getCommonBody(Mission mission, MissionParticipant missionParticipant){
     String body = null;
-
-    body = "there is new change on referral program ";
-    body +="view on "+remoteUrl+"/portal/intranet/brand-advocacy?action=mp_view&id="+missionParticipant.getId();
+    Map<String,String> infos = this.getCommonMisionInfo(mission,missionParticipant);
+    if(null != infos){
+      StringBuilder stringBuilder = new StringBuilder("Mission: ").append(infos.get("mission_title"));
+      stringBuilder.append("<br/> Status: ").append(infos.get("status"));
+      stringBuilder.append("<br/> participant: ").append(infos.get("username"));
+      stringBuilder.append("<br/> url: ").append(this.generateMissionParticipantUrl(infos.get("mpid")));
+    }
     return body;
+  }
+  private Map<String,String> pushEmailInfo(String subject, String body){
+    Map<String,String> emailInfo = new HashMap<String, String>();
+    emailInfo.put("subject",subject);
+    emailInfo.put("body",body);
+    return emailInfo;
+  }
+  private Map<String,String> getEmailInfoWait4Validation(Mission mission, MissionParticipant missionParticipant){
+    String subject = "A new mission is waiting for validation";
+    String body = this.getCommonBody(mission,missionParticipant);
+    if (null != body){
+      return this.pushEmailInfo(subject,body);
+    }
+    return null;
+  }
+  private Map<String,String> getEmailInfoWait4Shipping(Mission mission, MissionParticipant missionParticipant){
+    String subject = "A mission has been validated and waiting for shipment";
+    String body = this.getCommonBody(mission,missionParticipant);
+    if (null != body){
+      return this.pushEmailInfo(subject,body);
+    }
+    return null;
+  }
+  private Map<String,String> getEmailInfoRejected(Mission mission, MissionParticipant missionParticipant){
+    String subject = "A mission has been rejected";
+    String body = this.getCommonBody(mission,missionParticipant);
+    if (null != body){
+      return this.pushEmailInfo(subject,body);
+    }
+    return null;
+
+  }
+  private Map<String,String> getEmailInfoAllCompleted(){
+    String subject = "All missions have been completed once";
+    String body = "You might want to add new mission : link to mission tab ";
+    body +=remoteUrl+"/portal/intranet/brand-advocacy/missions";
+    return this.pushEmailInfo(subject,body);
+  }
+  private Map<String,String> generateAdminEmailInfoByStatus(Mission mission, MissionParticipant missionParticipant){
+
+    if (Status.WAITING_FOR_VALIDATE.getLabel().equals(missionParticipant.getStatus().getLabel())){
+      return this.getEmailInfoWait4Validation(mission, missionParticipant);
+    }else if (Status.VALIDATED.getLabel().equals(missionParticipant.getStatus().getLabel())){
+      return this.getEmailInfoWait4Shipping(mission, missionParticipant);
+    }else if (Status.REJECTED.getLabel().equals(missionParticipant.getStatus().getLabel())){
+      return this.getEmailInfoRejected(mission, missionParticipant);
+    }
+    return null;
+  }
+
+  private Map<String,String> getEmailInfoGiftShipped(Program program,Identity identity){
+    String subject = "Your eXo t-shirt has been shipped !";
+    String remoteImgUrl =  remoteUrl;
+    remoteImgUrl+="/brand-advocacy-webapp/img/email";
+    Map<String, String> props = new HashMap<String, String>();
+    props.put("user.name", identity.getProfile().getFullName());
+    props.put("imgUrlBase",remoteImgUrl);
+    props.put("program.title",program.getTitle());
+    String body = this.getBodyByTemplate(email_gift_shipped_template, props);
+    if (null != body){
+      return this.pushEmailInfo(subject,body);
+    }
+    return null;
+  }
+  private Map<String,String> getEmailInfoThankyou(String fullName){
+    String subject = "Mission submitted !";
+    String remoteImgUrl =  remoteUrl;
+    remoteImgUrl+="/brand-advocacy-webapp/img/email";
+    Map<String, String> props = new HashMap<String, String>();
+    props.put("user.name", fullName);
+    props.put("imgUrlBase",remoteImgUrl);
+    String body = this.getBodyByTemplate(email_thankyou_template, props);
+    if (null != body){
+      return this.pushEmailInfo(subject,body);
+    }
+    return null;
+  }
+  private Map<String,String> getEmailInfoMissionFailed(Program program,Identity identity){
+    String  subject = "";
+    String remoteImgUrl =  remoteUrl;
+    remoteImgUrl+="/brand-advocacy-webapp/img/email";
+    Map<String, String> props = new HashMap<String, String>();
+    props.put("user.name", identity.getProfile().getFullName());
+    props.put("imgUrlBase",remoteImgUrl);
+    props.put("program.title",program.getTitle());
+    String body = this.getBodyByTemplate(email_mission_failed_template, props);
+    if (null != body){
+      return this.pushEmailInfo(subject,body);
+    }
+    return null;
+  }
+
+  private Map<String,String> generateParticipantEmailInfoByStatus(Program program, Identity identity,MissionParticipant missionParticipant){
+
+    if(Status.VALIDATED.getLabel().equals(missionParticipant.getStatus().getLabel())){
+      return this.getEmailInfoThankyou(identity.getProfile().getFullName());
+    }else if (Status.SHIPPED.getLabel().equals(missionParticipant.getStatus().getLabel())){
+      return this.getEmailInfoGiftShipped(program,identity);
+    } else if (Status.REJECTED.getLabel().equals(missionParticipant.getStatus().getLabel())){
+      return this.getEmailInfoMissionFailed(program,identity);
+    }
+    return null;
   }
   public void sendNotif2Managers(MissionParticipant missionParticipant){
-
-    if (null != missionParticipant){
-      Mission mission = this.iService.getMissionById(missionParticipant.getMission_id());
-      if (null != mission && mission.getActive()){
+    Mission mission = this.iService.getMissionById(missionParticipant.getMission_id());
+    if (null != mission){
+      Map<String,String> emailInfo = this.generateAdminEmailInfoByStatus(mission, missionParticipant);
+      if (null != emailInfo){
         List<Manager> managers = this.iService.getAllManagersInProgram(mission.getProgramId());
         Identity eXoIdentity;
-        String body = this.generateBodyMissionParticipantByStatus(mission,missionParticipant);
-        if (null != body){
-          Message message;
-          for (Manager manager:managers){
-            if (manager.getNotif() && this.canSend2Manager(manager.getRole(),missionParticipant.getStatus())){
-              eXoIdentity = this.identityManager.getOrCreateIdentity(OrganizationIdentityProvider.NAME, manager.getUserName(), true);
-              if (null != eXoIdentity){
-                log.info("sending email to "+eXoIdentity.getProfile().getEmail()+" role "+manager.getRoleLabel());
-                message = new Message();
-                message.setTo(eXoIdentity.getProfile().getEmail());
-                message.setSubject("new message from referral program");
-                message.setBody(body);
-                message.setMimeType("text/html");
-                try {
-                  this.exoMailService.sendMessage(message);
-                } catch (Exception e) {
-                  log.error("cannot send referral email "+e.getMessage());
-                }
+        Message message;
+        for (Manager manager:managers){
+          if (manager.getNotif() && this.canSend2Manager(manager.getRole(),missionParticipant.getStatus())){
+            eXoIdentity = this.identityManager.getOrCreateIdentity(OrganizationIdentityProvider.NAME, manager.getUserName(), true);
+            if (null != eXoIdentity){
+              log.info("sending email "+eXoIdentity.getProfile().getEmail()+" role "+manager.getRoleLabel()+" subject"+emailInfo.get("subject"));
+              message = new Message();
+              message.setFrom(this.senderEmail);
+              message.setTo(eXoIdentity.getProfile().getEmail());
+              message.setSubject(emailInfo.get("subject"));
+              message.setBody(emailInfo.get("body"));
+              message.setMimeType("text/html");
+              try {
+                log.info(" subject = "+emailInfo.get("subject"));
+                log.info(" body = "+emailInfo.get("body"));
+                this.exoMailService.sendMessage(message);
+              } catch (Exception e) {
+                log.error("cannot send referral email "+e.getMessage());
               }
             }
           }
@@ -138,30 +235,30 @@ public class EmailService {
 
   public void sendNotif2Participant(MissionParticipant missionParticipant){
     if (null != missionParticipant){
-      String subjectSending = this.canSend2Participant(missionParticipant.getStatus().getValue());
-      if (null != subjectSending){
-        String participantId = missionParticipant.getParticipant_username();
-        Identity identity = identityManager.getOrCreateIdentity(OrganizationIdentityProvider.NAME,participantId,true);
-        if (null != identity){
-          String subject="Referral Program";
-          String body = "";
-          if (subjectSending.equals(Status.VALIDATED.getLabel())){
-            subject = "Your mission has beed validated";
-            body = this.generateBodyThankyou(identity.getProfile().getFullName());
-          }else if (subjectSending.equals(Status.SHIPPED.getLabel())){
-            subject= "Your eXo t-shirt has been shipped !";
-            body = this.generateBodyGiftShipped(identity.getProfile().getFullName());
-          }
-          log.info("sending email to participant "+participantId);
-          Message message = new Message();
-          message.setTo(identity.getProfile().getEmail());
-          message.setSubject(subject);
-          message.setBody(body);
-          message.setMimeType("text/html");
-          try {
-            this.exoMailService.sendMessage(message);
-          } catch (Exception e) {
-            log.error("cannot send referral email "+e.getMessage());
+      Mission mission = this.iService.getMissionById(missionParticipant.getMission_id());
+      if (null != mission){
+        Program program = this.iService.getProgramById(mission.getProgramId());
+        if (null != program){
+          String participantId = missionParticipant.getParticipant_username();
+          Identity identity = identityManager.getOrCreateIdentity(OrganizationIdentityProvider.NAME,participantId,true);
+          if (null != identity){
+            Map<String,String> emailInfo = this.generateParticipantEmailInfoByStatus(program,identity,missionParticipant);
+            if (null != emailInfo){
+              log.info("sending email to participant "+participantId);
+              Message message = new Message();
+              message.setFrom(this.senderEmail);
+              message.setTo(identity.getProfile().getEmail());
+              message.setSubject(emailInfo.get("subject"));
+              message.setBody(emailInfo.get("body"));
+              message.setMimeType("text/html");
+              try {
+                log.info(" subject = "+emailInfo.get("subject"));
+                log.info(" body = "+emailInfo.get("body"));
+                this.exoMailService.sendMessage(message);
+              } catch (Exception e) {
+                log.error("cannot send referral email "+e.getMessage());
+              }
+            }
           }
         }
       }
@@ -181,19 +278,11 @@ public class EmailService {
     }
     return false;
   }
-  private String canSend2Participant(int missionParticipantStatus){
-    if (missionParticipantStatus == Status.SHIPPED.getValue()){
-      return Status.SHIPPED.getLabel();
-    }else if (missionParticipantStatus == Status.VALIDATED.getValue()){
-      return Status.VALIDATED.getLabel();
-    }
-    return null;
-  }
   public void sendNotifAlmostMissionDone2Managers(String programId){
     List<Manager> managers = this.iService.getAllManagersInProgram(programId);
     Identity eXoIdentity;
-    String body = "Almost missions have been done, pls create new one";
-    if (null != body){
+    Map<String,String> emailInfo = this.getEmailInfoAllCompleted();
+    if (null != emailInfo){
       Message message;
       for (Manager manager:managers){
         if (manager.getNotif()){
@@ -201,11 +290,14 @@ public class EmailService {
           if (null != eXoIdentity){
             log.info("sending email to "+eXoIdentity.getProfile().getEmail()+" role "+manager.getRoleLabel());
             message = new Message();
+            message.setFrom(this.senderEmail);  
             message.setTo(eXoIdentity.getProfile().getEmail());
-            message.setSubject("new message from referral program");
-            message.setBody(body);
+            message.setSubject(emailInfo.get("subject"));
+            message.setBody(emailInfo.get("body"));
             message.setMimeType("text/html");
             try {
+              log.info(" subject = "+emailInfo.get("subject"));
+              log.info(" body = "+emailInfo.get("body"));
               this.exoMailService.sendMessage(message);
             } catch (Exception e) {
               log.error("cannot send referral email "+e.getMessage());

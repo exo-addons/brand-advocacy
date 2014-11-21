@@ -104,6 +104,13 @@ public class MissionDTO {
       return true;
     return false;
   }
-
+  public String getProbability(int totalPriority) {
+    if(!this.getActive())
+      return "0 %";
+    if (0 == totalPriority)
+      totalPriority = 1;
+    float probab = (float)((this.getPriority()*100)/totalPriority) ;
+    return String.format("%10.2f%n", probab)+" %";
+  }
 
 }

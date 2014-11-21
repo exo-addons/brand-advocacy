@@ -33,6 +33,10 @@ public class JuZFrontEndApplication {
   org.exoplatform.community.brandadvocacy.portlet.frontend.templates.index indexTpl;
 
   @Inject
+  @Path("discovery.gtmpl")
+  org.exoplatform.community.brandadvocacy.portlet.frontend.templates.discovery discoveryTpl;
+
+  @Inject
   @Path("stepContainer.gtmpl")
   org.exoplatform.community.brandadvocacy.portlet.frontend.templates.stepContainer stepContainerTpl;
 
@@ -149,10 +153,10 @@ public class JuZFrontEndApplication {
   }
   @Ajax
   @Resource
-  public Response.Content loadIndexView(){
+  public Response.Content loadDiscoveryView(){
     //if (this.isFinished)
-    if (null != this.currentProgramId)
-      return indexTpl.ok();
+    if (null != this.currentProgramId && null != this.currentMissionId)
+      return discoveryTpl.ok();
     else
       return Response.ok("We are preparing next mission, please come back later");
   }
