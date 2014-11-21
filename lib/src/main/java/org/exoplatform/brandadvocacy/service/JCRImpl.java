@@ -163,17 +163,7 @@ public class JCRImpl implements IService {
   }
 
   @Override
-  public Boolean sendNotifNewMissionParticipant(String missionParticipantId) {
-    MissionParticipant missionParticipant = this.getMissionParticipantDAO().getMissionParticipantById(missionParticipantId);
-    if (null != missionParticipant){
-      this.emailService.sendNotif2Managers(missionParticipant);
-      return true;
-    }
-    return false;
-  }
-
-  @Override
-  public Boolean sendNotifUpdateMissionParticipantEmail(String missionParticipantId) {
+  public Boolean sendNotifMissionParticipantEmail(String missionParticipantId) {
     MissionParticipant missionParticipant = this.getMissionParticipantDAO().getMissionParticipantById(missionParticipantId);
     if (null != missionParticipant){
       this.emailService.sendNotif2Managers(missionParticipant);
@@ -185,13 +175,16 @@ public class JCRImpl implements IService {
 
   @Override
   public Boolean sendNotifAlmostMissionDoneEmail(String programId, String username) {
-    Participant participant = this.getParticipantDAO().getParticipantInProgramByUserName(programId,username);
-    if (null != participant){
-      int nbMissions = this.getMissionDAO().getTotalNumberMissions(programId,true,true,0);
-      if(nbMissions >= participant.getMission_ids().size()){
-        if(nbMissions - participant.getMission_ids().size() <= 3){
-          this.emailService.sendNotifAlmostMissionDone2Managers(programId);
-          return true;
+    Program program = this.getProgramDAO().getProgramById(programId);
+    if (null != program){
+      Participant participant = this.getParticipantDAO().getParticipantInProgramByUserName(programId,username);
+      if (null != participant){
+        int nbMissions = this.getMissionDAO().getTotalNumberMissions(program.getLabelID(),true,true,0);
+        if(nbMissions >= participant.getMission_ids().size()){
+          if(nbMissions - participant.getMission_ids().size() <= 3){
+            this.emailService.sendNotifAlmostMissionDone2Managers(programId);
+            return true;
+          }
         }
       }
     }

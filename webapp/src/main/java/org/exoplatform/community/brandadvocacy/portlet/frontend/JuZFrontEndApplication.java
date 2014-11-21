@@ -154,11 +154,7 @@ public class JuZFrontEndApplication {
   @Ajax
   @Resource
   public Response.Content loadDiscoveryView(){
-    //if (this.isFinished)
-    if (null != this.currentProgramId && null != this.currentMissionId)
-      return discoveryTpl.ok();
-    else
-      return Response.ok("We are preparing next mission, please come back later");
+    return discoveryTpl.ok();
   }
 
   @Ajax
@@ -317,7 +313,7 @@ public class JuZFrontEndApplication {
   @Ajax
   @Resource
   public Response sendNotifEmail(){
-    if (this.jcrService.sendNotifNewMissionParticipant(this.currentMissionParticipantId))
+    if (this.jcrService.sendNotifMissionParticipantEmail(this.currentMissionParticipantId))
       return Response.ok("ok");
     return Response.ok("nok");
   }

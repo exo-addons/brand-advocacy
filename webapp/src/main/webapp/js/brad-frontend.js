@@ -44,6 +44,14 @@
   var _displayProcessing = function(){
     _ftStepContainer.html('Processing ...');
   };
+  var _initTerminateForm = function(){
+
+    $("input:text").click(function(){
+      $(this).closest('.control-group').removeClass('error');
+
+    });
+
+  };
   var _validateTerminateForm = function(){
     _msgError = "";
     var urlDOM = $("#brad_participant_url_submitted");
@@ -130,6 +138,7 @@
         if(typeof data == "string" && data != "nok"){
           _ftStepContainer.html(data);
           _addOptionCountries();
+          _initTerminateForm();
         }
         else
           _ftStepContainer.html("something went wrong, please retry it later");
@@ -317,7 +326,10 @@
     });
   };
   var _addFocusEvent2Input = function(){
-    $("#txt-brad-tweet").focus(function() { $(this).select(); } );
+    $('textarea').on('mouseup', function() {
+      $(this).val('I just won a free t-shirt from @eXoPlatform on http://community.exoplatform.com #ILOVEMYESN');
+      $(this).select();
+    });
   };
   bradObj.init = function(){
     _isValidTweetMsg = true;

@@ -594,6 +594,7 @@
   };
   var _loadPreviousMissionParticipant = function(username){
     _displayLoading(true);
+    $(".previous-mission-participant").html('loading ....');
     $(".previous-mission-participant").jzAjax("MissionParticipantController.getPreviousMissionParticipant()",{
       data:{username:username},
       success:function(data){

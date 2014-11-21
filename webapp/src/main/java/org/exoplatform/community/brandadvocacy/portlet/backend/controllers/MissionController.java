@@ -86,9 +86,9 @@ public class MissionController {
       }
       missionDTOs.add(missionDTO);
     }
-    if (totalPriority > 100){
+/*    if (totalPriority > 100){
       alertPriority = "attention, the total priority is exceeded";
-    }
+    }*/
     return listTpl.with().set("priorities", Priority.values()).set("missions",missionDTOs).set("alertPriority",alertPriority).set("totalPriority",totalPriority).ok();
   }
 

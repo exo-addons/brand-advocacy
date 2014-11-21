@@ -107,6 +107,6 @@ public class JuZBackEndApplication {
   @Ajax
   @Resource
   public void sendNotifUpdateMissionParticipantEmail(String missionParticipantId){
-    this.jcrService.sendNotifUpdateMissionParticipantEmail(missionParticipantId);
+    this.jcrService.sendNotifMissionParticipantEmail(missionParticipantId);
   }
 }

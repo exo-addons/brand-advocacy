@@ -95,6 +95,7 @@ public class EmailService {
       stringBuilder.append("<br/> Status: ").append(infos.get("status"));
       stringBuilder.append("<br/> participant: ").append(infos.get("username"));
       stringBuilder.append("<br/> url: ").append(this.generateMissionParticipantUrl(infos.get("mpid")));
+      body = stringBuilder.toString();
     }
     return body;
   }
@@ -175,7 +176,7 @@ public class EmailService {
     return null;
   }
   private Map<String,String> getEmailInfoMissionFailed(Program program,Identity identity){
-    String  subject = "";
+    String  subject = program.getTitle()+" - Mission failed";
     String remoteImgUrl =  remoteUrl;
     remoteImgUrl+="/brand-advocacy-webapp/img/email";
     Map<String, String> props = new HashMap<String, String>();
@@ -191,7 +192,7 @@ public class EmailService {
 
   private Map<String,String> generateParticipantEmailInfoByStatus(Program program, Identity identity,MissionParticipant missionParticipant){
 
-    if(Status.VALIDATED.getLabel().equals(missionParticipant.getStatus().getLabel())){
+    if(Status.WAITING_FOR_VALIDATE.getLabel().equals(missionParticipant.getStatus().getLabel())){
       return this.getEmailInfoThankyou(identity.getProfile().getFullName());
     }else if (Status.SHIPPED.getLabel().equals(missionParticipant.getStatus().getLabel())){
       return this.getEmailInfoGiftShipped(program,identity);
@@ -235,28 +236,30 @@ public class EmailService {
 
   public void sendNotif2Participant(MissionParticipant missionParticipant){
     if (null != missionParticipant){
-      Mission mission = this.iService.getMissionById(missionParticipant.getMission_id());
-      if (null != mission){
-        Program program = this.iService.getProgramById(mission.getProgramId());
-        if (null != program){
-          String participantId = missionParticipant.getParticipant_username();
-          Identity identity = identityManager.getOrCreateIdentity(OrganizationIdentityProvider.NAME,participantId,true);
-          if (null != identity){
-            Map<String,String> emailInfo = this.generateParticipantEmailInfoByStatus(program,identity,missionParticipant);
-            if (null != emailInfo){
-              log.info("sending email to participant "+participantId);
-              Message message = new Message();
-              message.setFrom(this.senderEmail);
-              message.setTo(identity.getProfile().getEmail());
-              message.setSubject(emailInfo.get("subject"));
-              message.setBody(emailInfo.get("body"));
-              message.setMimeType("text/html");
-              try {
-                log.info(" subject = "+emailInfo.get("subject"));
-                log.info(" body = "+emailInfo.get("body"));
-                this.exoMailService.sendMessage(message);
-              } catch (Exception e) {
-                log.error("cannot send referral email "+e.getMessage());
+      if (canSend2Participant(missionParticipant.getStatus())){
+        Mission mission = this.iService.getMissionById(missionParticipant.getMission_id());
+        if (null != mission){
+          Program program = this.iService.getProgramById(mission.getProgramId());
+          if (null != program){
+            String participantId = missionParticipant.getParticipant_username();
+            Identity identity = identityManager.getOrCreateIdentity(OrganizationIdentityProvider.NAME,participantId,true);
+            if (null != identity){
+              Map<String,String> emailInfo = this.generateParticipantEmailInfoByStatus(program,identity,missionParticipant);
+              if (null != emailInfo){
+                log.info("sending email to participant "+participantId);
+                Message message = new Message();
+                message.setFrom(this.senderEmail);
+                message.setTo(identity.getProfile().getEmail());
+                message.setSubject(emailInfo.get("subject"));
+                message.setBody(emailInfo.get("body"));
+                message.setMimeType("text/html");
+                try {
+                  log.info(" subject = "+emailInfo.get("subject"));
+                  log.info(" body = "+emailInfo.get("body"));
+                  this.exoMailService.sendMessage(message);
+                } catch (Exception e) {
+                  log.error("cannot send referral email "+e.getMessage());
+                }
               }
             }
           }
@@ -277,6 +280,12 @@ public class EmailService {
         return true;
     }
     return false;
+  }
+  private Boolean canSend2Participant(Status status){
+    if (Status.OPEN.getValue() == status.getValue() || Status.INPROGRESS.getValue() == status.getValue())
+      return false;
+
+    return true;
   }
   public void sendNotifAlmostMissionDone2Managers(String programId){
     List<Manager> managers = this.iService.getAllManagersInProgram(programId);

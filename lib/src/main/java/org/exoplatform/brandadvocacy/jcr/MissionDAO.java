@@ -281,6 +281,7 @@ public class MissionDAO extends DAO {
   public int getTotalNumberMissions(String programId, Boolean isPublic, Boolean isActive,int priority){
     StringBuilder sql = new StringBuilder("select jcr:uuid from "+ JCRImpl.MISSION_NODE_TYPE +" where ");
 
+    sql.append("jcr:path like '").append(this.getProgramJcrPath(programId)).append("%' AND ");
     if(isPublic){
       sql.append(node_prop_active).append(" = 'true' ");
     }else{

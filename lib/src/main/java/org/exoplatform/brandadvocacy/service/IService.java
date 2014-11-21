@@ -94,7 +94,6 @@ public interface IService {
   public ListAccess<org.exoplatform.services.organization.User> searchEXOUsers(String keyword);
   public List<Profile> searchEXOProfiles(String keyword);
 
-  public Boolean sendNotifNewMissionParticipant(String missionParticipantId);
-  public Boolean sendNotifUpdateMissionParticipantEmail(String missionParticipantId);
+  public Boolean sendNotifMissionParticipantEmail(String missionParticipantId);
   public Boolean sendNotifAlmostMissionDoneEmail(String programId, String username);
 }

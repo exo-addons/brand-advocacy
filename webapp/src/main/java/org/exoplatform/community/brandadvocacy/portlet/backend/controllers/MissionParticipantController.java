@@ -27,7 +27,7 @@ import java.util.List;
 @SessionScoped
 public class MissionParticipantController {
 
-  final static int NUMBER_RECORDS = 5;
+  final static int NUMBER_RECORDS = 10;
   OrganizationService organizationService;
   IdentityManager identityManager;
   IService missionParticipantService;
@@ -236,7 +236,10 @@ public class MissionParticipantController {
         missionParticipantDTOs.add(missionParticipantDTO);
       }
     }
-    return previousTPL.with().set("missionParticipantDTOs",missionParticipantDTOs).ok();
+    if (missionParticipantDTOs.size() > 0)
+     return previousTPL.with().set("missionParticipantDTOs",missionParticipantDTOs).ok();
+    else
+      return Response.ok("have no previous mission");
   }
 
   @Ajax
