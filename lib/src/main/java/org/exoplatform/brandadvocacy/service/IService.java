@@ -89,7 +89,7 @@ public interface IService {
   public MissionParticipant updateMissionParticipantInProgram(String programId, MissionParticipant missionParticipant);
   public int getTotalMissionParticipants(Query query);
   public MissionParticipant getCurrentMissionParticipantByUserName(String programId,String username);
-  public MissionParticipant getCurrentMissionParticipantByMissionId(String programId,String missionId);
+  public MissionParticipant getCurrentMissionParticipantByMissionId(String programId,String missionId,String username);
 
   public ListAccess<org.exoplatform.services.organization.User> searchEXOUsers(String keyword);
   public List<Profile> searchEXOProfiles(String keyword);

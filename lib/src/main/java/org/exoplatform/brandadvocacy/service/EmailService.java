@@ -221,8 +221,6 @@ public class EmailService {
               message.setBody(emailInfo.get("body"));
               message.setMimeType("text/html");
               try {
-                log.info(" subject = "+emailInfo.get("subject"));
-                log.info(" body = "+emailInfo.get("body"));
                 this.exoMailService.sendMessage(message);
               } catch (Exception e) {
                 log.error("cannot send referral email "+e.getMessage());
@@ -254,8 +252,6 @@ public class EmailService {
                 message.setBody(emailInfo.get("body"));
                 message.setMimeType("text/html");
                 try {
-                  log.info(" subject = "+emailInfo.get("subject"));
-                  log.info(" body = "+emailInfo.get("body"));
                   this.exoMailService.sendMessage(message);
                 } catch (Exception e) {
                   log.error("cannot send referral email "+e.getMessage());
@@ -294,7 +290,7 @@ public class EmailService {
     if (null != emailInfo){
       Message message;
       for (Manager manager:managers){
-        if (manager.getNotif()){
+        if (manager.getNotif() && manager.getRole().getLabel().equals(Role.Admin.getLabel())){
           eXoIdentity = this.identityManager.getOrCreateIdentity(OrganizationIdentityProvider.NAME, manager.getUserName(), true);
           if (null != eXoIdentity){
             log.info("sending email to "+eXoIdentity.getProfile().getEmail()+" role "+manager.getRoleLabel());
@@ -305,8 +301,6 @@ public class EmailService {
             message.setBody(emailInfo.get("body"));
             message.setMimeType("text/html");
             try {
-              log.info(" subject = "+emailInfo.get("subject"));
-              log.info(" body = "+emailInfo.get("body"));
               this.exoMailService.sendMessage(message);
             } catch (Exception e) {
               log.error("cannot send referral email "+e.getMessage());

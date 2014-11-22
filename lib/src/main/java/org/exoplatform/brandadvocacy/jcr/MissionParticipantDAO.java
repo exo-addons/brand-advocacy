@@ -381,9 +381,10 @@ public class MissionParticipantDAO extends DAO {
     return this.getCurrentMissionParticipantByQuery(query);
 
   }
-  public MissionParticipant getCurrentMissionParticipantByMissionId(String programId, String missionId){
+  public MissionParticipant getCurrentMissionParticipantByMissionId(String programId, String missionId,String username){
     org.exoplatform.brandadvocacy.model.Query query = new org.exoplatform.brandadvocacy.model.Query(programId);
     query.setMissionId(missionId);
+    query.setUsername(username);
     return this.getCurrentMissionParticipantByQuery(query);
   }
 }

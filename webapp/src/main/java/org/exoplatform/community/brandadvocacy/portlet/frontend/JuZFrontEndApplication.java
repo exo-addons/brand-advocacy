@@ -250,7 +250,7 @@ public class JuZFrontEndApplication {
   }
   private Boolean getOrCreateMissionParticipant(String missionId){
 
-    MissionParticipant missionParticipant = this.jcrService.getCurrentMissionParticipantByMissionId(currentProgramId,missionId);
+    MissionParticipant missionParticipant = this.jcrService.getCurrentMissionParticipantByMissionId(currentProgramId,missionId,remoteUserName);
     if (null == missionParticipant) {
       missionParticipant = new MissionParticipant();
       missionParticipant.setMission_id(missionId);
