@@ -2,6 +2,7 @@ package org.exoplatform.community.brandadvocacy.portlet.backend;
 
 import juzu.*;
 
+import juzu.request.HttpContext;
 import juzu.request.SecurityContext;
 import org.exoplatform.brandadvocacy.model.Manager;
 import org.exoplatform.brandadvocacy.model.MissionParticipant;
@@ -14,6 +15,7 @@ import org.exoplatform.services.organization.OrganizationService;
 import org.exoplatform.webui.application.WebuiRequestContext;
 
 import javax.inject.Inject;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -51,10 +53,6 @@ public class JuZBackEndApplication {
   @View
   public Response index(SecurityContext securityContext) {
 
-    String action = WebuiRequestContext.getCurrentInstance().getRequestParameter("action");
-    String missionParticipantId = WebuiRequestContext.getCurrentInstance().getRequestParameter("id");
-
-
     if (null == loginController.getCurrentProgramId()){
       List<Program> programs = this.jcrService.getAllPrograms();
       Program program = null;
@@ -66,13 +64,34 @@ public class JuZBackEndApplication {
       this.generateRights(loginController.getCurrentProgramId(),loginController.getCurrentUserName());
     }
     if (null != loginController.getRights()){
-      if (null != action && action.equals("mp_view") && null != missionParticipantId && !"".equals(missionParticipantId) ){
-        MissionParticipant missionParticipant = this.jcrService.getMissionParticipantById(missionParticipantId);
-        if (null != missionParticipant){
-          return indexTpl.with().set("mp_view",true).set("username",missionParticipant.getParticipant_username()).set("missionParticipantId",missionParticipantId).ok();
+
+      String action = WebuiRequestContext.getCurrentInstance().getRequestParameter("action");
+      String missionParticipantId = WebuiRequestContext.getCurrentInstance().getRequestParameter("id");
+
+      String[] menus = {"program","mission","participant","mp_view"};
+      if (null != action){
+        if (!Arrays.asList(menus).contains(action))
+          action = null;
+      }
+      if (loginController.isAdmin()){
+        if (null == action ){
+          action = "program";
+        }
+      }else{
+        if (null == action || "program".equals(action) || "mission".equals(action)){
+          action = "participant";
         }
       }
-      return indexTpl.with().set("mp_view",false).set("username","").set("missionParticipantId","").ok();
+      String username = "";
+      if (null == missionParticipantId)
+        missionParticipantId = "";
+      if (action.equals("mp_view") ){
+        MissionParticipant missionParticipant = this.jcrService.getMissionParticipantById(missionParticipantId);
+        if (null != missionParticipant){
+          username = missionParticipant.getParticipant_username();
+        }
+      }
+      return indexTpl.with().set("action", action).set("username",username).set("missionParticipantId",missionParticipantId).ok();
 
     }
     return this.showError("alert-info","Info","You have no rights");

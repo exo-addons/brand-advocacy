@@ -229,6 +229,6 @@ public class ManagerController {
       } catch (Exception e) {
       }
     }
-    return Response.ok("");
+    return Response.ok("user not found");
   }
 }

@@ -133,7 +133,7 @@ public class EmailService {
   private Map<String,String> getEmailInfoAllCompleted(){
     String subject = "All missions have been completed once";
     String body = "You might want to add new mission : link to mission tab ";
-    body +=remoteUrl+"/portal/intranet/brand-advocacy/missions";
+    body +=remoteUrl+"/portal/intranet/brand-advocacy/?action=mission";
     return this.pushEmailInfo(subject,body);
   }
   private Map<String,String> generateAdminEmailInfoByStatus(Mission mission, MissionParticipant missionParticipant){

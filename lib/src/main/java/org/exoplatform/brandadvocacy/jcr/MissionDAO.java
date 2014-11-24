@@ -228,7 +228,7 @@ public class MissionDAO extends DAO {
       if(null != query.getIsActive()){
         sql.append(" AND ").append(node_prop_active).append("='").append(query.getIsActive()).append("'");
       }
-      sql.append(" ORDER BY ").append(node_prop_priority).append(" DESC ");
+      sql.append(" ORDER BY ").append(node_prop_dateCreated).append(" DESC ");
       List<Node> nodes =  this.getNodesByQuery(sql.toString(),query.getOffset(),query.getLimit());
       return this.transferNodes2Objects(nodes,query.getIsActive());
     }

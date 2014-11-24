@@ -111,7 +111,6 @@
         _fillBodyContainer(data);
         _managerContainerDOM = $('.program-list-managers');
         _loadProgramManagers();
-        _displayLoading(false);
       }
     });
   };
@@ -150,8 +149,8 @@
           _managerContainerDOM.html(data);
           _addEventIPhoneStyle2CheckBox();
           _managerBradList2BeAdded = [];
-          _displayLoading(false);
         }
+        _displayLoading(false);
       }
     });
   };
@@ -372,6 +371,7 @@
     if(priority == "" || missionId == "")
       return;
     _displayLoading(true);
+    console.info(' update mission priority '+priority);
     $('.jz').jzAjax("MissionController.updateMissionPriority()", {
       data: {missionId: missionId, priority: priority},
       success: function (data) {
@@ -583,10 +583,10 @@
       success:function(data){
         if(data === 'nok'){
           _disPlayErrorMsgCB('Something went wrong, cannot load detail mission participant')
-          return;
+        }else{
+          _fillBodyContainer(data);
+          _loadPreviousMissionParticipant(username);
         }
-        _fillBodyContainer(data);
-        _loadPreviousMissionParticipant(username);
         _displayLoading(false);
 
       }
@@ -752,24 +752,47 @@
     });
   };
 
-  var _addEvent2InputUsername = function(){
-    var termTemplate = "<span class='ui-autocomplete-term'>%s</span>";
-    $(document).on('keypress keyup.juzBrad.bk.searchmanager','input.manager-username',function(){
+  var _searchingUserMamagerTimeOut;
+  var _startSearchingUser = function(keyword){
+    if(keyword == $('input.manager-username').val()){
+      $(".jz").jzAjax('ManagerController.searchEXOProfiles()',{
+        data:{keyword:keyword},
+        success:function(data){
+          $(".result-search-manager").html(data);
+          $(".result-search-manager").addClass('open');
+        }
+      });
+    }
+  };
+  var _addEventKeyPress2InputSearchManager = function(){
+    $(document).on('keypress.juzBrad.bk.searchmanager.keypress','input.manager-username',function(){
       var keyword = $(this).val();
       if(keyword.length >= 3){
-        $(".jz").jzAjax('ManagerController.searchEXOProfiles()',{
-          data:{keyword:keyword},
-          success:function(data){
-            $(".result-search-manager").html(data);
-            $(".result-search-manager").addClass('open');
-          }
-        });
+        $(".result-search-manager").html('searching '+$(this).val());
+        $(".result-search-manager").addClass('open');
       }else{
         $(".result-search-manager").html('');
         $(".result-search-manager").removeClass('open');
       }
-    })
+      if(_searchingUserMamagerTimeOut){
+        clearTimeout(_searchingUserMamagerTimeOut);
+      }
+    });
   };
+  var _addEventKeyUp2InputSearchManager = function(){
+    $(document).on('keyup.juzBrad.bk.searchmanager.keyup','input.manager-username',function(){
+      var keyword = $(this).val();
+      if(keyword.length >= 3){
+        _searchingUserMamagerTimeOut = setTimeout(function(){
+          _startSearchingUser(keyword);
+        },3000);
+      }else{
+        $(".result-search-manager").html('');
+        $(".result-search-manager").removeClass('open');
+      }
+    });
+  };
+
 
   var _addEvent2ProgramTabMenu = function(){
     $(document).on('click.juzBrad.bk.tabmenu.program','li.program-tab',function(e){
@@ -867,20 +890,30 @@
   };
   var _addEvent2InputTextMissionPriority = function(){
     $(document).on('keypress.juzBrad.bk.missionPriority',':text.brad-mission-priority',function(event){
+      console.info(' keypress '+event.which);
+      if(_MissionPriorityEventTimeout)
+        clearTimeout(_MissionPriorityEventTimeout);
       // only number
       $(this).val($(this).val().replace(/[^\d].+/, ""));
       // Allow: backspace, delete, tab, escape, enter,left,right
       if($.inArray(event.which, [46, 8 ,13,37,39]) !== -1)
         event.preventDefault();
       if ((event.which >= 48 && event.which <= 57) ){
-        if(_MissionPriorityEventTimeout)
-          clearTimeout(_MissionPriorityEventTimeout);
       }
     });
   };
   var _addEventKeyUp2InputTextMissionPriority = function(){
     $(document).on('keyup.juzBrad.bk.missionPriorityKeyup',':text.brad-mission-priority',function(event){
-      _preSetMissionPriorityTimeout( $(this).attr('data-missionId'),$(this).val());
+      if (event.which != 8 && event.which != 46 && _oldPriorityVal != $(this).val()){
+        console.info(' key up event start update mission prio '+_oldPriorityVal+' new '+$(this).val() );
+        _oldPriorityVal = $(this).val();
+        _preSetMissionPriorityTimeout($(this).attr('data-missionId'), $(this).val());
+
+      }
+      else {
+        console.info('do nothing');
+        _MissionPriorityEventTimeout = null;
+      }
     });
   };
   var _oldPriorityVal;
@@ -890,13 +923,18 @@
         _disPlayInfoMsgCB('Activate mission to edit its priority');
       }
       _oldPriorityVal = $(this).val();
-      $(this).val('');
+      console.info(' click old value '+_oldPriorityVal);
+     // $(this).val('');
     });
   };
   var _addEventBlur2InputTextMissionPriority = function(){
     $(document).on('blur.juzBrad.bk.missionPriorityBlur',':text.brad-mission-priority',function(event){
       if($(this).val() == ""){
         $(this).val(_oldPriorityVal);
+      }else if( (!_MissionPriorityEventTimeout || _MissionPriorityEventTimeout == null)  &&  _oldPriorityVal != $(this).val()){
+        console.info(' blur event start update mission prio '+_oldPriorityVal+' new '+$(this).val() );
+        _oldPriorityVal = $(this).val();
+        _preSetMissionPriorityTimeout($(this).attr('data-missionId'), $(this).val());
       }
     });
   };
@@ -1088,7 +1126,8 @@
   var _initManagerEvent = function(){
     _addEvent2BtnAddProgramManager();
     _addEvent2BtnRemoveProgramManager();
-    _addEvent2InputUsername();
+    _addEventKeyPress2InputSearchManager();
+    _addEventKeyUp2InputSearchManager();
     _addEvent2LinkAddManager2BeAdded();
     _addEvent2LinkRemoveManager2BeAdded();
   };
@@ -1128,9 +1167,9 @@
     _bodyContainerDOM = $(".tab-content");
     _MissionPriorityEventTimeout = false;
   }
-  brandAdvBackend.init = function(isAdmin){
+  brandAdvBackend.init = function(isAdmin,action,missionParticipantId,username){
     _initVar();
-    if(isAdmin){
+    if(isAdmin == 'true'){
       _addEvent2LinkClosePopup();
       _initProgramEvent();
       _initManagerEvent();
@@ -1139,6 +1178,7 @@
       _addEventIPhoneStyle2CheckBox();
       _addEvent2BtnIphoneCheckbox();
       _addEvent2RoleSelect();
+
     }else{
       _menuStyleController('participant');
     }
@@ -1146,22 +1186,20 @@
     _addEvent2MPStatus();
     _addEvent2LinkConfirmYes();
     _addEvent2LinkConfirmNo();
-  };
-  brandAdvBackend.initMissionParticipant = function(mode,missionParticipantId,username){
-    _initVar();
-    if(mode == "mp_view"){
+
+    if(action == "mp_view"){
       _menuStyleController('participant');
       _loadMissionParticipantDetail(missionParticipantId,username);
-    }else{
+    } else if(action == "mission"){
+      _menuStyleController("mission");
+      _loadMissions();
+    } else if(action == "participant"){
       _menuStyleController('participant');
       _loadMissionParticipantContainer();
+    }else {
+      _menuStyleController("program");
+      _loadProgramContentView();
     }
-
-  };
-  brandAdvBackend.initProgram = function(){
-    _initVar();
-    _menuStyleController('program');
-    _loadProgramContentView();
   };
 
   return brandAdvBackend;

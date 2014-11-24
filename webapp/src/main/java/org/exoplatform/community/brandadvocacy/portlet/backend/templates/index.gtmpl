@@ -1,4 +1,4 @@
-#{param name=mp_view/}
+#{param name=action/}
 #{param name=username/}
 #{param name=missionParticipantId/}
 <%
@@ -7,22 +7,7 @@ import org.exoplatform.webui.application.portlet.PortletRequestContext;
 import org.exoplatform.web.application.JavascriptManager;
 def pcontext = Util.getPortalRequestContext();
 def jsManager = pcontext.getJavascriptManager();
-if(loginController.isAdmin()){
-    jsManager.require("SHARED/jQueryJuzBrandAdvBackend", "brandAdvBackend").addScripts("brandAdvBackend.init(true);");
-}
-else{
-    jsManager.require("SHARED/jQueryJuzBrandAdvBackend", "brandAdvBackend").addScripts("brandAdvBackend.init();");
-}
-if(mp_view){
-    jsManager.require("SHARED/jQueryJuzBrandAdvBackend", "brandAdvBackend").addScripts("brandAdvBackend.initMissionParticipant('mp_view','"+missionParticipantId+"','"+username+"');");
-}else{
-    if(loginController.isAdmin()){
-        jsManager.require("SHARED/jQueryJuzBrandAdvBackend", "brandAdvBackend").addScripts("brandAdvBackend.initProgram();");
-    }
-    else{
-        jsManager.require("SHARED/jQueryJuzBrandAdvBackend", "brandAdvBackend").addScripts("brandAdvBackend.initMissionParticipant('','','');");
-    }
-}
+jsManager.require("SHARED/jQueryJuzBrandAdvBackend", "brandAdvBackend").addScripts("brandAdvBackend.init('"+loginController.isAdmin()+"','"+action+"','"+missionParticipantId+"','"+username+"');");
 %>
 <script type="text/javascript" src="/brand-advocacy-webapp/ckeditor/ckeditor.js"></script>
 <div class="referral-porlet">
