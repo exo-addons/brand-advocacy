@@ -398,6 +398,7 @@
   };
   var _updateMissionParticipantStatusInline = function(missionParticipantId,val){
     _displayLoading(true);
+    var jStatus = $("select.mission-participant-status");
     $('.jz').jzAjax("MissionParticipantController.ajaxUpdateMPInline()",{
       data:{missionParticipantId:missionParticipantId,action:"status",val:val},
       success:function(data){

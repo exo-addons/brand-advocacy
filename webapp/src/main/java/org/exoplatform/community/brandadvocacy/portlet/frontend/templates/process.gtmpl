@@ -16,7 +16,7 @@ if(null != mission) {
         <div class="quote-popup">
             <% propositions.each{ proposition -> %>
                 <input type="hidden" name="propositionId" class="propositionId" value="<%= proposition.getId()%>"/>
-                <%= StringEscapeUtils.escapeHtml(proposition.getContent()) %>
+                <%= proposition.getContent() %>
             <% } %>
         </div>
         <button class="button-flat-balck btn-brad-done" data-url="<%=mission.getThird_part_link()%>">Go!</button>

@@ -253,5 +253,27 @@ public class ParticipantDAO extends DAO {
 
     return false;
   }
+  public Boolean removeMission(String programId, String userName, String missionId){
+    Node participantNode = this.getNodeByUserName(programId,userName);
+    if(null != participantNode){
+      try {
+        Participant participant = this.transferNode2Object(participantNode);
+        if (null != participant){
+          Set<String> mIds = participant.getMission_ids();
+          if (mIds.contains(missionId)){
+            if(mIds.remove(missionId)){
+              participant.setMission_participant_ids(mIds);
+              this.setProperties(participantNode,participant);
+              participantNode.save();
+              return true;
+            }
+          }
+        }
+      } catch (RepositoryException e) {
+        log.error("Error remove mission participant "+e.getMessage());
+      }
+    }
 
+    return false;
+  }
 }

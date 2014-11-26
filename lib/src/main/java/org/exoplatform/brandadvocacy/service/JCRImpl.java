@@ -322,6 +322,11 @@ public class JCRImpl implements IService {
   }
 
   @Override
+  public Boolean removeMissionInParticipant(String programId, String username, String missionId) {
+    return this.getParticipantDAO().removeMission(programId,username,missionId);
+  }
+
+  @Override
   public Address addAddress2Participant(String programId, String username, Address address) {
     return this.getAddressDAO().addAddress2Participant(programId, username, address);
   }

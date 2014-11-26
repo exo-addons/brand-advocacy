@@ -51,7 +51,7 @@ public interface IService {
   public Participant getParticipantInProgramByUserName(String programId, String username);
   public List<Participant> getAllParticipantsInProgram(String programId);
   public Boolean removeMissionParticipantInParticipant(String programId,String username, String missionParticipantId);
-
+  public Boolean removeMissionInParticipant(String programId,String username, String missionId);
   public Address addAddress2Participant(String programId, String username,Address address);
   public Address updateAddress(Address address);
   public void removeAddress(String addressId);

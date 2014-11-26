@@ -6,7 +6,7 @@
 </div>
 <% }else{ %>
 <div class="uiBox custom-tweet-button" id="brad-ft-discovery">
-    <img src="<%=bannerUrl%>" />
-        <a><%=programTitle%></a>
+    <img class="img-responsive" src="<%=bannerUrl%>" />
+    <a class="btn"><%=programTitle%></a>
 </div>
 <% } %>

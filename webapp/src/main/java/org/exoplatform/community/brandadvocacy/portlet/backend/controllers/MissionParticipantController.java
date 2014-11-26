@@ -139,8 +139,8 @@ public class MissionParticipantController {
   @Resource
   public Response ajaxUpdateMPInline(String missionParticipantId,String action,String val){
     JSONObject jsonObject = new JSONObject();
-    Boolean hasError = false;
-    String msg = "";
+    Boolean hasError = true;
+    String msg = "Something went wrong,cannot update status";
     int oldStatus = 0;
     String mpId = "";
     MissionParticipant missionParticipant = this.missionParticipantService.getMissionParticipantById(missionParticipantId);
@@ -150,27 +150,32 @@ public class MissionParticipantController {
         hasError = false;
         msg = "Status has already been updated ";
       }else{
+        hasError = false;
         if (loginController.isShippingManager()){
           if (Status.SHIPPED.getValue() != Integer.parseInt(val)) {
             hasError = true;
             msg = "you have no rights for this change";
           }
         }else if (loginController.isValidator()){
-          if (Status.SHIPPED.getValue() == Integer.parseInt(val)){
+          if (Status.VALIDATED.getValue() != Integer.parseInt(val)){
             hasError = true;
             msg = "you have no rights for this change";
           }
         }
-        if (!hasError && action.equals("status"))
+        if (!hasError && action.equals("status")){
           missionParticipant.setStatus(Status.getStatus(Integer.parseInt(val)));
-        missionParticipant = this.missionParticipantService.updateMissionParticipantInProgram(loginController.getCurrentProgramId(),missionParticipant);
-        if (null != missionParticipant){
-          hasError = false;
-          msg = "Status has been successfully updated";
-          mpId = missionParticipant.getId();
-        }else{
-          hasError = true;
-          msg = "Something went wrong,cannot update status";
+          missionParticipant = this.missionParticipantService.updateMissionParticipantInProgram(loginController.getCurrentProgramId(),missionParticipant);
+          if (null != missionParticipant){
+            hasError = false;
+            msg = "Status has been successfully updated";
+            mpId = missionParticipant.getId();
+            if (Status.REJECTED.getValue() == Integer.parseInt(val)){
+              // allow participant to replay this mission
+              if (this.missionParticipantService.removeMissionInParticipant(loginController.getCurrentProgramId(),loginController.getCurrentUserName(),missionParticipant.getMission_id())){
+                msg = "One mission has been rejected, participant can replay it";
+              }
+            }
+          }
         }
       }
     }else{
