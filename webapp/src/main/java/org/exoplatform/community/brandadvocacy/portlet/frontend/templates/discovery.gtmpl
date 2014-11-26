@@ -1,3 +1,12 @@
+#{param name=bannerUrl/}
+#{param name=programTitle/}
+<% if(bannerUrl == ""){ %>
 <div class="uiBox custom-tweet-button" id="brad-ft-discovery">
     <a class="twitter popup" href="#"><span>&nbsp;</span></a>
 </div>
+<% }else{ %>
+<div class="uiBox custom-tweet-button" id="brad-ft-discovery">
+    <img src="<%=bannerUrl%>" />
+        <a><%=programTitle%></a>
+</div>
+<% } %>

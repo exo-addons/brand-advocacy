@@ -92,6 +92,8 @@
   };
 
   var _fillBodyContainer = function(content){
+    if (content == '')
+      content = 'loading ... ';
     _bodyContainerDOM.html(content);
   }
   var _displayLoading = function(b){
@@ -143,6 +145,7 @@
 
   var _loadProgramManagers = function(){
     _displayLoading(true);
+    _managerContainerDOM.html('loading ...');
     $('.jz').jzAjax('ManagerController.listProgramManagers()',{
       success:function(data){
         if(data !== 'nok'){
@@ -559,14 +562,13 @@
         _fillBodyContainer(data);
         _missionParticipantContainerDOM = $('.mission-participant-container');
         _loadMissionParticipants('','',1);
-        _displayLoading(false);
       }
     });
   };
 
   var _loadMissionParticipants = function(keyword,status,page){
     _displayLoading(true);
-    _missionParticipantContainerDOM.html('');
+    _missionParticipantContainerDOM.html(' loading ...');
     $('.jz').jzAjax('MissionParticipantController.search()',{
       data:{keyword:keyword,status:status,page:page},
       success:function(data){

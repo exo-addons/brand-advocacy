@@ -1,5 +1,8 @@
 #{param name=mission/}
 <%
+import org.apache.commons.lang.StringEscapeUtils;
+%>
+<%
 if(null != mission) {
     def propositions = mission.getPropositions();
 %>
@@ -13,7 +16,7 @@ if(null != mission) {
         <div class="quote-popup">
             <% propositions.each{ proposition -> %>
                 <input type="hidden" name="propositionId" class="propositionId" value="<%= proposition.getId()%>"/>
-                <%= proposition.getContent() %>
+                <%= StringEscapeUtils.escapeHtml(proposition.getContent()) %>
             <% } %>
         </div>
         <button class="button-flat-balck btn-brad-done" data-url="<%=mission.getThird_part_link()%>">Go!</button>

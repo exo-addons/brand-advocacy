@@ -1,12 +1,17 @@
 package org.exoplatform.community.brandadvocacy.portlet.frontend;
 
 import juzu.*;
+import juzu.request.HttpContext;
 import juzu.request.SecurityContext;
 import org.exoplatform.brandadvocacy.model.*;
 import org.exoplatform.brandadvocacy.service.IService;
 import org.exoplatform.commons.juzu.ajax.Ajax;
 
 import javax.inject.Inject;
+import java.io.IOException;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -26,7 +31,10 @@ public class JuZFrontEndApplication {
   String currentPropositionId;
   String currentMissionId;
   String currentProgramId;
+  String currentProgramTitle;
   Boolean isFinished;
+  String bannerUrl;
+
 
   @Inject
   @Path("index.gtmpl")
@@ -73,7 +81,9 @@ public class JuZFrontEndApplication {
     }
   }
   @View
-  public Response.Content index(SecurityContext securityContext){
+  public Response.Content index(SecurityContext securityContext,HttpContext httpContext){
+    String dns = httpContext.getScheme()+"://"+httpContext.getServerName()+":"+httpContext.getServerPort();
+    this.bannerUrl = dns+"/rest/jcr/repository/collaboration/sites/intranet/web%20contents/brand-advocacy/banner.jpg";
     this.isFinished = false;
     this.remoteUserName = securityContext.getUserPrincipal().getName();
     if (null != remoteUserName){
@@ -83,6 +93,21 @@ public class JuZFrontEndApplication {
       }
     }
     return Response.ok("");
+  }
+
+  private Boolean checkBannerUrl(){
+
+    try {
+      URL url = new URL(bannerUrl);
+      HttpURLConnection huc = (HttpURLConnection) url.openConnection();
+      huc.setRequestMethod("HEAD");
+      int responseCode = huc.getResponseCode();
+      if (responseCode == 200)
+        return true;
+    } catch (MalformedURLException e) {
+    } catch (IOException e) {
+    }
+    return false;
   }
 
   private Mission getRandomMission(){
@@ -124,6 +149,7 @@ public class JuZFrontEndApplication {
     List<Program> programs = this.jcrService.getAllPrograms();
     for (Program program:programs){
       this.currentProgramId = program.getId();
+      this.currentProgramTitle = program.getTitle();
       break;
     }
   }
@@ -154,7 +180,13 @@ public class JuZFrontEndApplication {
   @Ajax
   @Resource
   public Response.Content loadDiscoveryView(){
-    return discoveryTpl.ok();
+    String title = "";
+    String url = "";
+    if (this.checkBannerUrl()){
+      url = this.bannerUrl;
+      title = this.currentProgramTitle;
+    }
+    return discoveryTpl.with().set("bannerUrl",url).set("programTitle",title).ok();
   }
 
   @Ajax
