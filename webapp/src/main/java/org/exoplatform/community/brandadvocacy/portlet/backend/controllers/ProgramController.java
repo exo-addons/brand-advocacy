@@ -4,9 +4,12 @@ import juzu.*;
 import org.exoplatform.brandadvocacy.model.Manager;
 import org.exoplatform.brandadvocacy.model.Program;
 import org.exoplatform.brandadvocacy.service.IService;
+import org.exoplatform.brandadvocacy.service.Utils;
 import org.exoplatform.commons.juzu.ajax.Ajax;
 import org.exoplatform.community.brandadvocacy.portlet.backend.Flash;
 import org.exoplatform.services.organization.OrganizationService;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import javax.inject.Inject;
 
@@ -40,14 +43,20 @@ public class ProgramController {
   @Ajax
   @Resource
   public Response index(){
+    String banner_url = "";
+    String email_sender = "";
     Program program = null;
     String programId = loginController.getCurrentProgramId();
     if (null != programId){
       program = this.jcrService.getProgramById(programId);
     }
-
     if (null != program){
-      return indexTpl.with().set("program", program).ok();
+      JSONObject settings = this.jcrService.getProgramSettings(programId);
+      if (null != settings){
+        banner_url = Utils.getAttrFromJson(settings,Program.banner_url_setting_key);
+        email_sender = Utils.getAttrFromJson(settings,Program.email_sender_setting_key);
+      }
+      return indexTpl.with().set("program", program).set("banner_url",banner_url).set("email_sender",email_sender).ok();
     }
     else
       return addTpl.ok();
@@ -70,12 +79,25 @@ public class ProgramController {
 
   @Ajax
   @Resource
-  public Response update(String title){
+  public Response update(String title,String banner_url,String email_sender){
     String programId = loginController.getCurrentProgramId();
     Program program = this.jcrService.getProgramById(programId);
     if (null != program){
       program.setTitle(title);
       if (null != this.jcrService.updateProgram(program)){
+        JSONObject settings = new JSONObject();
+        try {
+          if (null == banner_url)
+            banner_url = "";
+          if (null == email_sender)
+            email_sender = "";
+          settings.put(Program.banner_url_setting_key,banner_url);
+          settings.put(Program.email_sender_setting_key,email_sender);
+          program.setSettings(settings);
+          this.jcrService.setProgramSettings(program);
+        } catch (JSONException e) {
+          e.printStackTrace();
+        }
         return Response.ok("ok");
       }
     }

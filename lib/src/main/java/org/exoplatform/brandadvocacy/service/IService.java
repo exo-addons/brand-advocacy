@@ -21,6 +21,7 @@ import org.exoplatform.brandadvocacy.model.Query;
 import org.exoplatform.commons.utils.ListAccess;
 import org.exoplatform.services.organization.*;
 import org.exoplatform.social.core.identity.model.Profile;
+import org.json.JSONObject;
 
 import javax.jcr.RepositoryException;
 import java.util.List;
@@ -37,6 +38,8 @@ public interface IService {
   public Program updateProgram(Program program);
   public Program getProgramById(String programId);
   public List<Program> getAllPrograms();
+  public JSONObject setProgramSettings(Program program);
+  public JSONObject getProgramSettings(String programId);
 
   public Mission addMission2Program(Mission mission);
   public Boolean removeMissionById(String missionId);

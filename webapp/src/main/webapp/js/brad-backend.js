@@ -128,10 +128,10 @@
       }
     });
   };
-  var _updateProgram = function(title){
+  var _updateProgram = function(title,banner_url,email_sender){
     _displayLoading(true);
     $('.jz').jzAjax('ProgramController.update()',{
-      data:{title:title},
+      data:{title:title,banner_url:banner_url,email_sender:email_sender},
       success:function(data){
         if(data != "nok"){
           _disPlayInfoMsgCB('The program has been updated');
@@ -835,10 +835,12 @@
   var _addEvent2BtnUpdateProgram = function(){
     $(document).on('click.juzBrad.bk.updateprogram','button.btn-update-program',function(e){
       var title = $(".program-title").val();
+      var banner_url = $('.program-banner-url').val();
+      var email_sender = $('.program-email-sender').val();
       if(title.length === 0){
         return;
       }
-      _updateProgram(title);
+      _updateProgram(title,banner_url,email_sender);
       e.preventDefault();
     });
   };

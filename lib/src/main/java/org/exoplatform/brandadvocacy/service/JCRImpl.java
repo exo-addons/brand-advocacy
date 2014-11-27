@@ -39,6 +39,7 @@ import org.exoplatform.social.core.identity.model.Profile;
 import org.exoplatform.social.core.identity.provider.OrganizationIdentityProvider;
 import org.exoplatform.social.core.manager.IdentityManager;
 import org.exoplatform.social.core.profile.ProfileFilter;
+import org.json.JSONObject;
 
 import javax.jcr.Node;
 
@@ -94,7 +95,8 @@ public class JCRImpl implements IService {
   public static final String ADDRESS_LIST_NODE_TYPE = "brad:addresseslist";
   public static final String ADDRESS_NODE_TYPE = "brad:address";
   public static final String MISSION_PARTICIPANT_NODE_TYPE = "brad:mission-participant";
-  
+  public static final String PROGRAM_SETTINGS_NODE_TYPE = "brad:program-settings";
+
   public static final String APP_PATH = "ApplicationData/brandAdvocacyExtension";
   
   public JCRImpl(InitParams params, SessionProviderService sessionService, RepositoryService repositoryService, DataDistributionManager dataDistributionManager,IdentityManager identityManager,MailService mailService,OrganizationService organizationService){
@@ -259,6 +261,16 @@ public class JCRImpl implements IService {
   @Override
   public List<Program> getAllPrograms() {
     return this.getProgramDAO().getAllPrograms();
+  }
+
+  @Override
+  public JSONObject setProgramSettings(Program program) {
+    return this.getProgramDAO().saveSettings(program);
+  }
+
+  @Override
+  public JSONObject getProgramSettings(String programId) {
+    return this.getProgramDAO().getSettings(programId);
   }
 
   @Override

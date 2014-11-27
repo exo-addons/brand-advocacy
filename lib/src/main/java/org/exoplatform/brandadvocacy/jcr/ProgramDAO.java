@@ -6,6 +6,8 @@ import org.exoplatform.brandadvocacy.service.BrandAdvocacyServiceException;
 import org.exoplatform.brandadvocacy.service.JCRImpl;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import javax.jcr.*;
 import java.util.ArrayList;
@@ -25,16 +27,30 @@ public class ProgramDAO extends DAO {
   public static final String node_prop_missions = "exo:missionslist";
   public static final String node_prop_participants = "exo:participantslist";
   public static final String node_prop_missionparticipants = "exo:missionparticipantslist";
+  public static final String node_prop_settings = "exo:settings";
+  public static final String node_settings = "exo:program-settings";
 
   public ProgramDAO(JCRImpl jcrImpl) {
     super(jcrImpl);
+  }
+
+  public Node getOrSettingsHome() throws RepositoryException {
+    Node extensionHome = this.getJcrImplService().getOrCreateExtensionHome();
+    if (null != extensionHome){
+      if (extensionHome.hasNode(node_settings)){
+        return extensionHome.getNode(node_settings);
+      }else{
+        return extensionHome.addNode(node_settings,JCRImpl.PROGRAM_SETTINGS_NODE_TYPE);
+      }
+    }
+    return null;
   }
 
   public Node getOrCreateManagerHome(Node node) throws RepositoryException {
     return this.getOrCreateNodeCommon(node,node_prop_managers,JCRImpl.MANAGER_LIST_NODE_TYPE);
   }
 
-  public Node getOrCreateMissionHome(Node node) throws RepositoryException {
+  public Node   getOrCreateMissionHome(Node node) throws RepositoryException {
     return this.getOrCreateNodeCommon(node,node_prop_missions,JCRImpl.MISSION_LIST_NODE_TYPE);
   }
 
@@ -45,6 +61,21 @@ public class ProgramDAO extends DAO {
     return this.getOrCreateNodeCommon(node,node_prop_missionparticipants,JCRImpl.MISSION_PARTICIPANT_LIST_NODE_TYPE);
   }
 
+  private void setSettingsPropertiesNode(Node node, Program program) throws RepositoryException {
+    node.setProperty(node_prop_settings,program.getSettings().toString());
+  }
+  private JSONObject transferNode2SettingsObject(Node node) throws RepositoryException {
+    if (node.hasProperty(node_prop_settings)){
+      String settings = node.getProperty(node_prop_settings).getString();
+      try {
+        if (null != settings && !"".equals(settings))
+          return new JSONObject(settings);
+      } catch (JSONException e) {
+        e.printStackTrace();
+      }
+    }
+    return null;
+  }
   private void setPropertiesNode(Node node, Program program) throws RepositoryException {
 
     node.setProperty(node_prop_labelID,program.getLabelID());
@@ -145,6 +176,43 @@ public class ProgramDAO extends DAO {
     try {
       NodeIterator nodeIterator = node.getNodes();
       return this.transferNodes2Objects(Lists.newArrayList(nodeIterator));
+    } catch (RepositoryException e) {
+      e.printStackTrace();
+    }
+    return null;
+  }
+  public JSONObject saveSettings(Program program){
+    if (null != program.getSettings() && !"".equals(program.getSettings().toString())){
+      try {
+        Node settingsHome = this.getOrSettingsHome();
+        Node settingsNode = null;
+        if (null != settingsHome){
+          if (!settingsHome.hasNode(program.getId())){
+            settingsNode = settingsHome.addNode(program.getId(),JCRImpl.PROGRAM_SETTINGS_NODE_TYPE);
+          }
+          else{
+            settingsNode = settingsHome.getNode(program.getId());
+          }
+          if (null != settingsNode){
+            this.setSettingsPropertiesNode(settingsNode,program);
+            settingsHome.getParent().save();
+            return this.transferNode2SettingsObject(settingsNode);
+          }
+        }
+      } catch (RepositoryException e) {
+        e.printStackTrace();
+      }
+
+    }
+    return null;
+  }
+  public JSONObject getSettings(String programId){
+    Node programNode = null;
+    try {
+      Node settingsHome = this.getOrSettingsHome();
+      if (settingsHome.hasNode(programId)){
+        return this.transferNode2SettingsObject(settingsHome.getNode(programId));
+      }
     } catch (RepositoryException e) {
       e.printStackTrace();
     }

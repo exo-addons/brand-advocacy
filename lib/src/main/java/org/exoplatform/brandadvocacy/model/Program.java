@@ -1,8 +1,9 @@
 package org.exoplatform.brandadvocacy.model;
-
 import org.exoplatform.brandadvocacy.service.BrandAdvocacyServiceException;
+import org.json.JSONObject;
 
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 /**
@@ -15,6 +16,9 @@ public class Program {
   private String title;
   private Boolean active;
   private List<Manager> managers;
+  private JSONObject settings;
+  public static final String banner_url_setting_key = "banner_url";
+  public static final String email_sender_setting_key = "email_sender";
 
   public Program(String title){
     this.setLabelID(UUID.randomUUID().toString());
@@ -65,5 +69,13 @@ public class Program {
   }
   public String toString(){
     return this.getTitle();
+  }
+
+  public JSONObject getSettings() {
+    return settings;
+  }
+
+  public void setSettings(JSONObject settings) {
+    this.settings = settings;
   }
 }

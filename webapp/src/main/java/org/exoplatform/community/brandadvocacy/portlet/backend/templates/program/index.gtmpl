@@ -1,21 +1,29 @@
 #{param name=program/}
+#{param name=email_sender/}
+#{param name=banner_url/}
 <%
 import org.apache.commons.lang.StringEscapeUtils;
 %>
-<% if (null != program){ %>
+<% if (null != program){%>
 <% def programId = program.getId(); %>
     <div class="tab-pane fade in active" id="generalTab">
         <div class="form-horizontal">
             <div class="control-group">
                 <label class="control-label">Program Title:</label>
-                <%if(flash.getMessage() != ""){%>
-                <div id="saveinfo" class="alert alert-success" style="display: inline-block;">
-                  <i class="uiIconSuccess"></i>Your changed have been saved.
-                </div>
-                <% } %>
-
                 <div class="controls">
                         <input class="full program-title" type="text" name="title" value="<%= StringEscapeUtils.escapeHtml(program.getTitle())%>"  placeholder="Win a free eXo T-Shirt !">
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label">Banner URL:</label>
+                <div class="controls">
+                    <input class="full program-banner-url" type="text" name="banner-url" value="<%= StringEscapeUtils.escapeHtml(banner_url)%>">
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label">Email Sender:</label>
+                <div class="controls">
+                    <input class="full program-email-sender" type="text" name="email-sender" value="<%= StringEscapeUtils.escapeHtml(email_sender)%>">
                 </div>
             </div>
             <div class="control-group program-list-managers">

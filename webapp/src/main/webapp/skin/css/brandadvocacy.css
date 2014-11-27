@@ -1,5 +1,6 @@
 .brand-adv-custom-tweet-button {
     position: relative;
+    margin-bottom: 20px;
 }
 /* Case 1 */
 .brand-adv-custom-tweet-button .twitter {
@@ -12,7 +13,7 @@
 /* Case 2 */
 .brand-adv-custom-tweet-button .btn {
     position: absolute;
-    left: 30px;
+    left: 20px;
     bottom: 30px;
     white-space: nowrap;
     background: #FAA800;

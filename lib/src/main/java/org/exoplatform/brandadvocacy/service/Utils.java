@@ -16,6 +16,8 @@
  */
 package org.exoplatform.brandadvocacy.service;
 
+import org.json.JSONObject;
+
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Set;
@@ -48,5 +50,16 @@ public class Utils {
     SimpleDateFormat df2 = new SimpleDateFormat("dd/MM/yy");
     String dateText = df2.format(date);
     return dateText;
+  }
+  public static String getAttrFromJson(JSONObject jsonObject, String attr) {
+    String val = "";
+    if (null != jsonObject){
+      try {
+        if (jsonObject.has(attr))
+          val = (String) jsonObject.get(attr);
+      } catch (Exception e) {
+      }
+    }
+    return val;
   }
 }
