@@ -120,7 +120,7 @@ public class MissionDAO extends DAO {
     Mission m = new Mission();
     m.setId(node.getUUID());
     PropertyIterator iter = node.getProperties("exo:*");
-    iter =  node.getProperties();
+//    iter =  node.getProperties();
     Property p;
     String name;
     while (iter.hasNext()) {

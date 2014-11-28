@@ -90,7 +90,7 @@ public class ProgramDAO extends DAO {
     Program program = new Program("");
     program.setId(node.getUUID());
     PropertyIterator iter = node.getProperties("exo:*");
-    iter =  node.getProperties();
+//    iter =  node.getProperties();
     Property p;
     String name;
     while (iter.hasNext()) {
