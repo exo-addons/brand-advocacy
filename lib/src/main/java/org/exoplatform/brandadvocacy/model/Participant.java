@@ -59,9 +59,13 @@ public class Participant extends User {
       throw new BrandAdvocacyServiceException(BrandAdvocacyServiceException.PARTICIPANT_INVALID," participant must belong to a program");
     if(null == this.getUserName() || "".equals(this.getUserName()))
       throw new BrandAdvocacyServiceException(BrandAdvocacyServiceException.PARTICIPANT_INVALID,"participant must have username");
+/*
+dont need thi condition as we can remove a mission participant
     if (0 == this.getMission_participant_ids().size())
       throw new BrandAdvocacyServiceException(BrandAdvocacyServiceException.PARTICIPANT_INVALID,"participant must have at least 1 mission participant");
-/*
+
+*/
+    /*
     dont need this condition as we store only complete mission to participant
     if (0 == this.getMission_ids().size())
       throw new BrandAdvocacyServiceException(BrandAdvocacyServiceException.PARTICIPANT_INVALID,"participant must participate to 1 mission");*/

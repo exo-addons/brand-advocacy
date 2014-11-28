@@ -262,7 +262,7 @@ public class ParticipantDAO extends DAO {
           Set<String> mIds = participant.getMission_ids();
           if (mIds.contains(missionId)){
             if(mIds.remove(missionId)){
-              participant.setMission_participant_ids(mIds);
+              participant.setMission_ids(mIds);
               this.setProperties(participantNode,participant);
               participantNode.save();
               return true;
