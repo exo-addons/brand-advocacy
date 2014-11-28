@@ -165,9 +165,14 @@ public class JCRImpl implements IService {
   }
 
   @Override
-  public Boolean sendNotifMissionParticipantEmail(String missionParticipantId) {
+  public Boolean sendNotifMissionParticipantEmail(JSONObject settings,String missionParticipantId) {
     MissionParticipant missionParticipant = this.getMissionParticipantDAO().getMissionParticipantById(missionParticipantId);
     if (null != missionParticipant){
+      if (null != settings){
+        String email_sender = Utils.getAttrFromJson(settings,Program.email_sender_setting_key);
+        if (null != email_sender && !"".equals(email_sender))
+          this.emailService.setSenderEmail(email_sender);
+      }
       this.emailService.sendNotif2Managers(missionParticipant);
       this.emailService.sendNotif2Participant(missionParticipant);
       return true;

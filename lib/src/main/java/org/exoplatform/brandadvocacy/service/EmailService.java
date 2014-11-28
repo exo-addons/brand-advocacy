@@ -29,20 +29,26 @@ public class EmailService {
   final String email_thankyou_template="/html/email_thankyou_template.html";
   final String email_mission_failed_template="/html/email_mission_failed_template.html";
   String remoteUrl = "";
-  String senderEmail;
+  private String senderEmail;
   private static final Log log = ExoLogger.getLogger(EmailService.class);
 
   public EmailService(IService iService,IdentityManager identityManager,MailService mailService){
     this.iService = iService;
     this.identityManager = identityManager;
     this.exoMailService = mailService;
-    this.senderEmail = "Julie | eXo <mission-control@exoplatform.com>";
+    this.setSenderEmail("Julie | eXo <mission-control@exoplatform.com>");
     this.remoteUrl = System.getProperty("EXO_DEPLOYMENT_URL");
     if(null == remoteUrl || "".equals(remoteUrl)){
       remoteUrl = "http://community.exoplatform.com";
     }
   }
+  public String getSenderEmail() {
+    return senderEmail;
+  }
 
+  public void setSenderEmail(String senderEmail) {
+    this.senderEmail = senderEmail;
+  }
   private String getBodyByTemplate(String fileTemplate, Map<String, String> templateProperties) {
     InputStream is = this.getClass().getResourceAsStream(fileTemplate);
     String body = null;
@@ -215,7 +221,7 @@ public class EmailService {
             if (null != eXoIdentity){
               log.info("sending email "+eXoIdentity.getProfile().getEmail()+" role "+manager.getRoleLabel()+" subject"+emailInfo.get("subject"));
               message = new Message();
-              message.setFrom(this.senderEmail);
+              message.setFrom(this.getSenderEmail());
               message.setTo(eXoIdentity.getProfile().getEmail());
               message.setSubject(emailInfo.get("subject"));
               message.setBody(emailInfo.get("body"));
@@ -246,7 +252,7 @@ public class EmailService {
               if (null != emailInfo){
                 log.info("sending email to participant "+participantId);
                 Message message = new Message();
-                message.setFrom(this.senderEmail);
+                message.setFrom(this.getSenderEmail());
                 message.setTo(identity.getProfile().getEmail());
                 message.setSubject(emailInfo.get("subject"));
                 message.setBody(emailInfo.get("body"));
@@ -295,7 +301,7 @@ public class EmailService {
           if (null != eXoIdentity){
             log.info("sending email to "+eXoIdentity.getProfile().getEmail()+" role "+manager.getRoleLabel());
             message = new Message();
-            message.setFrom(this.senderEmail);  
+            message.setFrom(this.getSenderEmail());
             message.setTo(eXoIdentity.getProfile().getEmail());
             message.setSubject(emailInfo.get("subject"));
             message.setBody(emailInfo.get("body"));

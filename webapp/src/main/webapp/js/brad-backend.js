@@ -134,10 +134,9 @@
       data:{title:title,banner_url:banner_url,email_sender:email_sender},
       success:function(data){
         if(data != "nok"){
-          _disPlayInfoMsgCB('The program has been updated');
-          return;
-        }
-        _disPlayErrorMsgCB('something went wrong, cannot update the program');
+          _disPlayInfoMsgCB(data);
+        }else
+         _disPlayErrorMsgCB('something went wrong, cannot update the program');
         _displayLoading(false);
       }
     });

@@ -5,7 +5,9 @@ import juzu.request.HttpContext;
 import juzu.request.SecurityContext;
 import org.exoplatform.brandadvocacy.model.*;
 import org.exoplatform.brandadvocacy.service.IService;
+import org.exoplatform.brandadvocacy.service.Utils;
 import org.exoplatform.commons.juzu.ajax.Ajax;
+import org.json.JSONObject;
 
 import javax.inject.Inject;
 import java.io.IOException;
@@ -34,6 +36,7 @@ public class JuZFrontEndApplication {
   String currentProgramTitle;
   Boolean isFinished;
   String bannerUrl;
+  JSONObject currentSettings;
 
 
   @Inject
@@ -76,6 +79,13 @@ public class JuZFrontEndApplication {
     if (null == this.currentProgramId)
       this.loadCurrentProgram();
     if (null != this.currentProgramId) {
+      this.currentSettings = this.jcrService.getProgramSettings(currentProgramId);
+      if (null != currentSettings){
+        String banner_url = Utils.getAttrFromJson(currentSettings,Program.banner_url_setting_key);
+        if (null != banner_url && !"".equals(banner_url) && this.checkBannerUrl(bannerUrl))
+          this.bannerUrl = banner_url;
+      }
+
 //      this.loadCurrentMission();
       this.getRandomMission();
     }
@@ -95,7 +105,7 @@ public class JuZFrontEndApplication {
     return Response.ok("");
   }
 
-  private Boolean checkBannerUrl(){
+  private Boolean checkBannerUrl(String bannerUrl){
 
     try {
       URL url = new URL(bannerUrl);
@@ -180,13 +190,7 @@ public class JuZFrontEndApplication {
   @Ajax
   @Resource
   public Response.Content loadDiscoveryView(){
-    String title = "";
-    String url = "";
-    if (this.checkBannerUrl()){
-      url = this.bannerUrl;
-      title = this.currentProgramTitle;
-    }
-    return discoveryTpl.with().set("bannerUrl",url).set("programTitle",title).ok();
+    return discoveryTpl.with().set("bannerUrl",bannerUrl).set("programTitle",currentProgramTitle).ok();
   }
 
   @Ajax
@@ -345,7 +349,7 @@ public class JuZFrontEndApplication {
   @Ajax
   @Resource
   public Response sendNotifEmail(){
-    if (this.jcrService.sendNotifMissionParticipantEmail(this.currentMissionParticipantId))
+    if (this.jcrService.sendNotifMissionParticipantEmail(this.currentSettings,this.currentMissionParticipantId))
       return Response.ok("ok");
     return Response.ok("nok");
   }

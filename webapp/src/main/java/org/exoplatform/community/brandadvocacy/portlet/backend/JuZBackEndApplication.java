@@ -13,6 +13,7 @@ import org.exoplatform.commons.juzu.ajax.Ajax;
 import org.exoplatform.community.brandadvocacy.portlet.backend.controllers.*;
 import org.exoplatform.services.organization.OrganizationService;
 import org.exoplatform.webui.application.WebuiRequestContext;
+import org.json.JSONObject;
 
 import javax.inject.Inject;
 import java.util.Arrays;
@@ -126,6 +127,7 @@ public class JuZBackEndApplication {
   @Ajax
   @Resource
   public void sendNotifUpdateMissionParticipantEmail(String missionParticipantId){
-    this.jcrService.sendNotifMissionParticipantEmail(missionParticipantId);
+    JSONObject settings = this.jcrService.getProgramSettings(loginController.getCurrentProgramId());
+    this.jcrService.sendNotifMissionParticipantEmail(settings,missionParticipantId);
   }
 }

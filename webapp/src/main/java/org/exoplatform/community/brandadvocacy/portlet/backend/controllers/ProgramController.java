@@ -98,7 +98,7 @@ public class ProgramController {
         } catch (JSONException e) {
           e.printStackTrace();
         }
-        return Response.ok("ok");
+        return Response.ok("The program has been updated");
       }
     }
     return Response.ok("nok");
