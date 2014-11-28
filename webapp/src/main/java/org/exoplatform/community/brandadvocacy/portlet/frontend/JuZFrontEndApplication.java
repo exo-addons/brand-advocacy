@@ -79,13 +79,6 @@ public class JuZFrontEndApplication {
     if (null == this.currentProgramId)
       this.loadCurrentProgram();
     if (null != this.currentProgramId) {
-      this.currentSettings = this.jcrService.getProgramSettings(currentProgramId);
-      if (null != currentSettings){
-        String banner_url = Utils.getAttrFromJson(currentSettings,Program.banner_url_setting_key);
-        if (null != banner_url && !"".equals(banner_url) && this.checkBannerUrl(bannerUrl))
-          this.bannerUrl = banner_url;
-      }
-
 //      this.loadCurrentMission();
       this.getRandomMission();
     }
@@ -99,6 +92,15 @@ public class JuZFrontEndApplication {
     if (null != remoteUserName){
       this.init();
       if (null != this.currentMissionId){
+
+        this.currentSettings = this.jcrService.getProgramSettings(currentProgramId);
+        if (null != currentSettings){
+          String banner_url = Utils.getAttrFromJson(currentSettings,Program.banner_url_setting_key);
+          if (null != banner_url && !"".equals(banner_url))
+            this.bannerUrl = banner_url;
+          if(!this.checkBannerUrl(bannerUrl))
+            this.bannerUrl = "";
+        }
         return indexTpl.ok();
       }
     }
