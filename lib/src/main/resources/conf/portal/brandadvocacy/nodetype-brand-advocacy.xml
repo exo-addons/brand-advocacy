@@ -340,12 +340,6 @@
           <requiredPrimaryType>brad:missionparticipantslist</requiredPrimaryType>
         </requiredPrimaryTypes>
       </childNodeDefinition>
-      <childNodeDefinition name="exo:settings" defaultPrimaryType="brad:program-settings" autoCreated="true" mandatory="true"
-                           onParentVersion="COPY" protected="false" sameNameSiblings="false">
-        <requiredPrimaryTypes>
-          <requiredPrimaryType>brad:program-settings</requiredPrimaryType>
-        </requiredPrimaryTypes>
-      </childNodeDefinition>
     </childNodeDefinitions>
   </nodeType>
 

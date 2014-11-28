@@ -98,9 +98,9 @@ public class JuZFrontEndApplication {
           String banner_url = Utils.getAttrFromJson(currentSettings,Program.banner_url_setting_key);
           if (null != banner_url && !"".equals(banner_url))
             this.bannerUrl = banner_url;
-          if(!this.checkBannerUrl(bannerUrl))
-            this.bannerUrl = "";
         }
+        if(!this.checkBannerUrl(bannerUrl))
+          this.bannerUrl = "";
         return indexTpl.ok();
       }
     }

@@ -28,6 +28,7 @@ public class ProgramDAO extends DAO {
   public static final String node_prop_participants = "exo:participantslist";
   public static final String node_prop_missionparticipants = "exo:missionparticipantslist";
   public static final String node_prop_settings = "exo:settings";
+  public static final String node_prop_settings_programId = "exo:program_id";
   public static final String node_settings = "exo:program-settings";
 
   public ProgramDAO(JCRImpl jcrImpl) {
@@ -40,7 +41,9 @@ public class ProgramDAO extends DAO {
       if (extensionHome.hasNode(node_settings)){
         return extensionHome.getNode(node_settings);
       }else{
-        return extensionHome.addNode(node_settings,JCRImpl.PROGRAM_SETTINGS_NODE_TYPE);
+        Node aNode = extensionHome.addNode(node_settings,"nt:unstructured");
+        extensionHome.save();
+        return aNode;
       }
     }
     return null;
@@ -62,6 +65,7 @@ public class ProgramDAO extends DAO {
   }
 
   private void setSettingsPropertiesNode(Node node, Program program) throws RepositoryException {
+    node.setProperty(node_prop_settings_programId,program.getId());
     node.setProperty(node_prop_settings,program.getSettings().toString());
   }
   private JSONObject transferNode2SettingsObject(Node node) throws RepositoryException {
@@ -195,7 +199,7 @@ public class ProgramDAO extends DAO {
           }
           if (null != settingsNode){
             this.setSettingsPropertiesNode(settingsNode,program);
-            settingsHome.getParent().save();
+            settingsHome.save();
             return this.transferNode2SettingsObject(settingsNode);
           }
         }
