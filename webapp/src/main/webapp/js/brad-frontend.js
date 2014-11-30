@@ -2,8 +2,11 @@
  * Created by exoplatform on 13/10/14.
  */
 (function($) {
-
+  var _brandAdvFtContainer;
+  var _discoveryDOM;
+  var _ftStepContainerTemp;
   var _ftStepContainer;
+  var _createNew;
   var _isValidTweetMsg;
   var _msgError;
   var bradObj = {};
@@ -44,6 +47,12 @@
   var _displayProcessing = function(){
     _ftStepContainer.html('Processing ...');
   };
+  var _displayNoMoreMission = function(){
+    _ftStepContainer.html('We are preparing next mission, please come back later');
+  };
+  var _displayProcessError = function(){
+    _ftStepContainer.html('Something went wrong,please try later');
+  };
   var _initTerminateForm = function(){
 
     $("input:text").click(function(){
@@ -54,14 +63,15 @@
   };
   var _validateTerminateForm = function(){
     _msgError = "";
-    var urlDOM = $("#brad_participant_url_submitted");
-    var fNameDOM = $("#brad-participant-fname");
-    var lNameDOM = $("#brad-participant-lname");
-    var adrsDOM  =  $("#brad-participant-address");
-    var phoneDOM = $("#brad-participant-phone");
-    var cityDOM = $("#brad-participant-city");
+    var parent = _ftStepContainer.children('.brad-terminate-step');
+    var urlDOM =  parent.find(".brad_participant_url_submitted");
+    var fNameDOM = parent.find(".brad-participant-fname");
+    var lNameDOM = parent.find(".brad-participant-lname");
+    var adrsDOM  =  parent.find(".brad-participant-address");
+    var phoneDOM = parent.find(".brad-participant-phone");
+    var cityDOM = parent.find(".brad-participant-city");
+    var countryDOM = parent.find(".brad-participant-country");
     var errorClass = 'error';
-
     var urlParent = urlDOM.closest('.control-group');
     urlParent.removeClass(errorClass);
     var fNameParent = fNameDOM.closest('.control-group');
@@ -99,16 +109,29 @@
       _msgError += "Please fill-in correct the phone\n";
       phoneParent.addClass(errorClass);
     }
-    if($("#brad-participant-country").val().length < 1) {
+    if(countryDOM.val().length < 1) {
       _msgError += "Please select your country\n";
     }
     return _msgError;
+  };
+  var _appendStepCommon = function(content){
+    _ftStepContainer.html('');
+    content.appendTo('.brad-container-step-container');
+  };
+  var _removeStepCommon = function(step){
+    var stepDOM = _ftStepContainerTemp.children('.'+step);
+    if(stepDOM.length){
+      stepDOM.remove();
+    }
   };
   var _loadDiscoveryView = function(){
     $(".jz").jzAjax("JuZFrontEndApplication.loadDiscoveryView()",{
       success: function(data){
         if(typeof data == "string" && data != "nok"){
-          $("#brad-ft-container").html(data);
+          _brandAdvFtContainer.html(data);
+          _discoveryDOM = $('.brad-ft-discovery');
+          _ftStepContainer = $(".brad-container-step-container");
+          _discoveryDOM.show();
           $(window).scroll(function (event) {
             var scroll = $(window).scrollTop();
             if(scroll > 45) {
@@ -118,25 +141,55 @@
             }
           });
         }
-        else
-          $("#brad-ft-container").html("something went wrong, please retry it later");
       }
     });
   };
+  var _loadStepContainerView = function(){
+    $('.jz').jzAjax("JuZFrontEndApplication.loadStepContainerView()", {
+      success: function (data) {
+        $("#brad-ft-container").html(data);
+        _loadStartView();
+      }
+    });
+  };
+
   var _loadStartView = function () {
     _displayLoading();
     $(".jz").jzAjax("JuZFrontEndApplication.loadStartView()",{
       success:function(data){
         _ftStepContainer.html(data);
+        _ftStepContainerTemp.append(data);
       }
     });
   };
+
+  var _loadMissionView = function(){
+    $('.jz').jzAjax("JuZFrontEndApplication.loadProcessView()",{
+      success: function(data){
+        if(data != "nok"){
+          _initView();
+          _ftStepContainerTemp.append(data);
+        }
+      }
+    });
+  };
+
+  var _executeMission = function(){
+    $('.jz').jzAjax("JuZFrontEndApplication.executeMission()",{
+      success: function(data){
+        if(data == "ok"){
+          _processExecuteMission();
+        }
+        else
+          _ftStepContainer.html("something went wrong !!!, please try later");
+      }
+    });
+  }
   var _loadTerminateView = function(){
-    _displayProcessing();
     $(".jz").jzAjax("JuZFrontEndApplication.loadTerminateView()",{
       success: function(data){
         if(typeof data == "string" && data != "nok"){
-          _ftStepContainer.html(data);
+          _ftStepContainerTemp.append(data);
           _addOptionCountries();
           _initTerminateForm();
         }
@@ -146,50 +199,70 @@
     });
   };
 
-  // for old logic: load current mission for participant
-  var _initView = function(){
-    _displayLoading();
-    $(".jz").jzAjax("JuZFrontEndApplication.initView()", {
-      success: function (data) {
+
+  var _completeMission = function(url,fname,lname,address,city,phone,country,size){
+    _displayProcessing();
+    $('.jz').jzAjax("JuZFrontEndApplication.completeMission()",{
+      data:{'url':url,fname:fname,lname:lname,address:address,city:city,phone:phone,country:country,size:size},
+      success: function(data){
+        if(data == "ok"){
+          _processTerminate();
+        }
+        else{
+          _displayProcessError();
+          return;
+        }
+      }
+    });
+  };
+  var _loadThankyouView = function(){
+    $('.jz').jzAjax("JuZFrontEndApplication.loadThankyouView()",{
+      success: function(data){
+        if(typeof data == "string" && data != "nok"){
         _ftStepContainer.html(data);
-        _addOptionCountries();
+          _tweetController();
+          _addFocusEvent2Input();
+          _sendNotifNewMissionParticipant();
+        }
+        else{
+          alert("something went wrong, please reload this page");
+          return;
+        }
       }
     });
   };
 
+  var _initView = function(){
+    _removeStepCommon('brad-process-step');
+  };
+
   var _addEventToBtnDiscovery = function(){
-    $(document).on('click.juzbrad.ft.discovery.view','#brad-ft-discovery',function(){
-      var jDiscovery = $(this);
-      jDiscovery.jzAjax("JuZFrontEndApplication.loadStepContainerView()", {
-        success: function (data) {
-//          $("#brad-ft-container").fadeIn('1000');
-          $("#brad-ft-container").html(data);
-          _ftStepContainer = $(".brad-container-step-container");
-          _loadStartView();
-        }
-      });
+    $(document).on('click.juzbrad.ft.discovery.view','.brad-ft-discovery',function(){
+      if(_createNew){
+        _processGenerateNewMission();
+      }else{
+        _displayLoading();
+        _processDiscovery();
+        $(this).hide();
+        $('.brand-adv-LightBoxContainer').show();
+        _loadMissionView();
+      }
     });
   };
 
   var _addEventToBtnClose = function(){
-    $(document).on('click.juzbrad.ft.index.view','.btn-brad-close',function(){
+    $(document).on('click.juzbrad.ft.close.view','.btn-brad-close',function(){
       $(".tweetPopup").removeClass('scroll-down');
-      _loadDiscoveryView();
+      _ftStepContainer.html('');
+      $('.brand-adv-LightBoxContainer').hide();
+      _discoveryDOM.show();
+      _createNew = true;
     });
   };
 
   var _addEventToBtnStart = function(){
-    $(document).on('click.juzbrad.ft.start.view','.btn-brad-start',function(e){
-      _displayProcessing();
-      $('.jz').jzAjax("JuZFrontEndApplication.loadProcessView()",{
-        success: function(data){
-          if(typeof data == "string" && data != "nok"){
-            _ftStepContainer.html(data);
-          }
-          else
-          _ftStepContainer.html("something went wrong !!!, please try later");
-        }
-      });
+    $(document).on('click.juzbrad.ft.start.view','.btn-brad-start',function(){
+      _processStart();
     });
   };
   var _sendNotifNewMissionParticipant = function(){
@@ -210,11 +283,11 @@
   var _addEventToBtnDone = function(){
     $(document).on('click.juzbrad.ft.done.view','.btn-brad-done',function(){
       var label = $(this).text();
+      var missionId = $(this).attr("data-missionId");
+      var propositionId = $(".propositionId").val();
       if(label == "Next"){
-        var missionId = $(".missionId").val();
-        var propositionId = $(".propositionId").val();
         if(_checkFtForm(missionId,propositionId)) {
-          _loadTerminateView();
+          _executeMission();
         }
       }else{
         var third_part_link = $(this).attr('data-url');
@@ -227,51 +300,38 @@
   var _addEventToBtnTerminate = function(){
     $(document).on('click.juzbrad.ft.terminate.view','.btn-brad-terminate',function(){
       if(_validateTerminateForm().length == 0){
-        var jTerminate = $(this);
-        var url = $("#brad_participant_url_submitted").val();
-        var fname = $("#brad-participant-fname").val();
-        var lname = $("#brad-participant-lname").val();
-        var address = $("#brad-participant-address").val();
-        var city = $("#brad-participant-city").val();
-        var phone = $("#brad-participant-phone").val();
-        var country = $("#brad-participant-country").val();
-        var size = $("#brad-participant-size").val();
-        jTerminate.jzAjax("JuZFrontEndApplication.loadThankyouView()",{
-          data:{'url':url,fname:fname,lname:lname,address:address,city:city,phone:phone,country:country,size:size},
-          success: function(data){
-            if(typeof data == "string" && data != "nok"){
-              _ftStepContainer.html(data);
-              _tweetController();
-              _addFocusEvent2Input();
-              _sendNotifNewMissionParticipant();
-            }
-            else{
-              alert("something went wrong, please reload this page");
-              return;
-            }
-          }
-        });
+        var parent = _ftStepContainer.children('.brad-terminate-step');
+        var url = parent.find(".brad_participant_url_submitted").val();
+        var fname = parent.find(".brad-participant-fname").val();
+        var lname = parent.find(".brad-participant-lname").val();
+        var address = parent.find(".brad-participant-address").val();
+        var city = parent.find(".brad-participant-city").val();
+        var phone = parent.find(".brad-participant-phone").val();
+        var country = parent.find(".brad-participant-country").val();
+        var size = parent.find(".brad-participant-size").val();
+        _completeMission(url,fname,lname,address,city,phone,country,size);
       }else{
         alert(_msgError);
       }
     });
   };
   var _addOptionCountries = function() {
-    if($('#brad-participant-country').length > 0){
+    var parent = _ftStepContainerTemp.children('.brad-terminate-step');
+    if(parent.find('.brad-participant-country').length > 0){
       var strOptions = '<option value="">Country</option>';
       $.getJSON("/brand-advocacy-webapp/resources/countries.json", function(data){
         $.each(data, function(i,v){
           strOptions +='<option value="'+v.code+'">'+v.name+'</option>';
         });
-        $('#brad-participant-country').append(strOptions);
+        parent.find('.brad-participant-country').append(strOptions);
       });
     }
   };
 
   var _tweetController = function(){
-    $("#txt-brad-tweet").keypress(function(){
-      var legth = $(this).val().length;
-      if(legth > 108) {
+    _ftStepContainer.children('.brad-thankyou-step').find(".txt-brad-tweet").keypress(function(){
+      var length = $(this).val().length;
+      if(length > 108) {
         _tweetErrorMessageController(true);
       } else {
         _tweetErrorMessageController(false);
@@ -279,31 +339,33 @@
     });
   };
   var _tweetErrorMessageController = function(b){
+    var parent = _ftStepContainer.children('.brad-thankyou-step');
     if(b){
-      $(".brad-errors").show("slow");
-      $(".btn-brad-tweet").attr("href", "#");
-      $(".btn-brad-tweet").attr("disabled", "disabled");
+      parent.find(".brad-errors").show("slow");
+      parent.find(".btn-brad-tweet").attr("href", "#");
+      parent.find(".btn-brad-tweet").attr("disabled", "disabled");
       _isValidTweetMsg = false;
     }else{
-      $(".brad-errors").hide("fast");
-      $(".btn-brad-tweet").removeAttr("disabled");
+      parent.find(".brad-errors").hide("fast");
+      parent.find(".btn-brad-tweet").removeAttr("disabled");
       _isValidTweetMsg = true;
     }
   };
 
   var _addEvent2LinkTweet = function(){
     $(document).on('click.juzBrad.ft.tweetit','a.btn-brad-tweet',function(){
-      if(!_isValidTweetMsg || $("#txt-brad-tweet").val().length > 108){
+      var parent = _ftStepContainer.children('.brad-thankyou-step');
+      var textareaMessageDOM = parent.find(".txt-brad-tweet");
+      if(!_isValidTweetMsg || textareaMessageDOM.val().length > 108){
         _tweetErrorMessageController(true);
         return;
       }
       var tweetMessage = '';
       var defaultTweetMsg = "I just won a free t-shirt from @eXoPlatform on ";
-      var textareaMessage = $("#txt-brad-tweet").val();
       var strTweet = "http://twitter.com/share?url=http://community.exoplatform.com&hashtags=ILOVEMYESN&text=";
 
-      if(textareaMessage.length > 0)  {
-        tweetMessage = strTweet + encodeURI(textareaMessage);
+      if(textareaMessageDOM.val().length > 0)  {
+        tweetMessage = strTweet + encodeURI(textareaMessageDOM.val());
       } else {
         tweetMessage = strTweet + encodeURI(defaultTweetMsg);
       }
@@ -331,8 +393,95 @@
       $(this).select();
     });
   };
+
+  var _processDiscovery = function(){
+    _appendStartStepView();
+    var terminateDOM = _ftStepContainerTemp.children('.brad-terminate-step');
+    if(terminateDOM.length <= 0){
+      _loadTerminateView();
+    }
+  };
+  var _processStart = function(){
+    $('.jz').jzAjax('JuZFrontEndApplication.processStartMission()', {
+      success:function(data){
+        if(data == 'nok'){
+          _displayProcessError();
+        }else
+          _appendExecuteStepView();
+      }
+    });
+  };
+  var _processExecuteMission = function(){
+    _appendTerminateStepView();
+  };
+  var _processTerminate = function(){
+    _appendThankyouStepView();
+  };
+  var _processGenerateNewMission = function(){
+
+    $('.jz').jzAjax('JuZFrontEndApplication.generateNewMission()',{
+      success:function(data){
+        if(data == 'nok'){
+          _removeStepCommon('brad-ft-start-step');
+          _displayLoading();
+          _displayNoMoreMission();
+          _discoveryDOM.hide();
+          $('.brand-adv-LightBoxContainer').show();
+        }else{
+          _displayLoading();
+          _processDiscovery();
+          _discoveryDOM.hide();
+          $('.brand-adv-LightBoxContainer').show();
+          _loadMissionView();
+        }
+      }
+    });
+  }
+  var _appendStartStepView = function(){
+    var startDOM = _ftStepContainerTemp.children('.brad-ft-start-step');
+    if(startDOM.length){
+      _appendStepCommon(startDOM.clone());
+    }else{
+      _displayNoMoreMission();
+    }
+  };
+  var _appendExecuteStepView = function(){
+    _displayLoading();
+    var processDOM = _ftStepContainerTemp.children('.brad-process-step');
+    if(processDOM.length){
+      _appendStepCommon(processDOM.clone());
+    }else{
+      _displayProcessError();
+    }
+  };
+  var _appendTerminateStepView = function(){
+    _displayProcessing();
+    var terminateDOM = _ftStepContainerTemp.children('.brad-terminate-step');
+    if(terminateDOM.length){
+      _appendStepCommon(terminateDOM.clone());
+    }else{
+      _loadTerminateView();
+    }
+  };
+  var _appendThankyouStepView = function(){
+    _displayProcessing();
+    var thankyouDOM = _ftStepContainerTemp.children('.brad-thankyou-step');
+    if(thankyouDOM.length){
+      _appendStepCommon(thankyouDOM.clone());
+      _sendNotifNewMissionParticipant();
+      _initView();
+      _tweetController();
+      _addFocusEvent2Input();
+
+    }else{
+      alert('something went wrong, please try later');
+    }
+  };
   bradObj.init = function(){
+    _createNew = false;
     _isValidTweetMsg = true;
+    _ftStepContainerTemp = $("#brad-ft-container-temp");
+    _brandAdvFtContainer = $("#brad-ft-container");
     _loadDiscoveryView();
     _addEventToBtnDiscovery();
     _addEventToBtnStart();

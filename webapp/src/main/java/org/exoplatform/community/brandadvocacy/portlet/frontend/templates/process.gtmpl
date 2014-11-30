@@ -6,9 +6,8 @@ import org.apache.commons.lang.StringEscapeUtils;
 if(null != mission) {
     def propositions = mission.getPropositions();
 %>
-    <input type="hidden" name="missionId" class="missionId" value="<%= mission.getId()%>"/>
     <!-- Step 1 -->
-    <div class="tweetStepContent step-1">
+    <div class="tweetStepContent step-1 brad-process-step">
         <h5 class="titleStep">
             <span class="numb">1</span><span class="textStep">Here is your mission:</span>
         </h5>
@@ -19,7 +18,7 @@ if(null != mission) {
                 <input type="hidden" name="propositionId" class="propositionId" value="<%= proposition.getId()%>"/>
             <% } %>
         </div>
-        <button class="button-flat-balck btn-brad-done" data-url="<%=mission.getThird_part_link()%>">Go!</button>
+        <button data-missionId="<%= mission.getId()%>" class="button-flat-balck btn-brad-done" data-url="<%=mission.getThird_part_link()%>">Go!</button>
     </div>
     <!-- /.step-1 -->
 

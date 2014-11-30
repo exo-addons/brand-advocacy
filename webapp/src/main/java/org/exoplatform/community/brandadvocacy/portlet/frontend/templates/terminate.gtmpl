@@ -1,12 +1,12 @@
 #{param name=sizes/}
 <!-- Step 2 -->
-<div class="tweetStepContent step-2">
+<div class="tweetStepContent step-2 brad-terminate-step">
     <h5 class="titleStep mgB15-ipt">
         <span class="numb">2</span><span class="textStep">Where should we check the result ?</span>
     </h5>
     <div class="control-group mgB20">
         <div class="controls">
-            <input type="text" id="brad_participant_url_submitted" placeholder="Url">
+            <input type="text" class="brad_participant_url_submitted" placeholder="Url">
         </div>
     </div>
     <h5 class="titleStep mgB15-ipt">
@@ -14,38 +14,38 @@
     </h5>
     <div class="control-group">
         <div class="controls">
-            <input type="text" id="brad-participant-fname" placeholder="First Name ">
+            <input type="text" class="brad-participant-fname" placeholder="First Name ">
         </div>
     </div>
     <div class="control-group">
         <div class="controls">
-            <input type="text" id="brad-participant-lname" placeholder="Last Name">
+            <input type="text" class="brad-participant-lname" placeholder="Last Name">
         </div>
     </div>
     <div class="control-group">
         <div class="controls">
-            <input type="text" id="brad-participant-address" placeholder="Address">
+            <input type="text" class="brad-participant-address" placeholder="Address">
         </div>
     </div>
     <div class="control-group">
         <div class="controls">
-            <input type="text" id="brad-participant-city" placeholder="City">
+            <input type="text" class="brad-participant-city" placeholder="City">
         </div>
     </div>
     <div class="control-group">
         <div class="controls">
-            <input type="text" id="brad-participant-phone" placeholder="Phone">
+            <input type="text" class="brad-participant-phone" placeholder="Phone">
         </div>
     </div>
     <div class="control-group">
         <div class="controls">
-            <select name="brad-participant-country" id="brad-participant-country">
+            <select name="brad-participant-country" class="brad-participant-country">
             </select>
         </div>
     </div>
     <div class="control-group">
         <div class="controls">
-            <select name="tweetSize" id="brad-participant-size">
+            <select name="tweetSize" class="brad-participant-size">
                <% sizes.each { size -> %>
                 <option value="<%= size.getValue() %>"><%= size.getLabel() %></option>
                 <% } %>

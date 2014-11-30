@@ -44,6 +44,10 @@ public class JuZFrontEndApplication {
   org.exoplatform.community.brandadvocacy.portlet.frontend.templates.index indexTpl;
 
   @Inject
+  @Path("indexTemp.gtmpl")
+  org.exoplatform.community.brandadvocacy.portlet.frontend.templates.indexTemp indexTempTpl;
+
+  @Inject
   @Path("discovery.gtmpl")
   org.exoplatform.community.brandadvocacy.portlet.frontend.templates.discovery discoveryTpl;
 
@@ -85,6 +89,7 @@ public class JuZFrontEndApplication {
   }
   @View
   public Response.Content index(SecurityContext securityContext,HttpContext httpContext){
+
     String dns = httpContext.getScheme()+"://"+httpContext.getServerName()+":"+httpContext.getServerPort();
     this.bannerUrl = dns+"/rest/jcr/repository/collaboration/sites/intranet/web%20contents/brand-advocacy/banner.jpg";
     this.isFinished = false;
@@ -101,7 +106,7 @@ public class JuZFrontEndApplication {
         }
         if(!this.checkBannerUrl(bannerUrl))
           this.bannerUrl = "";
-        return indexTpl.ok();
+          return indexTpl.ok();
       }
     }
     return Response.ok("");
@@ -204,7 +209,6 @@ public class JuZFrontEndApplication {
   @Ajax
   @Resource
   public Response.Content loadStartView(){
-    this.init();
     if(null == this.currentMissionId || null == this.currentPropositionId){
       return Response.ok("We are preparing next mission, please come back later");
     }
@@ -212,6 +216,16 @@ public class JuZFrontEndApplication {
       return Response.ok("something went wrong, please come back later");
     }else{
       return startTpl.ok();
+    }
+  }
+
+  @Ajax
+  @Resource
+  public Response processStartMission(){
+    if(!this.getOrCreateMissionParticipant(this.currentMissionId)){
+      return Response.ok("nok");
+    }else{
+      return Response.ok("ok");
     }
   }
 
@@ -228,13 +242,19 @@ public class JuZFrontEndApplication {
   @Ajax
   @Resource
   public Response loadTerminateView(){
+    return terminateTpl.with().set("sizes", Size.values()).ok();
+  }
+
+  @Ajax
+  @Resource
+  public Response executeMission(){
     if(null != this.currentMissionParticipantId){
       MissionParticipant missionParticipant = this.jcrService.getMissionParticipantById(this.currentMissionParticipantId);
       if(null != missionParticipant){
         missionParticipant.setStatus(Status.INPROGRESS);
         if (null != this.jcrService.updateMissionParticipantInProgram(this.currentProgramId,missionParticipant)){
           this.currentMissionParticipantStatus = Status.INPROGRESS.getLabel();
-          return terminateTpl.with().set("sizes", Size.values()).ok();
+          return Response.ok("ok");
         }
       }
     }
@@ -243,7 +263,8 @@ public class JuZFrontEndApplication {
 
   @Ajax
   @Resource
-  public Response loadThankyouView(String url,String fname, String lname, String address, String city, String phone,String country,String size ){
+  // store mission only when user complete his mission
+  public Response completeMission(String url,String fname, String lname, String address, String city, String phone,String country,String size ){
     if(null != this.currentMissionParticipantId){
       MissionParticipant missionParticipant = this.jcrService.getMissionParticipantById(this.currentMissionParticipantId);
       if(null != missionParticipant){
@@ -256,9 +277,16 @@ public class JuZFrontEndApplication {
           missionParticipant.setAddress_id(addressObj.getId());
           missionParticipant.setSize(Size.getSize(Integer.parseInt(size)));
           if (null != this.jcrService.updateMissionParticipantInProgram(this.currentProgramId,missionParticipant) ){
-            if (this.completeMission()){
-              this.isFinished = true;
-              return thankyouTpl.ok();
+            Participant participant = new Participant(this.remoteUserName);
+            participant.setProgramId(this.currentProgramId);
+            Set<String> missionIds = new HashSet<String>();
+            missionIds.add(currentMissionId);
+            participant.setMission_ids(missionIds);
+            Set<String> missionParticipantIds = new HashSet<String>();
+            missionParticipantIds.add(currentMissionParticipantId);
+            participant.setMission_participant_ids(missionParticipantIds);
+            if (null != this.jcrService.addParticipant2Program(participant) && null != this.updateCurrentProposition()) {
+              return Response.ok("ok");
             }
           }
         }
@@ -268,23 +296,10 @@ public class JuZFrontEndApplication {
     return Response.ok("nok");
 
   }
-
-  // store mission only when user complete his mission
-  private Boolean completeMission(){
-    if (null != currentMissionId && null != currentPropositionId && null != this.currentMissionParticipantId){
-      Participant participant = new Participant(this.remoteUserName);
-      participant.setProgramId(this.currentProgramId);
-      Set<String> missionIds = new HashSet<String>();
-      missionIds.add(currentMissionId);
-      participant.setMission_ids(missionIds);
-      Set<String> missionParticipantIds = new HashSet<String>();
-      missionParticipantIds.add(currentMissionParticipantId);
-      participant.setMission_participant_ids(missionParticipantIds);
-      if (null != this.jcrService.addParticipant2Program(participant) && null != this.updateCurrentProposition()) {
-        return true;
-      }
-    }
-    return false;
+  @Ajax
+  @Resource
+  public Response loadThankyouView(){
+    return thankyouTpl.ok();
   }
   private Boolean getOrCreateMissionParticipant(String missionId){
 
@@ -351,14 +366,24 @@ public class JuZFrontEndApplication {
   @Ajax
   @Resource
   public Response sendNotifEmail(){
-    if (this.jcrService.sendNotifMissionParticipantEmail(this.currentSettings,this.currentMissionParticipantId))
+    if (this.jcrService.sendNotifMissionParticipantEmail(this.currentSettings,this.currentMissionParticipantId)) {
       return Response.ok("ok");
+    }
     return Response.ok("nok");
   }
   @Ajax
   @Resource
   public Response sendNotifAlmostMissionDoneEmail(){
-    if (this.jcrService.sendNotifAlmostMissionDoneEmail(this.currentProgramId,this.remoteUserName))
+    if (this.jcrService.sendNotifAlmostMissionDoneEmail(this.currentProgramId,this.remoteUserName)) {
+      return Response.ok("ok");
+    }
+    return Response.ok("nok");
+  }
+  @Ajax
+  @Resource
+  public Response generateNewMission(){
+    this.init();
+    if(null != this.currentMissionId)
       return Response.ok("ok");
     return Response.ok("nok");
   }
