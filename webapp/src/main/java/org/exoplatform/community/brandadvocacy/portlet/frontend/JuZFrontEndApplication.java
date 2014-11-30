@@ -43,9 +43,6 @@ public class JuZFrontEndApplication {
   @Path("index.gtmpl")
   org.exoplatform.community.brandadvocacy.portlet.frontend.templates.index indexTpl;
 
-  @Inject
-  @Path("indexTemp.gtmpl")
-  org.exoplatform.community.brandadvocacy.portlet.frontend.templates.indexTemp indexTempTpl;
 
   @Inject
   @Path("discovery.gtmpl")
