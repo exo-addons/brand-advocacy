@@ -14,7 +14,7 @@ if(null != mission) {
         <p class="write-review"><i class="iconCapterra"></i><%= mission.getTitle()%></p>
         <div class="quote-popup brad-proposition-suggestion">
             <% propositions.each{ proposition -> %>
-                <%= proposition.getContent() %>
+                <p><%= proposition.getContent() %></p>
                 <input type="hidden" name="propositionId" class="propositionId" value="<%= proposition.getId()%>"/>
                 <textarea class=" hide brad-proposition-textarea" rows="3"><%= proposition.getContent() %></textarea>
             <% } %>
