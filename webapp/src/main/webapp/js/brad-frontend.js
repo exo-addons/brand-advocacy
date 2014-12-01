@@ -482,6 +482,7 @@
     $(document).on('click.juzBrad.Proposition.Click','.brad-proposition-suggestion',function(){
       var pDOM = $(this).children('p');
       var textareaDOM = $(this).children('textarea');
+      textareaDOM.html(pDOM.text());
       pDOM.hide();
       textareaDOM.show();
       textareaDOM.select();

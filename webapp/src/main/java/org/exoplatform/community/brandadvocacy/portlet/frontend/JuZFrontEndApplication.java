@@ -87,8 +87,9 @@ public class JuZFrontEndApplication {
   @View
   public Response.Content index(SecurityContext securityContext,HttpContext httpContext){
 
-    String dns = httpContext.getScheme()+"://"+httpContext.getServerName()+":"+httpContext.getServerPort();
-    this.bannerUrl = dns+"/rest/jcr/repository/collaboration/sites/intranet/web%20contents/brand-advocacy/banner.jpg";
+//    String dns = httpContext.getScheme()+"://"+httpContext.getServerName()+":"+httpContext.getServerPort();
+//    this.bannerUrl = dns+"/rest/jcr/repository/collaboration/sites/intranet/web%20contents/brand-advocacy/banner.jpg";
+    this.bannerUrl = "";
     this.isFinished = false;
     this.remoteUserName = securityContext.getUserPrincipal().getName();
     if (null != remoteUserName){
@@ -101,7 +102,7 @@ public class JuZFrontEndApplication {
           if (null != banner_url && !"".equals(banner_url))
             this.bannerUrl = banner_url;
         }
-        if(!this.checkBannerUrl(bannerUrl))
+        if(!"".equals(bannerUrl) && !this.checkBannerUrl(bannerUrl))
           this.bannerUrl = "";
           return indexTpl.ok();
       }

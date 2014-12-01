@@ -2,7 +2,9 @@
 #{param name=programTitle/}
 <% if(bannerUrl == ""){ %>
 <div class="brand-adv-custom-tweet-button brad-ft-discovery">
-    <a class="twitter popup" href="#"><span>&nbsp;</span></a>
+    <!--a class="twitter popup" href="#"><span>&nbsp;</span></a-->
+    <img class="img-responsive" src="/brand-advocacy-webapp/img/banner-2.jpg" />
+    <a class="btn">Discovery your mission</a>
 </div>
 <% }else{ %>
 <div class="brand-adv-custom-tweet-button brad-ft-discovery">
