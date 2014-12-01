@@ -11,13 +11,16 @@ if(null != mission) {
         <h5 class="titleStep">
             <span class="numb">1</span><span class="textStep">Here is your mission:</span>
         </h5>
-        <p class="write-review"><%= mission.getTitle()%></p>
-        <div class="quote-popup">
+        <p class="write-review"><i class="iconCapterra"></i><%= mission.getTitle()%></p>
+        <div class="quote-popup brad-proposition-suggestion">
             <% propositions.each{ proposition -> %>
                 <%= proposition.getContent() %>
                 <input type="hidden" name="propositionId" class="propositionId" value="<%= proposition.getId()%>"/>
+                <textarea class=" hide brad-proposition-textarea" rows="3"><%= proposition.getContent() %></textarea>
             <% } %>
+
         </div>
+        <p class="tut-copy">Need inspiration? Click on suggestion text area and press <span class="btn btn-mini">Ctrl</span> + <span class="btn btn-mini">C</span> to use this suggestion!</p>
         <button data-missionId="<%= mission.getId()%>" class="button-flat-balck btn-brad-done" data-url="<%=mission.getThird_part_link()%>">Go!</button>
     </div>
     <!-- /.step-1 -->

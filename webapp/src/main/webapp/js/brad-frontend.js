@@ -477,11 +477,50 @@
       alert('something went wrong, please try later');
     }
   };
+  var _ctrlDown
+  var _ctrlKey;
+  var _cKey;
+
+  var _addEventClick2GetSuggestion = function(){
+    $(document).on('click.juzBrad.Proposition.Click','.brad-proposition-suggestion',function(){
+      var pDOM = $(this).children('p');
+      var textareaDOM = $(this).children('textarea');
+      pDOM.hide();
+      textareaDOM.show();
+      textareaDOM.select();
+    });
+  };
+  var _addEventKeyDownCopy = function(){
+    $(document).on('keydown.juzBrad.Proposition.Copy','body',function(e){
+      if (_ctrlDown && e.keyCode == _cKey) {
+        var quoteDOM = _ftStepContainer.children('.brad-process-step').children('.quote-popup');
+//        quoteDOM.children('textarea').hide();
+//        quoteDOM.children('p').show();
+      }
+    });
+  };
+  var _addEvent2DetectCopyAction = function(){
+
+    $(document).keydown(function(e)
+    {
+      if (e.keyCode == _ctrlKey){ _ctrlDown = true; }
+    }).keyup(function(e)
+    {
+      if (e.keyCode == _ctrlKey) _ctrlDown = false;
+    });
+  };
+
   bradObj.init = function(){
+    _ctrlDown = false;
+    _ctrlKey = 17;
+    _cKey = 67;
     _createNew = false;
     _isValidTweetMsg = true;
     _ftStepContainerTemp = $("#brad-ft-container-temp");
     _brandAdvFtContainer = $("#brad-ft-container");
+    _addEvent2DetectCopyAction();
+    _addEventKeyDownCopy();
+    _addEventClick2GetSuggestion();
     _loadDiscoveryView();
     _addEventToBtnDiscovery();
     _addEventToBtnStart();
