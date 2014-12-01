@@ -238,12 +238,13 @@
 
   var _addEventToBtnDiscovery = function(){
     $(document).on('click.juzbrad.ft.discovery.view','.brad-ft-discovery',function(){
+      _displayLoading();
+      $(this).hide();
+      $('.brand-adv-LightBoxContainer').show();
       if(_createNew){
         _processGenerateNewMission();
       }else{
-        _displayLoading();
         _processDiscovery();
-        $(this).hide();
         $('.brand-adv-LightBoxContainer').show();
         _loadMissionView();
       }
@@ -262,6 +263,7 @@
 
   var _addEventToBtnStart = function(){
     $(document).on('click.juzbrad.ft.start.view','.btn-brad-start',function(){
+      _displayProcessing();
       _processStart();
     });
   };
@@ -287,7 +289,10 @@
       var propositionId = $(".propositionId").val();
       if(label == "Next"){
         if(_checkFtForm(missionId,propositionId)) {
+          _displayProcessing();
           _executeMission();
+        }else{
+          _displayProcessError();
         }
       }else{
         var third_part_link = $(this).attr('data-url');
@@ -418,20 +423,15 @@
     _appendThankyouStepView();
   };
   var _processGenerateNewMission = function(){
-
     $('.jz').jzAjax('JuZFrontEndApplication.generateNewMission()',{
       success:function(data){
         if(data == 'nok'){
           _removeStepCommon('brad-ft-start-step');
-          _displayLoading();
           _displayNoMoreMission();
-          _discoveryDOM.hide();
-          $('.brand-adv-LightBoxContainer').show();
+//          $('.brand-adv-LightBoxContainer').show();
         }else{
-          _displayLoading();
           _processDiscovery();
-          _discoveryDOM.hide();
-          $('.brand-adv-LightBoxContainer').show();
+//          $('.brand-adv-LightBoxContainer').show();
           _loadMissionView();
         }
       }
@@ -446,7 +446,6 @@
     }
   };
   var _appendExecuteStepView = function(){
-    _displayLoading();
     var processDOM = _ftStepContainerTemp.children('.brad-process-step');
     if(processDOM.length){
       _appendStepCommon(processDOM.clone());
@@ -455,7 +454,6 @@
     }
   };
   var _appendTerminateStepView = function(){
-    _displayProcessing();
     var terminateDOM = _ftStepContainerTemp.children('.brad-terminate-step');
     if(terminateDOM.length){
       _appendStepCommon(terminateDOM.clone());
@@ -464,7 +462,6 @@
     }
   };
   var _appendThankyouStepView = function(){
-    _displayProcessing();
     var thankyouDOM = _ftStepContainerTemp.children('.brad-thankyou-step');
     if(thankyouDOM.length){
       _appendStepCommon(thankyouDOM.clone());
