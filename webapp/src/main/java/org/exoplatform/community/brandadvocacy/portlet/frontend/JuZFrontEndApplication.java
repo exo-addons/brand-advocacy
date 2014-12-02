@@ -169,6 +169,13 @@ public class JuZFrontEndApplication {
     }
   }
 
+  public String checkSession(){
+    String msg = "";
+    if(null == remoteUserName || "".equals(remoteUserName))
+      msg = "Your session has been expired, please refresh your browser";
+    return msg;
+  }
+
   @Ajax
   @Resource
   public Response.Content initView(){
@@ -220,11 +227,17 @@ public class JuZFrontEndApplication {
   @Ajax
   @Resource
   public Response processStartMission(){
-    if(!this.getOrCreateMissionParticipant(this.currentMissionId)){
-      return Response.ok("nok");
+    String session = this.checkSession();
+    if ("".equals(session)){
+      if(!this.getOrCreateMissionParticipant(this.currentMissionId)){
+        return Response.ok("nok");
+      }else{
+        return Response.ok("ok");
+      }
     }else{
-      return Response.ok("ok");
+      return Response.ok(session);
     }
+
   }
 
   @Ajax
@@ -246,53 +259,63 @@ public class JuZFrontEndApplication {
   @Ajax
   @Resource
   public Response executeMission(){
-    if(null != this.currentMissionParticipantId){
-      MissionParticipant missionParticipant = this.jcrService.getMissionParticipantById(this.currentMissionParticipantId);
-      if(null != missionParticipant){
-        missionParticipant.setStatus(Status.INPROGRESS);
-        if (null != this.jcrService.updateMissionParticipantInProgram(this.currentProgramId,missionParticipant)){
-          this.currentMissionParticipantStatus = Status.INPROGRESS.getLabel();
-          return Response.ok("ok");
+    String session = this.checkSession();
+    if ("".equals(session)){
+      if(null != this.currentMissionParticipantId){
+        MissionParticipant missionParticipant = this.jcrService.getMissionParticipantById(this.currentMissionParticipantId);
+        if(null != missionParticipant){
+          missionParticipant.setStatus(Status.INPROGRESS);
+          if (null != this.jcrService.updateMissionParticipantInProgram(this.currentProgramId,missionParticipant)){
+            this.currentMissionParticipantStatus = Status.INPROGRESS.getLabel();
+            return Response.ok("ok");
+          }
         }
       }
+      return Response.ok("nok");
     }
-    return Response.ok("nok");
+    else
+      return Response.ok(session);
+
   }
 
   @Ajax
   @Resource
   // store mission only when user complete his mission
   public Response completeMission(String url,String fname, String lname, String address, String city, String phone,String country,String size ){
-    if(null != this.currentMissionParticipantId){
-      MissionParticipant missionParticipant = this.jcrService.getMissionParticipantById(this.currentMissionParticipantId);
-      if(null != missionParticipant){
-        missionParticipant.setProposition_id(this.currentPropositionId);
-        Address addressObj = new Address(fname,lname,address,city,country,phone);
-        addressObj = this.jcrService.addAddress2Participant(this.currentProgramId,this.remoteUserName,addressObj);
-        if(null != addressObj ){
-          missionParticipant.setUrl_submitted(url);
-          missionParticipant.setStatus(Status.WAITING_FOR_VALIDATE);
-          missionParticipant.setAddress_id(addressObj.getId());
-          missionParticipant.setSize(Size.getSize(Integer.parseInt(size)));
-          if (null != this.jcrService.updateMissionParticipantInProgram(this.currentProgramId,missionParticipant) ){
-            Participant participant = new Participant(this.remoteUserName);
-            participant.setProgramId(this.currentProgramId);
-            Set<String> missionIds = new HashSet<String>();
-            missionIds.add(currentMissionId);
-            participant.setMission_ids(missionIds);
-            Set<String> missionParticipantIds = new HashSet<String>();
-            missionParticipantIds.add(currentMissionParticipantId);
-            participant.setMission_participant_ids(missionParticipantIds);
-            if (null != this.jcrService.addParticipant2Program(participant) && null != this.updateCurrentProposition()) {
-              return Response.ok("ok");
+    String session = this.checkSession();
+    if ("".equals(session)){
+      if(null != this.currentMissionParticipantId){
+        MissionParticipant missionParticipant = this.jcrService.getMissionParticipantById(this.currentMissionParticipantId);
+        if(null != missionParticipant){
+          missionParticipant.setProposition_id(this.currentPropositionId);
+          Address addressObj = new Address(fname,lname,address,city,country,phone);
+          addressObj = this.jcrService.addAddress2Participant(this.currentProgramId,this.remoteUserName,addressObj);
+          if(null != addressObj ){
+            missionParticipant.setUrl_submitted(url);
+            missionParticipant.setStatus(Status.WAITING_FOR_VALIDATE);
+            missionParticipant.setAddress_id(addressObj.getId());
+            missionParticipant.setSize(Size.getSize(Integer.parseInt(size)));
+            if (null != this.jcrService.updateMissionParticipantInProgram(this.currentProgramId,missionParticipant) ){
+              Participant participant = new Participant(this.remoteUserName);
+              participant.setProgramId(this.currentProgramId);
+              Set<String> missionIds = new HashSet<String>();
+              missionIds.add(currentMissionId);
+              participant.setMission_ids(missionIds);
+              Set<String> missionParticipantIds = new HashSet<String>();
+              missionParticipantIds.add(currentMissionParticipantId);
+              participant.setMission_participant_ids(missionParticipantIds);
+              if (null != this.jcrService.addParticipant2Program(participant) && null != this.updateCurrentProposition()) {
+                return Response.ok("ok");
+              }
             }
           }
         }
       }
+      this.jcrService.removeMissionParticipant(currentMissionParticipantId);
+      return Response.ok("nok");
     }
-    this.jcrService.removeMissionParticipant(currentMissionParticipantId);
-    return Response.ok("nok");
-
+    else
+      return Response.ok(session);
   }
   @Ajax
   @Resource
@@ -380,10 +403,14 @@ public class JuZFrontEndApplication {
   @Ajax
   @Resource
   public Response generateNewMission(){
-    this.init();
-    if(null != this.currentMissionId)
-      return Response.ok("ok");
-    return Response.ok("nok");
+    String session = checkSession();
+    if("".equals(session)){
+      this.init();
+      if(null != this.currentMissionId)
+        return Response.ok("ok");
+      return Response.ok("nok");
+    }
+    return Response.ok(session);
   }
 
 }

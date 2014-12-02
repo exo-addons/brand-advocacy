@@ -180,8 +180,10 @@
         if(data == "ok"){
           _processExecuteMission();
         }
-        else
+        else if(data == 'nok')
           _ftStepContainer.html("something went wrong !!!, please try later");
+        else
+          _ftStepContainer.html(data);
       }
     });
   }
@@ -208,10 +210,11 @@
         if(data == "ok"){
           _processTerminate();
         }
-        else{
+        else if(data == 'nok'){
           _displayProcessError();
           return;
-        }
+        }else
+          _ftStepContainer.html(data);
       }
     });
   };
@@ -411,8 +414,10 @@
       success:function(data){
         if(data == 'nok'){
           _displayProcessError();
-        }else
+        }else if(data == 'ok')
           _appendExecuteStepView();
+        else
+          _ftStepContainer.html(data);
       }
     });
   };
@@ -429,10 +434,12 @@
           _removeStepCommon('brad-ft-start-step');
           _displayNoMoreMission();
 //          $('.brand-adv-LightBoxContainer').show();
-        }else{
+        }else if(data == 'ok'){
           _processDiscovery();
 //          $('.brand-adv-LightBoxContainer').show();
           _loadMissionView();
+        }else{
+          _ftStepContainer.html(data);
         }
       }
     });
