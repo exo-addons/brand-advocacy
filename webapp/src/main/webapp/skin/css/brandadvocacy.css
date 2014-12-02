@@ -181,6 +181,9 @@
     padding: 0;
     resize: none;
     white-space: nowrap;
+    cursor: pointer;
+    background: #FFF;
+    font-size: 14px;
 }
 
 .brand-adv-LightBoxContainer.tweetPopup .quote-popup:before {
@@ -206,10 +209,10 @@
     font-weight: bold;
 }
 .brand-adv-LightBoxContainer.tweetPopup  .tut-copy {
-    text-align: left;
+    text-align: center;
     line-height: 24px;
     margin-bottom: 20px;
-    word-break: break-all;
+ /*   word-break: break-all;*/
 }
 .brand-adv-LightBoxContainer.tweetPopup select,
 .brand-adv-LightBoxContainer.tweetPopup textarea,

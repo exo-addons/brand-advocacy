@@ -20,7 +20,7 @@ if(null != mission) {
             <% } %>
 
         </div>
-        <p class="tut-copy">Need inspiration? Click on suggestion text area and press <span class="btn btn-mini">Ctrl</span> + <span class="btn btn-mini">C</span> to use this suggestion!</p>
+        <p class="tut-copy">Need inspiration? Select and press <span class="btn btn-mini">Ctrl</span> + <span class="btn btn-mini">C</span> to use this suggestion!</p>
         <button data-missionId="<%= mission.getId()%>" class="button-flat-balck btn-brad-done" data-url="<%=mission.getThird_part_link()%>">Go!</button>
     </div>
     <!-- /.step-1 -->

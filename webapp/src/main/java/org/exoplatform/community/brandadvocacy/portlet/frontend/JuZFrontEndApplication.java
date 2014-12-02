@@ -202,6 +202,10 @@ public class JuZFrontEndApplication {
   @Ajax
   @Resource
   public Response.Content loadDiscoveryView(){
+    if ("".equals(bannerUrl))
+      bannerUrl = "/brand-advocacy-webapp/img/banner-2.jpg";
+    if ("".equals(currentProgramTitle))
+      currentProgramTitle = "Discovery your mission";
     return discoveryTpl.with().set("bannerUrl",bannerUrl).set("programTitle",currentProgramTitle).ok();
   }
 
