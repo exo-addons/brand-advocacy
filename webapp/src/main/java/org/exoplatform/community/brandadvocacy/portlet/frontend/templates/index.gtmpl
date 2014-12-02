@@ -18,7 +18,7 @@
         <div class="action">
             <button class="btn btn-large btn-brad-start">Start!</button>
         </div>
-        <img class="tshirt-img" src="/brand-advocacy-webapp/img/t-shirt.png" alt="T-Shirt">
+        <img class="tshirt-img" src="/brand-advocacy-webapp/img/banner.png" alt="T-Shirt">
     </div>
     <!-- /.start-step -->
 
