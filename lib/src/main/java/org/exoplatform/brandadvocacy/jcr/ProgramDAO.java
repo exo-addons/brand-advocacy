@@ -177,9 +177,16 @@ public class ProgramDAO extends DAO {
   }
   public List<Program> getAllPrograms(){
     Node node = this.getJcrImplService().getOrCreateExtensionHome();
+    List nodePrograms = new ArrayList();
     try {
       NodeIterator nodeIterator = node.getNodes();
-      return this.transferNodes2Objects(Lists.newArrayList(nodeIterator));
+      while (nodeIterator.hasNext()){
+        Node nodeProgram = nodeIterator.nextNode();
+        if (nodeProgram.isNodeType(JCRImpl.PROGRAM_NODE_TYPE)){
+          nodePrograms.add(nodeProgram);
+        }
+      }
+      return this.transferNodes2Objects(nodePrograms);
     } catch (RepositoryException e) {
       e.printStackTrace();
     }

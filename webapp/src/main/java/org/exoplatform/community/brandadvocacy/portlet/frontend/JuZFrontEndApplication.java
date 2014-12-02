@@ -311,7 +311,9 @@ public class JuZFrontEndApplication {
           }
         }
       }
-      this.jcrService.removeMissionParticipant(currentMissionParticipantId);
+      if (this.jcrService.removeMissionParticipantInParticipant(currentProgramId,remoteUserName,currentMissionParticipantId)) {
+        this.jcrService.removeMissionParticipant(currentMissionParticipantId);
+      }
       return Response.ok("nok");
     }
     else
