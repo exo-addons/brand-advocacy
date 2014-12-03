@@ -14,7 +14,7 @@
 /* Case 2 */
 .brand-adv-custom-tweet-button .btn {
     position: absolute;
-    left: 20px;
+    left: 40px;
     bottom: 30px;
     background: #FAA800;
     border: none;
@@ -35,6 +35,9 @@
     box-shadow: 0 3px 0 0 #CF8A00;
     max-width: 220px;
     text-align: center;
+}
+.brand-adv-custom-tweet-button .img-responsive {
+    margin-left: 60px;    
 }
 .brand-adv-custom-tweet-button .btn > span {
     display: block;
