@@ -26,11 +26,13 @@ import org.exoplatform.web.url.MimeType;
  */
 public enum Size {
   
-  Large(1),
-  Medium(2),
-  Small(3),
-  Extra_Large(4),
-  Extra_Small(5);
+  Extra_Small(1);
+  Small(2),
+  Medium(3),
+  Large(4),
+  Extra_Large(5),
+  Extra_Extra_Large(5),
+  
 
   private final int size;
 
@@ -44,16 +46,18 @@ public enum Size {
 
   public String getLabel() {
       switch (this.size) {
+        case 6:
+          return "Size XXL";
         case 5:
-          return "Size XS";
-        case 4:
           return "Size XL";
+        case 4:
+          return "Size L";
         case 3:
-            return "Size S";
-        case 2:
             return "Size M";
+        case 2:
+            return "Size S";
         case 1:
-            return "Size L";
+            return "Size XS";
         default:
             return "Customization";
       }
