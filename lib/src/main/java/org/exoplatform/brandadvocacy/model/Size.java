@@ -26,12 +26,12 @@ import org.exoplatform.web.url.MimeType;
  */
 public enum Size {
   
-  Extra_Small(1);
+  Extra_Small(1),
   Small(2),
   Medium(3),
   Large(4),
   Extra_Large(5),
-  Extra_Extra_Large(5),
+  Extra_Extra_Large(6);
   
 
   private final int size;
