@@ -155,7 +155,7 @@ public class EmailService {
   }
 
   private Map<String,String> getEmailInfoGiftShipped(Program program,Identity identity){
-    String subject = "Your eXo t-shirt has been shipped !";
+    String subject = "Your eXo Tshirt has been shipped";
     String remoteImgUrl =  remoteUrl;
     remoteImgUrl+="/brand-advocacy-webapp/img/email";
     Map<String, String> props = new HashMap<String, String>();

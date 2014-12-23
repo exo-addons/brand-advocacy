@@ -6,7 +6,6 @@ import org.exoplatform.brandadvocacy.model.Program;
 import org.exoplatform.brandadvocacy.service.IService;
 import org.exoplatform.brandadvocacy.service.Utils;
 import org.exoplatform.commons.juzu.ajax.Ajax;
-import org.exoplatform.community.brandadvocacy.portlet.backend.Flash;
 import org.exoplatform.services.organization.OrganizationService;
 import org.json.JSONException;
 import org.json.JSONObject;

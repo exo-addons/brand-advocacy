@@ -16,7 +16,11 @@ public class MissionParticipantDTO {
   private Status status;
   private String size;
   private String date_submitted;
+  private AddressDTO addressDTO;
 
+  public MissionParticipantDTO(){
+    this.setAddressDTO(null);
+  }
   public String getId() {
     return id;
   }
@@ -88,5 +92,19 @@ public class MissionParticipantDTO {
 
   public void setParticipant_id(String participant_id) {
     this.participant_id = participant_id;
+  }
+
+  public AddressDTO getAddressDTO() {
+    return addressDTO;
+  }
+
+  public void setAddressDTO(AddressDTO addressDTO) {
+    this.addressDTO = addressDTO;
+  }
+  public String getFullAddresses(){
+    if (null != this.getAddressDTO()){
+      return this.getAddressDTO().getFullAddresses();
+    }
+    return "not provided yet";
   }
 }

@@ -325,13 +325,14 @@
   };
   var _addOptionCountries = function() {
     var parent = _ftStepContainerTemp.children('.brad-terminate-step');
-    if(parent.find('.brad-participant-country').length > 0){
+    var countryDOM = parent.find('.brad-participant-country');
+    if(countryDOM.length > 0){
       var strOptions = '<option value="">Country</option>';
       $.getJSON("/brand-advocacy-webapp/resources/countries.json", function(data){
         $.each(data, function(i,v){
           strOptions +='<option value="'+v.code+'">'+v.name+'</option>';
         });
-        parent.find('.brad-participant-country').append(strOptions);
+        countryDOM.append(strOptions);
       });
     }
   };

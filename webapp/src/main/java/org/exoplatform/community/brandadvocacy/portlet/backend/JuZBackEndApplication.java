@@ -1,7 +1,8 @@
 package org.exoplatform.community.brandadvocacy.portlet.backend;
 
 import juzu.*;
-
+import juzu.impl.common.JSON;
+import juzu.impl.common.JSONParser;
 import juzu.request.HttpContext;
 import juzu.request.SecurityContext;
 import org.exoplatform.brandadvocacy.model.Manager;
@@ -16,6 +17,8 @@ import org.exoplatform.webui.application.WebuiRequestContext;
 import org.json.JSONObject;
 
 import javax.inject.Inject;
+import java.io.FileReader;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -44,7 +47,9 @@ public class JuZBackEndApplication {
   @Inject
   MissionParticipantController missionParticipantController;
 
-
+  static {
+   Utils.readCountriesJSON();
+  }
   @Inject
   public JuZBackEndApplication(OrganizationService organizationService,IService iService){
     this.organizationService = organizationService;

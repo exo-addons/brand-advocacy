@@ -4,8 +4,9 @@ import juzu.*;
 import org.exoplatform.commons.juzu.ajax.Ajax;
 import org.exoplatform.brandadvocacy.model.*;
 import org.exoplatform.brandadvocacy.service.IService;
-import org.exoplatform.brandadvocacy.service.Utils;
-import org.exoplatform.community.brandadvocacy.portlet.backend.Flash;
+import org.exoplatform.community.brandadvocacy.portlet.backend.JuZBackEndApplication_;
+import org.exoplatform.community.brandadvocacy.portlet.backend.Utils;
+import org.exoplatform.community.brandadvocacy.portlet.backend.models.AddressDTO;
 import org.exoplatform.community.brandadvocacy.portlet.backend.models.MissionParticipantDTO;
 import org.exoplatform.community.brandadvocacy.portlet.backend.models.Pagination;
 import org.exoplatform.community.brandadvocacy.portlet.backend.models.ParticipantDTO;
@@ -107,8 +108,10 @@ public class MissionParticipantController {
             if (null == address){
               address = new Address("","","","","","");
             }
+            AddressDTO addressDTO = new AddressDTO(address.getfName(),address.getlName(),address.getAddress(),address.getCity(),address.getCountry(),address.getPhone()) ;
+            addressDTO.setCountryName(Utils.getCountryNameByCode(addressDTO.getCountry()));
             if (isAjax){
-              return viewAjaxTpl.with().set("missionParticipantDTO",missionParticipantDTO).set("address",address).set("participantDTO",participantDTO).set("states",Status.values()).ok();
+              return viewAjaxTpl.with().set("missionParticipantDTO",missionParticipantDTO).set("address",addressDTO).set("participantDTO",participantDTO).set("states",Status.values()).ok();
             }
           }
         }
@@ -197,6 +200,8 @@ public class MissionParticipantController {
     List<MissionParticipantDTO> missionParticipantDTOs = new ArrayList<MissionParticipantDTO>();
     MissionParticipantDTO missionParticipantDTO;
     Mission mission;
+    Address address;
+    AddressDTO addressDTO;
     User exoUser;
     for (MissionParticipant missionParticipant : missionParticipants){
       try {
@@ -212,6 +217,12 @@ public class MissionParticipantController {
             missionParticipantDTO.setStatus(missionParticipant.getStatus());
             missionParticipantDTO.setUrl_submitted(missionParticipant.getUrl_submitted());
             missionParticipantDTO.setDate_submitted(Utils.convertDateFromLong(missionParticipant.getModifiedDate()));
+            address = this.missionParticipantService.getAddressById(missionParticipant.getAddress_id());
+            if (null != address){
+              addressDTO = new AddressDTO(address.getfName(),address.getlName(),address.getAddress(),address.getCity(),address.getCountry(),address.getPhone()) ;
+              addressDTO.setCountryName(Utils.getCountryNameByCode(addressDTO.getCountry()));
+              missionParticipantDTO.setAddressDTO(addressDTO);
+            }
             missionParticipantDTOs.add(missionParticipantDTO);
           }
         }

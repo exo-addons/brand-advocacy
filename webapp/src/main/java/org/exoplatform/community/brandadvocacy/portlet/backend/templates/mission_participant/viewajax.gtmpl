@@ -15,8 +15,8 @@ def strUserAddress = "";
 def strAddress = "";
 def strPhone = "";
 if(address != null){
-    strUserAddress = address.getfName() +" "+address.getlName();
-    strAddress = address.getAddress() + ", " +address.getCity()+", "+address.getCountry();
+    strUserAddress = address.getFirstName() +" "+address.getLastName();
+    strAddress = address.getAddress() + ", " +address.getCity()+", "+address.getCountryName();
     strPhone = address.getPhone();
 }
 
@@ -42,7 +42,7 @@ def strDateSubmitted = missionParticipantDTO.getDate_submitted()
                     <h4 class="ref-user-name"><a href="<%=urlProfile%>" target="_blank"><%= StringEscapeUtils.escapeHtml(strUserAddress) %></a></h4>
                     <div class="row-fluid">
                         <div class="span6">
-                            <% if(null != address && "" != address.getfName()){ %>
+                            <% if(null != address && "" != address.getFirstName()){ %>
                                 <p><b>Address:</b> <span><%= StringEscapeUtils.escapeHtml(strAddress) %></span></p>
                                 <p><b>Phone:</b> <span><%= StringEscapeUtils.escapeHtml(strPhone)%></span></p>
                                 <p><b>Email:</b> <span><%= StringEscapeUtils.escapeHtml(strEmail)%></span></p>

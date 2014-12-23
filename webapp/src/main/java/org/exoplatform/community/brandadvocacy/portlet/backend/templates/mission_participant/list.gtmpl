@@ -7,6 +7,7 @@ import org.apache.commons.lang.StringEscapeUtils;
     <thead>
         <tr>
             <th>Name</th>
+            <th>Address</th>
             <th>Missions</th>
             <th  style="width: 150px;">Status</th>
             <th>Link</th>
@@ -19,6 +20,7 @@ import org.apache.commons.lang.StringEscapeUtils;
         <% def missionParticipantId = missionParticipantDTO.getId() %>
          <tr>
              <td><%= missionParticipantDTO.getParticipant_fullName()%></td>
+             <td><%= missionParticipantDTO.getFullAddresses()%></td>
              <td><%= StringEscapeUtils.escapeHtml(missionParticipantDTO.getMission_title())%></td>
              <td class="center">
                  <select name="status" class="input-medium mission-participant-status" data-mission-participant-id="<%=missionParticipantId%>">
