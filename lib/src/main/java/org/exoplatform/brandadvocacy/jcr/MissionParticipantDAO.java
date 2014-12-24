@@ -49,9 +49,18 @@ public class MissionParticipantDAO extends DAO {
   public static final String node_prop_date_submitted = "exo:date_submitted";
   public static final String node_prop_dateCreated = "exo:dateCreated";
   public static final String node_prop_modifiedDate = "exo:modifiedDate";
+  public static final String node_child_note = "exo:noteslist";
 
   public MissionParticipantDAO(JCRImpl jcrImpl) {
     super(jcrImpl);
+  }
+  public Node getOrCreateNoteHome(Node missionParticipantNode) {
+    try {
+      return this.getOrCreateNodeCommon(missionParticipantNode,node_child_note,JCRImpl.NOTE_LIST_NODE_TYPE);
+    } catch (RepositoryException e) {
+      e.printStackTrace();
+    }
+    return null;
   }
   private void setProperties(Node aNode,MissionParticipant missionParticipant) throws RepositoryException {
 

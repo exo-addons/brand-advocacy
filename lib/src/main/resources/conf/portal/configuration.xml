@@ -36,5 +36,10 @@
     </init-params>
   </component>
 
+
+  <component>
+    <type>org.exoplatform.brandadvocacy.service.RestUpgrade</type>
+  </component>
+
   <import>jar:/conf/portal/brandadvocacy/jcr-configuration.xml</import>   
 </configuration>

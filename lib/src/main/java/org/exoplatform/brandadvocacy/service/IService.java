@@ -94,9 +94,14 @@ public interface IService {
   public MissionParticipant getCurrentMissionParticipantByUserName(String programId,String username);
   public MissionParticipant getCurrentMissionParticipantByMissionId(String programId,String missionId,String username);
 
+  public MissionParticipantNote addNote2MissionParticipant(MissionParticipantNote missionParticipantNote);
+  public List<MissionParticipantNote> getAllByType(String missionParticipantId,int type);
+  public MissionParticipantNote getById(String missionParticipantNoteId);
+
   public ListAccess<org.exoplatform.services.organization.User> searchEXOUsers(String keyword);
   public List<Profile> searchEXOProfiles(String keyword);
 
   public Boolean sendNotifMissionParticipantEmail(JSONObject settings,String missionParticipantId);
   public Boolean sendNotifAlmostMissionDoneEmail(String programId, String username);
+
 }

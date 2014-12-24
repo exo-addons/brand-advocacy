@@ -50,6 +50,7 @@ def strDateSubmitted = missionParticipantDTO.getDate_submitted()
                             <% }else{ %>
                                 no address yet
                             <% } %>
+                            <p><b>Notes</b><textarea></textarea></p>
                         </div>
                         <div class="span6">
                             <p><b>Missions:</b> <span><%= StringEscapeUtils.escapeHtml(strMissionTitle) %></span></p>

@@ -70,6 +70,7 @@ public class JCRImpl implements IService {
   private AddressDAO addressDAO;
   private ParticipantDAO participantDAO;
   private MissionParticipantDAO missionParticipantDAO;
+  private MissionParticipantNoteDAO missionParticipantNoteDAO;
   private PropositionDAO propositionDAO;
   private EmailService emailService;
   
@@ -95,6 +96,8 @@ public class JCRImpl implements IService {
   public static final String ADDRESS_LIST_NODE_TYPE = "brad:addresseslist";
   public static final String ADDRESS_NODE_TYPE = "brad:address";
   public static final String MISSION_PARTICIPANT_NODE_TYPE = "brad:mission-participant";
+  public static final String NOTE_NODE_TYPE = "brad:misson-participant-note";
+  public static final String NOTE_LIST_NODE_TYPE = "brad:noteslist";
   public static final String PROGRAM_SETTINGS_NODE_TYPE = "brad:program-settings";
 
   public static final String APP_PATH = "ApplicationData/brandAdvocacyExtension";
@@ -239,6 +242,13 @@ public class JCRImpl implements IService {
   }
   public void setMissionParticipantDAO(MissionParticipantDAO missionParticipantDAO) {
     this.missionParticipantDAO = missionParticipantDAO;
+  }
+  public MissionParticipantNoteDAO getMissionParticipantNoteDAO() {
+    return missionParticipantNoteDAO;
+  }
+
+  public void setMissionParticipantNoteDAO(MissionParticipantNoteDAO missionParticipantNoteDAO) {
+    this.missionParticipantNoteDAO = missionParticipantNoteDAO;
   }
   public PropositionDAO getPropositionDAO() {
     return propositionDAO;
@@ -510,6 +520,21 @@ public class JCRImpl implements IService {
   }
 
   @Override
+  public MissionParticipantNote addNote2MissionParticipant(MissionParticipantNote missionParticipantNote) {
+    return this.getMissionParticipantNoteDAO().addNote2MissionParticipant(missionParticipantNote);
+  }
+
+  @Override
+  public List<MissionParticipantNote> getAllByType(String missionParticipantId, int type) {
+    return this.getMissionParticipantNoteDAO().getAllByType(missionParticipantId,type);
+  }
+
+  @Override
+  public MissionParticipantNote getById(String missionParticipantNoteId) {
+    return this.getMissionParticipantNoteDAO().getById(missionParticipantNoteId);
+  }
+
+  @Override
   public List<MissionParticipant> searchMissionParticipants(Query query) {
     return this.getMissionParticipantDAO().searchMissionParticipants(query);
   }
@@ -529,4 +554,6 @@ public class JCRImpl implements IService {
   public void setIdentityManager(IdentityManager identityManager) {
     this.identityManager = identityManager;
   }
+
+
 }
