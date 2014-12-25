@@ -1,13 +1,13 @@
 #{param name=action/}
 #{param name=username/}
-#{param name=missionParticipantId/}
+#{param name=id/}
 <%
 import org.exoplatform.portal.webui.util.Util;
 import org.exoplatform.webui.application.portlet.PortletRequestContext;
 import org.exoplatform.web.application.JavascriptManager;
 def pcontext = Util.getPortalRequestContext();
 def jsManager = pcontext.getJavascriptManager();
-jsManager.require("SHARED/jQueryJuzBrandAdvBackend", "brandAdvBackend").addScripts("brandAdvBackend.init('"+loginController.isAdmin()+"','"+action+"','"+missionParticipantId+"','"+username+"');");
+jsManager.require("SHARED/jQueryJuzBrandAdvBackend", "brandAdvBackend").addScripts("brandAdvBackend.init('"+loginController.isAdmin()+"','"+action+"','"+id+"','"+username+"');");
 %>
 <script type="text/javascript" src="/brand-advocacy-webapp/ckeditor/ckeditor.js"></script>
 <div class="referral-porlet">

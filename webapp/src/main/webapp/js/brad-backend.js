@@ -272,6 +272,7 @@
           _loadPropositions();
         }else{
           _disPlayErrorMsgCB('Something went wrong, cannot load mission detail view');
+          _fillBodyContainer('item not found');
         }
         _displayLoading(false);
       }
@@ -584,6 +585,7 @@
       data:{missionParticipantId:missionParticipantId},
       success:function(data){
         if(data === 'nok'){
+          _fillBodyContainer('item not found');
           _disPlayErrorMsgCB('Something went wrong, cannot load detail mission participant')
         }else{
           _fillBodyContainer(data);
@@ -1211,7 +1213,7 @@
     _bodyContainerDOM = $(".tab-content");
     _MissionPriorityEventTimeout = false;
   }
-  brandAdvBackend.init = function(isAdmin,action,missionParticipantId,username){
+  brandAdvBackend.init = function(isAdmin,action,id,username){
     _initVar();
     if(isAdmin == 'true'){
       _addEvent2LinkClosePopup();
@@ -1233,7 +1235,10 @@
 
     if(action == "mp_view"){
       _menuStyleController('participant');
-      _loadMissionParticipantDetail(missionParticipantId,username);
+      _loadMissionParticipantDetail(id,username);
+    } else if(action == "m_view"){
+      _menuStyleController("mission");
+      _loadEditMissionFormView(id);
     } else if(action == "mission"){
       _menuStyleController("mission");
       _loadMissions();

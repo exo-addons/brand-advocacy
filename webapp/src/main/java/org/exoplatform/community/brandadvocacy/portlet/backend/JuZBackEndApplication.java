@@ -72,9 +72,9 @@ public class JuZBackEndApplication {
     if (null != loginController.getRights()){
 
       String action = WebuiRequestContext.getCurrentInstance().getRequestParameter("action");
-      String missionParticipantId = WebuiRequestContext.getCurrentInstance().getRequestParameter("id");
+      String id = WebuiRequestContext.getCurrentInstance().getRequestParameter("id");
 
-      String[] menus = {"program","mission","participant","mp_view"};
+      String[] menus = {"program","mission","participant","mp_view","m_view"};
       if (null != action){
         if (!Arrays.asList(menus).contains(action))
           action = null;
@@ -84,20 +84,20 @@ public class JuZBackEndApplication {
           action = "program";
         }
       }else{
-        if (null == action || "program".equals(action) || "mission".equals(action)){
+        if (null == action || "program".equals(action) || "mission".equals(action) || "m_view".equals(action)){
           action = "participant";
         }
       }
       String username = "";
-      if (null == missionParticipantId)
-        missionParticipantId = "";
+      if (null == id)
+        id = "";
       if (action.equals("mp_view") ){
-        MissionParticipant missionParticipant = this.jcrService.getMissionParticipantById(missionParticipantId);
+        MissionParticipant missionParticipant = this.jcrService.getMissionParticipantById(id);
         if (null != missionParticipant){
           username = missionParticipant.getParticipant_username();
         }
       }
-      return indexTpl.with().set("action", action).set("username",username).set("missionParticipantId",missionParticipantId).ok();
+      return indexTpl.with().set("action", action).set("username",username).set("id",id).ok();
 
     }
     return this.showError("alert-info","Info","You have no rights");
