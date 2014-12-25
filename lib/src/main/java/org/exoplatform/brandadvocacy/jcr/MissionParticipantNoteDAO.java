@@ -58,7 +58,7 @@ public class MissionParticipantNoteDAO extends DAO {
 
     MissionParticipantNote missionParticipantNote = new MissionParticipantNote();
     missionParticipantNote.setId(aNode.getUUID());
-    PropertyIterator props = aNode.getProperties("exo:");
+    PropertyIterator props = aNode.getProperties("exo:*");
     Property property;
     String name;
     while (props.hasNext()){
@@ -113,6 +113,7 @@ public class MissionParticipantNoteDAO extends DAO {
         }
         if (null != missionParticipantNoteNode){
           this.setProperties(missionParticipantNoteNode,missionParticipantNote);
+          noteHome.save();
           return this.transfertNode2Object(missionParticipantNoteNode);
         }
       }
@@ -131,7 +132,7 @@ public class MissionParticipantNoteDAO extends DAO {
         NodeIterator nodeIterator = noteHome.getNodes();
         List<MissionParticipantNote> missionParticipantNotes = this.transfertNodes2Objects(Lists.newArrayList(nodeIterator));
         for (MissionParticipantNote missionParticipantNote:missionParticipantNotes){
-          if (type == missionParticipantNote.getType().getType()){
+          if (type == missionParticipantNote.getType().getValue()){
             result.add(missionParticipantNote);
           }
         }

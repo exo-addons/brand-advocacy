@@ -51,6 +51,9 @@ public class MissionParticipantController {
   @Path("mission_participant/previous.gtmpl")
   org.exoplatform.community.brandadvocacy.portlet.backend.templates.mission_participant.previous previousTPL;
 
+  @Inject
+  @Path("mission_participant/notes.gtmpl")
+  org.exoplatform.community.brandadvocacy.portlet.backend.templates.mission_participant.notes notesTPL;
 
   @Inject
   public MissionParticipantController(OrganizationService organizationService,IdentityManager identityManager ,IService iService){
@@ -93,6 +96,7 @@ public class MissionParticipantController {
             MissionParticipantDTO missionParticipantDTO = new MissionParticipantDTO();
             missionParticipantDTO.setId(missionParticipantId);
             missionParticipantDTO.setMission_title(mission.getTitle()+" on "+mission.getThird_part_link());
+            missionParticipantDTO.setMission_id(mission.getId());
             missionParticipantDTO.setSize(missionParticipant.getSize().getLabel());
             missionParticipantDTO.setDate_submitted(Utils.convertDateFromLong(missionParticipant.getModifiedDate()));
             missionParticipantDTO.setStatus(missionParticipant.getStatus());
@@ -279,5 +283,32 @@ public class MissionParticipantController {
       }
     }else
       return Response.ok("you have no rights to do this task");
+  }
+  @Ajax
+  @Resource
+  public Response addMPAdminNote(String mpId, String content){
+    if(loginController.isAdmin()){
+      MissionParticipantNote missionParticipantNote = new MissionParticipantNote(mpId);
+      missionParticipantNote.setType(NoteType.AdminComment);
+      missionParticipantNote.setAuthor(loginController.getCurrentUserName());
+      missionParticipantNote.setContent(content);
+      missionParticipantNote = this.missionParticipantService.addNote2MissionParticipant(missionParticipantNote);
+      if (null != missionParticipantNote){
+        return Response.ok("ok");
+      }else{
+        return Response.ok("Something went wrong, cannot remove this mission participant");
+      }
+    }else
+      return Response.ok("you have no rights to do this task");
+  }
+
+  @Ajax
+  @Resource
+  public Response getAllMPAdminNote(String mpId){
+    if(loginController.isAdmin()){
+      List<MissionParticipantNote> notes = this.missionParticipantService.getAllByType(mpId,NoteType.AdminComment.getValue());
+      return notesTPL.with().set("notes",notes).set("mpId",mpId).ok();
+    }else
+      return Response.ok("nok");
   }
 }

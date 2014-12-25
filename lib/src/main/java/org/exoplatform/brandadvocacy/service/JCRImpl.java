@@ -102,7 +102,7 @@ public class JCRImpl implements IService {
 
   public static final String APP_PATH = "ApplicationData/brandAdvocacyExtension";
   
-  public JCRImpl(InitParams params, SessionProviderService sessionService, RepositoryService repositoryService, DataDistributionManager dataDistributionManager,IdentityManager identityManager,MailService mailService,OrganizationService organizationService){
+  public JCRImpl(InitParams params, SessionProviderService sessionService, RepositoryService repositoryService, DataDistributionManager dataDistributionManager,OrganizationService organizationService,IdentityManager identityManager,MailService mailService){
 
     if(params != null){
       ValueParam param = params.getValueParam("workspace");
@@ -117,6 +117,7 @@ public class JCRImpl implements IService {
     this.setMissionParticipantDAO(new MissionParticipantDAO(this));
     this.setPropositionDAO(new PropositionDAO(this));
     this.setAddressDAO(new AddressDAO(this));
+    this.setMissionParticipantNoteDAO(new MissionParticipantNoteDAO(this));
     this.sessionService = sessionService;
     this.dataDistributionManager = dataDistributionManager;
     this.repositoryService = repositoryService;

@@ -11,10 +11,10 @@ public enum  NoteType {
   NoteType(int type){
     this.type = type;
   }
-  public int getType(){
+  public int getValue(){
     return this.type;
   }
-  public String getValue(){
+  public String getLabel(){
     switch (this.type){
       case (1):
         return "admim comment";
@@ -26,7 +26,7 @@ public enum  NoteType {
   }
   public static NoteType getNoteType(int type){
     for (NoteType noteType: NoteType.values()){
-      if (noteType.getType() == type){
+      if (noteType.getValue() == type){
         return noteType;
       }
     }

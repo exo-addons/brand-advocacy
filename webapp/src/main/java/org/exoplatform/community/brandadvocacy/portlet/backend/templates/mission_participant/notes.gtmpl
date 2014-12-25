@@ -1,0 +1,10 @@
+#{param name=notes/}
+#{param name=mpId/}
+<p><b>Notes</b></p>
+<%
+import org.apache.commons.lang.StringEscapeUtils;
+%>
+<% notes.each{ note -> %>
+<p><textarea class="brandadv-mp-admin-note-content"><%=StringEscapeUtils.escapeHtml(note.getContent())%></textarea></p>
+<% } %>
+<p><button class="btn btn-primary brandadv-add-mp-admin-note-add" type="button" data-mission-participant-id="<%=mpId%>">save note</button></p>

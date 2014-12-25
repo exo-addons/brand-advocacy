@@ -116,7 +116,7 @@
                 <value>hsqldb</value>
               </property>
             </systemProperties>
-            <skipTests>false</skipTests>
+            <skipTests>true</skipTests>
           </configuration>
         </plugin>
       </plugins>

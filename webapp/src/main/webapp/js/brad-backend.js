@@ -588,6 +588,7 @@
         }else{
           _fillBodyContainer(data);
           _loadPreviousMissionParticipant(username);
+          _loadAllMPAdminNote(missionParticipantId);
         }
         _displayLoading(false);
 
@@ -1122,6 +1123,42 @@
       _displayConfirmPopup('off','','');
     });
   };
+
+  var _loadAllMPAdminNote = function(mpId){
+    var _mpAdminNoteContainerDOM = $(".brandadv-mp-admin-note-list");
+    $('.jz').jzAjax("MissionParticipantController.getAllMPAdminNote()", {
+      data:{mpId:mpId},
+      success:function(data){
+        if(data != "nok"){
+          _mpAdminNoteContainerDOM.html(data);
+        }
+      }
+    });
+  };
+  var _addMPAdminNote = function(mpId,content){
+    $('.jz').jzAjax("MissionParticipantController.addMPAdminNote()",{
+      data:{mpId:mpId,content:content},
+      success:function(data){
+        if (data == "nok"){
+          _disPlayErrorMsgCB('something went wrong, cannot add note to mission participant');
+        }else{
+          _loadAllMPAdminNote(mpId);
+        }
+        _displayLoading(false);
+      }
+    });
+  };
+  var _addEventClick2BtnAddMPAdminNote = function(){
+    $(document).on('click.juzBrad.bk.addMPAdminNote','button.brandadv-add-mp-admin-note-add',function(e){
+      var content = $("textarea.brandadv-mp-admin-note-content").val();
+      if(content.trim().length > 0){
+        var mpId = $(this).attr("data-mission-participant-id");
+        _addMPAdminNote(mpId,content);
+      }else{
+        _disPlayInfoMsgCB("please fill note content");
+      }
+    });
+  };
   var _initProgramEvent = function(){
     _addEvent2ProgramTabMenu();
     _addEvent2BtnAddProgram();
@@ -1165,6 +1202,9 @@
     _addEvent2LinkPageSearchMissionParticipant();
     _addEvent2LinkRemoveMissionParticipant();
   };
+  var _initMissionParticipantNoteEvent = function(){
+    _addEventClick2BtnAddMPAdminNote();
+  }
 
   var _initVar = function(){
     _textAreaContentId = "bradAdvPropositionContent";
@@ -1182,7 +1222,7 @@
       _addEventIPhoneStyle2CheckBox();
       _addEvent2BtnIphoneCheckbox();
       _addEvent2RoleSelect();
-
+      _initMissionParticipantNoteEvent();
     }else{
       _menuStyleController('participant');
     }

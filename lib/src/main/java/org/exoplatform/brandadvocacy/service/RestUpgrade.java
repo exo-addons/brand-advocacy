@@ -80,6 +80,6 @@ public class RestUpgrade implements ResourceContainer {
       result = "upgrade node type unsuccessful";
     }
     return Response.ok(result , MediaType.TEXT_HTML).cacheControl(cacheControl_).build();
-
   }
+
 }

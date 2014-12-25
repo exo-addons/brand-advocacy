@@ -22,7 +22,7 @@ if(address != null){
 
 def tshirtSize = missionParticipantDTO.getSize();
 def strMissionTitle = missionParticipantDTO.getMission_title();
-def strDateSubmitted = missionParticipantDTO.getDate_submitted()
+def strDateSubmitted = missionParticipantDTO.getDate_submitted();
 %>
 <!-- part for ajax -->
     <div class="tab-pane fade in active" id="participantsTab">
@@ -50,10 +50,17 @@ def strDateSubmitted = missionParticipantDTO.getDate_submitted()
                             <% }else{ %>
                                 no address yet
                             <% } %>
-                            <p><b>Notes</b><textarea></textarea></p>
+                            <p class="brandadv-mp-admin-note-list"></p>
                         </div>
                         <div class="span6">
-                            <p><b>Missions:</b> <span><%= StringEscapeUtils.escapeHtml(strMissionTitle) %></span></p>
+                            <p>
+                                <b>Missions:</b>
+                                <a href="?action=m_view&id=<%=missionParticipantDTO.getMission_id()%>" target="_blank">
+                                    <span>
+                                        <%= StringEscapeUtils.escapeHtml(strMissionTitle) %>
+                                    </span>
+                                </a>
+                            </p>
                             <p><b>Submit Date:</b> <span><%= strDateSubmitted %></span></p>
                             <p>
                                 <b>Status: </b>
