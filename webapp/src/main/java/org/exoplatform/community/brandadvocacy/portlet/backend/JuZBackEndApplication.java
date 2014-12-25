@@ -131,8 +131,8 @@ public class JuZBackEndApplication {
   }
   @Ajax
   @Resource
-  public void sendNotifUpdateMissionParticipantEmail(String missionParticipantId){
+  public void sendNotifUpdateMissionParticipantEmail(String missionParticipantId,String note){
     JSONObject settings = this.jcrService.getProgramSettings(loginController.getCurrentProgramId());
-    this.jcrService.sendNotifMissionParticipantEmail(settings,missionParticipantId);
+    this.jcrService.sendNotifMissionParticipantEmail(settings,missionParticipantId,note);
   }
 }

@@ -1,0 +1,28 @@
+#{param name=mpId/}
+#{param name=mpStatus/}
+<div class="addNewProposition">
+    <div class="row-fluid control-group">
+        <label class="control-label span2">Reason:</label>
+        <div class="controls">
+            <div class="spaceIphoneChkBox">
+                <select class="brandadv-mp-status-reason-option">
+                    <option value="Could not find review">Could not find review</option>
+                    <option value="Bad data">Bad data</option>
+                    <option value="You already won a t-shirt for this mission">You already won a t-shirt for this mission</option>
+                    <option value="No_Reason">No Reason</option>
+                    <option value="Other">Other</option>
+                </select>
+            </div>
+        </div>
+    </div>
+    <div class="control-group">
+        <label class="control-label">Comment:</label>
+        <div class="control row-fluid">
+            <textarea class="span12 brandadv-mp-status-reason-comment hide" style="min-height: 84px" name="bradAdvPropositionContent" id="bradAdvPropositionContent" cols="30" rows="15"></textarea>
+        </div>
+    </div>
+</div>
+<div class="uiAction uiActionBorder">
+    <button class="btn btn-primary brandadv-mp-status-note-add" type="button" data-mission-participant-id="<%=mpId%>" data-mission-participant-status="<%=mpStatus%>">Submit</button>
+    <a class="btn mgL20 brandAdvPopupClose" href="#">Cancel</a>
+</div>

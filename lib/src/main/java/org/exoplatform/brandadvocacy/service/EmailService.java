@@ -196,8 +196,8 @@ public class EmailService {
     return null;
   }
 
-  private Map<String,String> generateParticipantEmailInfoByStatus(Program program, Identity identity,MissionParticipant missionParticipant){
-
+  private Map<String,String> generateParticipantEmailInfoByStatus(Program program, Identity identity,MissionParticipant missionParticipant,String note){
+    log.info( " send to participant with note "+note);
     if(Status.WAITING_FOR_VALIDATE.getLabel().equals(missionParticipant.getStatus().getLabel())){
       return this.getEmailInfoThankyou(identity.getProfile().getFullName());
     }else if (Status.SHIPPED.getLabel().equals(missionParticipant.getStatus().getLabel())){
@@ -238,7 +238,7 @@ public class EmailService {
     }
   }
 
-  public void sendNotif2Participant(MissionParticipant missionParticipant){
+  public void sendNotif2Participant(MissionParticipant missionParticipant,String note){
     if (null != missionParticipant){
       if (canSend2Participant(missionParticipant.getStatus())){
         Mission mission = this.iService.getMissionById(missionParticipant.getMission_id());
@@ -248,7 +248,7 @@ public class EmailService {
             String participantId = missionParticipant.getParticipant_username();
             Identity identity = identityManager.getOrCreateIdentity(OrganizationIdentityProvider.NAME,participantId,true);
             if (null != identity){
-              Map<String,String> emailInfo = this.generateParticipantEmailInfoByStatus(program,identity,missionParticipant);
+              Map<String,String> emailInfo = this.generateParticipantEmailInfoByStatus(program,identity,missionParticipant,note);
               if (null != emailInfo){
                 log.info("sending email to participant "+participantId);
                 Message message = new Message();

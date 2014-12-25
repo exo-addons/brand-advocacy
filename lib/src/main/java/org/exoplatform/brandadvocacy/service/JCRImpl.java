@@ -169,7 +169,7 @@ public class JCRImpl implements IService {
   }
 
   @Override
-  public Boolean sendNotifMissionParticipantEmail(JSONObject settings,String missionParticipantId) {
+  public Boolean sendNotifMissionParticipantEmail(JSONObject settings,String missionParticipantId,String note) {
     MissionParticipant missionParticipant = this.getMissionParticipantDAO().getMissionParticipantById(missionParticipantId);
     if (null != missionParticipant){
       if (null != settings){
@@ -178,7 +178,7 @@ public class JCRImpl implements IService {
           this.emailService.setSenderEmail(email_sender);
       }
       this.emailService.sendNotif2Managers(missionParticipant);
-      this.emailService.sendNotif2Participant(missionParticipant);
+      this.emailService.sendNotif2Participant(missionParticipant,note);
       return true;
     }
     return false;
@@ -526,12 +526,12 @@ public class JCRImpl implements IService {
   }
 
   @Override
-  public List<MissionParticipantNote> getAllByType(String missionParticipantId, int type) {
+  public List<MissionParticipantNote> getAllMPNotesByType(String missionParticipantId, int type) {
     return this.getMissionParticipantNoteDAO().getAllByType(missionParticipantId,type);
   }
 
   @Override
-  public MissionParticipantNote getById(String missionParticipantNoteId) {
+  public MissionParticipantNote getMPNoteById(String missionParticipantNoteId) {
     return this.getMissionParticipantNoteDAO().getById(missionParticipantNoteId);
   }
 

@@ -388,19 +388,19 @@
       }
     });
   };
-  var _sendNotifUpdateMissionParticipantEmail = function(missionParticipantId){
+  var _sendNotifUpdateMissionParticipantEmail = function(missionParticipantId,note){
     $('.jz').jzAjax("JuZBackEndApplication.sendNotifUpdateMissionParticipantEmail()",{
-      data:{missionParticipantId:missionParticipantId},
+      data:{missionParticipantId:missionParticipantId,note:note},
       success:function(){
 
       }
     });
   };
-  var _updateMissionParticipantStatusInline = function(missionParticipantId,val){
+  var _updateMissionParticipantStatusInline = function(missionParticipantId,val,note,force){
     _displayLoading(true);
     var jStatus = $("select.mission-participant-status");
     $('.jz').jzAjax("MissionParticipantController.ajaxUpdateMPInline()",{
-      data:{missionParticipantId:missionParticipantId,action:"status",val:val},
+      data:{missionParticipantId:missionParticipantId,action:"status",val:val,note:note,force:force},
       success:function(data){
         try{
           var obj = data = $.parseJSON(data);
@@ -408,9 +408,22 @@
             _disPlayErrorMsgCB(obj.msg);
             jStatus.val(obj.status);
           }else{
-            if(obj.mpId != "")
-              _sendNotifUpdateMissionParticipantEmail(obj.mpId);
-            _disPlayInfoMsgCB(obj.msg);
+            if(obj.msg == "show_reason"){
+              _showPopupMPStatusReasonOption(obj.mpId);
+              jStatus.val(obj.status);
+            }else{
+              if(obj.mpId != ""){
+                if(obj.note != null && obj.note != ""){
+                  _loadPopup("off","","");
+                  _addMPStatusNote(obj.mpId,obj.note);
+                }
+                else{
+                  _loadPopup("off","","");
+                  _sendNotifUpdateMissionParticipantEmail(obj.mpId,"");
+                }
+                _disPlayInfoMsgCB(obj.msg);
+              }
+            }
           }
         }catch (e){
           _disPlayErrorMsgCB('something went wrong to update mission participant status');
@@ -750,7 +763,7 @@
       var missionParticipantId =jStatus.attr("data-mission-participant-id");
       if (typeof missionParticipantId != "undefined"){
         var val = jStatus.val();
-        _updateMissionParticipantStatusInline(missionParticipantId,val);
+        _updateMissionParticipantStatusInline(missionParticipantId,val,"","");
       }else
         _disPlayErrorMsgCB('something went wrong to update mission participant status');
 
@@ -1161,6 +1174,62 @@
       }
     });
   };
+  var _showPopupMPStatusReasonOption = function(mpId){
+    $('.jz').jzAjax("MissionParticipantController.loadPoupMPStatusReasonOption()",{
+      data:{mpId:mpId},
+      success:function(data) {
+        if(data != "nok"){
+          _loadPopup('on','Reason',data);
+          _addCkEditor2Textarea();
+        }
+        else
+          _disPlayErrorMsgCB("something went wrong, cannot load confirmation popup")
+      }
+    });
+  };
+  var _addMPStatusNote = function(mpId,content){
+    $('.jz').jzAjax("MissionParticipantController.addMPStatusNote()",{
+      data:{mpId:mpId,content:content},
+      success:function(data){
+        if (data == "nok"){
+          _disPlayErrorMsgCB('something went wrong, cannot add note to mission participant');
+        }else{
+          _sendNotifUpdateMissionParticipantEmail(mpId,data);
+        }
+        _displayLoading(false);
+      }
+    });
+  };
+  var _addEventClick2BtnAddMPStatusNote = function(){
+    $(document).on('click.juzBrad.bk.addMPStatusNote','button.brandadv-mp-status-note-add',function(e){
+      var statusOptionDOM = $('select.brandadv-mp-status-reason-option');
+      var content = statusOptionDOM.val();
+      var mpId = $(this).attr("data-mission-participant-id");
+      var mpStatus = $(this).attr("data-mission-participant-status");
+      if("No_Reason" == content){
+        _updateMissionParticipantStatusInline(mpId,mpStatus,"","yes");
+      }else{
+        if("Other" == content && $("textarea.brandadv-mp-status-reason-comment").length > 0)
+          content = $("textarea.brandadv-mp-status-reason-comment").val();
+        if("" != content && content.trim().length > 0){
+          _updateMissionParticipantStatusInline(mpId,mpStatus,content,"yes");
+        }else{
+          _disPlayInfoMsgCB("please give note");
+        }
+      }
+    });
+  };
+  var _addEventChange2SelectMPReasonOption = function(){
+    $(document).on("change.juzBrandAdv.bk.select.mp.reason","select.brandadv-mp-status-reason-option",function(){
+      var reasonTxtDOM = $("textarea.brandadv-mp-status-reason-comment");
+      if($(this).val() == "Other" && reasonTxtDOM.length > 0){
+        reasonTxtDOM.show();
+      }
+      else
+        reasonTxtDOM.hide();
+    });
+  };
+
   var _initProgramEvent = function(){
     _addEvent2ProgramTabMenu();
     _addEvent2BtnAddProgram();
@@ -1206,7 +1275,9 @@
   };
   var _initMissionParticipantNoteEvent = function(){
     _addEventClick2BtnAddMPAdminNote();
-  }
+    _addEventClick2BtnAddMPStatusNote();
+    _addEventChange2SelectMPReasonOption();
+  };
 
   var _initVar = function(){
     _textAreaContentId = "bradAdvPropositionContent";

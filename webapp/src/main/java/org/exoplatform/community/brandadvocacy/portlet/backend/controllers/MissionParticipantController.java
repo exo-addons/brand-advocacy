@@ -52,8 +52,12 @@ public class MissionParticipantController {
   org.exoplatform.community.brandadvocacy.portlet.backend.templates.mission_participant.previous previousTPL;
 
   @Inject
-  @Path("mission_participant/notes.gtmpl")
-  org.exoplatform.community.brandadvocacy.portlet.backend.templates.mission_participant.notes notesTPL;
+  @Path("mission_participant/adminnotes.gtmpl")
+  org.exoplatform.community.brandadvocacy.portlet.backend.templates.mission_participant.adminnotes adminNotesTpl;
+
+  @Inject
+  @Path("mission_participant/statusnotes.gtmpl")
+  org.exoplatform.community.brandadvocacy.portlet.backend.templates.mission_participant.statusnotes statusNotesTpl;
 
   @Inject
   public MissionParticipantController(OrganizationService organizationService,IdentityManager identityManager ,IService iService){
@@ -96,7 +100,8 @@ public class MissionParticipantController {
             MissionParticipantDTO missionParticipantDTO = new MissionParticipantDTO();
             missionParticipantDTO.setId(missionParticipantId);
             missionParticipantDTO.setMission_title(mission.getTitle()+" on "+mission.getThird_part_link());
-            missionParticipantDTO.setMission_id(mission.getId());
+            if(loginController.isAdmin())
+              missionParticipantDTO.setMission_id(mission.getId());
             missionParticipantDTO.setSize(missionParticipant.getSize().getLabel());
             missionParticipantDTO.setDate_submitted(Utils.convertDateFromLong(missionParticipant.getModifiedDate()));
             missionParticipantDTO.setStatus(missionParticipant.getStatus());
@@ -144,7 +149,8 @@ public class MissionParticipantController {
 
   @Ajax
   @Resource
-  public Response ajaxUpdateMPInline(String missionParticipantId,String action,String val){
+  public Response ajaxUpdateMPInline(String missionParticipantId,String action,String val,String note, String force){
+    Boolean showReason = false;
     JSONObject jsonObject = new JSONObject();
     Boolean hasError = true;
     String msg = "Something went wrong,cannot update status";
@@ -156,6 +162,7 @@ public class MissionParticipantController {
       if (oldStatus == Integer.parseInt(val)){
         hasError = false;
         msg = "Status has already been updated ";
+        note = "";
       }else{
         hasError = false;
         if (loginController.isShippingManager()){
@@ -169,17 +176,25 @@ public class MissionParticipantController {
             msg = "you have no rights for this change";
           }
         }
-        if (!hasError && action.equals("status")){
-          missionParticipant.setStatus(Status.getStatus(Integer.parseInt(val)));
-          missionParticipant = this.missionParticipantService.updateMissionParticipantInProgram(loginController.getCurrentProgramId(),missionParticipant);
-          if (null != missionParticipant){
-            hasError = false;
-            msg = "Status has been successfully updated";
-            mpId = missionParticipant.getId();
-            if (Status.REJECTED.getValue() == Integer.parseInt(val)){
-              // allow participant to replay this mission
-              if (this.missionParticipantService.removeMissionInParticipant(loginController.getCurrentProgramId(),loginController.getCurrentUserName(),missionParticipant.getMission_id())){
-                msg = "One mission has been rejected, participant can replay it";
+
+        if ("".equals(force) && Status.REJECTED.getValue() == Integer.parseInt(val)){
+          msg = "show_reason";
+          mpId = missionParticipant.getId();
+          showReason = true;
+        }
+        if (!showReason){
+          if (!hasError && action.equals("status")){
+            missionParticipant.setStatus(Status.getStatus(Integer.parseInt(val)));
+            missionParticipant = this.missionParticipantService.updateMissionParticipantInProgram(loginController.getCurrentProgramId(),missionParticipant);
+            if (null != missionParticipant){
+              hasError = false;
+              msg = "Status has been successfully updated";
+              mpId = missionParticipant.getId();
+              if (Status.REJECTED.getValue() == Integer.parseInt(val)){
+                // allow participant to replay this mission
+                if (this.missionParticipantService.removeMissionInParticipant(loginController.getCurrentProgramId(),loginController.getCurrentUserName(),missionParticipant.getMission_id())){
+                  msg = "One mission has been rejected, participant can replay it";
+                }
               }
             }
           }
@@ -194,6 +209,7 @@ public class MissionParticipantController {
       jsonObject.put("msg",msg);
       jsonObject.put("status",oldStatus);
       jsonObject.put("mpId",mpId);
+      jsonObject.put("note",note);
     } catch (JSONException e) {
       return Response.ok("something went wrong");
     }
@@ -288,12 +304,7 @@ public class MissionParticipantController {
   @Resource
   public Response addMPAdminNote(String mpId, String content){
     if(loginController.isAdmin()){
-      MissionParticipantNote missionParticipantNote = new MissionParticipantNote(mpId);
-      missionParticipantNote.setType(NoteType.AdminComment);
-      missionParticipantNote.setAuthor(loginController.getCurrentUserName());
-      missionParticipantNote.setContent(content);
-      missionParticipantNote = this.missionParticipantService.addNote2MissionParticipant(missionParticipantNote);
-      if (null != missionParticipantNote){
+      if (null != this.addNote(NoteType.AdminComment,mpId,content)){
         return Response.ok("ok");
       }else{
         return Response.ok("Something went wrong, cannot remove this mission participant");
@@ -304,11 +315,39 @@ public class MissionParticipantController {
 
   @Ajax
   @Resource
+  public Response addMPStatusNote(String mpId, String content){
+      MissionParticipantNote missionParticipantNote= this.addNote(NoteType.RejectParcipantReason,mpId,content);
+      if (null != missionParticipantNote){
+        return Response.ok(missionParticipantNote.getContent());
+      }else{
+        return Response.ok("nok");
+      }
+  }
+
+  private MissionParticipantNote addNote(NoteType noteType, String mpId, String content){
+    MissionParticipantNote missionParticipantNote = new MissionParticipantNote(mpId);
+    missionParticipantNote.setType(noteType);
+    missionParticipantNote.setAuthor(loginController.getCurrentUserName());
+    missionParticipantNote.setContent(content);
+    return this.missionParticipantService.addNote2MissionParticipant(missionParticipantNote);
+  }
+
+  @Ajax
+  @Resource
   public Response getAllMPAdminNote(String mpId){
     if(loginController.isAdmin()){
-      List<MissionParticipantNote> notes = this.missionParticipantService.getAllByType(mpId,NoteType.AdminComment.getValue());
-      return notesTPL.with().set("notes",notes).set("mpId",mpId).ok();
+      List<MissionParticipantNote> notes = this.missionParticipantService.getAllMPNotesByType(mpId,NoteType.AdminComment.getValue());
+      return adminNotesTpl.with().set("notes",notes).set("mpId",mpId).ok();
     }else
       return Response.ok("nok");
+  }
+  @Ajax
+  @Resource
+  public Response loadPoupMPStatusReasonOption(String mpId){
+    if(loginController.isAdmin()){
+      return statusNotesTpl.with().set("mpId",mpId).set("mpStatus",Status.REJECTED.getValue()).ok();
+    }else
+      return Response.ok("nok");
+
   }
 }

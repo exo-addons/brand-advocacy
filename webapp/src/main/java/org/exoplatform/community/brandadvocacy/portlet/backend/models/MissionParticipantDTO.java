@@ -20,6 +20,7 @@ public class MissionParticipantDTO {
 
   public MissionParticipantDTO(){
     this.setAddressDTO(null);
+    this.setMission_id("");
   }
   public String getId() {
     return id;

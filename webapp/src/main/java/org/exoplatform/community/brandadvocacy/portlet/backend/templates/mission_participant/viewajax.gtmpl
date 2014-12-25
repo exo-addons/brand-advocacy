@@ -55,11 +55,17 @@ def strDateSubmitted = missionParticipantDTO.getDate_submitted();
                         <div class="span6">
                             <p>
                                 <b>Missions:</b>
+                                <% if("" != missionParticipantDTO.getMission_id()) { %>
                                 <a href="?action=m_view&id=<%=missionParticipantDTO.getMission_id()%>" target="_blank">
                                     <span>
                                         <%= StringEscapeUtils.escapeHtml(strMissionTitle) %>
                                     </span>
                                 </a>
+                                <% }else{ %>
+                                    <span>
+                                        <%= StringEscapeUtils.escapeHtml(strMissionTitle) %>
+                                    </span>
+                                <% } %>
                             </p>
                             <p><b>Submit Date:</b> <span><%= strDateSubmitted %></span></p>
                             <p>

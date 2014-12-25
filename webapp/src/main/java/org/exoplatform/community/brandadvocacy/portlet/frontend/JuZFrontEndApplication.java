@@ -393,7 +393,7 @@ public class JuZFrontEndApplication {
   @Ajax
   @Resource
   public Response sendNotifEmail(){
-    if (this.jcrService.sendNotifMissionParticipantEmail(this.currentSettings,this.currentMissionParticipantId)) {
+    if (this.jcrService.sendNotifMissionParticipantEmail(this.currentSettings,this.currentMissionParticipantId,"")) {
       return Response.ok("ok");
     }
     return Response.ok("nok");

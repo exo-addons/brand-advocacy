@@ -1,10 +1,7 @@
 package org.exoplatform.brandadvocacy.jcr;
 
 import com.google.common.collect.Lists;
-import org.exoplatform.brandadvocacy.model.MissionParticipantNote;
-import org.exoplatform.brandadvocacy.model.NoteType;
-import org.exoplatform.brandadvocacy.model.Program;
-import org.exoplatform.brandadvocacy.model.Query;
+import org.exoplatform.brandadvocacy.model.*;
 import org.exoplatform.brandadvocacy.service.BrandAdvocacyServiceException;
 import org.exoplatform.brandadvocacy.service.JCRImpl;
 import org.exoplatform.brandadvocacy.service.Utils;
@@ -142,9 +139,9 @@ public class MissionParticipantNoteDAO extends DAO {
     }
     return result;
   }
-  public MissionParticipantNote getById(String missionParticipantId){
+  public MissionParticipantNote getById(String missionParticipantNoteId){
     try {
-      Node node = this.getNodeById(missionParticipantId);
+      Node node = this.getNodeById(missionParticipantNoteId);
       if (null != node){
         return this.transfertNode2Object(node);
       }
