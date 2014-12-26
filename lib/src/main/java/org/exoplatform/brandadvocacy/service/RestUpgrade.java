@@ -11,6 +11,9 @@ import org.exoplatform.services.rest.impl.RuntimeDelegateImpl;
 import org.exoplatform.services.rest.resource.ResourceContainer;
 
 import javax.annotation.security.RolesAllowed;
+import javax.jcr.Property;
+import javax.jcr.PropertyType;
+import javax.jcr.RepositoryException;
 import javax.jcr.version.OnParentVersionAction;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -48,7 +51,7 @@ public class RestUpgrade implements ResourceContainer {
   @GET
   @Path("/upgrade/nodetype/{name}/{children}")
   @RolesAllowed({"administrators"})
-  public Response upgradeNodeType(@PathParam("name") String nodeTypeName,@PathParam("children") String childNode){
+  public Response upgradeNodeTypeChild(@PathParam("name") String nodeTypeName,@PathParam("children") String childNode){
     String result = "upgrade node type successfully";
     try {
       log.info("==== start upgrade brand adv node type "+nodeTypeName);
@@ -80,6 +83,34 @@ public class RestUpgrade implements ResourceContainer {
       result = "upgrade node type unsuccessful";
     }
     return Response.ok(result , MediaType.TEXT_HTML).cacheControl(cacheControl_).build();
+  }
+  @GET
+  @Path("/upgrade/nodetype/{name}/{property}/{type}")
+  @RolesAllowed({"administrators"})
+  public Response upgradeNodeTypeProperty(@PathParam("name") String nodeTypeName,@PathParam("property") String propertyName,@PathParam("type") String type){
+    String result = "upgrade node type successfully";
+    log.info("==== start upgrade brand adv node type "+nodeTypeName);
+    try {
+      ExtendedNodeTypeManager nodeTypeManager =   CommonsUtils.getRepository().getNodeTypeManager();
+      NodeTypeValue nodeTypeValue = nodeTypeManager.getNodeTypeValue(nodeTypeName);
+      List<PropertyDefinitionValue> propValues = nodeTypeValue.getDeclaredPropertyDefinitionValues();
+      for (PropertyDefinitionValue propValue : propValues) {
+        if (propertyName.equalsIgnoreCase(propValue.getName())) {
+          log.info("==== update property "+propertyName+" set to type "+type);
+          if(type == "long")
+            propValue.setRequiredType(PropertyType.LONG);
+          break;
+        }
+      }
+      nodeTypeValue.setDeclaredPropertyDefinitionValues(propValues);
+      nodeTypeManager.registerNodeType(nodeTypeValue, ExtendedNodeTypeManager.REPLACE_IF_EXISTS);
+    }
+    catch (Exception e) {
+      if (log.isErrorEnabled()) {
+        log.error("An unexpected error occurs when migrating exo:actionable node type", e);
+      }
+    }
+    return Response.ok(result, MediaType.TEXT_HTML).cacheControl(cacheControl_).build();
   }
 
 }

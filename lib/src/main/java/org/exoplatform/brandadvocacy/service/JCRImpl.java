@@ -536,6 +536,11 @@ public class JCRImpl implements IService {
   }
 
   @Override
+  public MissionParticipantNote updateMPNote(MissionParticipantNote missionParticipantNote) {
+    return this.getMissionParticipantNoteDAO().update(missionParticipantNote);
+  }
+
+  @Override
   public List<MissionParticipant> searchMissionParticipants(Query query) {
     return this.getMissionParticipantDAO().searchMissionParticipants(query);
   }

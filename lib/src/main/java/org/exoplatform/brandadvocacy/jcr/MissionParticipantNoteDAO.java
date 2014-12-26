@@ -150,5 +150,18 @@ public class MissionParticipantNoteDAO extends DAO {
     }
     return null;
   }
+  public MissionParticipantNote update(MissionParticipantNote missionParticipantNote){
+    try {
+      Node node = this.getNodeById(missionParticipantNote.getId());
+      if (null != node){
+        this.setProperties(node,missionParticipantNote);
+        node.save();
+        return this.transfertNode2Object(node);
+      }
+    } catch (RepositoryException e) {
+      e.printStackTrace();
+    }
+    return null;
+  }
 }
 

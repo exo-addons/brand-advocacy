@@ -15,10 +15,10 @@
             </div>
         </div>
     </div>
-    <div class="control-group">
+    <div class="control-group hide">
         <label class="control-label">Comment:</label>
         <div class="control row-fluid">
-            <textarea class="span12 brandadv-mp-status-reason-comment hide" style="min-height: 84px" name="bradAdvPropositionContent" id="bradAdvPropositionContent" cols="30" rows="15"></textarea>
+            <textarea class="span12 brandadv-mp-status-reason-comment" style="min-height: 84px" name="bradAdvPropositionContent" id="bradAdvPropositionContent" cols="30" rows="15"></textarea>
         </div>
     </div>
 </div>

@@ -398,19 +398,20 @@
   };
   var _updateMissionParticipantStatusInline = function(missionParticipantId,val,note,force){
     _displayLoading(true);
-    var jStatus = $("select.mission-participant-status");
+    var parent = $("select.mission-participant-status.brandadv-current");
     $('.jz').jzAjax("MissionParticipantController.ajaxUpdateMPInline()",{
       data:{missionParticipantId:missionParticipantId,action:"status",val:val,note:note,force:force},
       success:function(data){
         try{
           var obj = data = $.parseJSON(data);
           if (obj.error){
+            parent.val(obj.status);
             _disPlayErrorMsgCB(obj.msg);
-            jStatus.val(obj.status);
+            parent.removeClass("brandadv-current");
           }else{
             if(obj.msg == "show_reason"){
               _showPopupMPStatusReasonOption(obj.mpId);
-              jStatus.val(obj.status);
+              parent.val(obj.status);
             }else{
               if(obj.mpId != ""){
                 if(obj.note != null && obj.note != ""){
@@ -423,6 +424,8 @@
                 }
                 _disPlayInfoMsgCB(obj.msg);
               }
+              parent.val(obj.status);
+              parent.removeClass("brandadv-current");
             }
           }
         }catch (e){
@@ -763,6 +766,7 @@
       var missionParticipantId =jStatus.attr("data-mission-participant-id");
       if (typeof missionParticipantId != "undefined"){
         var val = jStatus.val();
+        jStatus.addClass("brandadv-current");
         _updateMissionParticipantStatusInline(missionParticipantId,val,"","");
       }else
         _disPlayErrorMsgCB('something went wrong to update mission participant status');
@@ -1151,13 +1155,30 @@
     });
   };
   var _addMPAdminNote = function(mpId,content){
-    $('.jz').jzAjax("MissionParticipantController.addMPAdminNote()",{
+    var urlAction = "MissionParticipantController.addMPAdminNote()";
+    $('.jz').jzAjax(urlAction,{
       data:{mpId:mpId,content:content},
       success:function(data){
         if (data == "nok"){
           _disPlayErrorMsgCB('something went wrong, cannot add note to mission participant');
         }else{
-          _loadAllMPAdminNote(mpId);
+//          _loadAllMPAdminNote(mpId);
+          _disPlayInfoMsgCB("your note has been successfully saved");
+        }
+        _displayLoading(false);
+      }
+    });
+  };
+  var _updateMPAdminNote = function(mpId,mpNoteId,content){
+    var urlAction = "MissionParticipantController.updateMPAdminNote()";
+    $('.jz').jzAjax(urlAction,{
+      data:{mpId:mpId,mpNoteId:mpNoteId,content:content},
+      success:function(data){
+        if (data == "nok"){
+          _disPlayErrorMsgCB('something went wrong, cannot add note to mission participant');
+        }else{
+//          _loadAllMPAdminNote(mpId);
+          _disPlayInfoMsgCB("your note has been successfully saved");
         }
         _displayLoading(false);
       }
@@ -1168,7 +1189,13 @@
       var content = $("textarea.brandadv-mp-admin-note-content").val();
       if(content.trim().length > 0){
         var mpId = $(this).attr("data-mission-participant-id");
-        _addMPAdminNote(mpId,content);
+        var action = $(this).attr("data-mission-participant-action");
+        if(action == "add")
+          _addMPAdminNote(mpId,content);
+        else if(action == "update"){
+          var mpNoteId = $(this).attr("data-mission-participant-note-id");
+          _updateMPAdminNote(mpId,mpNoteId,content);
+        }
       }else{
         _disPlayInfoMsgCB("please fill note content");
       }
@@ -1180,7 +1207,6 @@
       success:function(data) {
         if(data != "nok"){
           _loadPopup('on','Reason',data);
-          _addCkEditor2Textarea();
         }
         else
           _disPlayErrorMsgCB("something went wrong, cannot load confirmation popup")
@@ -1209,12 +1235,12 @@
       if("No_Reason" == content){
         _updateMissionParticipantStatusInline(mpId,mpStatus,"","yes");
       }else{
-        if("Other" == content && $("textarea.brandadv-mp-status-reason-comment").length > 0)
-          content = $("textarea.brandadv-mp-status-reason-comment").val();
+        if("Other" == content)
+          content = _getDataFromCkEditor();
         if("" != content && content.trim().length > 0){
           _updateMissionParticipantStatusInline(mpId,mpStatus,content,"yes");
         }else{
-          _disPlayInfoMsgCB("please give note");
+          alert("please give note");
         }
       }
     });
@@ -1222,11 +1248,12 @@
   var _addEventChange2SelectMPReasonOption = function(){
     $(document).on("change.juzBrandAdv.bk.select.mp.reason","select.brandadv-mp-status-reason-option",function(){
       var reasonTxtDOM = $("textarea.brandadv-mp-status-reason-comment");
-      if($(this).val() == "Other" && reasonTxtDOM.length > 0){
-        reasonTxtDOM.show();
+      if($(this).val() == "Other"){
+        reasonTxtDOM.parents('.control-group').show();
+        _addCkEditor2Textarea();
       }
       else
-        reasonTxtDOM.hide();
+        reasonTxtDOM.parents('.control-group').hide();
     });
   };
 

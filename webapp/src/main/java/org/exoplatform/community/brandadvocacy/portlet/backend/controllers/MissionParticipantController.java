@@ -190,6 +190,7 @@ public class MissionParticipantController {
               hasError = false;
               msg = "Status has been successfully updated";
               mpId = missionParticipant.getId();
+              oldStatus = Integer.parseInt(val);
               if (Status.REJECTED.getValue() == Integer.parseInt(val)){
                 // allow participant to replay this mission
                 if (this.missionParticipantService.removeMissionInParticipant(loginController.getCurrentProgramId(),loginController.getCurrentUserName(),missionParticipant.getMission_id())){
@@ -323,7 +324,6 @@ public class MissionParticipantController {
         return Response.ok("nok");
       }
   }
-
   private MissionParticipantNote addNote(NoteType noteType, String mpId, String content){
     MissionParticipantNote missionParticipantNote = new MissionParticipantNote(mpId);
     missionParticipantNote.setType(noteType);
@@ -331,13 +331,32 @@ public class MissionParticipantController {
     missionParticipantNote.setContent(content);
     return this.missionParticipantService.addNote2MissionParticipant(missionParticipantNote);
   }
-
+  @Ajax
+  @Resource
+  public Response updateMPAdminNote(String mpId, String mpNoteId,String content){
+    MissionParticipantNote missionParticipantNote = this.missionParticipantService.getMPNoteById(mpNoteId);
+    if (null != missionParticipantNote){
+      missionParticipantNote.setContent(content);
+      missionParticipantNote.setAuthor(loginController.getCurrentUserName());
+      missionParticipantNote = this.missionParticipantService.updateMPNote(missionParticipantNote);
+    }
+    if(null == missionParticipantNote)
+      return Response.ok("nok");
+    return Response.ok("ok");
+  }
   @Ajax
   @Resource
   public Response getAllMPAdminNote(String mpId){
     if(loginController.isAdmin()){
+      String action = "update";
+      MissionParticipantNote missionParticipantNote = null;
       List<MissionParticipantNote> notes = this.missionParticipantService.getAllMPNotesByType(mpId,NoteType.AdminComment.getValue());
-      return adminNotesTpl.with().set("notes",notes).set("mpId",mpId).ok();
+      if (notes.size() == 0)
+        action = "add";
+      else{
+        missionParticipantNote = notes.get(0);
+      }
+      return adminNotesTpl.with().set("note",missionParticipantNote).set("mpId",mpId).set("action",action).ok();
     }else
       return Response.ok("nok");
   }
