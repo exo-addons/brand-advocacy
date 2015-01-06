@@ -31,7 +31,7 @@ public class MissionParticipantNoteDAO extends DAO {
   public MissionParticipantNoteDAO(JCRImpl jcrImpl) {
     super(jcrImpl);
   }
-  private Node getOrCreateNoteHome(String missionParticipantId){
+  public Node getOrCreateNoteHome(String missionParticipantId){
     Node missionParticipantNode = null;
     try {
       missionParticipantNode = this.getNodeById(missionParticipantId);

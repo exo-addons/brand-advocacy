@@ -98,7 +98,7 @@ public interface IService {
   public List<MissionParticipantNote> getAllMPNotesByType(String missionParticipantId,int type);
   public MissionParticipantNote getMPNoteById(String missionParticipantNoteId);
   public MissionParticipantNote updateMPNote(MissionParticipantNote missionParticipantNote);
-
+  public Boolean initMPHomeNote(String missionParticipantId);
   public ListAccess<org.exoplatform.services.organization.User> searchEXOUsers(String keyword);
   public List<Profile> searchEXOProfiles(String keyword);
 

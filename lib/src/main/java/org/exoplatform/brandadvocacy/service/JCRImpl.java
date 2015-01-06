@@ -541,6 +541,20 @@ public class JCRImpl implements IService {
   }
 
   @Override
+  public Boolean initMPHomeNote(String missionParticipantId) {
+    Node node = this.getMissionParticipantNoteDAO().getOrCreateNoteHome(missionParticipantId);
+    if (null != node){
+      try {
+        node.getSession().save();
+        return true;
+      } catch (RepositoryException e) {
+        e.printStackTrace();
+      }
+    }
+    return false;
+  }
+
+  @Override
   public List<MissionParticipant> searchMissionParticipants(Query query) {
     return this.getMissionParticipantDAO().searchMissionParticipants(query);
   }

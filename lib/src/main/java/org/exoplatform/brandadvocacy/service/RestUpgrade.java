@@ -1,5 +1,8 @@
 package org.exoplatform.brandadvocacy.service;
 
+import org.exoplatform.brandadvocacy.jcr.MissionParticipantNoteDAO;
+import org.exoplatform.brandadvocacy.model.MissionParticipant;
+import org.exoplatform.brandadvocacy.model.Program;
 import org.exoplatform.commons.utils.CommonsUtils;
 import org.exoplatform.services.jcr.core.nodetype.ExtendedNodeTypeManager;
 import org.exoplatform.services.jcr.core.nodetype.NodeDefinitionValue;
@@ -108,6 +111,22 @@ public class RestUpgrade implements ResourceContainer {
     catch (Exception e) {
       if (log.isErrorEnabled()) {
         log.error("An unexpected error occurs when migrating exo:actionable node type", e);
+      }
+    }
+    return Response.ok(result, MediaType.TEXT_HTML).cacheControl(cacheControl_).build();
+  }
+
+  @GET
+  @Path("/upgrade/childnode/data")
+  @RolesAllowed({"administrators"})
+  public Response upgradeChildnodeData(){
+    String result = "upgrade child node for data successfully";
+    List<Program> programs = iService.getAllPrograms();
+    for (Program program:programs){
+      List<MissionParticipant> missionParticipants = iService.getAllMissionParticipantsInProgram(program.getId());
+      for (MissionParticipant missionParticipant:missionParticipants){
+        if(!iService.initMPHomeNote(missionParticipant.getId()))
+          result = "upgrade child node for data unsuccessfully";
       }
     }
     return Response.ok(result, MediaType.TEXT_HTML).cacheControl(cacheControl_).build();
