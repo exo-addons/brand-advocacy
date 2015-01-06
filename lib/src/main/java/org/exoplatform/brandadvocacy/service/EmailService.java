@@ -181,7 +181,7 @@ public class EmailService {
     }
     return null;
   }
-  private Map<String,String> getEmailInfoMissionFailed(Program program,Identity identity){
+  private Map<String,String> getEmailInfoMissionFailed(Program program,Identity identity, String note){
     String  subject = program.getTitle()+" - Mission failed";
     String remoteImgUrl =  remoteUrl;
     remoteImgUrl+="/brand-advocacy-webapp/img/email";
@@ -189,6 +189,7 @@ public class EmailService {
     props.put("user.name", identity.getProfile().getFullName());
     props.put("imgUrlBase",remoteImgUrl);
     props.put("program.title",program.getTitle());
+    props.put("reason",note);
     String body = this.getBodyByTemplate(email_mission_failed_template, props);
     if (null != body){
       return this.pushEmailInfo(subject,body);
@@ -197,13 +198,13 @@ public class EmailService {
   }
 
   private Map<String,String> generateParticipantEmailInfoByStatus(Program program, Identity identity,MissionParticipant missionParticipant,String note){
-    log.info( " send to participant with note "+note);
+    //log.info( " send to participant with note "+note);
     if(Status.WAITING_FOR_VALIDATE.getLabel().equals(missionParticipant.getStatus().getLabel())){
       return this.getEmailInfoThankyou(identity.getProfile().getFullName());
     }else if (Status.SHIPPED.getLabel().equals(missionParticipant.getStatus().getLabel())){
       return this.getEmailInfoGiftShipped(program,identity);
     } else if (Status.REJECTED.getLabel().equals(missionParticipant.getStatus().getLabel())){
-      return this.getEmailInfoMissionFailed(program,identity);
+      return this.getEmailInfoMissionFailed(program,identity,note);
     }
     return null;
   }

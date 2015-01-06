@@ -1237,6 +1237,9 @@
       }else{
         if("Other" == content)
           content = _getDataFromCkEditor();
+        else if(content.indexOf("reason") != -1){
+          content = $(".brandadv-complete-reason").children("."+content).html().trim();
+        }
         if("" != content && content.trim().length > 0){
           _updateMissionParticipantStatusInline(mpId,mpStatus,content,"yes");
         }else{
@@ -1247,13 +1250,20 @@
   };
   var _addEventChange2SelectMPReasonOption = function(){
     $(document).on("change.juzBrandAdv.bk.select.mp.reason","select.brandadv-mp-status-reason-option",function(){
+      var reason = $(this).val();
+      $(".brandadv-complete-reason").children(".reason1").hide();
+      $(".brandadv-complete-reason").children(".reason2").hide();
+      $(".brandadv-complete-reason").children(".reason3").hide();
+
       var reasonTxtDOM = $("textarea.brandadv-mp-status-reason-comment");
-      if($(this).val() == "Other"){
+      reasonTxtDOM.parents('.control-group').hide();
+      if(reason == "Other"){
         reasonTxtDOM.parents('.control-group').show();
         _addCkEditor2Textarea();
       }
-      else
-        reasonTxtDOM.parents('.control-group').hide();
+      else if(reason.indexOf("reason") != -1 ){
+        $(".brandadv-complete-reason").children("."+reason).show();
+      }
     });
   };
 

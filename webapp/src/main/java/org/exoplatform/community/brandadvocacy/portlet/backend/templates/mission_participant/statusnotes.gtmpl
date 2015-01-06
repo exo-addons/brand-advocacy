@@ -6,13 +6,24 @@
         <div class="controls">
             <div class="spaceIphoneChkBox">
                 <select class="brandadv-mp-status-reason-option">
-                    <option value="Could not find review">Could not find review</option>
-                    <option value="Bad data">Bad data</option>
-                    <option value="You already won a t-shirt for this mission">You already won a t-shirt for this mission</option>
+                    <option value="reason1">Could not find review</option>
+                    <option value="reason2">Bad data</option>
+                    <option value="reason3">You already won a t-shirt for this mission</option>
+                    <option value="Other">Other (custom sentence)</option>
                     <option value="No_Reason">No Reason</option>
-                    <option value="Other">Other</option>
                 </select>
             </div>
+        </div>
+    </div>
+    <div class="control-group brandadv-complete-reason">
+        <div class="reason1">
+            Your review could not be found. Please make sure that it has been actually published and that the name used to sign the review is not anonymous.
+        </div>
+        <div class="reason2 hide">
+            The data you have provided for the shipment were incorrect or incomplete.
+        </div>
+        <div class="reason3 hide">
+            You already won a t-shirt for this mission.
         </div>
     </div>
     <div class="control-group hide">
