@@ -106,6 +106,8 @@ public class Address {
     if ("".equals( this.getlName() ) || "".equals( this.getlName() ) || "".equals( this.getAddress() ) || "".equals( this.getCity() ) || "".equals( this.getCountry() )|| "".equals( this.getPhone()) )
       throw new BrandAdvocacyServiceException(BrandAdvocacyServiceException.MISSION_NOT_EXISTS," address invalid");
   }
-
+  public String toString(){
+    return this.getfName()+" "+this.getlName()+", "+this.getAddress()+", "+this.getCity()+" "+this.getCountry();
+  }
 
 }

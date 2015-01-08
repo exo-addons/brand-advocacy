@@ -86,11 +86,26 @@ public class EmailService {
     if (null != mission && null != missionParticipant){
       infos = new HashMap<String, String>();
       String username = missionParticipant.getParticipant_username();
+      Identity identity = identityManager.getOrCreateIdentity(OrganizationIdentityProvider.NAME,username,true);
+      Address address = iService.getAddressById(missionParticipant.getAddress_id());
       infos.put("username",username);
+      String fullName = "",email = "";
+      if (null != identity){
+        fullName = identity.getProfile().getFullName();
+        email = identity.getProfile().getEmail();
+      }
+      infos.put("fullname",fullName);
+      infos.put("email",email);
+      String strAdrs = "";
+      if (null != address){
+        strAdrs = address.toString();
+      }
+      infos.put("address",strAdrs);
       infos.put("mission_title",mission.getTitle());
       infos.put("status",missionParticipant.getStatus().getLabel());
       infos.put("mpid",missionParticipant.getId());
     }
+//    log.info(" admin email body "+infos.toString());
     return infos;
   }
   private String getCommonBody(Mission mission, MissionParticipant missionParticipant){
@@ -99,7 +114,12 @@ public class EmailService {
     if(null != infos){
       StringBuilder stringBuilder = new StringBuilder("Mission: ").append(infos.get("mission_title"));
       stringBuilder.append("<br/> Status: ").append(infos.get("status"));
-      stringBuilder.append("<br/> participant: ").append(infos.get("username"));
+      stringBuilder.append("<br/> Username: ").append(infos.get("username"));
+      if(!"".equals(infos.get("email"))){
+        stringBuilder.append("<br/> Full name on community: ").append(infos.get("fullname"));
+        stringBuilder.append("<br/> Email: ").append(infos.get("email"));
+        stringBuilder.append("<br/> Shipping address : ").append(infos.get("address"));
+      }
       stringBuilder.append("<br/> url: ").append(this.generateMissionParticipantUrl(infos.get("mpid")));
       body = stringBuilder.toString();
     }
