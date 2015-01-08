@@ -97,9 +97,12 @@ public class EmailService {
       infos.put("fullname",fullName);
       infos.put("email",email);
       String strAdrs = "";
+      String phone = "";
       if (null != address){
         strAdrs = address.toString();
+        phone = address.getPhone();
       }
+      infos.put("phone",phone);
       infos.put("address",strAdrs);
       infos.put("mission_title",mission.getTitle());
       infos.put("status",missionParticipant.getStatus().getLabel());
@@ -118,6 +121,7 @@ public class EmailService {
       if(!"".equals(infos.get("email"))){
         stringBuilder.append("<br/> Full name on community: ").append(infos.get("fullname"));
         stringBuilder.append("<br/> Email: ").append(infos.get("email"));
+        stringBuilder.append("<br/> Phone: ").append(infos.get("phone"));
         stringBuilder.append("<br/> Shipping address : ").append(infos.get("address"));
       }
       stringBuilder.append("<br/> url: ").append(this.generateMissionParticipantUrl(infos.get("mpid")));

@@ -47,9 +47,9 @@ public class JuZBackEndApplication {
   @Inject
   MissionParticipantController missionParticipantController;
 
-  static {
+/*  static {
    Utils.readCountriesJSON();
-  }
+  }*/
   @Inject
   public JuZBackEndApplication(OrganizationService organizationService,IService iService){
     this.organizationService = organizationService;

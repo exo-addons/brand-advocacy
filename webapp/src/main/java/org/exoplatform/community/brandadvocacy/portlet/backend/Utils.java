@@ -22,7 +22,7 @@ public class Utils {
     }
   }
   public static String getCountryNameByCode(String code){
-    if (null == code || "".equals(code))
+    if (null == countriesList || countriesList.size() == 0 || null == code || "".equals(code))
       return "";
     JSON json;
     String country = null;

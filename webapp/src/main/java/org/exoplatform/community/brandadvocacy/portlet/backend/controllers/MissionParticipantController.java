@@ -118,7 +118,7 @@ public class MissionParticipantController {
               address = new Address("","","","","","");
             }
             AddressDTO addressDTO = new AddressDTO(address.getfName(),address.getlName(),address.getAddress(),address.getCity(),address.getCountry(),address.getPhone()) ;
-            addressDTO.setCountryName(Utils.getCountryNameByCode(addressDTO.getCountry()));
+/*            addressDTO.setCountryName(Utils.getCountryNameByCode(addressDTO.getCountry()));*/
             if (isAjax){
               return viewAjaxTpl.with().set("missionParticipantDTO",missionParticipantDTO).set("address",addressDTO).set("participantDTO",participantDTO).set("states",Status.values()).ok();
             }
@@ -241,7 +241,7 @@ public class MissionParticipantController {
             address = this.missionParticipantService.getAddressById(missionParticipant.getAddress_id());
             if (null != address){
               addressDTO = new AddressDTO(address.getfName(),address.getlName(),address.getAddress(),address.getCity(),address.getCountry(),address.getPhone()) ;
-              addressDTO.setCountryName(Utils.getCountryNameByCode(addressDTO.getCountry()));
+/*              addressDTO.setCountryName(Utils.getCountryNameByCode(addressDTO.getCountry())); */
               missionParticipantDTO.setAddressDTO(addressDTO);
             }
             missionParticipantDTOs.add(missionParticipantDTO);

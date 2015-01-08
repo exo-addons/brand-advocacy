@@ -330,7 +330,7 @@
       var strOptions = '<option value="">Country</option>';
       $.getJSON("/brand-advocacy-webapp/resources/countries.json", function(data){
         $.each(data, function(i,v){
-          strOptions +='<option value="'+v.code+'">'+v.name+'</option>';
+          strOptions +='<option value="'+v.name+'">'+v.name+'</option>';
         });
         countryDOM.append(strOptions);
       });

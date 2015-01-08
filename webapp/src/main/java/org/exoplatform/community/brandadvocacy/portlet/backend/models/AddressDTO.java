@@ -18,6 +18,7 @@ public class AddressDTO {
     this.setAddress(address);
     this.setCity(city);
     this.setCountry(country);
+    this.setCountryName(country);
     this.setPhone(phone);
   }
   public String getFirstName() {
