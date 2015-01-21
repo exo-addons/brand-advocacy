@@ -1,11 +1,3 @@
-<<<<<<< HEAD
-target/
-pom.xml.tag
-pom.xml.releaseBackup
-pom.xml.versionsBackup
-pom.xml.next
-release.properties
-=======
 #
 # Default excludes
 #
@@ -23,10 +15,13 @@ release.properties
 *.ear
 *.sar
 *.class
-*~
 
 # Maven 
 target/
+pom.xml.tag
+pom.xml.releaseBackup
+pom.xml.versionsBackup
+release.properties
 
 # IntelliJ project files 
 *.iml
@@ -44,15 +39,5 @@ target/
 
 # Misc
 *.swp
-.java-version
+transaction.log
 
-#
-# Project excludes
-#
-
-# Never add local setenv scripts
-setenv-dev.sh
-setenv-acceptance.sh
-setenv-preprod.sh
-setenv-prod.sh
->>>>>>> 0.6.2
