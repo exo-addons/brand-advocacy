@@ -18,8 +18,10 @@ To build this addon, you need to be familiar to maven.
 + To display frontend, you can add the portlet named "Juzu Brand Advocacy Frontend Portlet" wherever you want.
 
 ** Brand Advocacy Add-on currently has some main functions **
-1/ Frontend: allows user to participate a mission
-2/ Backend: allows manager to manage
+
+1. Frontend: allows user to participate a mission.
+2. Backend: allows manager to manage.
+
 a/ list of managers:
 - add or remove a manager.
 - his role.
