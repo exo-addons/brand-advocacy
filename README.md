@@ -59,3 +59,6 @@ When a mission
 - is validated: the shipping managers will receive a notification email that tells them about lead’s information to send the gift.
 
 - is shipped: the participant will be notified by an email telling him that his mission is validated and the gift is on the way.
+
+** More info about brand advocacy **
+http://blog.exoplatform.com/en/2015/01/29/reward-your-community-and-boost-engagement-with-the-advocacy-add-on
