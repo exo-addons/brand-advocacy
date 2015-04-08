@@ -14,15 +14,15 @@
       this.wrapCheckboxWithDivs();
       this.attachEvents();
       this.disableTextSelection();
-      
+
       this.container.css({
         width: this.containerWidth
       });
-      
+
       if (this.resizeHandle) {
         this.optionallyResize('handle');
       }
-      
+
       this.initialPosition();
     }
     iOSCheckbox.prototype.isDisabled = function() {
@@ -139,15 +139,15 @@
       this.handle.animate({
         left: new_left
       }, this.duration);
-      
+
       this.onLabel.animate({
         width: (new_left + this.handleRadius + 6)
       }, this.duration);
-      
+
       this.offSpan.animate({
         marginRight: -new_left
       }, this.duration);
-      
+
       return this.onSpan.animate({
         marginLeft: new_left - this.rightSide
       }, this.duration);
@@ -180,7 +180,7 @@
         offset -= 3;
       }
       this.rightSide = containerWidth - this._getDimension(this.handle, "width")  - offset;
-      
+
       if (this.elem.is(':checked')) {
         this.handle.css({
           left: this.rightSide
@@ -231,13 +231,13 @@
       uncheckedLabel: 'OFF',
       resizeHandle: false,
       resizeContainer: true,
-      disabledClass: 'iPhoneCheckDisabled',
-      containerClass: 'iPhoneCheckContainer',
-      labelOnClass: 'iPhoneCheckLabelOn',
-      labelOffClass: 'iPhoneCheckLabelOff',
-      handleClass: 'iPhoneCheckHandle',
-      handleCenterClass: 'iPhoneCheckHandleCenter',
-      handleRightClass: 'iPhoneCheckHandleRight',
+      disabledClass: 'switchBtnDisabled',
+      containerClass: 'uiSwitchBtn',
+      labelOnClass: 'switchBtnLabelOn',
+      labelOffClass: 'switchBtnLabelOff',
+      handleClass: 'switchBtnHandle',
+      handleCenterClass: 'switchBtnHandleCenter',
+      handleRightClass: 'switchBtnHandleRight',
       dragThreshold: 5,
       handleMargin: 15,
       handleRadius: 4,
@@ -275,13 +275,13 @@
     }
     opts = $.extend({}, options, {
       resizeHandle: false,
-      disabledClass: 'iOSCheckDisabled',
-      containerClass: 'iOSCheckContainer',
-      labelOnClass: 'iOSCheckLabelOn',
-      labelOffClass: 'iOSCheckLabelOff',
-      handleClass: 'iOSCheckHandle',
-      handleCenterClass: 'iOSCheckHandleCenter',
-      handleRightClass: 'iOSCheckHandleRight',
+      disabledClass: 'switchBtnDisabled',
+      containerClass: 'uiSwitchBtn',
+      labelOnClass: 'switchBtnLabelOn',
+      labelOffClass: 'switchBtnLabelOff',
+      handleClass: 'switchBtnHandle',
+      handleCenterClass: 'switchBtnHandleCenter',
+      handleRightClass: 'switchBtnHandleRight',
       dragThreshold: 5,
       handleMargin: 15,
       handleRadius: 4,
