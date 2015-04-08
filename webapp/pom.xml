@@ -43,6 +43,7 @@
       <groupId>org.exoplatform.commons</groupId>
       <artifactId>commons-webui-resources</artifactId>
       <type>war</type>
+      <scope>provided</scope>
     </dependency>
     <!-- provider for juzu -->
     <dependency>
