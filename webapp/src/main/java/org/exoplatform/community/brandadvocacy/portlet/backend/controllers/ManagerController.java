@@ -1,7 +1,7 @@
 package org.exoplatform.community.brandadvocacy.portlet.backend.controllers;
 
 import juzu.*;
-import org.exoplatform.commons.juzu.ajax.Ajax;
+import juzu.plugin.ajax.Ajax;
 import org.exoplatform.brandadvocacy.model.Manager;
 import org.exoplatform.brandadvocacy.model.Program;
 import org.exoplatform.brandadvocacy.model.Role;

@@ -1,15 +1,7 @@
 #{param name=action/}
 #{param name=username/}
 #{param name=id/}
-<%
-import org.exoplatform.portal.webui.util.Util;
-import org.exoplatform.webui.application.portlet.PortletRequestContext;
-import org.exoplatform.web.application.JavascriptManager;
-def pcontext = Util.getPortalRequestContext();
-def jsManager = pcontext.getJavascriptManager();
-jsManager.require("SHARED/jQueryJuzBrandAdvBackend", "brandAdvBackend").addScripts("brandAdvBackend.init('"+loginController.isAdmin()+"','"+action+"','"+id+"','"+username+"');");
-%>
-<script type="text/javascript" src="/brand-advocacy-webapp/ckeditor/ckeditor.js"></script>
+<script type="text/javascript" src="/CommonsResources/ckeditor/ckeditor.js"></script>
 <div class="referral-porlet">
 	<div style="margin: auto; z-index: 1600; position: absolute; left: 683px; top: 320.5px;" id="BrandAdvAjaxLoadingMask" class="ajaxLoadingMask clearfix">
 		<a class="uiIconClose uiIconWhite pull-right" onclick="javascript:ajaxAbort();"></a>
@@ -44,3 +36,8 @@ jsManager.require("SHARED/jQueryJuzBrandAdvBackend", "brandAdvBackend").addScrip
 </div>
 <div id="iuBrandAdvConfirmPopupContainer" class="UIPopupWindow UIDragObject uiPopup modal hide fade" style="display: none;position: fixed; top: 140px; visibility: visible; width: 550px;" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" id="myModal3">
 </div>
+<script type="text/javascript">
+    $(document).ready(function () {
+        brandAdvBackend.init('<%=loginController.isAdmin()%>','<%=action%>','<%=id%>','<%=username%>');
+    });
+</script>

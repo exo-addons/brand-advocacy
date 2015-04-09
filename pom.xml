@@ -29,7 +29,7 @@
   </scm>
   <properties>
     <exoplatform.version>4.2.0-M2</exoplatform.version>
-    <juzu.version>1.0.0-cr1</juzu.version>
+    <juzu.version>1.0.0-cr2</juzu.version>
     <!-- Dependency versions -->
     <junit.version>4.8.2</junit.version>
 

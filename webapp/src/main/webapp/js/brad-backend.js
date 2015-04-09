@@ -1359,5 +1359,6 @@
     }
   };
 
-  return brandAdvBackend;
+  window.brandAdvBackend = brandAdvBackend;
+  return window.brandAdvBackend;
 })($);

@@ -1,10 +1,9 @@
 package org.exoplatform.community.brandadvocacy.portlet.backend.controllers;
 
 import juzu.*;
-import org.exoplatform.commons.juzu.ajax.Ajax;
+import juzu.plugin.ajax.Ajax;
 import org.exoplatform.brandadvocacy.model.*;
 import org.exoplatform.brandadvocacy.service.IService;
-import org.exoplatform.community.brandadvocacy.portlet.backend.JuZBackEndApplication_;
 import org.exoplatform.community.brandadvocacy.portlet.backend.Utils;
 import org.exoplatform.community.brandadvocacy.portlet.backend.models.AddressDTO;
 import org.exoplatform.community.brandadvocacy.portlet.backend.models.MissionParticipantDTO;

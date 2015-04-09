@@ -516,7 +516,7 @@
     });
   };
 
-  bradObj.init = function(){
+  var _init = function(){
     _ctrlDown = false;
     _ctrlKey = 17;
     _cKey = 67;
@@ -535,5 +535,7 @@
     _addEventToBtnClose();
     _addEvent2LinkTweet();
   }
-  return bradObj;
+  $(document).ready(function(){
+    _init();
+  });
 })($);

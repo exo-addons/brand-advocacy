@@ -1,11 +1,3 @@
-<%
-      import org.exoplatform.portal.webui.util.Util;
-      import org.exoplatform.webui.application.portlet.PortletRequestContext;
-      import org.exoplatform.web.application.JavascriptManager;
-      def pcontext = Util.getPortalRequestContext();
-      def jsManager = pcontext.getJavascriptManager();
-      jsManager.require("SHARED/jQueryJuzBrandAdvFrontend", "brandAdvFrontend").addScripts("brandAdvFrontend.init();");
-%>
 <div id="brad-ft-container-temp" style="display:none;">
     <!-- Start Step -->
     <div class="tweetStepContent start-step brad-ft-start-step">

@@ -19,8 +19,8 @@
       <scope>provided</scope>
     </dependency>
     <dependency>
-      <groupId>org.exoplatform.commons</groupId>
-      <artifactId>commons-juzu</artifactId>
+      <groupId>org.juzu</groupId>
+      <artifactId>juzu-core</artifactId>
       <scope>provided</scope>
     </dependency>
     <dependency>
@@ -43,6 +43,7 @@
       <groupId>org.exoplatform.commons</groupId>
       <artifactId>commons-webui-resources</artifactId>
       <type>war</type>
+      <scope>provided</scope>
     </dependency>
     <!-- provider for juzu -->
     <dependency>
@@ -55,6 +56,13 @@
     <dependency>
       <groupId>org.codehaus.groovy</groupId>
       <artifactId>groovy-all</artifactId>
+      <scope>provided</scope>
+    </dependency>
+
+    <!-- Servlet 3.x API -->
+    <dependency>
+      <groupId>javax.servlet</groupId>
+      <artifactId>javax.servlet-api</artifactId>
       <scope>provided</scope>
     </dependency>
 

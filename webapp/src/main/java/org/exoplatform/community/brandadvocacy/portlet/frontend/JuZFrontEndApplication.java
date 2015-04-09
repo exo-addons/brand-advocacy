@@ -1,12 +1,12 @@
 package org.exoplatform.community.brandadvocacy.portlet.frontend;
 
 import juzu.*;
+import juzu.plugin.ajax.Ajax;
 import juzu.request.HttpContext;
 import juzu.request.SecurityContext;
 import org.exoplatform.brandadvocacy.model.*;
 import org.exoplatform.brandadvocacy.service.IService;
 import org.exoplatform.brandadvocacy.service.Utils;
-import org.exoplatform.commons.juzu.ajax.Ajax;
 import org.json.JSONObject;
 
 import javax.inject.Inject;
