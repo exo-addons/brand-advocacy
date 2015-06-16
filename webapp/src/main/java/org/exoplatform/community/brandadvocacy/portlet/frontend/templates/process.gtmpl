@@ -16,7 +16,7 @@ if(null != mission) {
             <% propositions.each{ proposition -> %>
                 <p><%= proposition.getContent() %></p>
                 <input type="hidden" name="propositionId" class="propositionId" value="<%= proposition.getId()%>"/>
-                <textarea class=" hide brad-proposition-textarea" rows="3"><%= proposition.getContent() %></textarea>
+                <textarea class=" hide brad-proposition-textarea" rows="8"><%= proposition.getContent() %></textarea>
             <% } %>
 
         </div>

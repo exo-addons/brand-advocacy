@@ -167,11 +167,13 @@
 }
 .brand-adv-LightBoxContainer.tweetPopup .quote-popup {
     background: #fff;
-    padding: 20px 15px;
+    padding: 10px 15px;
     margin-bottom: 20px;
     text-align: justify;
     color: #333;
     position: relative;
+    max-height: 180px;
+    overflow: hidden;
     box-shadow: 5px 5px 12px 0 rgba(36, 44, 48, 0.27);
     -moz-box-shadow: 5px 5px 12px 0 rgba(36, 44, 48, 0.27);
     -webkit-box-shadow: 5px 5px 12px 0 rgba(36, 44, 48, 0.27);
@@ -186,15 +188,13 @@
     border: medium none;
     border-radius: 0;
     box-shadow: none;
-    height: auto;
-    max-height: none;
-    min-height: 0;
+    height: inherit;
     padding: 0;
-    resize: none;
-    white-space: nowrap;
+    resize: none;    
     cursor: pointer;
     background: #FFF;
     font-size: 14px;
+    line-height: 1.5em;
 }
 
 .brand-adv-LightBoxContainer.tweetPopup .quote-popup:before {
@@ -208,6 +208,16 @@
     border-left: 9px solid transparent;
     border-right: 9px solid transparent;
     border-top: 9px solid #fff;
+}
+.brand-adv-LightBoxContainer.tweetPopup .quote-popup:after {
+    content: "";
+    position: absolute;
+    bottom: 0px;
+    right: 0px;
+    background: transparent linear-gradient(to right, rgba(255, 255, 255, 0), #FFF 50%) repeat scroll 0% 0%;
+    width: 60%;
+    height: 31px;
+    text-align: right;
 }
 .brand-adv-LightBoxContainer.tweetPopup .button-flat-balck {
     display: inline-block;
