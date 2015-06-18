@@ -37,7 +37,7 @@
     text-align: center;
 }
 .brand-adv-custom-tweet-button .img-responsive {
-    margin-left: 60px;    
+    margin-left: 60px;
 }
 .brand-adv-custom-tweet-button .btn > span {
     display: block;
@@ -167,19 +167,21 @@
 }
 .brand-adv-LightBoxContainer.tweetPopup .quote-popup {
     background: #fff;
-    padding: 10px 15px;
+    padding: 10px;
     margin-bottom: 20px;
     text-align: justify;
     color: #333;
     position: relative;
-    max-height: 180px;
-    overflow: hidden;
     box-shadow: 5px 5px 12px 0 rgba(36, 44, 48, 0.27);
     -moz-box-shadow: 5px 5px 12px 0 rgba(36, 44, 48, 0.27);
     -webkit-box-shadow: 5px 5px 12px 0 rgba(36, 44, 48, 0.27);
     border-radius: 4px 4px 4px 4px;
     -moz-border-radius: 4px 4px 4px 4px;
     -webkit-border-radius: 4px 4px 4px 4px;
+}
+.brand-adv-LightBoxContainer.tweetPopup .quote-popup .box-view-value {
+    max-height: 140px;
+    overflow: auto;
 }
 .brand-adv-LightBoxContainer.tweetPopup .quote-popup p {
     margin: 0;
@@ -188,12 +190,13 @@
     border: medium none;
     border-radius: 0;
     box-shadow: none;
-    height: inherit;
+    height: 140px;
     padding: 0;
-    resize: none;    
+    overflow: auto;
+    resize: none;
     cursor: pointer;
-    background: #FFF;
-    font-size: 14px;
+       background: #FFF;
+       font-size: 14px;
     line-height: 1.5em;
 }
 
@@ -209,7 +212,7 @@
     border-right: 9px solid transparent;
     border-top: 9px solid #fff;
 }
-.brand-adv-LightBoxContainer.tweetPopup .quote-popup:after {
+/*.brand-adv-LightBoxContainer.tweetPopup .quote-popup:after {
     content: "";
     position: absolute;
     bottom: 0px;
@@ -218,7 +221,7 @@
     width: 60%;
     height: 31px;
     text-align: right;
-}
+}*/
 .brand-adv-LightBoxContainer.tweetPopup .button-flat-balck {
     display: inline-block;
     padding: 10px 15px;
@@ -233,7 +236,7 @@
     text-align: center;
     line-height: 24px;
     margin-bottom: 20px;
- /*   word-break: break-all;*/
+    /*   word-break: break-all;*/
 }
 .brand-adv-LightBoxContainer.tweetPopup select,
 .brand-adv-LightBoxContainer.tweetPopup textarea,

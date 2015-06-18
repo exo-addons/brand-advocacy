@@ -222,7 +222,7 @@
     $('.jz').jzAjax("JuZFrontEndApplication.loadThankyouView()",{
       success: function(data){
         if(typeof data == "string" && data != "nok"){
-        _ftStepContainer.html(data);
+          _ftStepContainer.html(data);
           _tweetController();
           _addFocusEvent2Input();
           _sendNotifNewMissionParticipant();
@@ -488,7 +488,7 @@
 
   var _addEventClick2GetSuggestion = function(){
     $(document).on('click.juzBrad.Proposition.Click','.brad-proposition-suggestion',function(){
-      var pDOM = $(this).children('p');
+      var pDOM = $(this).children('div.box-view-value').children('p');
       var textareaDOM = $(this).children('textarea');
       textareaDOM.html(pDOM.text());
       pDOM.hide();

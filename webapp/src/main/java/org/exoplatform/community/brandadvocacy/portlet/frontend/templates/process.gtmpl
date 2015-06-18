@@ -14,11 +14,10 @@ if(null != mission) {
         <p class="write-review"><i class="iconCapterra"></i><%= mission.getTitle()%></p>
         <div class="quote-popup brad-proposition-suggestion">
             <% propositions.each{ proposition -> %>
-                <p><%= proposition.getContent() %></p>
+                <div class="box-view-value"><%= proposition.getContent() %></div>
                 <input type="hidden" name="propositionId" class="propositionId" value="<%= proposition.getId()%>"/>
                 <textarea class=" hide brad-proposition-textarea" rows="8"><%= proposition.getContent() %></textarea>
             <% } %>
-
         </div>
         <p class="tut-copy">Need inspiration? Select and press <span class="btn btn-mini">Ctrl</span> + <span class="btn btn-mini">C</span> to use this suggestion!</p>
         <button data-missionId="<%= mission.getId()%>" class="button-flat-balck btn-brad-done" data-url="<%=mission.getThird_part_link()%>">Go!</button>
