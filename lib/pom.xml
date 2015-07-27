@@ -4,7 +4,7 @@
   <parent>
     <artifactId>brand-advocacy-addon</artifactId>
     <groupId>org.exoplatform.addons.brand-advocacy</groupId>
-    <version>1.0.x-SNAPSHOT</version>
+    <version>1.0.4</version>
   </parent>
   <artifactId>brand-advocacy-lib</artifactId>
   <packaging>jar</packaging>
