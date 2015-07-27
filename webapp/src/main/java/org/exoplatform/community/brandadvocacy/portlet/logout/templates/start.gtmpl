@@ -1,0 +1,14 @@
+<!-- Start Step -->
+<div class="tweetStepContent start-step brad-ft-start-step">
+    <h5 class="titleStep">
+        <span class="numb">1</span><span class="textStep">Get your mission and complete it</span>
+    </h5>
+    <h5 class="titleStep">
+        <span class="numb">2</span><span class="textStep">Submit your address and get<br>your t-shirt!</span>
+    </h5>
+    <div class="action">
+        <button class="btn btn-large btn-brad-start">Start!</button>
+    </div>
+    <img class="tshirt-img" src="/brand-advocacy-webapp/img/banner.png" alt="T-Shirt">
+</div>
+<!-- /.start-step -->

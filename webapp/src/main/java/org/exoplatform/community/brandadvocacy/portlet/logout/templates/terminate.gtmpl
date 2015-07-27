@@ -47,10 +47,8 @@
         <div class="controls">
             <select name="tweetSize" class="brad-participant-size">
                <% sizes.each { size -> %>
-                   <% if(size.getValue() != 3){ %>
-                    <option value="<%= size.getValue() %>"><%= size.getLabel() %></option>
-                   <% } %>
-               <% } %>
+                <option value="<%= size.getValue() %>"><%= size.getLabel() %></option>
+                <% } %>
             </select>
         </div>
     </div>

@@ -1,0 +1,27 @@
+#{param name=mission/}
+<%
+import org.apache.commons.lang.StringEscapeUtils;
+%>
+<%
+if(null != mission) {
+    def propositions = mission.getPropositions();
+%>
+    <!-- Step 1 -->
+    <div class="tweetStepContent step-1 brad-process-step">
+        <h5 class="titleStep">
+            <span class="numb">1</span><span class="textStep">Here is your mission:</span>
+        </h5>
+        <p class="write-review"><i class="iconCapterra"></i><%= mission.getTitle()%></p>
+        <div class="quote-popup brad-proposition-suggestion">
+            <% propositions.each{ proposition -> %>
+                <div class="box-view-value"><%= proposition.getContent() %></div>
+                <input type="hidden" name="propositionId" class="propositionId" value="<%= proposition.getId()%>"/>
+                <textarea class=" hide brad-proposition-textarea" rows="8"><%= proposition.getContent() %></textarea>
+            <% } %>
+        </div>
+        <p class="tut-copy">Need inspiration? Select and press <span class="btn btn-mini">Ctrl</span> + <span class="btn btn-mini">C</span> to use this suggestion!</p>
+        <button data-missionId="<%= mission.getId()%>" class="button-flat-balck btn-brad-done" data-url="<%=mission.getThird_part_link()%>">Go!</button>
+    </div>
+    <!-- /.step-1 -->
+
+<% } %>

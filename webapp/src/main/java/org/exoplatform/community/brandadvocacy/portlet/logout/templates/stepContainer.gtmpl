@@ -1,0 +1,15 @@
+<div class="brand-adv-LightBoxContainer tweetPopup hide">
+    <div class="BgContent">
+        <div class="LightBoxContent">
+            <a class="closepopup btn-brad-close" href="#"><i class="uiIconClose uiIconWhite"></i>&nbsp;</a>
+            <div class="introBox">
+                <img src="/brand-advocacy-webapp/img/bg-community.png" alt="Image">
+                <h3 class="fix-step-3">Win a free eXo tshirt !</h3>
+            </div>
+            <!-- step content here -->
+            <div class="brad-container-step-container">
+
+            </div>
+        </div>
+    </div>
+</div>
