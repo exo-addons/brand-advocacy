@@ -1,6 +1,7 @@
 package org.exoplatform.brandadvocacy.service;
 
 import org.exoplatform.brandadvocacy.model.*;
+import org.exoplatform.brandadvocacy.service.Utils;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 import org.exoplatform.services.mail.Message;
@@ -186,19 +187,23 @@ public class EmailService {
     props.put("user.name", identity.getProfile().getFullName());
     props.put("imgUrlBase",remoteImgUrl);
     props.put("program.title",program.getTitle());
+    props.put("program.managerName",Utils.getAttrFromJson(program.getSettings(),program.MANAGER_NAME_KEY));      
+    props.put("program.managerTitle",Utils.getAttrFromJson(program.getSettings(),program.MANAGER_TITLE_KEY));
     String body = this.getBodyByTemplate(email_gift_shipped_template, props);
     if (null != body){
       return this.pushEmailInfo(subject,body);
     }
     return null;
   }
-  private Map<String,String> getEmailInfoThankyou(String fullName){
+  private Map<String,String> getEmailInfoThankyou(Program program, String fullName){
     String subject = "Mission submitted !";
     String remoteImgUrl =  remoteUrl;
     remoteImgUrl+="/brand-advocacy-webapp/img/email";
     Map<String, String> props = new HashMap<String, String>();
     props.put("user.name", fullName);
     props.put("imgUrlBase",remoteImgUrl);
+    props.put("program.managerName",Utils.getAttrFromJson(program.getSettings(),program.MANAGER_NAME_KEY));      
+    props.put("program.managerTitle",Utils.getAttrFromJson(program.getSettings(),program.MANAGER_TITLE_KEY));
     String body = this.getBodyByTemplate(email_thankyou_template, props);
     if (null != body){
       return this.pushEmailInfo(subject,body);
@@ -213,6 +218,8 @@ public class EmailService {
     props.put("user.name", identity.getProfile().getFullName());
     props.put("imgUrlBase",remoteImgUrl);
     props.put("program.title",program.getTitle());
+    props.put("program.managerName",Utils.getAttrFromJson(program.getSettings(),program.MANAGER_NAME_KEY));
+    props.put("program.managerTitle",Utils.getAttrFromJson(program.getSettings(),program.MANAGER_TITLE_KEY));
     props.put("reason",note);
     String body = this.getBodyByTemplate(email_mission_failed_template, props);
     if (null != body){
@@ -224,7 +231,7 @@ public class EmailService {
   private Map<String,String> generateParticipantEmailInfoByStatus(Program program, Identity identity,MissionParticipant missionParticipant,String note){
     //log.info( " send to participant with note "+note);
     if(Status.WAITING_FOR_VALIDATE.getLabel().equals(missionParticipant.getStatus().getLabel())){
-      return this.getEmailInfoThankyou(identity.getProfile().getFullName());
+      return this.getEmailInfoThankyou(program,identity.getProfile().getFullName());
     }else if (Status.SHIPPED.getLabel().equals(missionParticipant.getStatus().getLabel())){
       return this.getEmailInfoGiftShipped(program,identity);
     } else if (Status.REJECTED.getLabel().equals(missionParticipant.getStatus().getLabel())){
