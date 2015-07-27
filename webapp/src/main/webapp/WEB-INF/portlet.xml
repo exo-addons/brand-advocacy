@@ -67,4 +67,19 @@
     </portlet-info>
   </portlet>
 
+  <portlet>
+    <description xml:lang="EN">Brand Advocacy Logout Portlet</description>
+    <portlet-name>JuzBrandAdvocacyLogoutPortlet</portlet-name>
+    <display-name xml:lang="EN">Juzu Brand Advocacy Logout Portlet</display-name>
+    <portlet-class>org.exoplatform.community.brandadvocacy.portlet.logout.LogoutPortlet</portlet-class>
+    <supports>
+      <mime-type>text/html</mime-type>
+    </supports>
+    <portlet-info>
+      <title>Brand Advocacy Frontend Portlet</title>
+      <short-title>Brand Advocacy Frontend Portlet</short-title>
+      <keywords>brand-advocacy-webapp</keywords>
+    </portlet-info>
+  </portlet>
+
 </portlet-app>
