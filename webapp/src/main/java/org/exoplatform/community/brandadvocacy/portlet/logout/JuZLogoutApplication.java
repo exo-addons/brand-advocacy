@@ -44,16 +44,8 @@ public class JuZLogoutApplication {
 
 
   @Inject
-  @Path("discovery.gtmpl")
-  org.exoplatform.community.brandadvocacy.portlet.logout.templates.discovery discoveryTpl;
-
-  @Inject
   @Path("stepContainer.gtmpl")
   org.exoplatform.community.brandadvocacy.portlet.logout.templates.stepContainer stepContainerTpl;
-
-  @Inject
-  @Path("start.gtmpl")
-  org.exoplatform.community.brandadvocacy.portlet.logout.templates.start startTpl;
 
   @Inject
   @Path("process.gtmpl")
@@ -70,6 +62,7 @@ public class JuZLogoutApplication {
   public JuZLogoutApplication(){
   }
   private void init(){
+    this.remoteUserName = null;
     this.currentMissionId = null;
     this.currentMissionParticipantId = null;
     this.currentPropositionId = null;
@@ -98,7 +91,7 @@ public class JuZLogoutApplication {
         }
         if(!"".equals(bannerUrl) && !this.checkBannerUrl(bannerUrl))
           this.bannerUrl = "";
-        return indexTpl.ok();
+        return indexTpl.with().set("bannerUrl",bannerUrl).set("programTitle",currentProgramTitle).ok();
       }
     }
     return Response.ok("");
@@ -164,10 +157,7 @@ public class JuZLogoutApplication {
   }
 
   public String checkSession(){
-    String msg = "";
-    if(null == remoteUserName || "".equals(remoteUserName))
-      msg = "Your session has been expired, please refresh your browser";
-    return msg;
+    return "";
   }
 
   @Ajax
@@ -179,7 +169,7 @@ public class JuZLogoutApplication {
         if(!this.getOrCreateMissionParticipant(this.currentMissionId)){
           return Response.ok("something went wrong, please come back later");
         }else{
-          return startTpl.ok();
+          return indexTpl.ok();
         }
       }
       else{
@@ -193,15 +183,6 @@ public class JuZLogoutApplication {
     }
     return Response.ok("We are preparing next mission, please come back later");
   }
-  @Ajax
-  @Resource
-  public Response.Content loadDiscoveryView(){
-    if ("".equals(bannerUrl))
-      bannerUrl = "/brand-advocacy-webapp/img/banner.png";
-    if ("".equals(currentProgramTitle))
-      currentProgramTitle = "Discovery your mission";
-    return discoveryTpl.with().set("bannerUrl",bannerUrl).set("programTitle",currentProgramTitle).ok();
-  }
 
   @Ajax
   @Resource
@@ -211,20 +192,7 @@ public class JuZLogoutApplication {
 
   @Ajax
   @Resource
-  public Response.Content loadStartView(){
-    if(null == this.currentMissionId || null == this.currentPropositionId){
-      return Response.ok("We are preparing next mission, please come back later");
-    }
-    if(!this.getOrCreateMissionParticipant(this.currentMissionId)){
-      return Response.ok("something went wrong, please come back later");
-    }else{
-      return startTpl.ok();
-    }
-  }
-
-  @Ajax
-  @Resource
-  public Response processStartMission(){
+  public Response processOpenMission(){
     String session = this.checkSession();
     if ("".equals(session)){
       if(!this.getOrCreateMissionParticipant(this.currentMissionId)){
@@ -242,8 +210,9 @@ public class JuZLogoutApplication {
   @Resource
   public Response loadProcessView(){
     Mission missionRandom = this.getCurrentMission();
-    if(null != missionRandom)
+    if(null != missionRandom){
       return processTpl.with().set("mission", missionRandom).ok();
+    }
     else
       return Response.ok("nok");
   }
@@ -279,8 +248,31 @@ public class JuZLogoutApplication {
   @Ajax
   @Resource
   // store mission only when user complete his mission
-  public Response completeMission(String url,String fname, String lname, String address, String city, String phone,String country,String size ){
+  public Response completeMission(String url){
+    if(null != this.currentMissionParticipantId){
+      MissionParticipant missionParticipant = this.jcrService.getMissionParticipantById(this.currentMissionParticipantId);
+      if(null != missionParticipant){
+        missionParticipant.setStatus(Status.COMPLETE);
+        missionParticipant.setUrl_submitted(url);
+        if (null != this.jcrService.updateMissionParticipantInProgram(this.currentProgramId,missionParticipant)){
+          this.currentMissionParticipantStatus = Status.COMPLETE.getLabel();
+          return Response.ok("ok");
+        }
+      }
+    }
+    if (this.jcrService.removeMissionParticipantInParticipant(currentProgramId,remoteUserName,currentMissionParticipantId)) {
+      this.jcrService.removeMissionParticipant(currentMissionParticipantId);
+    }
+    return Response.ok("nok");
+  }
+
+  @Ajax
+  @Resource
+  // store mission only when user complete his mission
+  public Response terminate(String url,String fname, String lname,String email, String address, String city, String phone,String country,String size ){
+    this.remoteUserName = email;
     String session = this.checkSession();
+    this.getOrCreateMissionParticipant(currentMissionId);
     if ("".equals(session)){
       if(null != this.currentMissionParticipantId){
         MissionParticipant missionParticipant = this.jcrService.getMissionParticipantById(this.currentMissionParticipantId);
@@ -328,7 +320,7 @@ public class JuZLogoutApplication {
     if (null == missionParticipant) {
       missionParticipant = new MissionParticipant();
       missionParticipant.setMission_id(missionId);
-      missionParticipant.setParticipant_username(this.remoteUserName);
+      missionParticipant.setParticipant_username(remoteUserName);
       missionParticipant = this.jcrService.addMissionParticipant2Program(this.currentProgramId,missionParticipant);
       if(null != missionParticipant){
 

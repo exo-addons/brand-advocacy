@@ -17,6 +17,7 @@
 package org.exoplatform.brandadvocacy.jcr;
 
 import com.google.common.collect.Lists;
+import org.apache.commons.lang.StringUtils;
 import org.exoplatform.brandadvocacy.model.*;
 import org.exoplatform.brandadvocacy.service.BrandAdvocacyServiceException;
 import org.exoplatform.brandadvocacy.service.JCRImpl;
@@ -296,6 +297,9 @@ public class MissionDAO extends DAO {
   public List<Mission> getAllMissionsInProgramByParticipant(String programId, String username){
 
     List<Mission> missions = new ArrayList<Mission>();
+
+    if(null == username || !StringUtils.isNotEmpty(username))
+      return missions;
     ParticipantDAO participantDAO = this.getJcrImplService().getParticipantDAO();
     Node participantNode = participantDAO.getNodeByUserName(programId,username);
     if (null != participantNode){
@@ -313,15 +317,17 @@ public class MissionDAO extends DAO {
         log.error("=== ERROR getAllMissionParticipantsByParticipant: cannot transfer node to object "+username);
         e.printStackTrace();
       }
-
     }
+
     return missions;
   }
   public Mission getRandomMission(String programId, String username){
     List<Mission> randomMissions = new LinkedList<Mission>();
     List<Proposition> randomPropositions;
+    List<Mission> missionsUsed = new ArrayList<Mission>();
     List<Mission> activeMissions = this.getAllMissionsByProgramId(programId,true);
-    List<Mission> missionsUsed = this.getAllMissionsInProgramByParticipant(programId,username);
+    if(null != username && StringUtils.isNotEmpty(username))
+      missionsUsed = this.getAllMissionsInProgramByParticipant(programId,username);
     List<String> ids = new ArrayList<String>();
     Iterator<Mission> iterator = activeMissions.iterator();
     while (iterator.hasNext()){
@@ -358,4 +364,5 @@ public class MissionDAO extends DAO {
     }
     return null;
   }
+
 }

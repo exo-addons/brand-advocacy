@@ -317,8 +317,7 @@
         </propertyDefinition>        
         <propertyDefinition name="exo:modifiedDate" requiredType="Long" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="false">
           <valueConstraints/>
-        </propertyDefinition>                
-        
+        </propertyDefinition>
       </propertyDefinitions>
     <childNodeDefinitions>
       <childNodeDefinition name="exo:noteslist" defaultPrimaryType="brad:noteslist" autoCreated="true" mandatory="true"

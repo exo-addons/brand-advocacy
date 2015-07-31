@@ -2,15 +2,7 @@
 <!-- Step 2 -->
 <div class="tweetStepContent step-2 brad-terminate-step">
     <h5 class="titleStep mgB15-ipt">
-        <span class="numb">2</span><span class="textStep">Where should we check the result ?</span>
-    </h5>
-    <div class="control-group mgB20">
-        <div class="controls">
-            <input type="text" class="brad_participant_url_submitted" placeholder="Url">
-        </div>
-    </div>
-    <h5 class="titleStep mgB15-ipt">
-        <span class="numb">3</span><span class="textStep">Submit your office address</span>
+        <span class="numb">4</span><span class="textStep">Submit your office address</span>
     </h5>
     <div class="control-group">
         <div class="controls">
@@ -20,6 +12,11 @@
     <div class="control-group">
         <div class="controls">
             <input type="text" class="brad-participant-lname" placeholder="Last Name">
+        </div>
+    </div>
+    <div class="control-group">
+        <div class="controls">
+            <input type="text" class="brad-participant-email" placeholder="Email">
         </div>
     </div>
     <div class="control-group">

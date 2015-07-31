@@ -2,10 +2,16 @@
  * Created by exoplatform on 13/10/14.
  */
 (function($) {
+  var _brandAdvLandingPageContainer;
+  var _pickMissionSliceContainer;
+  var _brandStepBackgroundContainer;
+  var _brandLeftPanelContainer;
   var _brandAdvFtContainer;
-  var _discoveryDOM;
+
   var _ftStepContainerTemp;
   var _ftStepContainer;
+
+  var _discoveryDOM;
   var _createNew;
   var _isValidTweetMsg;
   var _msgError;
@@ -53,67 +59,7 @@
   var _displayProcessError = function(){
     _ftStepContainer.html('Something went wrong,please try later');
   };
-  var _initTerminateForm = function(){
 
-    $("input:text").click(function(){
-      $(this).closest('.control-group').removeClass('error');
-
-    });
-
-  };
-  var _validateTerminateForm = function(){
-    _msgError = "";
-    var parent = _ftStepContainer.children('.brad-terminate-step');
-    var urlDOM =  parent.find(".brad_participant_url_submitted");
-    var fNameDOM = parent.find(".brad-participant-fname");
-    var lNameDOM = parent.find(".brad-participant-lname");
-    var adrsDOM  =  parent.find(".brad-participant-address");
-    var phoneDOM = parent.find(".brad-participant-phone");
-    var cityDOM = parent.find(".brad-participant-city");
-    var countryDOM = parent.find(".brad-participant-country");
-    var errorClass = 'error';
-    var urlParent = urlDOM.closest('.control-group');
-    urlParent.removeClass(errorClass);
-    var fNameParent = fNameDOM.closest('.control-group');
-    fNameParent.removeClass(errorClass);
-    var lNameParent = lNameDOM.closest('.control-group');
-    lNameParent.removeClass(errorClass);
-    var adrsParent = adrsDOM.closest('.control-group');
-    adrsParent.removeClass(errorClass);
-    var phoneParent = phoneDOM.closest('.control-group')
-    phoneParent.removeClass(errorClass);
-    var cityParent = cityDOM.closest('.control-group')
-    cityParent.removeClass(errorClass);
-
-    if(urlDOM.val().length < 1 || !_validateUrlFormat(urlDOM.val())) {
-      _msgError += "Please fill-in the correct url\n";
-      urlParent.addClass(errorClass);
-    }
-    if(fNameDOM.val().length < 1) {
-      _msgError += "Please fill-in your first name\n";
-      fNameParent.addClass(errorClass);
-    }
-    if(lNameDOM.val().length < 1) {
-      _msgError += "Please fill-in your last name\n";
-      lNameParent.addClass(errorClass);
-    }
-    if(adrsDOM.val().length < 1 ) {
-      _msgError += "Please fill-in your address\n";
-      adrsParent.addClass(errorClass);
-    }
-    if(cityDOM.val().length < 1) {
-      _msgError += "Please fill-in your city\n";
-      cityParent.addClass(errorClass);
-    }
-    if(!_validatePhoneNumber(phoneDOM.val())) {
-      _msgError += "Please fill-in correct the phone\n";
-      phoneParent.addClass(errorClass);
-    }
-    if(countryDOM.val().length < 1) {
-      _msgError += "Please select your country\n";
-    }
-    return _msgError;
-  };
   var _appendStepCommon = function(content){
     _ftStepContainer.html('');
     content.appendTo('.brad-container-step-container');
@@ -124,100 +70,7 @@
       stepDOM.remove();
     }
   };
-  var _loadDiscoveryView = function(){
-    $(".jz").jzAjax("JuZLogoutApplication.loadDiscoveryView()",{
-      success: function(data){
-        if(typeof data == "string" && data != "nok"){
-          _brandAdvFtContainer.html(data);
-          _discoveryDOM = $('.brad-ft-discovery');
-          _ftStepContainer = $(".brad-container-step-container");
-          _discoveryDOM.show();
-          $(window).scroll(function (event) {
-            var scroll = $(window).scrollTop();
-            if(scroll > 45) {
-              $(".tweetPopup").addClass('scroll-down');
-            } else {
-              $(".tweetPopup").removeClass('scroll-down');
-            }
-          });
-        }
-      }
-    });
-  };
-  var _loadStepContainerView = function(){
-    $('.jz').jzAjax("JuZLogoutApplication.loadStepContainerView()", {
-      success: function (data) {
-        $("#brad-ft-container").html(data);
-        _loadStartView();
-      }
-    });
-  };
 
-  var _loadStartView = function () {
-    _displayLoading();
-    $(".jz").jzAjax("JuZLogoutApplication.loadStartView()",{
-      success:function(data){
-        _ftStepContainer.html(data);
-        _ftStepContainerTemp.append(data);
-      }
-    });
-  };
-
-  var _loadMissionView = function(){
-    $('.jz').jzAjax("JuZLogoutApplication.loadProcessView()",{
-      success: function(data){
-        if(data != "nok"){
-          _initView();
-          _ftStepContainerTemp.append(data);
-        }
-      }
-    });
-  };
-
-  var _executeMission = function(){
-    $('.jz').jzAjax("JuZLogoutApplication.executeMission()",{
-      success: function(data){
-        if(data == "ok"){
-          _processExecuteMission();
-        }
-        else if(data == 'nok')
-          _ftStepContainer.html("something went wrong !!!, please try later");
-        else
-          _ftStepContainer.html(data);
-      }
-    });
-  }
-  var _loadTerminateView = function(){
-    $(".jz").jzAjax("JuZLogoutApplication.loadTerminateView()",{
-      success: function(data){
-        if(typeof data == "string" && data != "nok"){
-          _ftStepContainerTemp.append(data);
-          _addOptionCountries();
-          _initTerminateForm();
-        }
-        else
-          _ftStepContainer.html("something went wrong, please retry it later");
-      }
-    });
-  };
-
-
-  var _completeMission = function(url,fname,lname,address,city,phone,country,size){
-    _displayProcessing();
-    $('.jz').jzAjax("JuZLogoutApplication.completeMission()",{
-      data:{'url':url,fname:fname,lname:lname,address:address,city:city,phone:phone,country:country,size:size},
-      success: function(data){
-        if(data == "ok"){
-          _processTerminate();
-        }
-        else if(data == 'nok'){
-          _displayProcessError();
-          return;
-        }else
-          _ftStepContainer.html(data);
-      }
-    });
-  };
   var _loadThankyouView = function(){
     $('.jz').jzAjax("JuZLogoutApplication.loadThankyouView()",{
       success: function(data){
@@ -235,41 +88,17 @@
     });
   };
 
-  var _initView = function(){
-    _removeStepCommon('brad-process-step');
-  };
 
-  var _addEventToBtnDiscovery = function(){
-    $(document).on('click.juzbrad.ft.discovery.view','.brad-ft-discovery',function(){
-      _displayLoading();
-      $(this).hide();
-      $('.brand-adv-LightBoxContainer').show();
-      if(_createNew){
-        _processGenerateNewMission();
-      }else{
-        _processDiscovery();
-        $('.brand-adv-LightBoxContainer').show();
-        _loadMissionView();
-      }
-    });
-  };
+
 
   var _addEventToBtnClose = function(){
     $(document).on('click.juzbrad.ft.close.view','.btn-brad-close',function(){
       $(".tweetPopup").removeClass('scroll-down');
-      _ftStepContainer.html('');
-      $('.brand-adv-LightBoxContainer').hide();
-      _discoveryDOM.show();
+      _showPickMission(true);
       _createNew = true;
     });
   };
 
-  var _addEventToBtnStart = function(){
-    $(document).on('click.juzbrad.ft.start.view','.btn-brad-start',function(){
-      _displayProcessing();
-      _processStart();
-    });
-  };
   var _sendNotifNewMissionParticipant = function(){
     $('.jz').jzAjax('JuZLogoutApplication.sendNotifEmail()',{
       success:function(data){
@@ -285,57 +114,7 @@
       }
     });
   };
-  var _addEventToBtnDone = function(){
-    $(document).on('click.juzbrad.ft.done.view','.btn-brad-done',function(){
-      var label = $(this).text();
-      var missionId = $(this).attr("data-missionId");
-      var propositionId = $(".propositionId").val();
-      if(label == "Next"){
-        if(_checkFtForm(missionId,propositionId)) {
-          _displayProcessing();
-          _executeMission();
-        }else{
-          _displayProcessError();
-        }
-      }else{
-        var third_part_link = $(this).attr('data-url');
-        $(this).text('Next');
-        window.open(third_part_link, '_blank');
-      }
-    });
-  };
 
-  var _addEventToBtnTerminate = function(){
-    $(document).on('click.juzbrad.ft.terminate.view','.btn-brad-terminate',function(){
-      if(_validateTerminateForm().length == 0){
-        var parent = _ftStepContainer.children('.brad-terminate-step');
-        var url = parent.find(".brad_participant_url_submitted").val();
-        var fname = parent.find(".brad-participant-fname").val();
-        var lname = parent.find(".brad-participant-lname").val();
-        var address = parent.find(".brad-participant-address").val();
-        var city = parent.find(".brad-participant-city").val();
-        var phone = parent.find(".brad-participant-phone").val();
-        var country = parent.find(".brad-participant-country").val();
-        var size = parent.find(".brad-participant-size").val();
-        _completeMission(url,fname,lname,address,city,phone,country,size);
-      }else{
-        alert(_msgError);
-      }
-    });
-  };
-  var _addOptionCountries = function() {
-    var parent = _ftStepContainerTemp.children('.brad-terminate-step');
-    var countryDOM = parent.find('.brad-participant-country');
-    if(countryDOM.length > 0){
-      var strOptions = '<option value="">Country</option>';
-      $.getJSON("/brand-advocacy-webapp/resources/countries.json", function(data){
-        $.each(data, function(i,v){
-          strOptions +='<option value="'+v.name+'">'+v.name+'</option>';
-        });
-        countryDOM.append(strOptions);
-      });
-    }
-  };
 
   var _tweetController = function(){
     _ftStepContainer.children('.brad-thankyou-step').find(".txt-brad-tweet").keypress(function(){
@@ -403,86 +182,8 @@
     });
   };
 
-  var _processDiscovery = function(){
-    _appendStartStepView();
-    var terminateDOM = _ftStepContainerTemp.children('.brad-terminate-step');
-    if(terminateDOM.length <= 0){
-      _loadTerminateView();
-    }
-  };
-  var _processStart = function(){
-    $('.jz').jzAjax('JuZLogoutApplication.processStartMission()', {
-      success:function(data){
-        if(data == 'nok'){
-          _displayProcessError();
-        }else if(data == 'ok')
-          _appendExecuteStepView();
-        else
-          _ftStepContainer.html(data);
-      }
-    });
-  };
-  var _processExecuteMission = function(){
-    _appendTerminateStepView();
-  };
-  var _processTerminate = function(){
-    _appendThankyouStepView();
-  };
-  var _processGenerateNewMission = function(){
-    $('.jz').jzAjax('JuZLogoutApplication.generateNewMission()',{
-      success:function(data){
-        if(data == 'nok'){
-          _removeStepCommon('brad-ft-start-step');
-          _displayNoMoreMission();
-//          $('.brand-adv-LightBoxContainer').show();
-        }else if(data == 'ok'){
-          _processDiscovery();
-//          $('.brand-adv-LightBoxContainer').show();
-          _loadMissionView();
-        }else{
-          _ftStepContainer.html(data);
-        }
-      }
-    });
-  }
-  var _appendStartStepView = function(){
-    var startDOM = _ftStepContainerTemp.children('.brad-ft-start-step');
-    if(startDOM.length){
-      _appendStepCommon(startDOM.clone());
-    }else{
-      _displayNoMoreMission();
-    }
-  };
-  var _appendExecuteStepView = function(){
-    var processDOM = _ftStepContainerTemp.children('.brad-process-step');
-    if(processDOM.length){
-      _appendStepCommon(processDOM.clone());
-    }else{
-      _displayProcessError();
-    }
-  };
-  var _appendTerminateStepView = function(){
-    var terminateDOM = _ftStepContainerTemp.children('.brad-terminate-step');
-    if(terminateDOM.length){
-      _appendStepCommon(terminateDOM.clone());
-    }else{
-      _loadTerminateView();
-    }
-  };
-  var _appendThankyouStepView = function(){
-    var thankyouDOM = _ftStepContainerTemp.children('.brad-thankyou-step');
-    if(thankyouDOM.length){
-      _appendStepCommon(thankyouDOM.clone());
-      _sendNotifNewMissionParticipant();
-      _initView();
-      _tweetController();
-      _addFocusEvent2Input();
 
-    }else{
-      alert('something went wrong, please try later');
-    }
-  };
-  var _ctrlDown
+  var _ctrlDown;
   var _ctrlKey;
   var _cKey;
 
@@ -516,21 +217,342 @@
     });
   };
 
+
+
+  var _loadSlices = function(){
+
+  };
+
+  var _showPickMission = function(b){
+    if(!b){
+      _pickMissionSliceContainer.hide();
+      _brandAdvFtContainer.show();
+    }else{
+      _brandAdvFtContainer.hide();
+      _pickMissionSliceContainer.show();
+    }
+  };
+  var _initView = function(){
+    _removeStepCommon('brad-process-step');
+  };
+
+  var _addEvent2BtnPickMission = function(){
+    $ (document).on('click.juzBrad.pickmission','.brad-pick-mission',function(){
+      // an slices
+      // load mission
+      // show image step 1 + show proposition
+      if(_createNew){
+        _processGenerateNewMission();
+      }else{
+        _loadMissionView();
+        //_showPickMission(false);
+      }
+
+    });
+  };
+
+  var _processGenerateNewMission = function(){
+    $('.jz').jzAjax('JuZLogoutApplication.generateNewMission()',{
+      success:function(data){
+        if(data == 'nok'){
+          _displayNoMoreMission();
+        }else if(data == 'ok'){
+          _loadMissionView();
+        }else{
+          _ftStepContainer.html(data);
+        }
+        _showPickMission(false);
+      }
+    });
+  };
+
+  var _loadMissionView = function(){
+    _displayLoading();
+    $('.jz').jzAjax("JuZLogoutApplication.loadProcessView()",{
+      success: function(data){
+        if(data != "nok"){
+//          _initView();
+//          _ftStepContainerTemp.append(data);
+          _ftStepContainer.html(data);
+          _showPickMission(false);
+        }
+      }
+    });
+  };
+
+  var switchStepCommon = function(stepBackground,stepContent){
+    if(stepBackground != '')
+      _brandStepBackgroundContainer.html(stepBackground);
+    if(stepContent != '')
+      _ftStepContainer.html(stepContent);
+  };
+  var _addEventToBtnGo = function(){
+    $(document).on('click.juzbrad.ft.done.view','.btn-brad-go',function(){
+      var label = $(this).text();
+      var missionId = $(this).attr("data-missionId");
+      var propositionId = $(".propositionId").val();
+      if(_checkFtForm(missionId,propositionId)) {
+        _prepareView4TerminateStep();
+        _urlSubmitted = "";
+        var third_part_link = $(this).attr('data-url');
+        $(this).hide();
+        $('.brad-complete-step').show();
+//        _executeMission();
+        window.open(third_part_link, '_blank');
+      }else{
+        _displayProcessError();
+      }
+
+    });
+  };
+
+  var _executeMission = function(){
+    $('.jz').jzAjax("JuZLogoutApplication.executeMission()",{
+      success: function(data){
+        if(data == "ok"){
+          switchStepCommon('complete','');
+          _prepareView4TerminateStep();
+          $('.brad-complete-step').show();
+        }
+        else if(data == 'nok')
+          _ftStepContainer.html("something went wrong !!!, please try later");
+        else
+          _ftStepContainer.html(data);
+      }
+    });
+  }
+  var _prepareView4TerminateStep = function(){
+    var terminateDOM = _ftStepContainerTemp.children('.brad-terminate-step');
+    if(terminateDOM.length){
+      _appendStepCommon(terminateDOM.clone());
+    }else{
+      $(".jz").jzAjax("JuZLogoutApplication.loadTerminateView()",{
+        success: function(data){
+          if(typeof data == "string" && data != "nok"){
+            _ftStepContainerTemp.append(data);
+            _addOptionCountries();
+            _initTerminateForm();
+          }
+          else
+            _ftStepContainer.html("something went wrong, please retry it later");
+        }
+      });
+    }
+  };
+
+  var _addOptionCountries = function() {
+    var parent = _ftStepContainerTemp.children('.brad-terminate-step');
+    var countryDOM = parent.find('.brad-participant-country');
+    if(countryDOM.length > 0){
+      var strOptions = '<option value="">Country</option>';
+      $.getJSON("/brand-advocacy-webapp/resources/countries.json", function(data){
+        $.each(data, function(i,v){
+          strOptions +='<option value="'+v.name+'">'+v.name+'</option>';
+        });
+        countryDOM.append(strOptions);
+      });
+    }
+  };
+
+
+  var _initTerminateForm = function(){
+
+    $("input:text").click(function(){
+      $(this).closest('.control-group').removeClass('error');
+
+    });
+
+  };
+  var _urlSubmitted;
+  var _addEventToBtnSubmitStep3 = function(){
+    $(document).on('click.juzbrad.ft.substep3.view','.btn-brad-submit-step3',function(){
+      _msgError = "";
+      var parent = _ftStepContainer.children('.brad-complete-step');
+      var url = parent.find(".brad_participant_url_submitted").val();
+      var urlDOM =  parent.find(".brad_participant_url_submitted");
+      var errorClass = 'error';
+      var urlParent = urlDOM.closest('.control-group');
+      urlParent.removeClass(errorClass);
+      if(urlDOM.val().length < 1 || !_validateUrlFormat(urlDOM.val())) {
+        _msgError += "Please fill-in the correct url\n";
+        urlParent.addClass(errorClass);
+      }
+      if(_msgError.length > 0){
+        alert(_msgError);
+      }else{
+        var missionId = $(this).attr("data-missionId");
+        var propositionId = $(".propositionId").val();
+        if(_checkFtForm(missionId,propositionId)) {
+          _urlSubmitted = urlDOM.val();
+          var terminateDOM = _ftStepContainerTemp.children('.brad-terminate-step');
+          switchStepCommon('terminate',terminateDOM.html());
+        }else{
+          _displayProcessError();
+        }
+      }
+    })
+  };
+
+  var _completeMission = function(url){
+    $('.jz').jzAjax("JuZLogoutApplication.completeMission()",{
+      data:{url:url},
+      success: function(data){
+        if(data == "ok"){
+          _completeMissionCB();
+        }
+        else if(data == 'nok')
+          _ftStepContainer.html("something went wrong !!!, please try later");
+        else
+          _ftStepContainer.html(data);
+      }
+    });
+  };
+
+  var _completeMissionCB = function(){
+    var terminateDOM = _ftStepContainerTemp.children('.brad-terminate-step');
+    switchStepCommon('terminate',terminateDOM.html());
+  };
+
+  var _addEventToBtnTerminate = function(){
+    $(document).on('click.juzbrad.ft.terminate.view','.btn-brad-terminate',function(){
+      if(_validateTerminateForm().length == 0){
+        var parent = _ftStepContainer;//.children('.brad-terminate-step');
+        var fname = parent.find(".brad-participant-fname").val();
+        var lname = parent.find(".brad-participant-lname").val();
+        var email = parent.find(".brad-participant-email").val();
+        var address = parent.find(".brad-participant-address").val();
+        var city = parent.find(".brad-participant-city").val();
+        var phone = parent.find(".brad-participant-phone").val();
+        var country = parent.find(".brad-participant-country").val();
+        var size = parent.find(".brad-participant-size").val();
+        _terminate(fname,lname,email,address,city,phone,country,size);
+      }else{
+        alert(_msgError);
+      }
+    });
+  };
+
+  var _isValidEmailAddress = function(emailAddress) {
+    var pattern = new RegExp(/^((([a-z]|\d|[!#\$%&'\*\+\-\/=\?\^_`{\|}~]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])+(\.([a-z]|\d|[!#\$%&'\*\+\-\/=\?\^_`{\|}~]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])+)*)|((\x22)((((\x20|\x09)*(\x0d\x0a))?(\x20|\x09)+)?(([\x01-\x08\x0b\x0c\x0e-\x1f\x7f]|\x21|[\x23-\x5b]|[\x5d-\x7e]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(\\([\x01-\x09\x0b\x0c\x0d-\x7f]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]))))*(((\x20|\x09)*(\x0d\x0a))?(\x20|\x09)+)?(\x22)))@((([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.)+(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.?$/i);
+    return pattern.test(emailAddress);
+  };
+
+  var _validateTerminateForm = function(){
+    _msgError = "";
+    var parent = _ftStepContainer;
+    var fNameDOM = parent.find(".brad-participant-fname");
+    var lNameDOM = parent.find(".brad-participant-lname");
+    var emailDOM = parent.find(".brad-participant-email");
+    var adrsDOM  =  parent.find(".brad-participant-address");
+    var phoneDOM = parent.find(".brad-participant-phone");
+    var cityDOM = parent.find(".brad-participant-city");
+    var countryDOM = parent.find(".brad-participant-country");
+
+    var errorClass = 'error';
+    var fNameParent = fNameDOM.closest('.control-group');
+    fNameParent.removeClass(errorClass);
+    var lNameParent = lNameDOM.closest('.control-group');
+    lNameParent.removeClass(errorClass);
+    var emailParent = emailDOM.closest('.control-group');
+    emailParent.removeClass(errorClass);
+    var adrsParent = adrsDOM.closest('.control-group');
+    adrsParent.removeClass(errorClass);
+    var phoneParent = phoneDOM.closest('.control-group')
+    phoneParent.removeClass(errorClass);
+    var cityParent = cityDOM.closest('.control-group')
+    cityParent.removeClass(errorClass);
+
+    if(fNameDOM.val().length < 1) {
+      _msgError += "Please fill-in your first name\n";
+      fNameParent.addClass(errorClass);
+    }
+    if(lNameDOM.val().length < 1) {
+      _msgError += "Please fill-in your last name\n";
+      lNameParent.addClass(errorClass);
+    }
+    if(emailDOM.val().length < 1) {
+      _msgError += "Please fill-in your email\n";
+      emailParent.addClass(errorClass);
+    }else if(!_isValidEmailAddress(emailDOM.val())){
+      _msgError += "Please fill-in a valid email address\n";
+      emailParent.addClass(errorClass);
+    }
+    if(adrsDOM.val().length < 1 ) {
+      _msgError += "Please fill-in your address\n";
+      adrsParent.addClass(errorClass);
+    }
+    if(cityDOM.val().length < 1) {
+      _msgError += "Please fill-in your city\n";
+      cityParent.addClass(errorClass);
+    }
+    if(!_validatePhoneNumber(phoneDOM.val())) {
+      _msgError += "Please fill-in correct the phone\n";
+      phoneParent.addClass(errorClass);
+    }
+    if(countryDOM.val().length < 1) {
+      _msgError += "Please select your country\n";
+    }
+    return _msgError;
+  };
+  var _terminate = function(fname,lname,email,address,city,phone,country,size){
+    _displayProcessing();
+    $('.jz').jzAjax("JuZLogoutApplication.terminate()",{
+      data:{url:_urlSubmitted,fname:fname,lname:lname,email:email,address:address,city:city,phone:phone,country:country,size:size},
+      success: function(data){
+        if(data == "ok"){
+          _terminateCB();
+        }
+        else if(data == 'nok'){
+          _displayProcessError();
+          return;
+        }else
+          _ftStepContainer.html(data);
+      }
+    });
+  };
+
+  var _terminateCB = function(){
+    var thankyouDOM = _ftStepContainerTemp.children('.brad-thankyou-step');
+    if(thankyouDOM.length){
+      _appendStepCommon(thankyouDOM.clone());
+      _sendNotifNewMissionParticipant();
+      _initView();
+      _tweetController();
+      _addFocusEvent2Input();
+
+    }else{
+      alert('something went wrong, please try later');
+    }
+  };
+
   var _init = function(){
+
     _ctrlDown = false;
     _ctrlKey = 17;
     _cKey = 67;
     _createNew = false;
     _isValidTweetMsg = true;
-    _ftStepContainerTemp = $("#brad-ft-container-temp");
+
+    _brandAdvLandingPageContainer = $("#brad-landing-page-container");
+    _pickMissionSliceContainer = $("#brad-pick-mission");
     _brandAdvFtContainer = $("#brad-ft-container");
+    _ftStepContainer = $(".brad-container-step-container");
+    _brandStepBackgroundContainer = $("#brad-step-background-container");
+    _brandLeftPanelContainer = $("#brad-left-panel-container");
+
+    _ftStepContainerTemp = $("#brad-ft-container-temp");
+
+
+    _addEvent2BtnPickMission();
+    _addEventToBtnGo();
+    _addEventToBtnSubmitStep3();
+
+
     _addEvent2DetectCopyAction();
     _addEventKeyDownCopy();
     _addEventClick2GetSuggestion();
-    _loadDiscoveryView();
-    _addEventToBtnDiscovery();
-    _addEventToBtnStart();
-    _addEventToBtnDone();
+
+
     _addEventToBtnTerminate();
     _addEventToBtnClose();
     _addEvent2LinkTweet();

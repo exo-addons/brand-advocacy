@@ -95,32 +95,39 @@ public class MissionParticipantController {
         Mission mission = this.missionParticipantService.getMissionById(missionParticipant.getMission_id());
         if(null != mission){
           Identity identity = this.identityManager.getOrCreateIdentity(OrganizationIdentityProvider.NAME,missionParticipant.getParticipant_username(),true);
+          String fullname = missionParticipant.getParticipant_username();
+          String avatar = "";
+          String profileUrl = "";
+          String email = missionParticipant.getParticipant_username();
           if (null != identity){
-            MissionParticipantDTO missionParticipantDTO = new MissionParticipantDTO();
-            missionParticipantDTO.setId(missionParticipantId);
-            missionParticipantDTO.setMission_title(mission.getTitle()+" on "+mission.getThird_part_link());
-            if(loginController.isAdmin())
-              missionParticipantDTO.setMission_id(mission.getId());
-            missionParticipantDTO.setSize(missionParticipant.getSize().getLabel());
-            missionParticipantDTO.setDate_submitted(Utils.convertDateFromLong(missionParticipant.getModifiedDate()));
-            missionParticipantDTO.setStatus(missionParticipant.getStatus());
-            missionParticipantDTO.setUrl_submitted(missionParticipant.getUrl_submitted());
+            fullname = identity.getProfile().getFullName();
+            avatar = identity.getProfile().getAvatarUrl();
+            profileUrl = identity.getProfile().getUrl();
+            email = identity.getProfile().getEmail();
+          }
+          MissionParticipantDTO missionParticipantDTO = new MissionParticipantDTO();
+          missionParticipantDTO.setId(missionParticipantId);
+          missionParticipantDTO.setMission_title(mission.getTitle()+" on "+mission.getThird_part_link());
+          if(loginController.isAdmin())
+            missionParticipantDTO.setMission_id(mission.getId());
+          missionParticipantDTO.setSize(missionParticipant.getSize().getLabel());
+          missionParticipantDTO.setDate_submitted(Utils.convertDateFromLong(missionParticipant.getModifiedDate()));
+          missionParticipantDTO.setStatus(missionParticipant.getStatus());
+          missionParticipantDTO.setUrl_submitted(missionParticipant.getUrl_submitted());
 
-            ParticipantDTO participantDTO = new ParticipantDTO();
-            participantDTO.setUserName(missionParticipant.getParticipant_username());
-            participantDTO.setFullName(identity.getProfile().getFullName());
-            participantDTO.setUrlAvatar(identity.getProfile().getAvatarUrl());
-            participantDTO.setUrlProfile(identity.getProfile().getUrl());
-            participantDTO.setEmail(identity.getProfile().getEmail());
-            Address address = this.missionParticipantService.getAddressById(missionParticipant.getAddress_id());
-            if (null == address){
-              address = new Address("","","","","","");
-            }
-            AddressDTO addressDTO = new AddressDTO(address.getfName(),address.getlName(),address.getAddress(),address.getCity(),address.getCountry(),address.getPhone()) ;
-/*            addressDTO.setCountryName(Utils.getCountryNameByCode(addressDTO.getCountry()));*/
-            if (isAjax){
-              return viewAjaxTpl.with().set("missionParticipantDTO",missionParticipantDTO).set("address",addressDTO).set("participantDTO",participantDTO).set("states",Status.values()).ok();
-            }
+          ParticipantDTO participantDTO = new ParticipantDTO();
+          participantDTO.setUserName(missionParticipant.getParticipant_username());
+          participantDTO.setFullName(fullname);
+          participantDTO.setUrlAvatar(avatar);
+          participantDTO.setUrlProfile(profileUrl);
+          participantDTO.setEmail(email);
+          Address address = this.missionParticipantService.getAddressById(missionParticipant.getAddress_id());
+          if (null == address){
+            address = new Address("","","","","","");
+          }
+          AddressDTO addressDTO = new AddressDTO(address.getfName(),address.getlName(),address.getAddress(),address.getCity(),address.getCountry(),address.getPhone()) ;
+          if (isAjax){
+            return viewAjaxTpl.with().set("missionParticipantDTO",missionParticipantDTO).set("address",addressDTO).set("participantDTO",participantDTO).set("states",Status.values()).ok();
           }
         }
 
@@ -226,25 +233,26 @@ public class MissionParticipantController {
     for (MissionParticipant missionParticipant : missionParticipants){
       try {
         exoUser = this.organizationService.getUserHandler().findUserByName(missionParticipant.getParticipant_username());
+        String fullname = missionParticipant.getParticipant_username();
         if(null != exoUser){
-          mission = this.missionParticipantService.getMissionById(missionParticipant.getMission_id());
-          if (null != mission){
-            missionParticipantDTO = new MissionParticipantDTO();
-            missionParticipantDTO.setId(missionParticipant.getId());
-            missionParticipantDTO.setMission_title(mission.getTitle());
-            missionParticipantDTO.setParticipant_fullName(exoUser.getFirstName()+ " "+exoUser.getLastName());
-            missionParticipantDTO.setParticipant_id(exoUser.getUserName());
-            missionParticipantDTO.setStatus(missionParticipant.getStatus());
-            missionParticipantDTO.setUrl_submitted(missionParticipant.getUrl_submitted());
-            missionParticipantDTO.setDate_submitted(Utils.convertDateFromLong(missionParticipant.getModifiedDate()));
-            address = this.missionParticipantService.getAddressById(missionParticipant.getAddress_id());
-            if (null != address){
-              addressDTO = new AddressDTO(address.getfName(),address.getlName(),address.getAddress(),address.getCity(),address.getCountry(),address.getPhone()) ;
-/*              addressDTO.setCountryName(Utils.getCountryNameByCode(addressDTO.getCountry())); */
-              missionParticipantDTO.setAddressDTO(addressDTO);
-            }
-            missionParticipantDTOs.add(missionParticipantDTO);
+          fullname = exoUser.getFirstName()+ " "+exoUser.getLastName();
+        }
+        mission = this.missionParticipantService.getMissionById(missionParticipant.getMission_id());
+        if (null != mission){
+          missionParticipantDTO = new MissionParticipantDTO();
+          missionParticipantDTO.setId(missionParticipant.getId());
+          missionParticipantDTO.setMission_title(mission.getTitle());
+          missionParticipantDTO.setParticipant_fullName(fullname);
+          missionParticipantDTO.setParticipant_id(missionParticipant.getParticipant_username());
+          missionParticipantDTO.setStatus(missionParticipant.getStatus());
+          missionParticipantDTO.setUrl_submitted(missionParticipant.getUrl_submitted());
+          missionParticipantDTO.setDate_submitted(Utils.convertDateFromLong(missionParticipant.getModifiedDate()));
+          address = this.missionParticipantService.getAddressById(missionParticipant.getAddress_id());
+          if (null != address){
+            addressDTO = new AddressDTO(address.getfName(),address.getlName(),address.getAddress(),address.getCity(),address.getCountry(),address.getPhone()) ;
+            missionParticipantDTO.setAddressDTO(addressDTO);
           }
+          missionParticipantDTOs.add(missionParticipantDTO);
         }
       } catch (Exception e) {
         e.printStackTrace();

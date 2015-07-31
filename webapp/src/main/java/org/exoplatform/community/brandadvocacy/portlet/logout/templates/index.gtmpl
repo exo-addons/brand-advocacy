@@ -1,18 +1,6 @@
+#{param name=bannerUrl/}
+#{param name=programTitle/}
 <div id="brad-ft-container-temp" style="display:none;">
-    <!-- Start Step -->
-    <div class="tweetStepContent start-step brad-ft-start-step">
-        <h5 class="titleStep">
-            <span class="numb">1</span><span class="textStep">Get your mission and complete it</span>
-        </h5>
-        <h5 class="titleStep">
-            <span class="numb">2</span><span class="textStep">Submit your address and get<br>your t-shirt!</span>
-        </h5>
-        <div class="action">
-            <button class="btn btn-large btn-brad-start">Start!</button>
-        </div>
-        <img class="tshirt-img" src="/brand-advocacy-webapp/img/banner.png" alt="T-Shirt">
-    </div>
-    <!-- /.start-step -->
 
     <!-- Step 3 -->
     <div class="tweetStepContent step-3 brad-thankyou-step">
@@ -30,6 +18,27 @@
     </div>
     <!-- /.step-3 -->
 </div>
-<div id="brad-ft-container" class="brad-ft-container">
+<div id="brad-landing-page-container">
+    <div id="brad-pick-mission" class="brad-pick-mission"> pick mission slices here </div>
+    <div id="brad-ft-container" class="brad-ft-container" style="display:none;">
+        <div id="brad-step-background-container"> brad-step-background-container here </div>
+        <div id="brad-left-panel-container">
+             <div class="brand-adv-LightBoxContainer tweetPopup">
+                 <div class="BgContent">
+                     <div class="LightBoxContent">
+                         <a class="closepopup btn-brad-close" href="#"><i class="uiIconClose uiIconWhite"></i>&nbsp;</a>
+                         <div class="introBox">
+                             <img src="/brand-advocacy-webapp/img/bg-community.png" alt="Image">
+                             <h5 class="fix-step-3"><%=programTitle%></h5>
+                         </div>
+                         <!-- step content here -->
+                         <div class="brad-container-step-container">
+
+                         </div>
+                     </div>
+                 </div>
+             </div>
+         </div>
+    </div>
 </div>
 <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
