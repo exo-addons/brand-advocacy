@@ -18,6 +18,13 @@
     </div>
     <!-- /.step-3 -->
 </div>
+<div id="giveupPopup" style="display:none;">
+    do you really want to give up on your mission
+    <div class="action">
+        <button class="btn btn-brad-giveup-yes" >Yes</button>
+        <button class="btn btn-brad-giveup-no" >No</button>
+    </div>
+</div>
 <div id="brad-landing-page-container">
     <div id="brad-pick-mission" class="brad-pick-mission"> pick mission slices here </div>
     <div id="brad-ft-container" class="brad-ft-container" style="display:none;">

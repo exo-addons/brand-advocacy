@@ -7,15 +7,17 @@
   var _brandStepBackgroundContainer;
   var _brandLeftPanelContainer;
   var _brandAdvFtContainer;
-
+  var _giveUpPopupDOM;
   var _ftStepContainerTemp;
   var _ftStepContainer;
 
-  var _discoveryDOM;
+  var _checkGiveUp;
   var _createNew;
   var _isValidTweetMsg;
   var _msgError;
+
   var bradObj = {};
+
 
   var _checkFtForm = function(missionId, propositionId ){
     var res = true;
@@ -88,14 +90,20 @@
     });
   };
 
+  var _reloadMission = function(){
+    $(".tweetPopup").removeClass('scroll-down');
+    _showPickMission(true);
+    _createNew = true;
+    _checkGiveUp = false;
+  };
 
-
-
-  var _addEventToBtnClose = function(){
+  var _addEvent2BtnClose = function(){
     $(document).on('click.juzbrad.ft.close.view','.btn-brad-close',function(){
-      $(".tweetPopup").removeClass('scroll-down');
-      _showPickMission(true);
-      _createNew = true;
+      if(_checkGiveUp){
+        _giveUpPopupDOM.show();
+      }else{
+        _reloadMission();
+      }
     });
   };
 
@@ -225,9 +233,11 @@
 
   var _showPickMission = function(b){
     if(!b){
+      _checkGiveUp = true;
       _pickMissionSliceContainer.hide();
       _brandAdvFtContainer.show();
     }else{
+      _checkGiveUp = false;
       _brandAdvFtContainer.hide();
       _pickMissionSliceContainer.show();
     }
@@ -514,6 +524,7 @@
   var _terminateCB = function(){
     var thankyouDOM = _ftStepContainerTemp.children('.brad-thankyou-step');
     if(thankyouDOM.length){
+      _checkGiveUp = false;
       _appendStepCommon(thankyouDOM.clone());
       _sendNotifNewMissionParticipant();
       _initView();
@@ -525,8 +536,25 @@
     }
   };
 
-  var _init = function(){
+  var _addEvent2BtnGiveUpYes = function(){
+    $(document).on('click.giveup.yes','button.btn-brad-giveup-yes',function(){
+      _checkGiveUp = false;
+      _giveUpPopupDOM.hide();
+      _reloadMission();
+    });
+  };
+  var _addEvent2BtnGiveUpNo = function(){
+    $(document).on('click.giveup.no','button.btn-brad-giveup-no',function(){
+      _checkGiveUp = true;
+      _giveUpPopupDOM.hide();
 
+    });
+
+  };
+
+
+  var _init = function(){
+    _checkGiveUp = false;
     _ctrlDown = false;
     _ctrlKey = 17;
     _cKey = 67;
@@ -541,7 +569,7 @@
     _brandLeftPanelContainer = $("#brad-left-panel-container");
 
     _ftStepContainerTemp = $("#brad-ft-container-temp");
-
+    _giveUpPopupDOM = $('#giveupPopup');
 
     _addEvent2BtnPickMission();
     _addEventToBtnGo();
@@ -554,8 +582,10 @@
 
 
     _addEventToBtnTerminate();
-    _addEventToBtnClose();
+    _addEvent2BtnClose();
     _addEvent2LinkTweet();
+    _addEvent2BtnGiveUpYes();
+    _addEvent2BtnGiveUpNo();
   }
   $(document).ready(function(){
     _init();
