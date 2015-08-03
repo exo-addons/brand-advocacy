@@ -1,6 +1,8 @@
 #{param name=program/}
 #{param name=email_sender/}
 #{param name=banner_url/}
+#{param name=size_out_of_stock/}
+#{param name=sizes/}
 <%
 import org.apache.commons.lang.StringEscapeUtils;
 %>
@@ -24,6 +26,19 @@ import org.apache.commons.lang.StringEscapeUtils;
                 <label class="control-label">Email Sender:</label>
                 <div class="controls">
                     <input class="full program-email-sender" type="text" name="email-sender" value="<%= StringEscapeUtils.escapeHtml(email_sender)%>">
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label">Size in stock:</label>
+                <div class="controls">
+                   <% sizes.each { size ->
+                   String status = "checked";
+                      if(size_out_of_stock.size() > 0 && Arrays.asList(size_out_of_stock).contains(String.valueOf(size.getValue()))){
+                        status = "";
+                      }
+                   %>
+                   <span class="uiCheckbox"><input type="checkbox" name="size-in-stock" class="checkbox" <%=status%> value="<%=size.getValue()%>" id="size_<%=size.getValue()%>"><span><%=size.getLabel()%></span></span>
+                   <% } %>
                 </div>
             </div>
             <div class="control-group program-list-managers">

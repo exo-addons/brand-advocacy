@@ -128,10 +128,10 @@
       }
     });
   };
-  var _updateProgram = function(title,banner_url,email_sender){
+  var _updateProgram = function(title,banner_url,email_sender,size_out_of_stock){
     _displayLoading(true);
     $('.jz').jzAjax('ProgramController.update()',{
-      data:{title:title,banner_url:banner_url,email_sender:email_sender},
+      data:{title:title,banner_url:banner_url,email_sender:email_sender,size_out_of_stock:size_out_of_stock},
       success:function(data){
         if(data != "nok"){
           _disPlayInfoMsgCB(data);
@@ -856,10 +856,18 @@
       var title = $(".program-title").val();
       var banner_url = $('.program-banner-url').val();
       var email_sender = $('.program-email-sender').val();
+      var size_out_of_stock = "";
+      $("input:checkbox[name='size-in-stock']:not(:checked)").each(function(i,v){
+        if(i != 0){
+          size_out_of_stock +=",";
+        }
+        size_out_of_stock +=$(v).val();
+
+      });
       if(title.length === 0){
         return;
       }
-      _updateProgram(title,banner_url,email_sender);
+      _updateProgram(title,banner_url,email_sender,size_out_of_stock);
       e.preventDefault();
     });
   };

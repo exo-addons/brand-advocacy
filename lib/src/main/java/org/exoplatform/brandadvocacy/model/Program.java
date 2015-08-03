@@ -19,7 +19,7 @@ public class Program {
   private JSONObject settings;
   public static final String banner_url_setting_key = "banner_url";
   public static final String email_sender_setting_key = "email_sender";
-
+  public static final String size_out_of_stock_setting_key = "size_out_of_stock";
   public Program(String title){
     this.setLabelID(UUID.randomUUID().toString());
     this.setTitle(title);

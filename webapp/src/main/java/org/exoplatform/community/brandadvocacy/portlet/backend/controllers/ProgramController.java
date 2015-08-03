@@ -4,6 +4,7 @@ import juzu.*;
 import juzu.plugin.ajax.Ajax;
 import org.exoplatform.brandadvocacy.model.Manager;
 import org.exoplatform.brandadvocacy.model.Program;
+import org.exoplatform.brandadvocacy.model.Size;
 import org.exoplatform.brandadvocacy.service.IService;
 import org.exoplatform.brandadvocacy.service.Utils;
 import org.exoplatform.services.organization.OrganizationService;
@@ -44,6 +45,7 @@ public class ProgramController {
   public Response index(){
     String banner_url = "";
     String email_sender = "";
+    String  size_out_of_stock = "";
     Program program = null;
     String programId = loginController.getCurrentProgramId();
     if (null != programId){
@@ -54,8 +56,10 @@ public class ProgramController {
       if (null != settings){
         banner_url = Utils.getAttrFromJson(settings,Program.banner_url_setting_key);
         email_sender = Utils.getAttrFromJson(settings,Program.email_sender_setting_key);
+        size_out_of_stock = Utils.getAttrFromJson(settings,Program.size_out_of_stock_setting_key);
       }
-      return indexTpl.with().set("program", program).set("banner_url",banner_url).set("email_sender",email_sender).ok();
+      String[] out_of_stock = size_out_of_stock.split(",");
+      return indexTpl.with().set("program", program).set("banner_url",banner_url).set("email_sender",email_sender).set("sizes", Size.values()).set("size_out_of_stock",out_of_stock).ok();
     }
     else
       return addTpl.ok();
@@ -78,7 +82,7 @@ public class ProgramController {
 
   @Ajax
   @Resource
-  public Response update(String title,String banner_url,String email_sender){
+  public Response update(String title,String banner_url,String email_sender,String size_out_of_stock){
     String programId = loginController.getCurrentProgramId();
     Program program = this.jcrService.getProgramById(programId);
     if (null != program){
@@ -90,8 +94,11 @@ public class ProgramController {
             banner_url = "";
           if (null == email_sender)
             email_sender = "";
+          if(null == size_out_of_stock)
+            size_out_of_stock = "";
           settings.put(Program.banner_url_setting_key,banner_url);
           settings.put(Program.email_sender_setting_key,email_sender);
+          settings.put(Program.size_out_of_stock_setting_key,size_out_of_stock);
           program.setSettings(settings);
           this.jcrService.setProgramSettings(program);
         } catch (JSONException e) {

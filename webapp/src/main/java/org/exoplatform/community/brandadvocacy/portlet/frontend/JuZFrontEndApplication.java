@@ -35,6 +35,7 @@ public class JuZFrontEndApplication {
   String currentProgramId;
   String currentProgramTitle;
   Boolean isFinished;
+  String sizeOutOfStock;
   String bannerUrl;
   JSONObject currentSettings;
 
@@ -101,6 +102,8 @@ public class JuZFrontEndApplication {
           String banner_url = Utils.getAttrFromJson(currentSettings,Program.banner_url_setting_key);
           if (null != banner_url && !"".equals(banner_url))
             this.bannerUrl = banner_url;
+
+          sizeOutOfStock = Utils.getAttrFromJson(currentSettings,Program.size_out_of_stock_setting_key);
         }
         if(!"".equals(bannerUrl) && !this.checkBannerUrl(bannerUrl))
           this.bannerUrl = "";
@@ -257,7 +260,8 @@ public class JuZFrontEndApplication {
   @Ajax
   @Resource
   public Response loadTerminateView(){
-    return terminateTpl.with().set("sizes", Size.values()).ok();
+    String[] out_of_stock = sizeOutOfStock.split(",");
+    return terminateTpl.with().set("sizes", Size.values()).set("size_out_of_stock",out_of_stock).ok();
   }
 
   @Ajax
