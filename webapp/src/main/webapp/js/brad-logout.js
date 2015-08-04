@@ -3,7 +3,7 @@
  */
 (function($) {
   var _brandAdvLandingPageContainer;
-  var _pickMissionSliceContainer;
+  var _pickMissionSliderContainer;
   var _brandStepBackgroundContainer;
   var _brandLeftPanelContainer;
   var _brandAdvFtContainer;
@@ -230,16 +230,18 @@
   var _loadSlices = function(){
 
   };
-
+  var _sliderTop = 0;
+  var _sliderLeft = 0;
   var _showPickMission = function(b){
     if(!b){
+      // need to hide slider container using css
       _checkGiveUp = true;
-      _pickMissionSliceContainer.hide();
+      $(_pickMissionSliderContainer).css({top: -2000, left: -2000, position:'absolute'}) ;
       _brandAdvFtContainer.show();
     }else{
       _checkGiveUp = false;
       _brandAdvFtContainer.hide();
-      _pickMissionSliceContainer.show();
+      $(_pickMissionSliderContainer).css({top: _sliderTop, left: _sliderLeft, position:'relative'}) ;
     }
   };
   var _initView = function(){
@@ -281,18 +283,20 @@
     $('.jz').jzAjax("JuZLogoutApplication.loadProcessView()",{
       success: function(data){
         if(data != "nok"){
-//          _initView();
-//          _ftStepContainerTemp.append(data);
-          _ftStepContainer.html(data);
+          _switchStepCommon('step1',data);
           _showPickMission(false);
         }
       }
     });
   };
 
-  var switchStepCommon = function(stepBackground,stepContent){
-    if(stepBackground != '')
-      _brandStepBackgroundContainer.html(stepBackground);
+  var _switchStepCommon = function(stepBackground,stepContent){
+    if(stepBackground != ''){
+      _brandStepBackgroundContainer.children().each(function(i,v){
+        $(v).hide();
+      });
+      $('#bg-'+stepBackground).show();
+    }
     if(stepContent != '')
       _ftStepContainer.html(stepContent);
   };
@@ -307,7 +311,7 @@
         var third_part_link = $(this).attr('data-url');
         $(this).hide();
         $('.brad-complete-step').show();
-//        _executeMission();
+        _switchStepCommon('step2','');
         window.open(third_part_link, '_blank');
       }else{
         _displayProcessError();
@@ -320,7 +324,7 @@
     $('.jz').jzAjax("JuZLogoutApplication.executeMission()",{
       success: function(data){
         if(data == "ok"){
-          switchStepCommon('complete','');
+          _switchStepCommon('step2','');
           _prepareView4TerminateStep();
           $('.brad-complete-step').show();
         }
@@ -395,7 +399,7 @@
         if(_checkFtForm(missionId,propositionId)) {
           _urlSubmitted = urlDOM.val();
           var terminateDOM = _ftStepContainerTemp.children('.brad-terminate-step');
-          switchStepCommon('terminate',terminateDOM.html());
+          _switchStepCommon('step3',terminateDOM.html());
         }else{
           _displayProcessError();
         }
@@ -420,7 +424,7 @@
 
   var _completeMissionCB = function(){
     var terminateDOM = _ftStepContainerTemp.children('.brad-terminate-step');
-    switchStepCommon('terminate',terminateDOM.html());
+    _switchStepCommon('end',terminateDOM.html());
   };
 
   var _addEventToBtnTerminate = function(){
@@ -525,7 +529,8 @@
     var thankyouDOM = _ftStepContainerTemp.children('.brad-thankyou-step');
     if(thankyouDOM.length){
       _checkGiveUp = false;
-      _appendStepCommon(thankyouDOM.clone());
+      _switchStepCommon('end',thankyouDOM.clone());
+//      _appendStepCommon(thankyouDOM.clone());
       _sendNotifNewMissionParticipant();
       _initView();
       _tweetController();
@@ -562,14 +567,16 @@
     _isValidTweetMsg = true;
 
     _brandAdvLandingPageContainer = $("#brad-landing-page-container");
-    _pickMissionSliceContainer = $("#brad-pick-mission");
+    _pickMissionSliderContainer = $("#brad-pick-mission");
     _brandAdvFtContainer = $("#brad-ft-container");
     _ftStepContainer = $(".brad-container-step-container");
     _brandStepBackgroundContainer = $("#brad-step-background-container");
     _brandLeftPanelContainer = $("#brad-left-panel-container");
-
     _ftStepContainerTemp = $("#brad-ft-container-temp");
     _giveUpPopupDOM = $('#giveupPopup');
+
+    _sliderTop = $(_pickMissionSliderContainer).position().top;
+    _sliderLeft = $(_pickMissionSliderContainer).position().left;
 
     _addEvent2BtnPickMission();
     _addEventToBtnGo();
@@ -586,6 +593,13 @@
     _addEvent2LinkTweet();
     _addEvent2BtnGiveUpYes();
     _addEvent2BtnGiveUpNo();
+
+    $('#slides-1').superslides({
+      animation: 'fade',
+      play:3000,
+      pagination:false,
+      hashchange: false
+    });
   }
   $(document).ready(function(){
     _init();

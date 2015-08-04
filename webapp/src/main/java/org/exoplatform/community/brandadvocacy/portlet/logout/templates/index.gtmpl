@@ -26,9 +26,26 @@
     </div>
 </div>
 <div id="brad-landing-page-container">
-    <div id="brad-pick-mission" class="brad-pick-mission"> pick mission slices here </div>
+    <div id="brad-pick-mission" class="brad-pick-mission">
+      <div id="slides-1" >
+        <div class="slides-container">
+          <img src="/brand-advocacy-webapp/img/bg/lp-tshirt-bg-start1.png" alt="">
+          <img src="/brand-advocacy-webapp/img/bg/lp-tshirt-bg-start2.png" alt="">
+        </div>
+        <nav class="slides-navigation">
+          <a href="#" class="next">Next</a>
+          <a href="#" class="prev">Prev</a>
+        </nav>
+      </div>
+
+    </div>
     <div id="brad-ft-container" class="brad-ft-container" style="display:none;">
-        <div id="brad-step-background-container"> brad-step-background-container here </div>
+        <div id="brad-step-background-container">
+            <img id="bg-step1" src="/brand-advocacy-webapp/img/bg/lp-tshirt-bg-step1.png" alt="">
+            <img id="bg-step2" src="/brand-advocacy-webapp/img/bg/lp-tshirt-bg-step2.png" alt="">
+            <img id="bg-step3" src="/brand-advocacy-webapp/img/bg/lp-tshirt-bg-step3.png" alt="">
+            <img id="bg-end" src="/brand-advocacy-webapp/img/bg/lp-tshirt-bg-end.png" alt="">
+        </div>
         <div id="brad-left-panel-container">
              <div class="brand-adv-LightBoxContainer tweetPopup">
                  <div class="BgContent">
