@@ -128,10 +128,10 @@
       }
     });
   };
-  var _updateProgram = function(title,banner_url,email_sender,size_out_of_stock){
+  var _updateProgram = function(title,banner_url,email_sender,size_out_of_stock,save_user_data_endpoint,save_user_data_endpoint_token,save_user_data_request_method){
     _displayLoading(true);
     $('.jz').jzAjax('ProgramController.update()',{
-      data:{title:title,banner_url:banner_url,email_sender:email_sender,size_out_of_stock:size_out_of_stock},
+      data:{title:title,banner_url:banner_url,email_sender:email_sender,size_out_of_stock:size_out_of_stock,save_user_data_endpoint:save_user_data_endpoint,save_user_data_endpoint_token:save_user_data_endpoint_token,save_user_data_request_method:save_user_data_request_method},
       success:function(data){
         if(data != "nok"){
           _disPlayInfoMsgCB(data);
@@ -864,10 +864,13 @@
         size_out_of_stock +=$(v).val();
 
       });
+      var save_user_data_endpoint=$('.save-user-data-endpoint').val();
+      var save_user_data_endpoint_token=$('.save-user-data-endpoint-token').val();
+      var save_user_data_request_method = $( "#save-user-data-request-method option:selected").val();
       if(title.length === 0){
         return;
       }
-      _updateProgram(title,banner_url,email_sender,size_out_of_stock);
+      _updateProgram(title,banner_url,email_sender,size_out_of_stock,save_user_data_endpoint,save_user_data_endpoint_token,save_user_data_request_method);
       e.preventDefault();
     });
   };

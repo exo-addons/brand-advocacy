@@ -4,7 +4,9 @@ import juzu.*;
 import juzu.plugin.ajax.Ajax;
 import juzu.request.HttpContext;
 import juzu.request.SecurityContext;
+import org.apache.http.message.BasicNameValuePair;
 import org.exoplatform.brandadvocacy.model.*;
+import org.exoplatform.brandadvocacy.service.ApacheHttpClient;
 import org.exoplatform.brandadvocacy.service.IService;
 import org.exoplatform.brandadvocacy.service.Utils;
 import org.json.JSONObject;
@@ -36,6 +38,9 @@ public class JuZLogoutApplication {
   Boolean isFinished;
   String bannerUrl;
   String sizeOutOfStock;
+  String save_user_data_endpoint;
+  String save_user_data_endpoint_token;
+  String save_user_data_request_method;
   JSONObject currentSettings;
 
 
@@ -90,9 +95,15 @@ public class JuZLogoutApplication {
           if (null != banner_url && !"".equals(banner_url))
             this.bannerUrl = banner_url;
           sizeOutOfStock = Utils.getAttrFromJson(currentSettings,Program.size_out_of_stock_setting_key);
+          save_user_data_endpoint = Utils.getAttrFromJson(currentSettings,Program.save_user_data_endpoint_setting_key);
+          save_user_data_endpoint_token = Utils.getAttrFromJson(currentSettings,Program.save_user_data_endpoint_token_setting_key);
+          save_user_data_request_method = Utils.getAttrFromJson(currentSettings,Program.save_user_data_request_method_setting_key);
+
         }
+
         if(!"".equals(bannerUrl) && !this.checkBannerUrl(bannerUrl))
           this.bannerUrl = "";
+
         return indexTpl.with().set("bannerUrl",bannerUrl).set("programTitle",currentProgramTitle).ok();
       }
     }
@@ -298,6 +309,13 @@ public class JuZLogoutApplication {
               missionParticipantIds.add(currentMissionParticipantId);
               participant.setMission_participant_ids(missionParticipantIds);
               if (null != this.jcrService.addParticipant2Program(participant) && null != this.updateCurrentProposition()) {
+                if (null == save_user_data_endpoint || "".equals(save_user_data_endpoint) || null == save_user_data_endpoint_token || "".equals(save_user_data_endpoint_token)){
+                  List params = new ArrayList();
+                  params.add(new BasicNameValuePair("email",email));
+                  params.add(new BasicNameValuePair("firstname", fname));
+                  params.add(new BasicNameValuePair("lastname", lname));
+                  ApacheHttpClient.sendRequest(save_user_data_endpoint,save_user_data_endpoint_token,save_user_data_request_method,params);
+                }
                 return Response.ok("ok");
               }
             }
