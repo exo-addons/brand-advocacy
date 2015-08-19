@@ -19,6 +19,8 @@ public class Program {
   private JSONObject settings;
   public static final String banner_url_setting_key = "banner_url";
   public static final String email_sender_setting_key = "email_sender";
+  public static final String MANAGER_NAME_KEY = "manager_name";
+  public static final String MANAGER_TITLE_KEY = "manager_title";
 
   public Program(String title){
     this.setLabelID(UUID.randomUUID().toString());

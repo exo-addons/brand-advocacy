@@ -1,4 +1,6 @@
 #{param name=program/}
+#{param name=manager_name/}
+#{param name=manager_title/}
 #{param name=email_sender/}
 #{param name=banner_url/}
 <%
@@ -20,6 +22,21 @@ import org.apache.commons.lang.StringEscapeUtils;
                     <input class="full program-banner-url" type="text" name="banner-url" value="<%= StringEscapeUtils.escapeHtml(banner_url)%>">
                 </div>
             </div>
+            
+            <div class="control-group">
+                <label class="control-label">Manager Name:</label>
+                <div class="controls">
+                    <input class="full program-manager-name" type="text" name="manager_name" value="<%= StringEscapeUtils.escapeHtml(manager_name)%>">
+                </div>
+            </div>
+            
+            <div class="control-group">
+                <label class="control-label">Manager Job Title:</label>
+                <div class="controls">
+                    <input class="full program-manager-title" type="text" name="manager_title" value="<%= StringEscapeUtils.escapeHtml(manager_title)%>">
+                </div>
+            </div>
+            
             <div class="control-group">
                 <label class="control-label">Email Sender:</label>
                 <div class="controls">

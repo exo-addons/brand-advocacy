@@ -405,6 +405,12 @@
       <propertyDefinition name="exo:email_sender" requiredType="String" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="false">
         <valueConstraints/>
       </propertyDefinition>
+        <propertyDefinition name="exo:manager_name" requiredType="String" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="false">
+        <valueConstraints/>
+      </propertyDefinition>
+        <propertyDefinition name="exo:manager_title" requiredType="String" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="false">
+        <valueConstraints/>
+      </propertyDefinition>
     </propertyDefinitions>
   </nodeType>
 </nodeTypes>

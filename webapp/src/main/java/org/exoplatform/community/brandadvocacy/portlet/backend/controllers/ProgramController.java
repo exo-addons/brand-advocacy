@@ -44,6 +44,8 @@ public class ProgramController {
   public Response index(){
     String banner_url = "";
     String email_sender = "";
+    String manager_name = "";
+    String manager_title = "";
     Program program = null;
     String programId = loginController.getCurrentProgramId();
     if (null != programId){
@@ -54,8 +56,10 @@ public class ProgramController {
       if (null != settings){
         banner_url = Utils.getAttrFromJson(settings,Program.banner_url_setting_key);
         email_sender = Utils.getAttrFromJson(settings,Program.email_sender_setting_key);
+        manager_name = Utils.getAttrFromJson(settings,Program.MANAGER_NAME_KEY);
+        manager_title = Utils.getAttrFromJson(settings,Program.MANAGER_TITLE_KEY);
       }
-      return indexTpl.with().set("program", program).set("banner_url",banner_url).set("email_sender",email_sender).ok();
+      return indexTpl.with().set("program", program).set("banner_url",banner_url).set("email_sender",email_sender).set("manager_name",manager_name).set("manager_title",manager_title).ok();
     }
     else
       return addTpl.ok();
@@ -78,7 +82,7 @@ public class ProgramController {
 
   @Ajax
   @Resource
-  public Response update(String title,String banner_url,String email_sender){
+  public Response update(String title,String banner_url,String email_sender,String manager_name,String manager_title){
     String programId = loginController.getCurrentProgramId();
     Program program = this.jcrService.getProgramById(programId);
     if (null != program){
@@ -90,8 +94,15 @@ public class ProgramController {
             banner_url = "";
           if (null == email_sender)
             email_sender = "";
+          if (null == manager_name)
+            manager_name = "";
+          if (null == manager_title)
+            manager_title = "";
+            
           settings.put(Program.banner_url_setting_key,banner_url);
           settings.put(Program.email_sender_setting_key,email_sender);
+          settings.put(Program.MANAGER_NAME_KEY,manager_name);
+          settings.put(Program.MANAGER_TITLE_KEY,manager_title);
           program.setSettings(settings);
           this.jcrService.setProgramSettings(program);
         } catch (JSONException e) {
