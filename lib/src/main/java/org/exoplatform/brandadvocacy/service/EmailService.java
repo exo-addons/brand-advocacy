@@ -36,7 +36,7 @@ public class EmailService {
     this.iService = iService;
     this.identityManager = identityManager;
     this.exoMailService = mailService;
-    this.setSenderEmail("Julie | eXo <mission-control@exoplatform.com>");
+    this.setSenderEmail("Patrice Lamarque | eXo <mission-control@exoplatform.com>");
     this.remoteUrl = System.getProperty("EXO_DEPLOYMENT_URL");
     if(null == remoteUrl || "".equals(remoteUrl)){
       remoteUrl = "http://community.exoplatform.com";
