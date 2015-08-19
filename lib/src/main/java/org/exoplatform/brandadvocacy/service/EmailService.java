@@ -39,7 +39,7 @@ public class EmailService {
     this.setSenderEmail("Patrice Lamarque | eXo <mission-control@exoplatform.com>");
     this.remoteUrl = System.getProperty("EXO_DEPLOYMENT_URL");
     if(null == remoteUrl || "".equals(remoteUrl)){
-      remoteUrl = "http://community.exoplatform.com";
+      remoteUrl = "https://community.exoplatform.com";
     }
   }
   public String getSenderEmail() {
