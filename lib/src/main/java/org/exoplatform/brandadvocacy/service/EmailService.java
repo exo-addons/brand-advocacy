@@ -158,8 +158,16 @@ public class EmailService {
       return this.pushEmailInfo(subject,body);
     }
     return null;
-
   }
+  private Map<String,String> getEmailInfoShipped(Mission mission, MissionParticipant missionParticipant){
+    String subject = "A mission has been updated with shipped status";
+    String body = this.getCommonBody(mission,missionParticipant);
+    if (null != body){
+      return this.pushEmailInfo(subject,body);
+    }
+    return null;
+  }
+
   private Map<String,String> getEmailInfoAllCompleted(){
     String subject = "All missions have been completed once";
     String body = "You might want to add new mission : link to mission tab ";
@@ -174,16 +182,18 @@ public class EmailService {
       return this.getEmailInfoWait4Shipping(mission, missionParticipant);
     }else if (Status.REJECTED.getLabel().equals(missionParticipant.getStatus().getLabel())){
       return this.getEmailInfoRejected(mission, missionParticipant);
+    }else if (Status.SHIPPED.getLabel().equals(missionParticipant.getStatus().getLabel())){
+      return this.getEmailInfoShipped(mission, missionParticipant);
     }
     return null;
   }
 
-  private Map<String,String> getEmailInfoGiftShipped(Program program,Identity identity){
+  private Map<String,String> getEmailInfoGiftShipped(Program program,String fullname){
     String subject = "Your eXo Tshirt has been shipped";
     String remoteImgUrl =  remoteUrl;
     remoteImgUrl+="/brand-advocacy-webapp/img/email";
     Map<String, String> props = new HashMap<String, String>();
-    props.put("user.name", identity.getProfile().getFullName());
+    props.put("user.name", fullname);
     props.put("imgUrlBase",remoteImgUrl);
     props.put("program.title",program.getTitle());
     String body = this.getBodyByTemplate(email_gift_shipped_template, props);
@@ -205,12 +215,12 @@ public class EmailService {
     }
     return null;
   }
-  private Map<String,String> getEmailInfoMissionFailed(Program program,Identity identity, String note){
+  private Map<String,String> getEmailInfoMissionFailed(Program program,String fullname, String note){
     String  subject = program.getTitle()+" - Mission failed";
     String remoteImgUrl =  remoteUrl;
     remoteImgUrl+="/brand-advocacy-webapp/img/email";
     Map<String, String> props = new HashMap<String, String>();
-    props.put("user.name", identity.getProfile().getFullName());
+    props.put("user.name", fullname);
     props.put("imgUrlBase",remoteImgUrl);
     props.put("program.title",program.getTitle());
     props.put("reason",note);
@@ -221,14 +231,14 @@ public class EmailService {
     return null;
   }
 
-  private Map<String,String> generateParticipantEmailInfoByStatus(Program program, Identity identity,MissionParticipant missionParticipant,String note){
+  private Map<String,String> generateParticipantEmailInfoByStatus(Program program, String fullname,MissionParticipant missionParticipant,String note){
     //log.info( " send to participant with note "+note);
     if(Status.WAITING_FOR_VALIDATE.getLabel().equals(missionParticipant.getStatus().getLabel())){
-      return this.getEmailInfoThankyou(identity.getProfile().getFullName());
+      return this.getEmailInfoThankyou(fullname);
     }else if (Status.SHIPPED.getLabel().equals(missionParticipant.getStatus().getLabel())){
-      return this.getEmailInfoGiftShipped(program,identity);
+      return this.getEmailInfoGiftShipped(program,fullname);
     } else if (Status.REJECTED.getLabel().equals(missionParticipant.getStatus().getLabel())){
-      return this.getEmailInfoMissionFailed(program,identity,note);
+      return this.getEmailInfoMissionFailed(program,fullname,note);
     }
     return null;
   }
@@ -272,23 +282,31 @@ public class EmailService {
           if (null != program){
             String participantId = missionParticipant.getParticipant_username();
             Identity identity = identityManager.getOrCreateIdentity(OrganizationIdentityProvider.NAME,participantId,true);
+            String fullname = "";
+            String toEmail = "";
             if (null != identity){
-              Map<String,String> emailInfo = this.generateParticipantEmailInfoByStatus(program,identity,missionParticipant,note);
-              if (null != emailInfo){
-                log.info("sending email to participant "+participantId);
-                Message message = new Message();
-                message.setFrom(this.getSenderEmail());
-                message.setTo(identity.getProfile().getEmail());
-                message.setSubject(emailInfo.get("subject"));
-                message.setBody(emailInfo.get("body"));
-                message.setMimeType("text/html");
-                try {
-                  this.exoMailService.sendMessage(message);
-                } catch (Exception e) {
-                  log.error("cannot send referral email "+e.getMessage());
-                }
+              fullname = identity.getProfile().getFullName();
+              toEmail = identity.getProfile().getEmail();
+            }else{
+              fullname = participantId;
+              toEmail = participantId;
+            }
+            Map<String,String> emailInfo = this.generateParticipantEmailInfoByStatus(program,fullname,missionParticipant,note);
+            if (null != emailInfo){
+              log.info("sending email to participant "+participantId);
+              Message message = new Message();
+              message.setFrom(this.getSenderEmail());
+              message.setTo(toEmail);
+              message.setSubject(emailInfo.get("subject"));
+              message.setBody(emailInfo.get("body"));
+              message.setMimeType("text/html");
+              try {
+                this.exoMailService.sendMessage(message);
+              } catch (Exception e) {
+                log.error("cannot send referral email "+e.getMessage());
               }
             }
+
           }
         }
       }
