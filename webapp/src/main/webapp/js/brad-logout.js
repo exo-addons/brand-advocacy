@@ -250,9 +250,10 @@
 
   var _addEvent2BtnPickMission = function(){
     $ (document).on('click.juzBrad.pickmission','.brad-pick-mission',function(){
-      // an slices
-      // load mission
-      // show image step 1 + show proposition
+      var stepsDOM = $('.bg-step step-1');
+      if (!stepsDOM.hasClass('active')){
+        stepsDOM.addClass('active');
+      }
       if(_createNew){
         _processGenerateNewMission();
       }else{
@@ -292,10 +293,25 @@
 
   var _switchStepCommon = function(stepBackground,stepContent){
     if(stepBackground != ''){
-      _brandStepBackgroundContainer.children().each(function(i,v){
-        $(v).hide();
-      });
-      $('#bg-'+stepBackground).show();
+
+      stepBackground = stepBackground.match(/\d+/);
+      if ($('.mission-'+stepBackground).length > 0){
+        if(stepBackground == 1){
+          $('.list-misstion li').each(function(i,v){
+            $(v).removeClass('passed');
+          });
+          $('.step-1').addClass('active');
+          $('.step-2').removeClass('active');
+
+        }
+        var stepDOM = $('.mission-'+stepBackground);
+        if (!stepDOM.hasClass('passed'))
+          stepDOM.addClass('passed');
+      }else{
+        $('.step-1').removeClass('active');
+        $('.step-2').addClass('active');
+      }
+
     }
     if(stepContent != '')
       _ftStepContainer.html(stepContent);
@@ -337,9 +353,9 @@
   }
   var _prepareView4TerminateStep = function(){
     var terminateDOM = _ftStepContainerTemp.children('.brad-terminate-step');
-    if(terminateDOM.length){
-      _appendStepCommon(terminateDOM.clone());
-    }else{
+    if(!terminateDOM.length){
+      /*      _appendStepCommon(terminateDOM.clone());
+       }else{*/
       $(".jz").jzAjax("JuZLogoutApplication.loadTerminateView()",{
         success: function(data){
           if(typeof data == "string" && data != "nok"){
@@ -549,7 +565,7 @@
     });
   };
   var _addEvent2BtnGiveUpNo = function(){
-    $(document).on('click.giveup.no','button.btn-brad-giveup-no',function(){
+    $(document).on('click.giveup.no','.btn-brad-giveup-no',function(){
       _checkGiveUp = true;
       _giveUpPopupDOM.hide();
 

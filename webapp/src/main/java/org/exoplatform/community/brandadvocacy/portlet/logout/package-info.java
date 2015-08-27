@@ -17,7 +17,7 @@
         @Script(value = "js/brad-logout.js",depends = "jquery", location = AssetLocation.SERVER)
 })
 @Stylesheets({
-        @Stylesheet(value = "skin/css/brandadvocacy.css", location = AssetLocation.SERVER),
+        @Stylesheet(value = "skin/css/brad-logout.css", location = AssetLocation.SERVER),
         @Stylesheet(value = "skin/css/slider/superslides.css", location = AssetLocation.SERVER)
 })
 @Assets("*")

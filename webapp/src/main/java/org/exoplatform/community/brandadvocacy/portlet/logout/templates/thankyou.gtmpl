@@ -1,15 +1,17 @@
-<!-- Step 3 -->
-<div class="tweetStepContent step-3 brad-thankyou-step">
-    <h5 class="thank-title">Thank You!</h5>
-    <div class="thank-content">
-        <p>Our mission control will check you were successful. Once validated, you'll receive a confirmation email to let you know your goodie has been shipped.</p>
+<!-- Step 5 -->
+<div class="tweetStepContent step-5 brad-thankyou-step">
+    <div class="thanks-box">
+        <h4>Thank You!</h4>
+        <p>We will check if you successfully completed your mission. Once we have confirmed that your mission was successfully completed, you’ll receive a confirmation email to let you know your reward has been shipped. </p>
+        <p>Hurry to complete more exciting missions and win more goodies!</p>
+        <img src="/brand-advocacy-webapp/img/join-tribe-now.png" alt="join-tribe-now.png">
+        <div class="social-link">
+            <a href="#" class="facebook"></a>
+            <a href="#" class="linkedin"></a>
+            <a href="#" class="googleplus"></a>
+        </div>
     </div>
-    <div class="thank-form">
-        <textarea style="resize:none;" class="txt-brad-tweet" placeholder="I just won a free t-shirt from @eXoPlatform on http://community.exoplatform.com #ILOVEMYESN"></textarea>
-    </div>
-    <div class="text-right"><a class="btn btnTweet btn-brad-tweet"><i class="iconTweetBird">&nbsp;</i>Tweet !</a></div>
-    <div class="brad-errors" style="color: red; font-size: 16px; margin-bottom: 10px;display:none;">
-     <span>You have exceeded the number of characters.</span>
-    </div>
+
+
 </div>
-<!-- /.step-3 -->
+<!-- /.step-5 -->

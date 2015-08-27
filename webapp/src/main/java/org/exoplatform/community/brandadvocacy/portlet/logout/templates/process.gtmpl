@@ -28,7 +28,7 @@ if(null != mission) {
     <div class="tweetStepContent step-3 brad-complete-step" style="display:none;">
 
         <h5 class="titleStep mgB15-ipt">
-            <span class="numb">3</span><span class="textStep">Where should we check the result ?</span>
+            <span class="numb">2</span><span class="textStep">Where should we check the result ?</span>
         </h5>
         <div class="control-group mgB20">
             <div class="controls">

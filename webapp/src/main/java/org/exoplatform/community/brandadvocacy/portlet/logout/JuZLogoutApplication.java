@@ -233,7 +233,9 @@ public class JuZLogoutApplication {
   @Ajax
   @Resource
   public Response loadTerminateView(){
-    String[] out_of_stock = sizeOutOfStock.split(",");
+    String[] out_of_stock = {};
+    if(null != sizeOutOfStock && !"".equals(sizeOutOfStock))
+      out_of_stock = sizeOutOfStock.split(",");
     return terminateTpl.with().set("sizes", Size.values()).set("size_out_of_stock",out_of_stock).ok();
   }
 
