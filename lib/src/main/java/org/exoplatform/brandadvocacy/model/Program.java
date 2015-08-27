@@ -21,7 +21,10 @@ public class Program {
   public static final String email_sender_setting_key = "email_sender";
   public static final String MANAGER_NAME_KEY = "manager_name";
   public static final String MANAGER_TITLE_KEY = "manager_title";
-
+  public static final String size_out_of_stock_setting_key = "size_out_of_stock";
+  public static final String save_user_data_endpoint_setting_key = "save_user_data_endpoint";
+  public static final String save_user_data_request_method_setting_key = "save_user_data_request_method";
+  public static final String save_user_data_endpoint_token_setting_key = "save_user_data_endpoint_token";
   public Program(String title){
     this.setLabelID(UUID.randomUUID().toString());
     this.setTitle(title);

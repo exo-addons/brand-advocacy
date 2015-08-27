@@ -128,10 +128,10 @@
       }
     });
   };
-  var _updateProgram = function(title,banner_url,email_sender,manager_name,manager_title){
+  var _updateProgram = function(title,banner_url,email_sender,size_out_of_stock,save_user_data_endpoint,save_user_data_endpoint_token,save_user_data_request_method){
     _displayLoading(true);
     $('.jz').jzAjax('ProgramController.update()',{
-      data:{title:title,banner_url:banner_url,email_sender:email_sender,manager_name:manager_name,manager_title:manager_title},
+      data:{title:title,banner_url:banner_url,email_sender:email_sender,size_out_of_stock:size_out_of_stock,save_user_data_endpoint:save_user_data_endpoint,save_user_data_endpoint_token:save_user_data_endpoint_token,save_user_data_request_method:save_user_data_request_method},
       success:function(data){
         if(data != "nok"){
           _disPlayInfoMsgCB(data);
@@ -853,15 +853,24 @@
 
   var _addEvent2BtnUpdateProgram = function(){
     $(document).on('click.juzBrad.bk.updateprogram','button.btn-update-program',function(e){
-      var title = $(".program-title").val(),
-          banner_url = $('.program-banner-url').val(),
-          email_sender = $('.program-email-sender').val(),
-          manager_name = $('.program-manager-name').val(),
-          manager_title = $('.program-manager-title').val();
+      var title = $(".program-title").val();
+      var banner_url = $('.program-banner-url').val();
+      var email_sender = $('.program-email-sender').val();
+      var size_out_of_stock = "";
+      $("input:checkbox[name='size-in-stock']:not(:checked)").each(function(i,v){
+        if(i != 0){
+          size_out_of_stock +=",";
+        }
+        size_out_of_stock +=$(v).val();
+
+      });
+      var save_user_data_endpoint=$('.save-user-data-endpoint').val();
+      var save_user_data_endpoint_token=$('.save-user-data-endpoint-token').val();
+      var save_user_data_request_method = $( "#save-user-data-request-method option:selected").val();
       if(title.length === 0){
         return;
       }
-      _updateProgram(title,banner_url,email_sender,manager_name,manager_title);
+      _updateProgram(title,banner_url,email_sender,size_out_of_stock,save_user_data_endpoint,save_user_data_endpoint_token,save_user_data_request_method);
       e.preventDefault();
     });
   };

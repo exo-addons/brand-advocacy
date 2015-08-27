@@ -3,6 +3,11 @@
 #{param name=manager_title/}
 #{param name=email_sender/}
 #{param name=banner_url/}
+#{param name=size_out_of_stock/}
+#{param name=sizes/}
+#{param name=save_user_data_endpoint/}
+#{param name=save_user_data_endpoint_token/}
+#{param name=save_user_data_request_method/}
 <%
 import org.apache.commons.lang.StringEscapeUtils;
 %>
@@ -41,6 +46,40 @@ import org.apache.commons.lang.StringEscapeUtils;
                 <label class="control-label">Email Sender:</label>
                 <div class="controls">
                     <input class="full program-email-sender" type="text" name="email-sender" value="<%= StringEscapeUtils.escapeHtml(email_sender)%>">
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label">Size in stock:</label>
+                <div class="controls">
+                   <% sizes.each { size ->
+                   String status = "checked";
+                      if(size_out_of_stock.size() > 0 && Arrays.asList(size_out_of_stock).contains(String.valueOf(size.getValue()))){
+                        status = "";
+                      }
+                   %>
+                   <span class="uiCheckbox"><input type="checkbox" name="size-in-stock" class="checkbox" <%=status%> value="<%=size.getValue()%>" id="size_<%=size.getValue()%>"><span><%=size.getLabel()%></span></span>
+                   <% } %>
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label">Save user data endpoint:</label>
+                <div class="controls">
+                    <input class="full save-user-data-endpoint" type="text" name="save-user-data-endpoint" value="<%= StringEscapeUtils.escapeHtml(save_user_data_endpoint)%>" placeholder="http://">
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label">Save user data method request:</label>
+                <div class="controls">
+                    <select id="save-user-data-request-method" class="brad-save-user-data-request-method">
+                        <option value="post" <% if(save_user_data_request_method == "post"){%> selected <% } %>>POST</option>
+                        <option value="get" <% if(save_user_data_request_method == "get"){%> selected <% } %>>GET</option>
+                    </select>
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label">Token:</label>
+                <div class="controls">
+                    <input class="full save-user-data-endpoint-token" type="text" name="save-user-data-endpoint-token" value="<%= StringEscapeUtils.escapeHtml(save_user_data_endpoint_token)%>">
                 </div>
             </div>
             <div class="control-group program-list-managers">

@@ -16,6 +16,7 @@
  */
 package org.exoplatform.brandadvocacy.jcr;
 
+import org.apache.commons.lang.StringUtils;
 import org.exoplatform.brandadvocacy.model.Participant;
 import org.exoplatform.brandadvocacy.service.BrandAdvocacyServiceException;
 import org.exoplatform.brandadvocacy.service.JCRImpl;
@@ -121,18 +122,23 @@ public class ParticipantDAO extends DAO {
     return null;
   }
   public Node getNodeByUserName(String programId,String username){
+
+    if ( !StringUtils.isNotEmpty(programId) || null == programId || null == username || !StringUtils.isNotEmpty(username)){
+      return null;
+    }
     Node programNode = null;
     try {
       programNode = this.getJcrImplService().getProgramDAO().getNodeById(programId);
       if (null != programNode){
         Node homeNode = this.getJcrImplService().getProgramDAO().getOrCreateParticipantHome(programNode);
-        if (null != homeNode && homeNode.hasNode(username)){
+        if (null != username && null != homeNode && homeNode.hasNode(username)){
           return homeNode.getNode(username);
         }
       }
     } catch (RepositoryException e) {
       e.printStackTrace();
     }
+
     return null;
   }
 

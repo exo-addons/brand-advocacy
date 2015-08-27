@@ -1,10 +1,12 @@
-package org.exoplatform.community.brandadvocacy.portlet.frontend;
+package org.exoplatform.community.brandadvocacy.portlet.logout;
 
 import juzu.*;
 import juzu.plugin.ajax.Ajax;
 import juzu.request.HttpContext;
 import juzu.request.SecurityContext;
+import org.apache.http.message.BasicNameValuePair;
 import org.exoplatform.brandadvocacy.model.*;
+import org.exoplatform.brandadvocacy.service.ApacheHttpClient;
 import org.exoplatform.brandadvocacy.service.IService;
 import org.exoplatform.brandadvocacy.service.Utils;
 import org.json.JSONObject;
@@ -19,12 +21,11 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-/**
- * Created by exoplatform on 07/10/14.
- */
-@SessionScoped
-public class JuZFrontEndApplication {
 
+@SessionScoped
+public class JuZLogoutApplication {
+
+  @Inject
   IService jcrService;
 
   String remoteUserName;
@@ -35,45 +36,39 @@ public class JuZFrontEndApplication {
   String currentProgramId;
   String currentProgramTitle;
   Boolean isFinished;
-  String sizeOutOfStock;
   String bannerUrl;
+  String sizeOutOfStock;
+  String save_user_data_endpoint;
+  String save_user_data_endpoint_token;
+  String save_user_data_request_method;
   JSONObject currentSettings;
 
 
   @Inject
   @Path("index.gtmpl")
-  org.exoplatform.community.brandadvocacy.portlet.frontend.templates.index indexTpl;
+  org.exoplatform.community.brandadvocacy.portlet.logout.templates.index indexTpl;
 
-
-  @Inject
-  @Path("discovery.gtmpl")
-  org.exoplatform.community.brandadvocacy.portlet.frontend.templates.discovery discoveryTpl;
 
   @Inject
   @Path("stepContainer.gtmpl")
-  org.exoplatform.community.brandadvocacy.portlet.frontend.templates.stepContainer stepContainerTpl;
-
-  @Inject
-  @Path("start.gtmpl")
-  org.exoplatform.community.brandadvocacy.portlet.frontend.templates.start startTpl;
+  org.exoplatform.community.brandadvocacy.portlet.logout.templates.stepContainer stepContainerTpl;
 
   @Inject
   @Path("process.gtmpl")
-  org.exoplatform.community.brandadvocacy.portlet.frontend.templates.process processTpl;
+  org.exoplatform.community.brandadvocacy.portlet.logout.templates.process processTpl;
 
   @Inject
   @Path("terminate.gtmpl")
-  org.exoplatform.community.brandadvocacy.portlet.frontend.templates.terminate terminateTpl;
+  org.exoplatform.community.brandadvocacy.portlet.logout.templates.terminate terminateTpl;
 
   @Inject
   @Path("thankyou.gtmpl")
-  org.exoplatform.community.brandadvocacy.portlet.frontend.templates.thankyou thankyouTpl;
+  org.exoplatform.community.brandadvocacy.portlet.logout.templates.thankyou thankyouTpl;
 
-  @Inject
-  public JuZFrontEndApplication(IService iService){
-    this.jcrService = iService;
+  public JuZLogoutApplication(){
   }
   private void init(){
+    this.remoteUserName = null;
     this.currentMissionId = null;
     this.currentMissionParticipantId = null;
     this.currentPropositionId = null;
@@ -86,14 +81,11 @@ public class JuZFrontEndApplication {
     }
   }
   @View
-  public Response.Content index(SecurityContext securityContext,HttpContext httpContext){
-
-//    String dns = httpContext.getScheme()+"://"+httpContext.getServerName()+":"+httpContext.getServerPort();
-//    this.bannerUrl = dns+"/rest/jcr/repository/collaboration/sites/intranet/web%20contents/brand-advocacy/banner.jpg";
+  public Response.Content index(SecurityContext securityContext){
     this.bannerUrl = "";
     this.isFinished = false;
-    this.remoteUserName = securityContext.getUserPrincipal().getName();
-    if (null != remoteUserName){
+    this.remoteUserName = null;
+    if (null == securityContext.getUserPrincipal()){
       this.init();
       if (null != this.currentMissionId){
 
@@ -102,12 +94,17 @@ public class JuZFrontEndApplication {
           String banner_url = Utils.getAttrFromJson(currentSettings,Program.banner_url_setting_key);
           if (null != banner_url && !"".equals(banner_url))
             this.bannerUrl = banner_url;
-
           sizeOutOfStock = Utils.getAttrFromJson(currentSettings,Program.size_out_of_stock_setting_key);
+          save_user_data_endpoint = Utils.getAttrFromJson(currentSettings,Program.save_user_data_endpoint_setting_key);
+          save_user_data_endpoint_token = Utils.getAttrFromJson(currentSettings,Program.save_user_data_endpoint_token_setting_key);
+          save_user_data_request_method = Utils.getAttrFromJson(currentSettings,Program.save_user_data_request_method_setting_key);
+
         }
+
         if(!"".equals(bannerUrl) && !this.checkBannerUrl(bannerUrl))
           this.bannerUrl = "";
-          return indexTpl.ok();
+
+        return indexTpl.with().set("bannerUrl",bannerUrl).set("programTitle",currentProgramTitle).ok();
       }
     }
     return Response.ok("");
@@ -173,10 +170,7 @@ public class JuZFrontEndApplication {
   }
 
   public String checkSession(){
-    String msg = "";
-    if(null == remoteUserName || "".equals(remoteUserName))
-      msg = "Your session has been expired, please refresh your browser";
-    return msg;
+    return "";
   }
 
   @Ajax
@@ -188,7 +182,7 @@ public class JuZFrontEndApplication {
         if(!this.getOrCreateMissionParticipant(this.currentMissionId)){
           return Response.ok("something went wrong, please come back later");
         }else{
-          return startTpl.ok();
+          return indexTpl.ok();
         }
       }
       else{
@@ -196,20 +190,11 @@ public class JuZFrontEndApplication {
           Mission mission = this.getCurrentMission();
           return processTpl.with().set("mission", mission).ok();
         }else if (Status.INPROGRESS.getLabel().equals(this.currentMissionParticipantStatus)){
-            return terminateTpl.with().set("sizes", Size.values()).ok();
+          return terminateTpl.with().set("sizes", Size.values()).ok();
         }
       }
     }
     return Response.ok("We are preparing next mission, please come back later");
-  }
-  @Ajax
-  @Resource
-  public Response.Content loadDiscoveryView(){
-    if ("".equals(bannerUrl))
-      bannerUrl = "/brand-advocacy-webapp/img/banner.png";
-    if ("".equals(currentProgramTitle))
-      currentProgramTitle = "Discovery your mission";
-    return discoveryTpl.with().set("bannerUrl",bannerUrl).set("programTitle",currentProgramTitle).ok();
   }
 
   @Ajax
@@ -220,20 +205,7 @@ public class JuZFrontEndApplication {
 
   @Ajax
   @Resource
-  public Response.Content loadStartView(){
-    if(null == this.currentMissionId || null == this.currentPropositionId){
-      return Response.ok("We are preparing next mission, please come back later");
-    }
-    if(!this.getOrCreateMissionParticipant(this.currentMissionId)){
-      return Response.ok("something went wrong, please come back later");
-    }else{
-      return startTpl.ok();
-    }
-  }
-
-  @Ajax
-  @Resource
-  public Response processStartMission(){
+  public Response processOpenMission(){
     String session = this.checkSession();
     if ("".equals(session)){
       if(!this.getOrCreateMissionParticipant(this.currentMissionId)){
@@ -251,8 +223,9 @@ public class JuZFrontEndApplication {
   @Resource
   public Response loadProcessView(){
     Mission missionRandom = this.getCurrentMission();
-    if(null != missionRandom)
-     return processTpl.with().set("mission", missionRandom).ok();
+    if(null != missionRandom){
+      return processTpl.with().set("mission", missionRandom).ok();
+    }
     else
       return Response.ok("nok");
   }
@@ -291,8 +264,31 @@ public class JuZFrontEndApplication {
   @Ajax
   @Resource
   // store mission only when user complete his mission
-  public Response completeMission(String url,String fname, String lname, String address, String city, String phone,String country,String size ){
+  public Response completeMission(String url){
+    if(null != this.currentMissionParticipantId){
+      MissionParticipant missionParticipant = this.jcrService.getMissionParticipantById(this.currentMissionParticipantId);
+      if(null != missionParticipant){
+        missionParticipant.setStatus(Status.COMPLETE);
+        missionParticipant.setUrl_submitted(url);
+        if (null != this.jcrService.updateMissionParticipantInProgram(this.currentProgramId,missionParticipant)){
+          this.currentMissionParticipantStatus = Status.COMPLETE.getLabel();
+          return Response.ok("ok");
+        }
+      }
+    }
+    if (this.jcrService.removeMissionParticipantInParticipant(currentProgramId,remoteUserName,currentMissionParticipantId)) {
+      this.jcrService.removeMissionParticipant(currentMissionParticipantId);
+    }
+    return Response.ok("nok");
+  }
+
+  @Ajax
+  @Resource
+  // store mission only when user complete his mission
+  public Response terminate(String url,String fname, String lname,String email, String address, String city, String phone,String country,String size ){
+    this.remoteUserName = email;
     String session = this.checkSession();
+    this.getOrCreateMissionParticipant(currentMissionId);
     if ("".equals(session)){
       if(null != this.currentMissionParticipantId){
         MissionParticipant missionParticipant = this.jcrService.getMissionParticipantById(this.currentMissionParticipantId);
@@ -315,6 +311,13 @@ public class JuZFrontEndApplication {
               missionParticipantIds.add(currentMissionParticipantId);
               participant.setMission_participant_ids(missionParticipantIds);
               if (null != this.jcrService.addParticipant2Program(participant) && null != this.updateCurrentProposition()) {
+                if (null == save_user_data_endpoint || "".equals(save_user_data_endpoint) || null == save_user_data_endpoint_token || "".equals(save_user_data_endpoint_token)){
+                  List params = new ArrayList();
+                  params.add(new BasicNameValuePair("email",email));
+                  params.add(new BasicNameValuePair("firstname", fname));
+                  params.add(new BasicNameValuePair("lastname", lname));
+                  ApacheHttpClient.sendRequest(save_user_data_endpoint,save_user_data_endpoint_token,save_user_data_request_method,params);
+                }
                 return Response.ok("ok");
               }
             }
@@ -340,7 +343,7 @@ public class JuZFrontEndApplication {
     if (null == missionParticipant) {
       missionParticipant = new MissionParticipant();
       missionParticipant.setMission_id(missionId);
-      missionParticipant.setParticipant_username(this.remoteUserName);
+      missionParticipant.setParticipant_username(remoteUserName);
       missionParticipant = this.jcrService.addMissionParticipant2Program(this.currentProgramId,missionParticipant);
       if(null != missionParticipant){
 

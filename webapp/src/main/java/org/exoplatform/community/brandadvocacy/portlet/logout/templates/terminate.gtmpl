@@ -1,14 +1,7 @@
 #{param name=sizes/}
+#{param name=size_out_of_stock/}
 <!-- Step 2 -->
 <div class="tweetStepContent step-2 brad-terminate-step">
-    <h5 class="titleStep mgB15-ipt">
-        <span class="numb">2</span><span class="textStep">Where should we check the result ?</span>
-    </h5>
-    <div class="control-group mgB20">
-        <div class="controls">
-            <input type="text" class="brad_participant_url_submitted" placeholder="Url">
-        </div>
-    </div>
     <h5 class="titleStep mgB15-ipt">
         <span class="numb">3</span><span class="textStep">Submit your office address</span>
     </h5>
@@ -20,6 +13,11 @@
     <div class="control-group">
         <div class="controls">
             <input type="text" class="brad-participant-lname" placeholder="Last Name">
+        </div>
+    </div>
+    <div class="control-group">
+        <div class="controls">
+            <input type="text" class="brad-participant-email" placeholder="Email">
         </div>
     </div>
     <div class="control-group">
@@ -46,9 +44,14 @@
     <div class="control-group">
         <div class="controls">
             <select name="tweetSize" class="brad-participant-size">
-               <% sizes.each { size -> %>
-                <option value="<%= size.getValue() %>"><%= size.getLabel() %></option>
-                <% } %>
+               <% sizes.each { size ->
+                    if(size_out_of_stock.size() == 0 || ( size_out_of_stock.size() > 0 && !Arrays.asList(size_out_of_stock).contains(String.valueOf(size.getValue())) )){
+               %>
+                        <option value="<%= size.getValue() %>"><%= size.getLabel() %></option>
+                <%
+                    }
+                  }
+                %>
             </select>
         </div>
     </div>

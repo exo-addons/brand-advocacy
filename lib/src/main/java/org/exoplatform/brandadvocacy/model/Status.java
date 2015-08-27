@@ -30,7 +30,8 @@ public enum Status {
   WAITING_FOR_VALIDATE(3),
   VALIDATED(4),
   SHIPPED(5),
-  REJECTED(6);
+  REJECTED(6),
+  COMPLETE(7);
   
   private final int status;
 
@@ -44,21 +45,22 @@ public enum Status {
 
   public String getLabel() {
       switch (this.status) {
-          
-          case 6:
-            return "Rejected";
-          case 5:
-              return "Shipped";
-          case 4:
-              return "Validated";
-          case 3:
-              return "Waiting For Validate";
-          case 2:
-              return "In Progress";
-          case 1:
-              return "Open";
-          default:
-              return "No name";
+        case 7:
+          return "Complete";
+        case 6:
+          return "Rejected";
+        case 5:
+          return "Shipped";
+        case 4:
+          return "Validated";
+        case 3:
+          return "Waiting For Validate";
+        case 2:
+          return "In Progress";
+        case 1:
+          return "Open";
+        default:
+          return "No name";
       }
   }
 

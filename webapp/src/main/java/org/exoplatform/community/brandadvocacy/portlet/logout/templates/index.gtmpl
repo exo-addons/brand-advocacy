@@ -1,35 +1,114 @@
+#{param name=bannerUrl/}
+#{param name=programTitle/}
 <div id="brad-ft-container-temp" style="display:none;">
-    <!-- Start Step -->
-    <div class="tweetStepContent start-step brad-ft-start-step">
-        <h5 class="titleStep">
-            <span class="numb">1</span><span class="textStep">Get your mission and complete it</span>
-        </h5>
-        <h5 class="titleStep">
-            <span class="numb">2</span><span class="textStep">Submit your address and get<br>your t-shirt!</span>
-        </h5>
-        <div class="action">
-            <button class="btn btn-large btn-brad-start">Start!</button>
-        </div>
-        <img class="tshirt-img" src="/brand-advocacy-webapp/img/banner.png" alt="T-Shirt">
-    </div>
-    <!-- /.start-step -->
 
-    <!-- Step 3 -->
-    <div class="tweetStepContent step-3 brad-thankyou-step">
-        <h5 class="thank-title">Thank You!</h5>
-        <div class="thank-content">
-            <p>Our mission control will check you were successful. Once validated, you'll receive a confirmation email to let you know your goodie has been shipped.</p>
+    <!-- Step 5 -->
+    <div class="tweetStepContent step-5 brad-thankyou-step">
+        <div class="thanks-box">
+            <h4>Thank You!</h4>
+            <p>We will check if you successfully completed your mission. Once we have confirmed that your mission was successfully completed, you’ll receive a confirmation email to let you know your reward has been shipped. </p>
+            <p>Hurry to complete more exciting missions and win more goodies!</p>
+            <img src="/brand-advocacy-webapp/img/join-tribe-now.png" alt="join-tribe-now.png">
+            <div class="social-link">
+                <a href="https://community.exoplatform.com/portal/facebookAuth" class="facebook"></a>
+                <a href="https://community.exoplatform.com/portal/linkedinAuth" class="linkedin"></a>
+                <a href="https://community.exoplatform.com/portal/googleAuth" class="googleplus"></a>
+            </div>
         </div>
-        <div class="thank-form">
-            <textarea style="resize:none;" class="txt-brad-tweet" placeholder="I just won a free t-shirt from @eXoPlatform on http://community.exoplatform.com #ILOVEMYESN"></textarea>
-        </div>
-        <div class="text-right"><a class="btn btnTweet btn-brad-tweet"><i class="iconTweetBird">&nbsp;</i>Tweet !</a></div>
-        <div class="brad-errors" style="color: red; font-size: 16px; margin-bottom: 10px;display:none;">
-         <span>You have exceeded the number of characters.</span>
-        </div>
+
+
     </div>
-    <!-- /.step-3 -->
+    <!-- /.step-5 -->
 </div>
-<div id="brad-ft-container" class="brad-ft-container">
+<!-- Modal -->
+<div style="display:none;" id="giveupPopup">
+	<a class="uiIconClose uiIconDarkGray close btn-brad-giveup-no" href="#"></a>
+    <h2>Oh no! You are so close to getting your T-shirt.</h2>
+    <h3>Do you really want to give up on your mission?</h3>
+    <img src="/brand-advocacy-webapp/img/people-in-popup.png" alt="popup-giveup.png">
+    <div class="action">
+        <button class="button-flat-primary large btn-brad-giveup-yes">Yes</button>
+        <button class="button-flat large btn-brad-giveup-no">No</div></button>
+    </div>
+</div>
+<div class="mark-layer" style="display:none;"></div>
+<div id="brad-landing-page-container">
+    <div id="brad-pick-mission" class="brad-pick-mission">
+      <div id="slides-1" >
+        <div class="slides-container">
+          <img src="/brand-advocacy-webapp/img/bg/lp-tshirt-bg-start1.png" alt="">
+          <img src="/brand-advocacy-webapp/img/bg/lp-tshirt-bg-start2.png" alt="">
+        </div>
+        <nav class="slides-navigation">
+          <a href="#" class="next">Next</a>
+          <a href="#" class="prev">Prev</a>
+        </nav>
+      </div>
+
+    </div>
+    <div id="brad-ft-container" class="brad-ft-container" style="display:none;">
+        <!-- HTML FOR STEP -->
+        <div id="brad-step-background-container">
+            <div class="bg-step step-1 active"><!-- Add class .active to show/hidden -->
+                <ul class="list-misstion">
+                    <li class="mission-1 passed"><!-- Add class .passed to change status on/off -->
+                        <span class="text">Pick your mission</span>
+                        <div class="status"></div>
+                    </li>
+                    <li class="mission-2">
+                        <span class="text">Complete your mission</span>
+                        <div class="status"></div>
+                    </li>
+                    <li class="mission-3">
+                        <span class="text">Submit your mission!</span>
+                        <div class="status"></div>
+                    </li>
+                    <li class="mission-4">
+                        <span class="text">GIVE YOUR DETAILS</span>
+                        <div class="status"></div>
+                    </li>
+                </ul>
+            </div>
+            <div class="bg-step step-2"><!-- Add class .active to show/hidden -->
+                <h2 class="congrat">Congratulations! Your T-shirt is on its way…</h2>
+                <div class="step-container">
+                    <div class="form-liquid clearfix">
+                        <div class="fixed">
+                            <a class="btnTweet btn-brad-tweet button-flat-primary large
+">Tweet</a>
+                        </div>
+                        <div class="fluid">
+                            <div class="inner">
+                                <textarea class="text-won txt-brad-tweet" placeholder="I just won a free t-shirt from @eXoPlatform on http://community.exoplatform.com#ILOVEMYESN"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="box-social">
+                        <strong>or share:</strong>
+                        <a href="https://www.facebook.com/sharer/sharer.php?u=http://bit.ly/1NJcYLZ" class="social-icon facebook" target="_blank"></a>
+                        <a href="https://www.linkedin.com/shareArticle?mini=true&url=http://bit.ly/1NJcYLZ&title=Win%20A%20Tshirt&summary=&source=" class="social-icon linkedin" target="_blank"></a>
+                        <a href="https://plus.google.com/share?url=http://bit.ly/1NJcYLZ" class="social-icon google" target="_blank"></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="brad-left-panel-container">
+             <div class="brand-adv-LightBoxContainer tweetPopup">
+                 <div class="BgContent">
+                     <div class="LightBoxContent">
+                         <a class="closepopup btn-brad-close" href="#"><i class="uiIconClose uiIconWhite"></i>&nbsp;</a>
+                         <div class="introBox">
+                             <img src="/brand-advocacy-webapp/img/bg-community.png" alt="Image">
+                    		 <h5 class="fix-step-5"><%=programTitle%></h5>
+                         </div>
+                         <!-- step content here -->
+                         <div class="brad-container-step-container">
+
+                         </div>
+                     </div>
+                 </div>
+             </div>
+         </div>
+    </div>
 </div>
 <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>

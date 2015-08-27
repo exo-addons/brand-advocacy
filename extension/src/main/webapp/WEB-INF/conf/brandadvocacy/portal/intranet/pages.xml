@@ -5,18 +5,33 @@
     xmlns="http://www.gatein.org/xml/ns/gatein_objects_1_2">
 
   <page>
-    <name>brand-advocacy</name>
-    <title>Referral Program</title>
-      <access-permissions>*:/platform/administrators</access-permissions>
+    <name>win-a-tshirt</name>
+    <title>Win A TShirt</title>
+    <access-permissions>Everyone</access-permissions>
     <edit-permission>*:/platform/administrators</edit-permission>
     <show-max-window>false</show-max-window>
     <portlet-application>
        <portlet>
           <application-ref>brand-advocacy-webapp</application-ref>
-          <portlet-ref>JuzBrandAdvocacyBackendPortlet</portlet-ref>
+          <portlet-ref>JuzBrandAdvocacyLogoutPortlet</portlet-ref>
        </portlet>
-      <access-permissions>*:/platform/administrators</access-permissions>
+      <access-permissions>Everyone</access-permissions>
        <show-info-bar>false</show-info-bar>
+    </portlet-application>
+  </page>
+  <page>
+    <name>brand-advocacy</name>
+    <title>Referral Program</title>
+    <access-permissions>*:/platform/administrators</access-permissions>
+    <edit-permission>*:/platform/administrators</edit-permission>
+    <show-max-window>false</show-max-window>
+    <portlet-application>
+      <portlet>
+        <application-ref>brand-advocacy-webapp</application-ref>
+        <portlet-ref>JuzBrandAdvocacyBackendPortlet</portlet-ref>
+      </portlet>
+      <access-permissions>*:/platform/administrators</access-permissions>
+      <show-info-bar>false</show-info-bar>
     </portlet-application>
   </page>
 </page-set>
