@@ -128,10 +128,10 @@
       }
     });
   };
-  var _updateProgram = function(title,banner_url,email_sender,size_out_of_stock,save_user_data_endpoint,save_user_data_endpoint_token,save_user_data_request_method){
+  var _updateProgram = function(title,banner_url,email_sender,manager_name,manager_title,size_out_of_stock,save_user_data_endpoint,save_user_data_endpoint_token,save_user_data_request_method){
     _displayLoading(true);
     $('.jz').jzAjax('ProgramController.update()',{
-      data:{title:title,banner_url:banner_url,email_sender:email_sender,size_out_of_stock:size_out_of_stock,save_user_data_endpoint:save_user_data_endpoint,save_user_data_endpoint_token:save_user_data_endpoint_token,save_user_data_request_method:save_user_data_request_method},
+      data:{title:title,banner_url:banner_url,email_sender:email_sender,manager_name:manager_name,manager_title:manager_title,size_out_of_stock:size_out_of_stock,save_user_data_endpoint:save_user_data_endpoint,save_user_data_endpoint_token:save_user_data_endpoint_token,save_user_data_request_method:save_user_data_request_method},
       success:function(data){
         if(data != "nok"){
           _disPlayInfoMsgCB(data);
@@ -856,6 +856,8 @@
       var title = $(".program-title").val();
       var banner_url = $('.program-banner-url').val();
       var email_sender = $('.program-email-sender').val();
+      var manager_name = $('.program-manager-name').val();
+      var manager_title = $('.program-manager-title').val();
       var size_out_of_stock = "";
       $("input:checkbox[name='size-in-stock']:not(:checked)").each(function(i,v){
         if(i != 0){
@@ -870,7 +872,7 @@
       if(title.length === 0){
         return;
       }
-      _updateProgram(title,banner_url,email_sender,size_out_of_stock,save_user_data_endpoint,save_user_data_endpoint_token,save_user_data_request_method);
+      _updateProgram(title,banner_url,email_sender,manager_name,manager_title,size_out_of_stock,save_user_data_endpoint,save_user_data_endpoint_token,save_user_data_request_method);
       e.preventDefault();
     });
   };

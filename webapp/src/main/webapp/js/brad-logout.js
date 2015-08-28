@@ -150,7 +150,7 @@
 
   var _addEvent2LinkTweet = function(){
     $(document).on('click.juzBrad.ft.tweetit','a.btn-brad-tweet',function(){
-      var parent = _ftStepContainer.children('.brad-thankyou-step');
+      var parent = $(this).parents('.step-2');
       var textareaMessageDOM = parent.find(".txt-brad-tweet");
       if(!_isValidTweetMsg || textareaMessageDOM.val().length > 108){
         _tweetErrorMessageController(true);
