@@ -128,15 +128,15 @@
       }
     });
   };
-  var _updateProgram = function(title,banner_url,email_sender,manager_name,manager_title,size_out_of_stock,save_user_data_endpoint,save_user_data_endpoint_token,save_user_data_request_method){
-    _displayLoading(true);
+  var _updateProgram = function(params)
+  {    _displayLoading(true);
     $('.jz').jzAjax('ProgramController.update()',{
-      data:{title:title,banner_url:banner_url,email_sender:email_sender,manager_name:manager_name,manager_title:manager_title,size_out_of_stock:size_out_of_stock,save_user_data_endpoint:save_user_data_endpoint,save_user_data_endpoint_token:save_user_data_endpoint_token,save_user_data_request_method:save_user_data_request_method},
+      data:params,
       success:function(data){
         if(data != "nok"){
           _disPlayInfoMsgCB(data);
         }else
-         _disPlayErrorMsgCB('something went wrong, cannot update the program');
+          _disPlayErrorMsgCB('something went wrong, cannot update the program');
         _displayLoading(false);
       }
     });
@@ -460,7 +460,7 @@
   };
   var _loadPropositions = function(){
     var missionId = _currentMissionId;
-;    $('.jz').jzAjax('PropositionController.indexProposition()',{
+    ;    $('.jz').jzAjax('PropositionController.indexProposition()',{
       data:{missionId:missionId},
       success:function(data){
         if(data === 'nok'){
@@ -869,10 +869,33 @@
       var save_user_data_endpoint=$('.save-user-data-endpoint').val();
       var save_user_data_endpoint_token=$('.save-user-data-endpoint-token').val();
       var save_user_data_request_method = $( "#save-user-data-request-method option:selected").val();
+      var facebook_oauth_url = $('.facebook-oauth-url').val();
+      var google_oauth_url = $('.google-oauth-url').val();
+      var linkedin_oauth_url = $('.linkedin-oauth-url').val();
+      var facebook_share_url = $('.facebook-share-url').val();
+      var google_share_url = $('.google-share-url').val();
+      var linkedin_share_url = $('.linkedin-share-url').val();
       if(title.length === 0){
         return;
       }
-      _updateProgram(title,banner_url,email_sender,manager_name,manager_title,size_out_of_stock,save_user_data_endpoint,save_user_data_endpoint_token,save_user_data_request_method);
+      var data = {
+        title:title,
+        banner_url:banner_url,
+        email_sender:email_sender,
+        manager_name:manager_name,
+        manager_title:manager_title,
+        size_out_of_stock:size_out_of_stock,
+        save_user_data_endpoint:save_user_data_endpoint,
+        save_user_data_endpoint_token:save_user_data_endpoint_token,
+        save_user_data_request_method:save_user_data_request_method,
+        facebook_oauth_url:facebook_oauth_url,
+        google_oauth_url:google_oauth_url,
+        linkedin_oauth_url:linkedin_oauth_url,
+        facebook_share_url:facebook_share_url,
+        google_share_url:google_share_url,
+        linkedin_share_url:linkedin_share_url,
+      };
+      _updateProgram(data);
       e.preventDefault();
     });
   };
@@ -961,7 +984,7 @@
       }
       _oldPriorityVal = $(this).val();
       console.info(' click old value '+_oldPriorityVal);
-     // $(this).val('');
+      // $(this).val('');
     });
   };
   var _addEventBlur2InputTextMissionPriority = function(){
@@ -1074,11 +1097,11 @@
   var _addEvent2BtnSearchMissionParticipant = function(){
     $(document).on('click.juzBrad.bk.searchMissionParticipant.btn','button.btn-search-mission-participant',function(e){
       /*
-      var searchForm = $(this).parent('.uiSearchInput');
-      var keyword = searchForm.find(':text').val();
-      var statusFilter = searchForm.find('select').val();
-      _loadMissionParticipants(keyword,statusFilter,1);
-      */
+       var searchForm = $(this).parent('.uiSearchInput');
+       var keyword = searchForm.find(':text').val();
+       var statusFilter = searchForm.find('select').val();
+       _loadMissionParticipants(keyword,statusFilter,1);
+       */
       var searchParams = _getCurrentSearchParams();
       _loadMissionParticipants(searchParams.keyword,searchParams.statusFilter,searchParams.page);
       e.preventDefault();
@@ -1141,7 +1164,7 @@
         }else if(action == "removeMissionParticipant"){
           _removeMissionParticipant(id);
         }
-       }
+      }
       else{
         _disPlayErrorMsgCB('Something went wrong, cannot process this action');
       }

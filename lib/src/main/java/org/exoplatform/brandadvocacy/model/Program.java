@@ -25,6 +25,15 @@ public class Program {
   public static final String save_user_data_endpoint_setting_key = "save_user_data_endpoint";
   public static final String save_user_data_request_method_setting_key = "save_user_data_request_method";
   public static final String save_user_data_endpoint_token_setting_key = "save_user_data_endpoint_token";
+
+  public static final String FACEBOOK_OAUTH_URL_SETTING_KEY = "facebook_oauth_url";
+  public static final String GOOGLE_OAUTH_URL_SETTING_KEY = "google_oauth_url";
+  public static final String LINKEDIN_OAUTH_URL_SETTING_KEY = "linkedin_oauth_url";
+
+  public static final String FACEBOOK_SHARE_URL_SETTING_KEY = "facebook_share_url";
+  public static final String GOOGLE_SHARE_URL_SETTING_KEY = "google_share_url";
+  public static final String LINKEDIN_SHARE_URL_SETTING_KEY = "linkedin_share_url";
+
   public Program(String title){
     this.setLabelID(UUID.randomUUID().toString());
     this.setTitle(title);

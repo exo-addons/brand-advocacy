@@ -1,5 +1,16 @@
 #{param name=bannerUrl/}
 #{param name=programTitle/}
+#{param name=facebook_oauth_url/}
+#{param name=google_oauth_url/}
+#{param name=linkedin_oauth_url/}
+#{param name=facebook_share_url/}
+#{param name=google_share_url/}
+#{param name=linkedin_share_url/}
+#{param name=hasOauth/}
+#{param name=hasShare/}
+<%
+import org.apache.commons.lang.StringEscapeUtils;
+%>
 <div id="brad-ft-container-temp" style="display:none;">
 
     <!-- Step 5 -->
@@ -9,11 +20,19 @@
             <p>We will check if you successfully completed your mission. Once we have confirmed that your mission was successfully completed, you’ll receive a confirmation email to let you know your reward has been shipped. </p>
             <p>Hurry to complete more exciting missions and win more goodies!</p>
             <img src="/brand-advocacy-webapp/img/join-tribe-now.png" alt="join-tribe-now.png">
-            <div class="social-link">
-                <a href="https://community.exoplatform.com/portal/facebookAuth" class="facebook"></a>
-                <a href="https://community.exoplatform.com/portal/linkedinAuth" class="linkedin"></a>
-                <a href="https://community.exoplatform.com/portal/googleAuth" class="googleplus"></a>
-            </div>
+            <% if(hasOauth){ %>
+                <div class="social-link">
+                    <% if(facebook_oauth_url != "" ){%>
+                        <a href="<%= StringEscapeUtils.escapeHtml(facebook_oauth_url) %>" class="facebook"></a>
+                    <% } %>
+                    <% if(linkedin_oauth_url != "" ){%>
+                        <a href="<%= StringEscapeUtils.escapeHtml(linkedin_oauth_url) %>" class="linkedin"></a>
+                    <% } %>
+                    <% if(google_oauth_url != "" ){%>
+                        <a href="<%= StringEscapeUtils.escapeHtml(google_oauth_url) %>" class="googleplus"></a>
+                    <% } %>
+                </div>
+            <% } %>
         </div>
 
 
@@ -83,12 +102,20 @@
                             </div>
                         </div>
                     </div>
-                    <div class="box-social">
-                        <strong>or share:</strong>
-                        <a href="https://www.facebook.com/sharer/sharer.php?u=http://bit.ly/1NJcYLZ" class="social-icon facebook" target="_blank"></a>
-                        <a href="https://www.linkedin.com/shareArticle?mini=true&url=http://bit.ly/1NJcYLZ&title=Win%20A%20Tshirt&summary=&source=" class="social-icon linkedin" target="_blank"></a>
-                        <a href="https://plus.google.com/share?url=http://bit.ly/1NJcYLZ" class="social-icon google" target="_blank"></a>
-                    </div>
+                    <% if(hasShare){ %>
+                        <div class="box-social">
+                            <strong>or share:</strong>
+                            <% if(facebook_share_url != ""){ %>
+                                <a href="StringEscapeUtils.escapeHtml(facebook_share_url)" class="social-icon facebook" target="_blank"></a>
+                            <% } %>
+                            <% if(linkedin_share_url != ""){ %>
+                                <a href="StringEscapeUtils.escapeHtml(linkedin_share_url)" class="social-icon linkedin" target="_blank"></a>
+                            <% } %>
+                            <% if(google_share_url != ""){ %>
+                                <a href="StringEscapeUtils.escapeHtml(google_share_url)" class="social-icon google" target="_blank"></a>
+                            <% } %>
+                        </div>
+                    <% } %>
                 </div>
             </div>
         </div>

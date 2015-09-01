@@ -8,6 +8,12 @@
 #{param name=save_user_data_endpoint/}
 #{param name=save_user_data_endpoint_token/}
 #{param name=save_user_data_request_method/}
+#{param name=facebook_oauth_url/}
+#{param name=google_oauth_url/}
+#{param name=linkedin_oauth_url/}
+#{param name=facebook_share_url/}
+#{param name=google_share_url/}
+#{param name=linkedin_share_url/}
 <%
 import org.apache.commons.lang.StringEscapeUtils;
 %>
@@ -82,6 +88,43 @@ import org.apache.commons.lang.StringEscapeUtils;
                     <input class="full save-user-data-endpoint-token" type="text" name="save-user-data-endpoint-token" value="<%= StringEscapeUtils.escapeHtml(save_user_data_endpoint_token)%>">
                 </div>
             </div>
+            <div class="control-group">
+                <label class="control-label">Facebook oauth url:</label>
+                <div class="controls">
+                    <input class="full facebook-oauth-url" type="text" name="facebook-oauth-url" value="<%= StringEscapeUtils.escapeHtml(facebook_oauth_url)%>">
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label">Google oauth url:</label>
+                <div class="controls">
+                    <input class="full google-oauth-url" type="text" name="google-oauth-url" value="<%= StringEscapeUtils.escapeHtml(google_oauth_url)%>">
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label">Linkedin oauth url:</label>
+                <div class="controls">
+                    <input class="full linkedin-oauth-url" type="text" name="linkedin-oauth-url" value="<%= StringEscapeUtils.escapeHtml(linkedin_oauth_url)%>">
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label">Facebook share url:</label>
+                <div class="controls">
+                    <input class="full facebook-share-url" type="text" name="facebook-share-url" value="<%= StringEscapeUtils.escapeHtml(facebook_share_url)%>">
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label">Google share url:</label>
+                <div class="controls">
+                    <input class="full google-share-url" type="text" name="google-share-url" value="<%= StringEscapeUtils.escapeHtml(google_share_url)%>">
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label">Linkedin share url:</label>
+                <div class="controls">
+                    <input class="full linkedin-share-url" type="text" name="linkedin-share-url" value="<%= StringEscapeUtils.escapeHtml(linkedin_share_url)%>">
+                </div>
+            </div>
+
             <div class="control-group program-list-managers">
             </div>
         </div>

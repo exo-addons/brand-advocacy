@@ -9,6 +9,7 @@ import org.exoplatform.brandadvocacy.model.Size;
 import org.exoplatform.brandadvocacy.service.ApacheHttpClient;
 import org.exoplatform.brandadvocacy.service.IService;
 import org.exoplatform.brandadvocacy.service.Utils;
+import org.exoplatform.community.brandadvocacy.portlet.backend.models.Settings;
 import org.exoplatform.services.organization.OrganizationService;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -55,6 +56,8 @@ public class ProgramController {
     String save_user_data_endpoint = "";
     String save_user_data_endpoint_token = "";
     String save_user_data_request_method = "";
+    String facebook_oauth_url="",google_oauth_url="",linkedin_oauth_url = "";
+    String facebook_share_url="",google_share_url="",linkedin_share_url = "";
 
     Program program = null;
     String programId = loginController.getCurrentProgramId();
@@ -72,6 +75,15 @@ public class ProgramController {
         save_user_data_endpoint = Utils.getAttrFromJson(settings,Program.save_user_data_endpoint_setting_key);
         save_user_data_endpoint_token = Utils.getAttrFromJson(settings,Program.save_user_data_endpoint_token_setting_key);
         save_user_data_request_method = Utils.getAttrFromJson(settings,Program.save_user_data_request_method_setting_key);
+
+
+        facebook_oauth_url = Utils.getAttrFromJson(settings,Program.FACEBOOK_OAUTH_URL_SETTING_KEY);
+        google_oauth_url = Utils.getAttrFromJson(settings,Program.GOOGLE_OAUTH_URL_SETTING_KEY);
+        linkedin_oauth_url = Utils.getAttrFromJson(settings,Program.LINKEDIN_OAUTH_URL_SETTING_KEY);
+        facebook_share_url = Utils.getAttrFromJson(settings,Program.FACEBOOK_SHARE_URL_SETTING_KEY);
+        google_share_url = Utils.getAttrFromJson(settings,Program.GOOGLE_SHARE_URL_SETTING_KEY);
+        linkedin_share_url = Utils.getAttrFromJson(settings,Program.LINKEDIN_SHARE_URL_SETTING_KEY);
+
       }
 
       String[] out_of_stock = size_out_of_stock.split(",");
@@ -82,6 +94,12 @@ public class ProgramController {
               .set("save_user_data_endpoint_token",save_user_data_endpoint_token)
               .set("save_user_data_request_method",save_user_data_request_method)
               .set("manager_name",manager_name).set("manager_title",manager_title)
+              .set("facebook_oauth_url",facebook_oauth_url)
+              .set("google_oauth_url",google_oauth_url)
+              .set("linkedin_oauth_url",linkedin_oauth_url)
+              .set("facebook_share_url",facebook_share_url)
+              .set("google_share_url",google_share_url)
+              .set("linkedin_share_url",linkedin_share_url)
               .ok();
     }
     else
@@ -105,7 +123,23 @@ public class ProgramController {
 
   @Ajax
   @Resource
-  public Response update(String title,String banner_url,String email_sender,String manager_name,String manager_title,String size_out_of_stock, String save_user_data_endpoint, String save_user_data_endpoint_token, String save_user_data_request_method){
+  public Response update(@Mapped Settings settingsBean){
+    String title = settingsBean.title;
+    String banner_url= settingsBean.banner_url;
+    String email_sender = settingsBean.email_sender;
+    String manager_name = settingsBean.manager_name;
+    String manager_title = settingsBean.manager_title;
+    String size_out_of_stock = settingsBean.size_out_of_stock;
+    String save_user_data_endpoint = settingsBean.save_user_data_endpoint;
+    String save_user_data_endpoint_token = settingsBean.save_user_data_endpoint_token;
+    String save_user_data_request_method = settingsBean.save_user_data_request_method;
+    String facebook_oauth_url = settingsBean.facebook_oauth_url;
+    String google_oauth_url = settingsBean.google_oauth_url;
+    String linkedin_oauth_url = settingsBean.linkedin_oauth_url;
+    String facebook_share_url = settingsBean.facebook_share_url;
+    String google_share_url = settingsBean.google_share_url;
+    String linkedin_share_url = settingsBean.linkedin_share_url;
+
     String programId = loginController.getCurrentProgramId();
     Program program = this.jcrService.getProgramById(programId);
     if (null != program){
@@ -121,6 +155,19 @@ public class ProgramController {
             manager_name = "";
           if (null == manager_title)
             manager_title = "";
+
+          if (null == facebook_oauth_url)
+            facebook_oauth_url = "";
+          if (null == google_oauth_url)
+            google_oauth_url = "";
+          if (null == linkedin_oauth_url)
+            linkedin_oauth_url = "";
+          if (null == facebook_share_url)
+            facebook_share_url = "";
+          if (null == google_share_url)
+            google_oauth_url = "";
+          if (null == linkedin_share_url)
+            linkedin_share_url = "";
             
           settings.put(Program.banner_url_setting_key,banner_url);
           settings.put(Program.email_sender_setting_key,email_sender);
@@ -132,6 +179,12 @@ public class ProgramController {
           settings.put(Program.save_user_data_endpoint_setting_key,save_user_data_endpoint);
           settings.put(Program.save_user_data_endpoint_token_setting_key,save_user_data_endpoint_token);
           settings.put(Program.save_user_data_request_method_setting_key,save_user_data_request_method);
+          settings.put(Program.FACEBOOK_OAUTH_URL_SETTING_KEY,facebook_oauth_url);
+          settings.put(Program.GOOGLE_OAUTH_URL_SETTING_KEY,google_oauth_url);
+          settings.put(Program.LINKEDIN_OAUTH_URL_SETTING_KEY,linkedin_oauth_url);
+          settings.put(Program.FACEBOOK_SHARE_URL_SETTING_KEY,facebook_share_url);
+          settings.put(Program.GOOGLE_SHARE_URL_SETTING_KEY,google_share_url);
+          settings.put(Program.LINKEDIN_SHARE_URL_SETTING_KEY,linkedin_share_url);
           program.setSettings(settings);
           this.jcrService.setProgramSettings(program);
         } catch (JSONException e) {

@@ -82,6 +82,9 @@ public class JuZLogoutApplication {
   }
   @View
   public Response.Content index(SecurityContext securityContext){
+    String facebook_oauth_url="",google_oauth_url="",linkedin_oauth_url = "";
+    String facebook_share_url="",google_share_url="",linkedin_share_url = "";
+
     this.bannerUrl = "";
     this.isFinished = false;
     this.remoteUserName = null;
@@ -99,12 +102,35 @@ public class JuZLogoutApplication {
           save_user_data_endpoint_token = Utils.getAttrFromJson(currentSettings,Program.save_user_data_endpoint_token_setting_key);
           save_user_data_request_method = Utils.getAttrFromJson(currentSettings,Program.save_user_data_request_method_setting_key);
 
-        }
+          facebook_oauth_url = Utils.getAttrFromJson(currentSettings,Program.FACEBOOK_OAUTH_URL_SETTING_KEY);
+          google_oauth_url = Utils.getAttrFromJson(currentSettings,Program.GOOGLE_OAUTH_URL_SETTING_KEY);
+          linkedin_oauth_url = Utils.getAttrFromJson(currentSettings,Program.LINKEDIN_OAUTH_URL_SETTING_KEY);
+          facebook_share_url = Utils.getAttrFromJson(currentSettings,Program.FACEBOOK_SHARE_URL_SETTING_KEY);
+          google_share_url = Utils.getAttrFromJson(currentSettings,Program.GOOGLE_SHARE_URL_SETTING_KEY);
+          linkedin_share_url = Utils.getAttrFromJson(currentSettings,Program.LINKEDIN_SHARE_URL_SETTING_KEY);
 
+        }
+        Boolean hasOauth = false;
+        if(!"".equals(facebook_oauth_url) || !"".equals(google_oauth_url) || !"".equals(linkedin_oauth_url))
+          hasOauth = true;
+        Boolean hasShare = false;
+        if(!"".equals(facebook_share_url) || !"".equals(google_share_url) || !"".equals(linkedin_share_url))
+          hasShare = true;
         if(!"".equals(bannerUrl) && !this.checkBannerUrl(bannerUrl))
           this.bannerUrl = "";
 
-        return indexTpl.with().set("bannerUrl",bannerUrl).set("programTitle",currentProgramTitle).ok();
+        return indexTpl.with()
+                .set("bannerUrl",bannerUrl)
+                .set("programTitle",currentProgramTitle)
+                .set("facebook_oauth_url",facebook_oauth_url)
+                .set("google_oauth_url",google_oauth_url)
+                .set("linkedin_oauth_url",linkedin_oauth_url)
+                .set("facebook_share_url",facebook_share_url)
+                .set("google_share_url",google_share_url)
+                .set("linkedin_share_url",linkedin_share_url)
+                .set("hasOauth",hasOauth)
+                .set("hasShare",hasShare)
+                .ok();
       }
     }
     return Response.ok("");
