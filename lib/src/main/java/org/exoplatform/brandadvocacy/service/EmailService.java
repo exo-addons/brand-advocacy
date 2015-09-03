@@ -10,6 +10,7 @@ import org.exoplatform.social.core.identity.model.Profile;
 import org.exoplatform.social.core.identity.provider.OrganizationIdentityProvider;
 import org.exoplatform.social.core.manager.IdentityManager;
 import org.exoplatform.services.mail.MailService;
+import org.json.JSONObject;
 
 import java.io.FileNotFoundException;
 import java.io.InputStream;
@@ -286,6 +287,8 @@ public class EmailService {
         Mission mission = this.iService.getMissionById(missionParticipant.getMission_id());
         if (null != mission){
           Program program = this.iService.getProgramById(mission.getProgramId());
+          JSONObject settings = this.iService.getProgramSettings(mission.getProgramId());
+          program.setSettings(settings);
           if (null != program){
             String participantId = missionParticipant.getParticipant_username();
             Identity identity = identityManager.getOrCreateIdentity(OrganizationIdentityProvider.NAME,participantId,true);
