@@ -41,6 +41,7 @@ public class JuZLogoutApplication {
   String save_user_data_endpoint;
   String save_user_data_endpoint_token;
   String save_user_data_request_method;
+  String email_player,firstname_player,lastname_player;
   JSONObject currentSettings;
 
 
@@ -68,6 +69,9 @@ public class JuZLogoutApplication {
   public JuZLogoutApplication(){
   }
   private void init(){
+    this.email_player = "";
+    this.firstname_player = "";
+    this.lastname_player = "";
     this.remoteUserName = null;
     this.currentMissionId = null;
     this.currentMissionParticipantId = null;
@@ -84,7 +88,9 @@ public class JuZLogoutApplication {
   public Response.Content index(SecurityContext securityContext){
     String facebook_oauth_url="",google_oauth_url="",linkedin_oauth_url = "";
     String facebook_share_url="",google_share_url="",linkedin_share_url = "";
-
+    this.email_player = "";
+    this.firstname_player = "";
+    this.lastname_player = "";
     this.bannerUrl = "";
     this.isFinished = false;
     this.remoteUserName = null;
@@ -337,13 +343,9 @@ public class JuZLogoutApplication {
               missionParticipantIds.add(currentMissionParticipantId);
               participant.setMission_participant_ids(missionParticipantIds);
               if (null != this.jcrService.addParticipant2Program(participant) && null != this.updateCurrentProposition()) {
-                if (null == save_user_data_endpoint || "".equals(save_user_data_endpoint) || null == save_user_data_endpoint_token || "".equals(save_user_data_endpoint_token)){
-                  List params = new ArrayList();
-                  params.add(new BasicNameValuePair("email",email));
-                  params.add(new BasicNameValuePair("firstname", fname));
-                  params.add(new BasicNameValuePair("lastname", lname));
-                  ApacheHttpClient.sendRequest(save_user_data_endpoint,save_user_data_endpoint_token,save_user_data_request_method,params);
-                }
+                this.email_player = email;
+                this.firstname_player = fname;
+                this.lastname_player = lname;
                 return Response.ok("ok");
               }
             }
@@ -429,6 +431,14 @@ public class JuZLogoutApplication {
   @Resource
   public Response sendNotifEmail(){
     if (this.jcrService.sendNotifMissionParticipantEmail(this.currentSettings,this.currentMissionParticipantId,"")) {
+      if (null != save_user_data_endpoint && !"".equals(save_user_data_endpoint) && null != save_user_data_endpoint_token || !"".equals(save_user_data_endpoint_token)){
+        List params = new ArrayList();
+        params.add(new BasicNameValuePair("partner_key",save_user_data_endpoint_token));
+        params.add(new BasicNameValuePair("email",this.email_player));
+        params.add(new BasicNameValuePair("first_name", this.firstname_player));
+        params.add(new BasicNameValuePair("last_name", this.lastname_player));
+        ApacheHttpClient.sendRequest(save_user_data_endpoint,save_user_data_endpoint_token,save_user_data_request_method,params);
+      }
       return Response.ok("ok");
     }
     return Response.ok("nok");
