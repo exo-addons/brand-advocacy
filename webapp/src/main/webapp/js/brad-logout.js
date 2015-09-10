@@ -237,10 +237,12 @@
       // need to hide slider container using css
       _checkGiveUp = true;
       $(_pickMissionSliderContainer).css({top: -2000, left: -2000, position:'absolute'}) ;
+      $('.brad-btn-pick-mission').hide();
       _brandAdvFtContainer.show();
     }else{
       _checkGiveUp = false;
       _brandAdvFtContainer.hide();
+      $('.brad-btn-pick-mission').show();
       $(_pickMissionSliderContainer).css({top: _sliderTop, left: _sliderLeft, position:'relative'}) ;
     }
   };
@@ -249,7 +251,7 @@
   };
 
   var _addEvent2BtnPickMission = function(){
-    $ (document).on('click.juzBrad.pickmission','.brad-pick-mission',function(){
+    $ (document).on('click.juzBrad.pickmission','.brad-btn-pick-mission',function(){
       var stepsDOM = $('.bg-step step-1');
       if (!stepsDOM.hasClass('active')){
         stepsDOM.addClass('active');

@@ -1,4 +1,24 @@
 @import url(https://fonts.googleapis.com/css?family=Lato:400,300,700);
+.commnuityNavigation {
+    display: none!important;
+}
+#brad-pick-mission > .logo-exo {
+    position: fixed;
+    top: 30px;
+    left: 30px;
+    z-index: 100;
+}
+#brad-pick-mission > .button-flat-yellow {
+    position: fixed;
+    bottom: 30px;
+    left: 50%;
+    -webkit-transform: translate(-50%, 0);
+    -moz-transform: translate(-50%, 0);
+    -ms-transform: translate(-50%, 0);
+    -o-transform: translate(-50%, 0);
+    transform: translate(-50%, 0);
+    z-index: 100;
+}
 .brand-adv-custom-tweet-button {
     position: relative;
     margin-bottom: 20px;
@@ -83,13 +103,11 @@
 .brand-adv-LightBoxContainer.tweetPopup .closepopup {
     background-color: #474747;
     display: block;
-    height: 27px;
-    line-height: 27px;
     position: absolute;
     right: 0;
     text-align: center;
-    top: 41px;
-    width: 27px;
+    top: 0px;
+    padding: 3px 1px 3px 5px;
 }
 .brand-adv-LightBoxContainer.tweetPopup .closepopup:hover .uiIconWhite,
 .brand-adv-LightBoxContainer.tweetPopup .closepopup .uiIconWhite:hover {
@@ -142,6 +160,11 @@
     margin-top: -14px;
     border-radius: 100%;
     /*  padding-left: 9px; */
+}
+@media all and (-webkit-min-device-pixel-ratio:0) and (min-resolution: .001dpcm) {
+    .brand-adv-LightBoxContainer.tweetPopup .titleStep .numb {
+        line-height: 28px;
+    }
 }
 /* .brand-adv-LightBoxContainer.tweetPopup .titleStep .numb:after,
 .brand-adv-LightBoxContainer.tweetPopup .titleStep .numb:before {
@@ -441,7 +464,7 @@
 #brad-step-background-container .bg-step.step-1 .list-misstion {
     left: 40%;
     position: absolute;
-    top: 53%;
+    top: 50%;
     -webkit-transform: translate(-50%, -50%);
     -moz-transform: translate(-50%, -50%);
     -ms-transform: translate(-50%, -50%);
@@ -521,8 +544,7 @@
     color: #fff;
 }
 [class*="button-flat"]:active {
-    position: relative;
-    top: 1px;
+    margin-top: 1px;
     -webkit-box-shadow: box-shadow: 0 0 8px 3px rgba(0, 0, 0, 0.15);
     -moz-box-shadow: box-shadow: 0 0 8px 3px rgba(0, 0, 0, 0.15);
     -ms-box-shadow: box-shadow: 0 0 8px 3px rgba(0, 0, 0, 0.15);
@@ -563,8 +585,12 @@
     border-radius: 5px;
     font-size: 24px;
     min-width: 150px;
-    padding: 23px 30px;
+    padding: 33px 30px;
     border-bottom-width: 5px;
+    font-family: 'Lato', sans-serif;
+    font-weight: 700;
+    white-space: nowrap;
+    border-radius:8px;
 }
 [class*="button-flat"].xlarge.no-foot {
     padding-top: 23px;
@@ -692,4 +718,43 @@
     top: 0;
     width: 100%;
     z-index: 900;
+}
+
+/*
+# RESPONSIVE
+*/
+
+@media(max-width: 1200px) {
+    .brad-pick-mission .slides-container > div {
+        background-size: 90%!important;
+    }
+    #brad-step-background-container .bg-step.step-1 .list-misstion {
+        left: 35%;
+    }
+}
+@media(max-width: 980px){
+    #brad-step-background-container .bg-step.step-1 .list-misstion {
+        left: 15px;
+        -webkit-transform: translate(0, -50%);
+        -moz-transform: translate(0, -50%);
+        -ms-transform: translate(0, -50%);
+        -o-transform: translate(0, -50%);
+        transform: translate(0, -50%);
+    }
+
+}
+@media(max-width: 767px){
+    #brad-pick-mission > .logo-exo {
+        left: 50%;
+        -webkit-transform: translate(-50%, 0);
+        -moz-transform: translate(-50%, 0);
+        -ms-transform: translate(-50%, 0);
+        -o-transform: translate(-50%, 0);
+        transform: translate(-50%, 0);
+    }
+}
+@media(max-width: 767px){
+    [class*="button-flat"].xlarge {
+       padding: 17px 20px;
+    }
 }

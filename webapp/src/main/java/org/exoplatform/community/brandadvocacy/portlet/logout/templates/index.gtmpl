@@ -53,6 +53,8 @@ import org.apache.commons.lang.StringEscapeUtils;
 <div class="mark-layer" style="display:none;"></div>
 <div id="brad-landing-page-container">
     <div id="brad-pick-mission" class="brad-pick-mission">
+        <a href="#" class="logo-exo"><img src="/brand-advocacy-webapp/img/logo-eXo.png" alt="Logo eXo Platform"></a>
+        <a href="#"  class="button-flat-yellow xlarge brad-btn-pick-mission">Pick your mission</a>
       <div id="slides-1" >
         <div class="slides-container">
           <img src="/brand-advocacy-webapp/img/bg/lp-tshirt-bg-start1.png" alt="">
@@ -89,7 +91,7 @@ import org.apache.commons.lang.StringEscapeUtils;
                 </ul>
             </div>
             <div class="bg-step step-2"><!-- Add class .active to show/hidden -->
-                <h2 class="congrat">Congratulations! Your T-shirt is on its way…</h2>
+                <h2 class="congrat">Congratulations! Your T-shirt is on its way...</h2>
                 <div class="step-container">
                     <div class="form-liquid clearfix">
                         <div class="fixed">
