@@ -237,7 +237,6 @@
       // need to hide slider container using css
       _checkGiveUp = true;
       $(_pickMissionSliderContainer).css({top: -2000, left: -2000, position:'absolute'}) ;
-      $('.brad-btn-pick-mission').hide();
       _brandAdvFtContainer.show();
     }else{
       _checkGiveUp = false;
@@ -252,6 +251,7 @@
 
   var _addEvent2BtnPickMission = function(){
     $ (document).on('click.juzBrad.pickmission','.brad-btn-pick-mission',function(){
+      $('.brad-btn-pick-mission').hide();
       var stepsDOM = $('.bg-step step-1');
       if (!stepsDOM.hasClass('active')){
         stepsDOM.addClass('active');

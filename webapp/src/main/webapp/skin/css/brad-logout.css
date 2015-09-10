@@ -2,6 +2,9 @@
 .commnuityNavigation {
     display: none!important;
 }
+.webContentInformation.content-display {
+    display: none!important;
+}
 #brad-pick-mission > .logo-exo {
     position: fixed;
     top: 30px;
