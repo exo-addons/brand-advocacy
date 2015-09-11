@@ -9,6 +9,7 @@ import org.exoplatform.brandadvocacy.model.*;
 import org.exoplatform.brandadvocacy.service.ApacheHttpClient;
 import org.exoplatform.brandadvocacy.service.IService;
 import org.exoplatform.brandadvocacy.service.Utils;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import javax.inject.Inject;
@@ -16,10 +17,7 @@ import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 
 @SessionScoped
@@ -41,6 +39,7 @@ public class JuZLogoutApplication {
   String save_user_data_endpoint;
   String save_user_data_endpoint_token;
   String save_user_data_request_method;
+  List mktoAttributes;
   String email_player,firstname_player,lastname_player;
   JSONObject currentSettings;
 
@@ -69,6 +68,7 @@ public class JuZLogoutApplication {
   public JuZLogoutApplication(){
   }
   private void init(){
+    this.mktoAttributes = new ArrayList();
     this.email_player = "";
     this.firstname_player = "";
     this.lastname_player = "";
@@ -88,6 +88,7 @@ public class JuZLogoutApplication {
   public Response.Content index(SecurityContext securityContext){
     String facebook_oauth_url="",google_oauth_url="",linkedin_oauth_url = "";
     String facebook_share_url="",google_share_url="",linkedin_share_url = "";
+    this.mktoAttributes = new ArrayList();
     this.email_player = "";
     this.firstname_player = "";
     this.lastname_player = "";
@@ -97,7 +98,6 @@ public class JuZLogoutApplication {
     if (null == securityContext.getUserPrincipal()){
       this.init();
       if (null != this.currentMissionId){
-
         this.currentSettings = this.jcrService.getProgramSettings(currentProgramId);
         if (null != currentSettings){
           String banner_url = Utils.getAttrFromJson(currentSettings,Program.banner_url_setting_key);
@@ -343,9 +343,14 @@ public class JuZLogoutApplication {
               missionParticipantIds.add(currentMissionParticipantId);
               participant.setMission_participant_ids(missionParticipantIds);
               if (null != this.jcrService.addParticipant2Program(participant) && null != this.updateCurrentProposition()) {
-                this.email_player = email;
-                this.firstname_player = fname;
-                this.lastname_player = lname;
+                mktoAttributes.add(new BasicNameValuePair("partner_key",save_user_data_endpoint_token));
+                mktoAttributes.add(new BasicNameValuePair("email",email));
+                mktoAttributes.add(new BasicNameValuePair("first_name", fname));
+                mktoAttributes.add(new BasicNameValuePair("last_name", lname));
+                mktoAttributes.add(new BasicNameValuePair("phone", phone));
+                mktoAttributes.add(new BasicNameValuePair("address", address));
+                mktoAttributes.add(new BasicNameValuePair("city", city));
+                mktoAttributes.add(new BasicNameValuePair("country", country));
                 return Response.ok("ok");
               }
             }
@@ -432,12 +437,7 @@ public class JuZLogoutApplication {
   public Response sendNotifEmail(){
     if (this.jcrService.sendNotifMissionParticipantEmail(this.currentSettings,this.currentMissionParticipantId,"")) {
       if (null != save_user_data_endpoint && !"".equals(save_user_data_endpoint) && null != save_user_data_endpoint_token || !"".equals(save_user_data_endpoint_token)){
-        List params = new ArrayList();
-        params.add(new BasicNameValuePair("partner_key",save_user_data_endpoint_token));
-        params.add(new BasicNameValuePair("email",this.email_player));
-        params.add(new BasicNameValuePair("first_name", this.firstname_player));
-        params.add(new BasicNameValuePair("last_name", this.lastname_player));
-        ApacheHttpClient.sendRequest(save_user_data_endpoint,save_user_data_endpoint_token,save_user_data_request_method,params);
+        ApacheHttpClient.sendRequest(save_user_data_endpoint,save_user_data_endpoint_token,save_user_data_request_method,mktoAttributes );
       }
       return Response.ok("ok");
     }
