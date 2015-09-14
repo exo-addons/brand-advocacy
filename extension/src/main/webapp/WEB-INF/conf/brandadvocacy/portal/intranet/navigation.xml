@@ -12,12 +12,12 @@
     <visibility>HIDDEN</visibility>
 	  <page-reference>portal::intranet::brand-advocacy</page-reference>
     </node>
-    <node>
+    <!--node>
       <uri>win-a-tshirt</uri>
       <name>win-a-tshirt</name>
       <label>#{addon.navigation.winatshirt.node}</label>
       <visibility>HIDDEN</visibility>
       <page-reference>portal::intranet::win-a-tshirt</page-reference>
-    </node>
+    </node-->
   </page-nodes>
 </node-navigation>

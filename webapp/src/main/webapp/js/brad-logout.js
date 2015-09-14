@@ -614,7 +614,7 @@
 
     $('#slides-1').superslides({
       animation: 'fade',
-      play:3000,
+      play:10000,
       pagination:false,
       hashchange: false
     });

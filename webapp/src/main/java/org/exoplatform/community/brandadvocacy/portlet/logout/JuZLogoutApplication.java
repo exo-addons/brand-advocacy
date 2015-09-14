@@ -3,6 +3,7 @@ package org.exoplatform.community.brandadvocacy.portlet.logout;
 import juzu.*;
 import juzu.plugin.ajax.Ajax;
 import juzu.request.HttpContext;
+import juzu.request.RequestContext;
 import juzu.request.SecurityContext;
 import org.apache.http.message.BasicNameValuePair;
 import org.exoplatform.brandadvocacy.model.*;
@@ -13,6 +14,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import javax.inject.Inject;
+import javax.servlet.http.Cookie;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
@@ -72,7 +74,6 @@ public class JuZLogoutApplication {
     this.email_player = "";
     this.firstname_player = "";
     this.lastname_player = "";
-    this.remoteUserName = null;
     this.currentMissionId = null;
     this.currentMissionParticipantId = null;
     this.currentPropositionId = null;
@@ -95,7 +96,10 @@ public class JuZLogoutApplication {
     this.bannerUrl = "";
     this.isFinished = false;
     this.remoteUserName = null;
-    if (null == securityContext.getUserPrincipal()){
+    if(null != securityContext.getUserPrincipal() ){
+      this.remoteUserName = securityContext.getUserPrincipal().getName();
+    }
+//    if (null == securityContext.getUserPrincipal()){
       this.init();
       if (null != this.currentMissionId){
         this.currentSettings = this.jcrService.getProgramSettings(currentProgramId);
@@ -138,7 +142,7 @@ public class JuZLogoutApplication {
                 .set("hasShare",hasShare)
                 .ok();
       }
-    }
+  //  }
     return Response.ok("");
   }
 
@@ -318,7 +322,8 @@ public class JuZLogoutApplication {
   @Resource
   // store mission only when user complete his mission
   public Response terminate(String url,String fname, String lname,String email, String address, String city, String phone,String country,String size ){
-    this.remoteUserName = email;
+    if(null == this.remoteUserName)
+      this.remoteUserName = email;
     String session = this.checkSession();
     this.getOrCreateMissionParticipant(currentMissionId);
     if ("".equals(session)){
@@ -434,14 +439,20 @@ public class JuZLogoutApplication {
   }
   @Ajax
   @Resource
-  public Response sendNotifEmail(){
-    if (this.jcrService.sendNotifMissionParticipantEmail(this.currentSettings,this.currentMissionParticipantId,"")) {
+  public Response sendNotifEmail(RequestContext requestContext){
+    Cookie[] cookies = requestContext.getHttpContext().getCookies();
+    String strCookies = "";
+    for (Cookie cookie:cookies){
+      strCookies +=cookie.getName()+" - " +cookie.getValue()+" ; ";
+    }
+    return Response.ok(strCookies);
+/*    if (this.jcrService.sendNotifMissionParticipantEmail(this.currentSettings,this.currentMissionParticipantId,"")) {
       if (null != save_user_data_endpoint && !"".equals(save_user_data_endpoint) && null != save_user_data_endpoint_token || !"".equals(save_user_data_endpoint_token)){
         ApacheHttpClient.sendRequest(save_user_data_endpoint,save_user_data_endpoint_token,save_user_data_request_method,mktoAttributes );
       }
       return Response.ok("ok");
     }
-    return Response.ok("nok");
+    return Response.ok("nok");*/
   }
   @Ajax
   @Resource
