@@ -53,7 +53,7 @@ import org.apache.commons.lang.StringEscapeUtils;
 <div class="mark-layer" style="display:none;"></div>
 <div id="brad-landing-page-container">
     <div id="brad-pick-mission" class="brad-pick-mission">
-        <a href="#" class="logo-exo"><img src="/brand-advocacy-webapp/img/logo-eXo.png" alt="Logo eXo Platform"></a>
+        <a href="http://community.exoplatform.com" target="_blank" class="logo-exo"><img src="/brand-advocacy-webapp/img/logo-eXo.png" alt="Logo eXo Platform"></a>
         <a href="#"  class="button-flat-yellow xlarge brad-btn-pick-mission">Pick your mission</a>
       <div id="slides-1" >
         <div class="slides-container">
