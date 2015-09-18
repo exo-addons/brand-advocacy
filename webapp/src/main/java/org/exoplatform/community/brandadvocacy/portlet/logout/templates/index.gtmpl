@@ -52,92 +52,117 @@ import org.apache.commons.lang.StringEscapeUtils;
 </div>
 <div class="mark-layer" style="display:none;"></div>
 <div id="brad-landing-page-container">
-    <div id="brad-pick-mission" class="brad-pick-mission">
+    <div class="inner">
         <a href="http://community.exoplatform.com" target="_blank" class="logo-exo"><img src="/brand-advocacy-webapp/img/logo-eXo.png" alt="Logo eXo Platform"></a>
         <a href="#"  class="button-flat-yellow xlarge brad-btn-pick-mission">Pick your mission</a>
-      <div id="slides-1" >
-        <div class="slides-container">
-          <img src="/brand-advocacy-webapp/img/bg/lp-tshirt-bg-start1.png" alt="">
-          <img src="/brand-advocacy-webapp/img/bg/lp-tshirt-bg-start2.png" alt="">
-        </div>
-        <nav class="slides-navigation">
-          <a href="#" class="next">Next</a>
-          <a href="#" class="prev">Prev</a>
-        </nav>
-      </div>
-
-    </div>
-    <div id="brad-ft-container" class="brad-ft-container" style="display:none;">
-        <!-- HTML FOR STEP -->
-        <div id="brad-step-background-container">
-            <div class="bg-step step-1 active"><!-- Add class .active to show/hidden -->
-                <ul class="list-misstion">
-                    <li class="mission-1 passed"><!-- Add class .passed to change status on/off -->
-                        <span class="text">Pick your mission</span>
-                        <div class="status"></div>
-                    </li>
-                    <li class="mission-2">
-                        <span class="text">Complete your mission</span>
-                        <div class="status"></div>
-                    </li>
-                    <li class="mission-3">
-                        <span class="text">Submit your mission!</span>
-                        <div class="status"></div>
-                    </li>
-                    <li class="mission-4">
-                        <span class="text">GIVE YOUR DETAILS</span>
-                        <div class="status"></div>
-                    </li>
-                </ul>
+        <div id="brad-pick-mission" class="brad-pick-mission">
+          <div id="slides-1" >
+            <div class="slides-container">
+              <img src="/brand-advocacy-webapp/img/bg/lp-tshirt-bg-start1.png" alt="">
+              <img src="/brand-advocacy-webapp/img/bg/lp-tshirt-bg-start2.png" alt="">
             </div>
-            <div class="bg-step step-2"><!-- Add class .active to show/hidden -->
-                <h2 class="congrat">Congratulations! Your T-shirt is on its way...</h2>
-                <div class="step-container">
-                    <div class="form-liquid clearfix">
-                        <div class="fixed">
-                            <a class="btnTweet btn-brad-tweet button-flat-primary large
-">Tweet</a>
-                        </div>
-                        <div class="fluid">
-                            <div class="inner">
-                                <textarea class="text-won txt-brad-tweet" placeholder="I just won a free t-shirt from @eXoPlatform on http://community.exoplatform.com#ILOVEMYESN"></textarea>
+            <nav class="slides-navigation">
+              <a href="#" class="next">Next</a>
+              <a href="#" class="prev">Prev</a>
+            </nav>
+          </div>
+        </div>
+
+        <div id="brad-ft-container" class="brad-ft-container" style="display:none;">
+            <!-- HTML FOR STEP -->
+            <div id="brad-step-background-container">
+                <div class="bg-step step-1 active"><!-- Add class .active to show/hidden -->
+                    <ul class="list-misstion">
+                        <li class="mission-1 passed"><!-- Add class .passed to change status on/off -->
+                            <span class="text">Pick your mission</span>
+                            <div class="status"></div>
+                        </li>
+                        <li class="mission-2">
+                            <span class="text">Complete your mission</span>
+                            <div class="status"></div>
+                        </li>
+                        <li class="mission-3">
+                            <span class="text">Submit your mission!</span>
+                            <div class="status"></div>
+                        </li>
+                        <li class="mission-4">
+                            <span class="text">GIVE YOUR DETAILS</span>
+                            <div class="status"></div>
+                        </li>
+                    </ul>
+                </div>
+                <div class="bg-step step-2"><!-- Add class .active to show/hidden -->
+                    <h2 class="congrat">Congratulations! Your T-shirt is on its way...</h2>
+                    <div class="step-container">
+                        <div class="form-liquid clearfix">
+                            <div class="fixed">
+                                <a class="btnTweet btn-brad-tweet button-flat-primary large">Tweet</a>
+                            </div>
+                            <div class="fluid">
+                                <div class="inner">
+                                    <textarea class="text-won txt-brad-tweet" placeholder="I just won a free t-shirt from @eXoPlatform on http://community.exoplatform.com#ILOVEMYESN"></textarea>
+                                </div>
                             </div>
                         </div>
+                        <% if(hasShare){ %>
+                            <div class="box-social">
+                                <strong>or share:</strong>
+                                <% if(facebook_share_url != ""){ %>
+                                    <a href="<%= StringEscapeUtils.escapeHtml(facebook_share_url) %>" class="social-icon facebook" target="_blank"></a>
+                                <% } %>
+                                <% if(linkedin_share_url != ""){ %>
+                                    <a href="<%= StringEscapeUtils.escapeHtml(linkedin_share_url) %>" class="social-icon linkedin" target="_blank"></a>
+                                <% } %>
+                                <% if(google_share_url != ""){ %>
+                                    <a href="<%= StringEscapeUtils.escapeHtml(google_share_url) %>" class="social-icon google" target="_blank"></a>
+                                <% } %>
+                            </div>
+                        <% } %>
                     </div>
-                    <% if(hasShare){ %>
-                        <div class="box-social">
-                            <strong>or share:</strong>
-                            <% if(facebook_share_url != ""){ %>
-                                <a href="<%= StringEscapeUtils.escapeHtml(facebook_share_url) %>" class="social-icon facebook" target="_blank"></a>
-                            <% } %>
-                            <% if(linkedin_share_url != ""){ %>
-                                <a href="<%= StringEscapeUtils.escapeHtml(linkedin_share_url) %>" class="social-icon linkedin" target="_blank"></a>
-                            <% } %>
-                            <% if(google_share_url != ""){ %>
-                                <a href="<%= StringEscapeUtils.escapeHtml(google_share_url) %>" class="social-icon google" target="_blank"></a>
-                            <% } %>
-                        </div>
-                    <% } %>
                 </div>
             </div>
-        </div>
-        <div id="brad-left-panel-container">
-             <div class="brand-adv-LightBoxContainer tweetPopup">
-                 <div class="BgContent">
-                     <div class="LightBoxContent">
-                         <a class="closepopup btn-brad-close" href="#"><i class="uiIconClose uiIconWhite"></i>&nbsp;</a>
-                         <div class="introBox">
-                             <img src="/brand-advocacy-webapp/img/bg-community.png" alt="Image">
-                    		 <h5 class="fix-step-5"><%=programTitle%></h5>
-                         </div>
-                         <!-- step content here -->
-                         <div class="brad-container-step-container">
+            <div id="brad-left-panel-container">
+                 <div class="brand-adv-LightBoxContainer tweetPopup">
+                     <div class="BgContent">
+                         <div class="LightBoxContent">
+                             <a class="closepopup btn-brad-close" href="#"><i class="uiIconClose uiIconWhite"></i>&nbsp;</a>
+                             <div class="introBox">
+                                 <img src="/brand-advocacy-webapp/img/bg-community.png" alt="Image">
+                                 <h5 class="fix-step-5"><%=programTitle%></h5>
+                             </div>
+                             <!-- step content here -->
+                             <div class="brad-container-step-container">
 
+                             </div>
                          </div>
                      </div>
                  </div>
              </div>
-         </div>
+        </div><!-- .inner -->
     </div>
+    <div class="footer">
+        <div class="container">
+            <div class="row">
+                <div class="span6">
+                   <ul class="scb-footer-menu">
+                        <li><a href="https://www.exoplatform.com/" target="_blank">Website</a></li>
+                        <li><a href="http://blog.exoplatform.com/en/" target="_blank">Blog</a></li>
+                        <li><a href="https://community.exoplatform.com/portal/intranet/" target="_blank">Community</a></li>
+                    </ul>
+                </div>
+                <div class="span6">
+                    <div class="links-social">
+                        <span>Follow us:</span>
+                        <a href="https://www.facebook.com/eXoPlatform" class="scb-icon-facebok" target="_blank"></a>
+                        <a href="https://twitter.com/eXoPlatform" class="scb-icon-twitter" target="_blank"></a>
+                        <a href="https://plus.google.com/u/0/+ExoplatformTribe" class="scb-icon-google" target="_blank"></a>
+                        <a href="https://www.linkedin.com/company/exo-platform" class="scb-icon-linkedin" target="_blank"></a>
+                        <a href="https://feeds.feedburner.com/eXo-Platform" class="scb-icon-rss" target="_blank"></a>
+                        <a href="https://www.youtube.com/channel/UCtKQaab9rTJ_gN-OCzkOvIw" class="scb-icon-youtube" target="_blank"></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>   
 </div>
 <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>

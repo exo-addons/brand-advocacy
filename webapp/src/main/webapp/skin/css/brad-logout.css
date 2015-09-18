@@ -6,15 +6,15 @@
 .webContentInformation.content-display {
     display: none!important;
 }
-#brad-pick-mission > .logo-exo {
-    position: fixed;
+#brad-landing-page-container .inner > .logo-exo {
+    position: absolute;
     top: 30px;
     left: 30px;
     z-index: 100;
 }
-#brad-pick-mission > .button-flat-yellow {
-    position: fixed;
-    bottom: 30px;
+#brad-landing-page-container .inner > .button-flat-yellow {
+    position: absolute;
+    bottom: 20px;
     left: 50%;
     -webkit-transform: translate(-50%, 0);
     -moz-transform: translate(-50%, 0);
@@ -83,7 +83,7 @@
     font-size: 14px;
     background-color: #4f76b5;
     text-align: center;
-    position: fixed;
+    position: absolute;
     left: auto;
     right: 0;
     top: 0px;
@@ -421,9 +421,6 @@
 /*/
 /* The New Brand Advocacy
 /*/
-#brad-pick-mission {
-    background: #3f5995;
-}
 .brad-pick-mission .slides-navigation {
     display: none;
 }
@@ -437,11 +434,26 @@
 .brad-pick-mission .slides-container > div:last-child {
     background: url("../../img/bg/lp-tshirt-bg-start2.png") no-repeat center center transparent;
 }
-#brad-step-background-container {
+/* #brad-step-background-container {
     background-color: #3f5995;
     height: 100%;
     position: fixed;
     width: 100%;
+} */
+#brad-landing-page-container > .inner > #brad-pick-mission > div {
+    height: 100% !important;
+    left: 0;
+    position: absolute !important;
+    top: 0;
+    width: 100% !important;
+}
+#brad-landing-page-container > .inner > #brad-pick-mission {
+    /* position: absolute!important; */
+}
+#brad-landing-page-container > .inner {
+    background-color: #3f5995;
+    position: relative;
+    height: 581px;
 }
 #brad-step-background-container .bg-step {
     display: none;
@@ -723,7 +735,65 @@
     width: 100%;
     z-index: 900;
 }
+#brad-landing-page-container .footer{
+    font-family: 'Lato', sans-serif;
+    padding: 15px;
+}
+#brad-landing-page-container .footer .scb-footer-menu  > li {
+    display: inline-block;
+}
+#brad-landing-page-container .footer .scb-footer-menu  > li > a {
+    font-weight: 700;
+    font-size: 14px;
+    display: inline-block;
+    color: #333!important;
+}
+#brad-landing-page-container .footer .scb-footer-menu  > li > a:after {
+    display: inline-block;
+    content: "|";
+    width: 20px;
+    text-align: center;
+}
+#brad-landing-page-container .footer .scb-footer-menu  > li:last-child > a:after {
+    display: none;
+}
+#brad-landing-page-container .footer  .links-social {
+    text-align: right;
+}
+#brad-landing-page-container .footer  .links-social > span {
+    font-weight: 700;
+    font-size: 14px;
+    display: inline-block;
+    margin-right: 10px;
+}
+[class^="scb-icon-"] {
+    display: inline-block;
+    width: 30px;
+    height: 30px;
+    background: url(/brand-advocacy-webapp/img/icons-social.png) no-repeat 0 0 transparent;
+    vertical-align: middle;
+}
+.scb-icon-facebok {
+    background-position: 0 0;
+}
+.scb-icon-twitter {
+    background-position: -34px 0;
+}
+.scb-icon-google {
+    background-position: -68px 0;
+}
+.scb-icon-linkedin {
+    background-position: -102px 0;
+}
+.scb-icon-rss {
+    background-position: -136px 0;
+}
+.scb-icon-youtube {
+    background-position: -170px 0;
+}
+#brad-landing-page-container .footer  .links-social > a {
 
+}
 /*
 # RESPONSIVE
 */
@@ -748,7 +818,7 @@
 
 }
 @media(max-width: 767px){
-    #brad-pick-mission > .logo-exo {
+    #brad-landing-page-container .logo-exo {
         left: 50%;
         -webkit-transform: translate(-50%, 0);
         -moz-transform: translate(-50%, 0);
@@ -759,6 +829,6 @@
 }
 @media(max-width: 767px){
     [class*="button-flat"].xlarge {
-       padding: 17px 20px;
+        padding: 17px 20px;
     }
 }

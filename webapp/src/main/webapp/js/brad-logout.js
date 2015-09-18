@@ -596,6 +596,9 @@
     _sliderTop = $(_pickMissionSliderContainer).position().top;
     _sliderLeft = $(_pickMissionSliderContainer).position().left;
 
+    var screenW = $(window).width();
+    var screenH = $(window).height()-60;
+    _brandAdvLandingPageContainer.children('.inner').css({'height':screenH});
     _addEvent2BtnPickMission();
     _addEventToBtnGo();
     _addEventToBtnSubmitStep3();
