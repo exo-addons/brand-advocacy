@@ -108,13 +108,13 @@ import org.apache.commons.lang.StringEscapeUtils;
                         <div class="box-social">
                             <strong>or share:</strong>
                             <% if(facebook_share_url != ""){ %>
-                                <a href="StringEscapeUtils.escapeHtml(facebook_share_url)" class="social-icon facebook" target="_blank"></a>
+                                <a href="<%= StringEscapeUtils.escapeHtml(facebook_share_url) %>" class="social-icon facebook" target="_blank"></a>
                             <% } %>
                             <% if(linkedin_share_url != ""){ %>
-                                <a href="StringEscapeUtils.escapeHtml(linkedin_share_url)" class="social-icon linkedin" target="_blank"></a>
+                                <a href="<%= StringEscapeUtils.escapeHtml(linkedin_share_url) %>" class="social-icon linkedin" target="_blank"></a>
                             <% } %>
                             <% if(google_share_url != ""){ %>
-                                <a href="StringEscapeUtils.escapeHtml(google_share_url)" class="social-icon google" target="_blank"></a>
+                                <a href="<%= StringEscapeUtils.escapeHtml(google_share_url) %>" class="social-icon google" target="_blank"></a>
                             <% } %>
                         </div>
                     <% } %>

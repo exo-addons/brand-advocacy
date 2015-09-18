@@ -439,20 +439,14 @@ public class JuZLogoutApplication {
   }
   @Ajax
   @Resource
-  public Response sendNotifEmail(RequestContext requestContext){
-    Cookie[] cookies = requestContext.getHttpContext().getCookies();
-    String strCookies = "";
-    for (Cookie cookie:cookies){
-      strCookies +=cookie.getName()+" - " +cookie.getValue()+" ; ";
-    }
-    return Response.ok(strCookies);
-/*    if (this.jcrService.sendNotifMissionParticipantEmail(this.currentSettings,this.currentMissionParticipantId,"")) {
+  public Response sendNotifEmail(){
+    if (this.jcrService.sendNotifMissionParticipantEmail(this.currentSettings,this.currentMissionParticipantId,"")) {
       if (null != save_user_data_endpoint && !"".equals(save_user_data_endpoint) && null != save_user_data_endpoint_token || !"".equals(save_user_data_endpoint_token)){
         ApacheHttpClient.sendRequest(save_user_data_endpoint,save_user_data_endpoint_token,save_user_data_request_method,mktoAttributes );
       }
       return Response.ok("ok");
     }
-    return Response.ok("nok");*/
+    return Response.ok("nok");
   }
   @Ajax
   @Resource
