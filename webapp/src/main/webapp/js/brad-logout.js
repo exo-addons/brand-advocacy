@@ -592,35 +592,38 @@
     _brandLeftPanelContainer = $("#brad-left-panel-container");
     _ftStepContainerTemp = $("#brad-ft-container-temp");
     _giveUpPopupDOM = $('#giveupPopup');
+    if(_pickMissionSliderContainer.length > 0){
 
-    _sliderTop = $(_pickMissionSliderContainer).position().top;
-    _sliderLeft = $(_pickMissionSliderContainer).position().left;
+      _sliderTop = $(_pickMissionSliderContainer).position().top;
+      _sliderLeft = $(_pickMissionSliderContainer).position().left;
 
-    var screenW = $(window).width();
-    var screenH = $(window).height()-60;
-    _brandAdvLandingPageContainer.children('.inner').css({'height':screenH});
-    _addEvent2BtnPickMission();
-    _addEventToBtnGo();
-    _addEventToBtnSubmitStep3();
-
-
-    _addEvent2DetectCopyAction();
-    _addEventKeyDownCopy();
-    _addEventClick2GetSuggestion();
+      var screenW = $(window).width();
+      var screenH = $(window).height()-60;
+      _brandAdvLandingPageContainer.children('.inner').css({'height':screenH});
+      _addEvent2BtnPickMission();
+      _addEventToBtnGo();
+      _addEventToBtnSubmitStep3();
 
 
-    _addEventToBtnTerminate();
-    _addEvent2BtnClose();
-    _addEvent2LinkTweet();
-    _addEvent2BtnGiveUpYes();
-    _addEvent2BtnGiveUpNo();
+      _addEvent2DetectCopyAction();
+      _addEventKeyDownCopy();
+      _addEventClick2GetSuggestion();
 
-    $('#slides-1').superslides({
-      animation: 'fade',
-      play:10000,
-      pagination:false,
-      hashchange: false
-    });
+
+      _addEventToBtnTerminate();
+      _addEvent2BtnClose();
+      _addEvent2LinkTweet();
+      _addEvent2BtnGiveUpYes();
+      _addEvent2BtnGiveUpNo();
+
+      $('#slides-1').superslides({
+        animation: 'fade',
+        play:10000,
+        pagination:false,
+        hashchange: false
+      });
+            
+    }
   }
   $(document).ready(function(){
     _init();
