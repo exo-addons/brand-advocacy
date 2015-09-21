@@ -1,6 +1,7 @@
 @import url(https://fonts.googleapis.com/css?family=Lato:400,300,700);
 .commnuityNavigation,
-#NavigationPortlet {
+#NavigationPortlet,
+.LeftNavigationTDContainer {
     display: none!important;
 }
 .webContentInformation.content-display {
