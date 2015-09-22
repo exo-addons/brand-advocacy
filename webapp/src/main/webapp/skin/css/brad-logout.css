@@ -833,3 +833,7 @@
         padding: 17px 20px;
     }
 }
+#brad-landing-page-container .footer .links-social > span {vertical-align: middle;}
+.scb-footer-menu {
+    margin-top: 5px;
+}

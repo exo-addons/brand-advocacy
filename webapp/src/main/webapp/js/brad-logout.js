@@ -230,19 +230,17 @@
   var _loadSlices = function(){
 
   };
-  var _sliderTop = 0;
-  var _sliderLeft = 0;
   var _showPickMission = function(b){
     if(!b){
       // need to hide slider container using css
       _checkGiveUp = true;
-      $(_pickMissionSliderContainer).css({top: -2000, left: -2000, position:'absolute'}) ;
+      $(_pickMissionSliderContainer).css('position','absolute');
       _brandAdvFtContainer.show();
     }else{
       _checkGiveUp = false;
       _brandAdvFtContainer.hide();
       $('.brad-btn-pick-mission').show();
-      $(_pickMissionSliderContainer).css({top: _sliderTop, left: _sliderLeft, position:'relative'}) ;
+      $(_pickMissionSliderContainer).removeAttr('style');
     }
   };
   var _initView = function(){
@@ -594,11 +592,9 @@
     _giveUpPopupDOM = $('#giveupPopup');
     if(_pickMissionSliderContainer.length > 0){
 
-      _sliderTop = $(_pickMissionSliderContainer).position().top;
-      _sliderLeft = $(_pickMissionSliderContainer).position().left;
-
       var screenW = $(window).width();
       var screenH = $(window).height()-60;
+
       _brandAdvLandingPageContainer.children('.inner').css({'height':screenH});
       _addEvent2BtnPickMission();
       _addEventToBtnGo();
@@ -622,7 +618,6 @@
         pagination:false,
         hashchange: false
       });
-            
     }
   }
   $(document).ready(function(){
