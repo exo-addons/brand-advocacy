@@ -740,6 +740,9 @@
     font-family: 'Lato', sans-serif;
     padding: 15px;
 }
+#brad-landing-page-container .footer > .container {
+    padding: 0!important;
+}
 #brad-landing-page-container .footer .scb-footer-menu  > li {
     display: inline-block;
 }
