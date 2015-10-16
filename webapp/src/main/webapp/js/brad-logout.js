@@ -15,7 +15,8 @@
   var _createNew;
   var _isValidTweetMsg;
   var _msgError;
-
+  var _utm_campaign,_utm_content,_utm_term,_utm_medium,_utm_source;
+  var _disableUTMCookie = false;
   var bradObj = {};
 
 
@@ -109,6 +110,7 @@
 
   var _sendNotifNewMissionParticipant = function(){
     $('.jz').jzAjax('JuZLogoutApplication.sendNotifEmail()',{
+      data:{disableUTMCookie:_disableUTMCookie,utm_content:_utm_content,utm_term:_utm_term,utm_campaign:_utm_campaign,utm_medium:_utm_medium,utm_source:_utm_source},
       success:function(data){
         if(data == "ok"){
           _sendNotifAlmostMissionDoneEmail();
@@ -573,7 +575,42 @@
 
   };
 
-
+  var _initUtmUrlParameter = function(){
+    _disableUTMCookie = false;
+    var sPageURL = window.location.search.substring(1);
+    var sURLVariables = sPageURL.split('&');
+    _utm_content = 'no-params';
+    _utm_term = 'no-params';
+    _utm_campaign = 'no-params';
+    _utm_medium  = 'no-params';
+    _utm_source  = 'no-params';
+    for (var i = 0; i < sURLVariables.length; i++)
+    {
+      var sParameterName = sURLVariables[i].split('=');
+      var val = sParameterName[1];
+      if (sParameterName[0] == 'utm_content')
+      {
+        _disableUTMCookie = true;
+        _utm_content = val;
+      }else if (sParameterName[0] == 'utm_term')
+      {
+        _disableUTMCookie = true;
+        _utm_term = val;
+      }else if (sParameterName[0] == 'utm_campaign')
+      {
+        _disableUTMCookie = true;
+        _utm_campaign = val;
+      }else if (sParameterName[0] == 'utm_medium')
+      {
+        _disableUTMCookie = true;
+        _utm_medium = val;
+      }else if (sParameterName[0] == 'utm_source')
+      {
+        _disableUTMCookie = true;
+        _utm_source = val;
+      }
+    }
+  };
   var _init = function(){
     _checkGiveUp = false;
     _ctrlDown = false;
@@ -590,6 +627,8 @@
     _brandLeftPanelContainer = $("#brad-left-panel-container");
     _ftStepContainerTemp = $("#brad-ft-container-temp");
     _giveUpPopupDOM = $('#giveupPopup');
+    _initUtmUrlParameter();
+    console.info(_utm_campaign+' - '+_utm_content+' - '+_utm_term+' - '+_utm_medium+' - '+_utm_source);
     if(_pickMissionSliderContainer.length > 0){
 
       var screenW = $(window).width();

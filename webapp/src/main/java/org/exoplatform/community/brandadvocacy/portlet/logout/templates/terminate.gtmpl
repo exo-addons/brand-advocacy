@@ -3,7 +3,7 @@
 <!-- Step 2 -->
 <div class="tweetStepContent step-2 brad-terminate-step">
     <h5 class="titleStep mgB15-ipt">
-        <span class="numb">3</span><span class="textStep">Submit your office address</span>
+        <span class="numb">3</span><span class="textStep">Fill in your details</span>
     </h5>
     <div class="control-group">
         <div class="controls">
@@ -56,7 +56,7 @@
         </div>
     </div>
     <div class="action">
-        <button class="btn btn-brad-terminate" >Submit</button>
+        <button class="btn btn-flat-yellow btn-brad-terminate" >Submit</button>
     </div>
 </div>
 <!-- /.step-2 -->

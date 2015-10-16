@@ -85,8 +85,42 @@ public class JuZLogoutApplication {
       this.getRandomMission();
     }
   }
+  private void initUTMCookie(HttpContext httpContext){
+    Cookie[] cookies = httpContext.getCookies();
+    String cookieName;
+    String defaultVal = "no-params";
+    String utm_content = defaultVal;
+    String utm_term = defaultVal;
+    String utm_campaign = defaultVal;
+    String utm_medium = defaultVal;
+    String utm_source = defaultVal;
+    for (Cookie cookie:cookies){
+      cookieName = cookie.getName();
+      if("utm_content".equals(cookieName)){
+        utm_content = (String)cookie.getValue();
+      }else if ("utm_term".equals(cookieName))
+      {
+        utm_term = (String)cookie.getValue();
+      }else if ("utm_campaign".equals(cookieName))
+      {
+        utm_campaign = (String)cookie.getValue();
+      }else if ("utm_medium".equals(cookieName))
+      {
+        utm_medium = (String)cookie.getValue();
+      }else if ("utm_source".equals(cookieName)){
+        utm_source = (String)cookie.getValue();
+      }
+    }
+    mktoAttributes.add(new BasicNameValuePair("utm_content", utm_content));
+    mktoAttributes.add(new BasicNameValuePair("utm_term", utm_term));
+    mktoAttributes.add(new BasicNameValuePair("utm_campaign", utm_campaign));
+    mktoAttributes.add(new BasicNameValuePair("utm_medium", utm_medium));
+    mktoAttributes.add(new BasicNameValuePair("utm_source", utm_source));
+  }
   @View
-  public Response.Content index(SecurityContext securityContext){
+  public Response.Content index(SecurityContext securityContext, HttpContext httpContext){
+    Cookie[] cookies = httpContext.getCookies();
+
     String facebook_oauth_url="",google_oauth_url="",linkedin_oauth_url = "";
     String facebook_share_url="",google_share_url="",linkedin_share_url = "";
     this.mktoAttributes = new ArrayList();
@@ -439,9 +473,18 @@ public class JuZLogoutApplication {
   }
   @Ajax
   @Resource
-  public Response sendNotifEmail(){
+  public Response sendNotifEmail(HttpContext httpContext,String disableUTMCookie, String utm_content, String utm_term, String utm_campaign, String utm_medium, String utm_source){
     if (this.jcrService.sendNotifMissionParticipantEmail(this.currentSettings,this.currentMissionParticipantId,"")) {
       if (null != save_user_data_endpoint && !"".equals(save_user_data_endpoint) && null != save_user_data_endpoint_token || !"".equals(save_user_data_endpoint_token)){
+        if("false".equals(disableUTMCookie)){
+          this.initUTMCookie(httpContext);
+        }else {
+          mktoAttributes.add(new BasicNameValuePair("utm_content", utm_content));
+          mktoAttributes.add(new BasicNameValuePair("utm_term", utm_term));
+          mktoAttributes.add(new BasicNameValuePair("utm_campaign", utm_campaign));
+          mktoAttributes.add(new BasicNameValuePair("utm_medium", utm_medium));
+          mktoAttributes.add(new BasicNameValuePair("utm_source", utm_source));
+        }
         ApacheHttpClient.sendRequest(save_user_data_endpoint,save_user_data_endpoint_token,save_user_data_request_method,mktoAttributes );
       }
       return Response.ok("ok");

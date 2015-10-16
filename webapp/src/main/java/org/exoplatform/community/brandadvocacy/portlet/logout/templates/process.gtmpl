@@ -9,7 +9,7 @@ if(null != mission) {
     <!-- Step 1 -->
     <div class="tweetStepContent step-1 brad-process-step">
         <h5 class="titleStep">
-            <span class="numb">1</span><span class="textStep">Here is your mission:</span>
+            <span class="numb">1</span><span class="textStep">Complete your mission:</span>
         </h5>
         <p class="write-review"><i class="iconCapterra"></i><%= mission.getTitle()%></p>
         <div class="quote-popup brad-proposition-suggestion">
@@ -36,7 +36,7 @@ if(null != mission) {
             </div>
         </div>
         <div class="action">
-            <button class="btn btn-brad-submit-step3" data-missionId="<%= mission.getId()%>">Submit</button>
+            <button class="btn btn-flat-yellow btn-brad-submit-step3" data-missionId="<%= mission.getId()%>">Submit</button>
         </div>
     </div>
     <!-- / step-3 -->
