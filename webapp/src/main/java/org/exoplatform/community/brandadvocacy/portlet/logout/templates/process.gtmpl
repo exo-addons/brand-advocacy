@@ -20,7 +20,7 @@ if(null != mission) {
             <% } %>
         </div>
         <p class="tut-copy">Need inspiration? Select and press <span class="btn btn-mini">Ctrl</span> + <span class="btn btn-mini">C</span> to use this suggestion!</p>
-        <button data-missionId="<%= mission.getId()%>" class="button-flat-balck btn-brad-go" data-url="<%=mission.getThird_part_link()%>">Go!</button>
+        <button data-missionId="<%= mission.getId()%>" class="button-flat-yellow btn-brad-go" data-url="<%=mission.getThird_part_link()%>">Go!</button>
     </div>
     <!-- /.step-1 -->
 
@@ -36,7 +36,7 @@ if(null != mission) {
             </div>
         </div>
         <div class="action">
-            <button class="btn btn-flat-yellow btn-brad-submit-step3" data-missionId="<%= mission.getId()%>">Submit</button>
+            <button class="button-flat-yellow btn-brad-submit-step3" data-missionId="<%= mission.getId()%>">Submit</button>
         </div>
     </div>
     <!-- / step-3 -->
