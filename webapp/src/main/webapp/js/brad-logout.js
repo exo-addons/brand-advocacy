@@ -320,6 +320,7 @@
   };
   var _addEventToBtnGo = function(){
     $(document).on('click.juzbrad.ft.done.view','.btn-brad-go',function(){
+      var parentElement = $(this).parents('.brad-process-step');
       var label = $(this).text();
       var missionId = $(this).attr("data-missionId");
       var propositionId = $(".propositionId").val();
@@ -327,6 +328,8 @@
         _prepareView4TerminateStep();
         _urlSubmitted = "";
         var third_part_link = $(this).attr('data-url');
+        parentElement.children('.title-step-1').hide();
+        parentElement.children('.title-step-2').show();
         $(this).hide();
         $('.brad-complete-step').show();
         _switchStepCommon('step2','');
