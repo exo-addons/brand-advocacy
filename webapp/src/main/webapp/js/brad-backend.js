@@ -586,13 +586,23 @@
   var _loadMissionParticipants = function(keyword,status,page){
     _displayLoading(true);
     _missionParticipantContainerDOM.html(' loading ...');
-    $('.jz').jzAjax('MissionParticipantController.search()',{
-      data:{keyword:keyword,status:status,page:page},
-      success:function(data){
-        _missionParticipantContainerDOM.html(data);
-        _displayLoading(false);
-      }
-    });
+    if(keyword == '' && status == '' && page == 1){
+      $('.jz').jzAjax('MissionParticipantController.list()',{
+        data:{keyword:keyword,status:status,page:page},
+        success:function(data){
+          _missionParticipantContainerDOM.html(data);
+          _displayLoading(false);
+        }
+      });
+    }else{
+      $('.jz').jzAjax('MissionParticipantController.search()',{
+        data:{keyword:keyword,status:status,page:page},
+        success:function(data){
+          _missionParticipantContainerDOM.html(data);
+          _displayLoading(false);
+        }
+      });
+    }
   };
   var _loadMissionParticipantDetail = function(missionParticipantId,username){
     _displayLoading(true);

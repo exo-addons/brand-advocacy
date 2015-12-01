@@ -72,11 +72,14 @@ public class MissionParticipantController {
     return indexTpl.with().set("states", Status.values()).ok();
   }
 
+  @Ajax
+  @Resource
   public Response list(){
     String programId = loginController.getCurrentProgramId();
     List<MissionParticipant>  missionParticipants = this.missionParticipantService.getAllMissionParticipantsInProgram(programId);
     List<MissionParticipantDTO> missionParticipantDTOs = this.transfers2DTOs(missionParticipants);
-    return listTpl.with().set("missionParticipantDTOs",missionParticipantDTOs).set("states", Status.values()).ok();
+    Pagination pagination = new Pagination(missionParticipantDTOs.size(),NUMBER_RECORDS,"1");
+    return listTpl.with().set("missionParticipantDTOs",missionParticipantDTOs).set("states", Status.values()).set("pagination",pagination).ok();
   }
 
   @View
