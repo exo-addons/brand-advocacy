@@ -17,13 +17,10 @@
 package org.exoplatform.brandadvocacy.service;
 
 import org.exoplatform.brandadvocacy.model.*;
-import org.exoplatform.brandadvocacy.model.Query;
 import org.exoplatform.commons.utils.ListAccess;
-import org.exoplatform.services.organization.*;
 import org.exoplatform.social.core.identity.model.Profile;
 import org.json.JSONObject;
 
-import javax.jcr.RepositoryException;
 import java.util.List;
 
 /**

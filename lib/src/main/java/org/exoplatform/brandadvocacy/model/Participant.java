@@ -18,7 +18,9 @@ package org.exoplatform.brandadvocacy.model;
 
 import org.exoplatform.brandadvocacy.service.BrandAdvocacyServiceException;
 
-import java.util.*;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 /**
  * Created by The eXo Platform SAS

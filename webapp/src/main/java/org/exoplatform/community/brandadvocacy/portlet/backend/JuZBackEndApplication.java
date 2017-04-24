@@ -1,24 +1,23 @@
 package org.exoplatform.community.brandadvocacy.portlet.backend;
 
-import juzu.*;
-import juzu.impl.common.JSON;
-import juzu.impl.common.JSONParser;
+import juzu.Path;
+import juzu.Resource;
+import juzu.Response;
+import juzu.View;
 import juzu.plugin.ajax.Ajax;
-import juzu.request.HttpContext;
 import juzu.request.SecurityContext;
 import org.exoplatform.brandadvocacy.model.Manager;
 import org.exoplatform.brandadvocacy.model.MissionParticipant;
 import org.exoplatform.brandadvocacy.model.Program;
 import org.exoplatform.brandadvocacy.model.Role;
 import org.exoplatform.brandadvocacy.service.IService;
-import org.exoplatform.community.brandadvocacy.portlet.backend.controllers.*;
+import org.exoplatform.community.brandadvocacy.portlet.backend.controllers.LoginController;
+import org.exoplatform.community.brandadvocacy.portlet.backend.controllers.MissionParticipantController;
 import org.exoplatform.services.organization.OrganizationService;
 import org.exoplatform.webui.application.WebuiRequestContext;
 import org.json.JSONObject;
 
 import javax.inject.Inject;
-import java.io.FileReader;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 

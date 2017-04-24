@@ -18,10 +18,6 @@ package org.exoplatform.brandadvocacy.service;
 
 import org.json.JSONObject;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Set;
-
 /**
  * Created by The eXo Platform SAS
  * Author : eXoPlatform

@@ -1,6 +1,5 @@
 package org.exoplatform.community.brandadvocacy.portlet.backend.models;
 
-import org.exoplatform.brandadvocacy.model.Manager;
 import org.exoplatform.brandadvocacy.model.Proposition;
 
 import java.util.List;

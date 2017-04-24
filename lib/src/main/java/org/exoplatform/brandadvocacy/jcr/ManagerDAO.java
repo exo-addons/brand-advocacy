@@ -16,11 +16,6 @@
  */
 package org.exoplatform.brandadvocacy.jcr;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.jcr.*;
-
 import com.google.common.collect.Lists;
 import org.exoplatform.brandadvocacy.model.Manager;
 import org.exoplatform.brandadvocacy.model.Role;
@@ -29,6 +24,10 @@ import org.exoplatform.brandadvocacy.service.JCRImpl;
 import org.exoplatform.brandadvocacy.service.Utils;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
+
+import javax.jcr.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by The eXo Platform SAS

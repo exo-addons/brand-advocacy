@@ -1,17 +1,14 @@
 package org.exoplatform.brandadvocacy.jcr;
 
 import com.google.common.collect.Lists;
-import org.exoplatform.brandadvocacy.model.*;
+import org.exoplatform.brandadvocacy.model.MissionParticipantNote;
+import org.exoplatform.brandadvocacy.model.NoteType;
 import org.exoplatform.brandadvocacy.service.BrandAdvocacyServiceException;
 import org.exoplatform.brandadvocacy.service.JCRImpl;
-import org.exoplatform.brandadvocacy.service.Utils;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 
 import javax.jcr.*;
-import javax.jcr.lock.LockException;
-import javax.jcr.nodetype.ConstraintViolationException;
-import javax.jcr.version.VersionException;
 import java.util.ArrayList;
 import java.util.List;
 

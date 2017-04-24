@@ -16,11 +16,12 @@
  */
 package org.exoplatform.brandadvocacy;
 
-import EDU.oswego.cs.dl.util.concurrent.FJTask;
 import org.exoplatform.brandadvocacy.model.*;
-import org.exoplatform.brandadvocacy.service.IService;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 /**
  * Created by The eXo Platform SAS

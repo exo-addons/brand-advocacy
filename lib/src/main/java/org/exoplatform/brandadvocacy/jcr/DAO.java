@@ -16,8 +16,10 @@
  */
 package org.exoplatform.brandadvocacy.jcr;
 
-import java.util.ArrayList;
-import java.util.List;
+import org.exoplatform.brandadvocacy.service.JCRImpl;
+import org.exoplatform.services.jcr.impl.core.query.QueryImpl;
+import org.exoplatform.services.log.ExoLogger;
+import org.exoplatform.services.log.Log;
 
 import javax.jcr.Node;
 import javax.jcr.NodeIterator;
@@ -25,11 +27,8 @@ import javax.jcr.RepositoryException;
 import javax.jcr.Session;
 import javax.jcr.query.Query;
 import javax.jcr.query.QueryResult;
-
-import org.exoplatform.brandadvocacy.service.JCRImpl;
-import org.exoplatform.services.jcr.impl.core.query.QueryImpl;
-import org.exoplatform.services.log.ExoLogger;
-import org.exoplatform.services.log.Log;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by The eXo Platform SAS

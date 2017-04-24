@@ -1,9 +1,9 @@
 package org.exoplatform.brandadvocacy.model;
+
 import org.exoplatform.brandadvocacy.service.BrandAdvocacyServiceException;
 import org.json.JSONObject;
 
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
 
 /**

@@ -17,8 +17,6 @@
 package org.exoplatform.brandadvocacy.jcr;
 
 import com.google.common.collect.Lists;
-import org.exoplatform.brandadvocacy.model.Mission;
-import org.exoplatform.brandadvocacy.model.Program;
 import org.exoplatform.brandadvocacy.model.Proposition;
 import org.exoplatform.brandadvocacy.service.BrandAdvocacyServiceException;
 import org.exoplatform.brandadvocacy.service.JCRImpl;
@@ -31,7 +29,6 @@ import javax.jcr.query.Query;
 import javax.jcr.query.QueryResult;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 /**
  * Created by The eXo Platform SAS

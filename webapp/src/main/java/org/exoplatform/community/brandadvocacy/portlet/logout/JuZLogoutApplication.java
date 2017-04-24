@@ -3,14 +3,12 @@ package org.exoplatform.community.brandadvocacy.portlet.logout;
 import juzu.*;
 import juzu.plugin.ajax.Ajax;
 import juzu.request.HttpContext;
-import juzu.request.RequestContext;
 import juzu.request.SecurityContext;
 import org.apache.http.message.BasicNameValuePair;
 import org.exoplatform.brandadvocacy.model.*;
 import org.exoplatform.brandadvocacy.service.ApacheHttpClient;
 import org.exoplatform.brandadvocacy.service.IService;
 import org.exoplatform.brandadvocacy.service.Utils;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import javax.inject.Inject;
@@ -19,7 +17,10 @@ import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 
 @SessionScoped

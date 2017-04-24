@@ -1,15 +1,13 @@
 package org.exoplatform.brandadvocacy.service;
 
 import org.exoplatform.brandadvocacy.model.*;
-import org.exoplatform.brandadvocacy.service.Utils;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
+import org.exoplatform.services.mail.MailService;
 import org.exoplatform.services.mail.Message;
 import org.exoplatform.social.core.identity.model.Identity;
-import org.exoplatform.social.core.identity.model.Profile;
 import org.exoplatform.social.core.identity.provider.OrganizationIdentityProvider;
 import org.exoplatform.social.core.manager.IdentityManager;
-import org.exoplatform.services.mail.MailService;
 import org.json.JSONObject;
 
 import java.io.FileNotFoundException;

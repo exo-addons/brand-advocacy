@@ -1,9 +1,15 @@
 package org.exoplatform.community.brandadvocacy.portlet.backend.controllers;
 
-import juzu.*;
+import juzu.Path;
+import juzu.Resource;
+import juzu.Response;
+import juzu.SessionScoped;
 import juzu.plugin.ajax.Ajax;
-import org.exoplatform.brandadvocacy.model.*;
+import org.exoplatform.brandadvocacy.model.Mission;
+import org.exoplatform.brandadvocacy.model.Priority;
+import org.exoplatform.brandadvocacy.model.Proposition;
 import org.exoplatform.brandadvocacy.service.IService;
+
 import javax.inject.Inject;
 import java.util.List;
 

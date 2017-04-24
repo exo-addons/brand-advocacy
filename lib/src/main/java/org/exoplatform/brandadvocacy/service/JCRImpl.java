@@ -18,8 +18,6 @@ package org.exoplatform.brandadvocacy.service;
 
 import org.exoplatform.brandadvocacy.jcr.*;
 import org.exoplatform.brandadvocacy.model.*;
-import org.exoplatform.brandadvocacy.model.Query;
-import org.exoplatform.brandadvocacy.model.User;
 import org.exoplatform.commons.utils.ListAccess;
 import org.exoplatform.container.xml.InitParams;
 import org.exoplatform.container.xml.ValueParam;
@@ -33,7 +31,8 @@ import org.exoplatform.services.jcr.ext.distribution.DataDistributionType;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 import org.exoplatform.services.mail.MailService;
-import org.exoplatform.services.organization.*;
+import org.exoplatform.services.organization.OrganizationService;
+import org.exoplatform.services.organization.UserHandler;
 import org.exoplatform.social.core.identity.model.Identity;
 import org.exoplatform.social.core.identity.model.Profile;
 import org.exoplatform.social.core.identity.provider.OrganizationIdentityProvider;
@@ -42,7 +41,6 @@ import org.exoplatform.social.core.profile.ProfileFilter;
 import org.json.JSONObject;
 
 import javax.jcr.Node;
-
 import javax.jcr.RepositoryException;
 import javax.jcr.Session;
 import java.util.Arrays;

@@ -2,11 +2,9 @@ package org.exoplatform.community.brandadvocacy.portlet.backend.controllers;
 
 import juzu.*;
 import juzu.plugin.ajax.Ajax;
-import org.apache.http.message.BasicNameValuePair;
 import org.exoplatform.brandadvocacy.model.Manager;
 import org.exoplatform.brandadvocacy.model.Program;
 import org.exoplatform.brandadvocacy.model.Size;
-import org.exoplatform.brandadvocacy.service.ApacheHttpClient;
 import org.exoplatform.brandadvocacy.service.IService;
 import org.exoplatform.brandadvocacy.service.Utils;
 import org.exoplatform.community.brandadvocacy.portlet.backend.models.Settings;
@@ -15,8 +13,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import javax.inject.Inject;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by exoplatform on 20/10/14.

@@ -1,6 +1,5 @@
 package org.exoplatform.brandadvocacy.service;
 
-import org.exoplatform.brandadvocacy.jcr.MissionParticipantNoteDAO;
 import org.exoplatform.brandadvocacy.model.MissionParticipant;
 import org.exoplatform.brandadvocacy.model.Program;
 import org.exoplatform.commons.utils.CommonsUtils;
@@ -14,9 +13,7 @@ import org.exoplatform.services.rest.impl.RuntimeDelegateImpl;
 import org.exoplatform.services.rest.resource.ResourceContainer;
 
 import javax.annotation.security.RolesAllowed;
-import javax.jcr.Property;
 import javax.jcr.PropertyType;
-import javax.jcr.RepositoryException;
 import javax.jcr.version.OnParentVersionAction;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
