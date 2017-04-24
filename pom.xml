@@ -10,7 +10,7 @@
   </parent>
   <groupId>org.exoplatform.addons.brand-advocacy</groupId>
   <artifactId>brand-advocacy-addon</artifactId>
-  <version>1.1.x-SNAPSHOT</version>
+  <version>1.1.0-M01</version>
   <packaging>pom</packaging>
   <name>Brand Advocacy</name>
   <description>Brand Advocacy Program</description>
@@ -24,7 +24,7 @@
   <scm>
     <connection>scm:git:git://github.com/exo-addons/brand-advocacy.git</connection>
     <developerConnection>scm:git:git@github.com:exo-addons/brand-advocacy.git</developerConnection>
-    <tag>HEAD</tag>
+    <tag>1.1.0-M01</tag>
     <url>https://github.com/exo-addons/brand-advocacy.git</url>
   </scm>
   <properties>
