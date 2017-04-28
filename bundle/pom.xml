@@ -31,12 +31,6 @@
       <type>war</type>
       <scope>provided</scope>
     </dependency>
-    <dependency>
-      <groupId>${project.groupId}</groupId>
-      <artifactId>brand-advocacy-config</artifactId>
-      <version>${project.version}</version>
-      <scope>provided</scope>
-    </dependency>
   </dependencies>
   <profiles>
     <profile>

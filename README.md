@@ -9,7 +9,6 @@ To build this addon, you need to be familiar to maven.
 - brand-advocacy-lib-{x}.jar
 - brand-advocacy-webapp.war
 - brand-advocacy-extension.war
-- brand-advocacy-config-{x}.jar
 
 ** How to install it **
 + All you need is just to unzip the bundle zip file and place the jar files in lib/ and war file in the webapp/ directory.

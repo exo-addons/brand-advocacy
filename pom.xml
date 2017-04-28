@@ -16,7 +16,6 @@
   <description>Brand Advocacy Program</description>
   <modules>
     <module>lib</module>
-    <module>config</module>
     <module>webapp</module>
     <module>extension</module>
     <module>bundle</module>
@@ -71,11 +70,6 @@
       <dependency>
         <groupId>org.exoplatform.addons.brand-advocacy</groupId>
         <artifactId>brand-advocacy-extension</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.exoplatform.addons.brand-advocacy</groupId>
-        <artifactId>brand-advocacy-config</artifactId>
         <version>${project.version}</version>
       </dependency>
 
