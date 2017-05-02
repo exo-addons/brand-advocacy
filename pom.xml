@@ -27,7 +27,7 @@
     <url>https://github.com/exo-addons/brand-advocacy.git</url>
   </scm>
   <properties>
-    <org.exoplatform.platform.version>5.0.x-SNAPSHOT</org.exoplatform.platform.version>
+    <org.exoplatform.platform.version>5.0.0-M02</org.exoplatform.platform.version>
     <juzu.version>1.1.0</juzu.version>
     <!-- Dependency versions -->
     <junit.version>4.8.2</junit.version>
