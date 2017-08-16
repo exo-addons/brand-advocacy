@@ -488,7 +488,7 @@
 
   var _addEventClick2GetSuggestion = function(){
     $(document).on('click.juzBrad.Proposition.Click','.brad-proposition-suggestion',function(){
-      var pDOM = $(this).children('div.box-view-value').children('p');
+      var pDOM = $(this).children('div.box-view-value');
       var textareaDOM = $(this).children('textarea');
       textareaDOM.html(pDOM.text());
       pDOM.hide();
