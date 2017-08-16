@@ -65,8 +65,10 @@
     bottom: 0;
     color: #fff;
     width: 265px;
-    padding: 60px 20px 20px;
+    padding: 75px 20px 20px;
     z-index: 2;
+    overflow-y: auto;
+    overflow-x:hidden;
     -webkit-transition: padding 200ms ease-in;
     -moz-transition: padding 200ms ease-in;
     -o-transition: padding 200ms ease-in;
@@ -80,7 +82,7 @@
     position: absolute;
     right: 0;
     text-align: center;
-    top: 41px;
+    top: 75px;
     width: 27px;
 }
 .brand-adv-LightBoxContainer.tweetPopup .closepopup:hover .uiIconWhite,
@@ -190,13 +192,13 @@
     border: medium none;
     border-radius: 0;
     box-shadow: none;
-    height: 140px;
+    height: 120px;
     padding: 0;
     overflow: auto;
     resize: none;
     cursor: pointer;
-       background: #FFF;
-       font-size: 14px;
+    background: #FFF;
+    font-size: 14px;
     line-height: 1.5em;
 }
 
