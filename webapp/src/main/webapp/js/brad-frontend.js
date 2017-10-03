@@ -516,6 +516,29 @@
     });
   };
 
+  var _fixOnScroll = function(){
+    window.addEventListener("scroll", function(event) {
+        var docHeight = $( document ).height();
+        var sideBarHeight = $( '#OfficeRightMiddle' ).height();
+        var scrollValue = $( document ).scrollTop();
+
+
+        if(sideBarHeight < scrollValue){
+            $("#brad-ft-container").addClass("animated fadeIn");
+            $("#brad-ft-container").css({
+                "position": "fixed",
+                "margin-right": "20px"
+            });
+        }else{
+            $("#brad-ft-container").removeClass("animated fadeIn");
+            $("#brad-ft-container").css({
+                "position": "relative",
+                "margin-right": "inherit"
+            });
+        }
+    });
+  }
+
   var _init = function(){
     _ctrlDown = false;
     _ctrlKey = 17;
@@ -524,6 +547,7 @@
     _isValidTweetMsg = true;
     _ftStepContainerTemp = $("#brad-ft-container-temp");
     _brandAdvFtContainer = $("#brad-ft-container");
+    _fixOnScroll();
     _addEvent2DetectCopyAction();
     _addEventKeyDownCopy();
     _addEventClick2GetSuggestion();
@@ -537,5 +561,6 @@
   }
   $(document).ready(function(){
     _init();
+
   });
 })($);

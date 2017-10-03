@@ -1,9 +1,6 @@
-#{param name=bannerUrl/}
-#{param name=programTitle/}
-
 <div class="brand-adv-custom-tweet-button brad-ft-discovery">
     <img class="img-responsive" src="<%=bannerUrl%>" />
-    <div class="btn"><span><%=programTitle%></span></div>
+    <div class="btn"><span>Get this T-shirt</span></div>
 </div>
 <div class="brand-adv-LightBoxContainer tweetPopup hide">
     <div class="BgContent">
@@ -11,7 +8,7 @@
             <a class="closepopup btn-brad-close" href="#"><i class="uiIconClose uiIconWhite"></i>&nbsp;</a>
             <div class="introBox">
                 <img src="/brand-advocacy-webapp/img/bg-community.png" alt="Image">
-                <h5 class="fix-step-3"><%=programTitle%></h5>
+                <h5 class="fix-step-3">Review eXo, Get the T-Shirt</h5>
             </div>
             <!-- step content here -->
             <div class="brad-container-step-container">
