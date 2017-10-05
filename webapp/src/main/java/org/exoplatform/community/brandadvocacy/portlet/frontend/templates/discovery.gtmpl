@@ -8,7 +8,7 @@
             <a class="closepopup btn-brad-close" href="#"><i class="uiIconClose uiIconWhite"></i>&nbsp;</a>
             <div class="introBox">
                 <img src="/brand-advocacy-webapp/img/bg-community.png" alt="Image">
-                <h5 class="fix-step-3">Review eXo, Get the T-Shirt</h5>
+                <h5 class="fix-step-3">Review eXo, Get the <br/>T-Shirt</h5>
             </div>
             <!-- step content here -->
             <div class="brad-container-step-container">

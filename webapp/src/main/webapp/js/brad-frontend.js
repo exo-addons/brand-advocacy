@@ -517,12 +517,14 @@
   };
 
   var _fixOnScroll = function(){
+
+    var docHeight = $( document ).height();
+    var parenttest = jQuery("#brad-ft-container").closest('td[class~="TDContainer"] > div > div');
+    parenttest.addClass("bradRightSideBar");
+
     window.addEventListener("scroll", function(event) {
-        var docHeight = $( document ).height();
-        var sideBarHeight = $( '#OfficeRightMiddle' ).height();
+        var sideBarHeight = $( '.bradRightSideBar' ).height();
         var scrollValue = $( document ).scrollTop();
-
-
         if(sideBarHeight < scrollValue){
             $("#brad-ft-container").addClass("animated fadeIn");
             $("#brad-ft-container").css({
