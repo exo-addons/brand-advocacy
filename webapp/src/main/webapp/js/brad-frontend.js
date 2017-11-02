@@ -529,13 +529,15 @@
             $("#brad-ft-container").addClass("animated fadeIn");
             $("#brad-ft-container").css({
                 "position": "fixed",
-                "margin-right": "20px"
+                "margin-right": "20px",
+                "top": "75px"
             });
         }else{
             $("#brad-ft-container").removeClass("animated fadeIn");
             $("#brad-ft-container").css({
                 "position": "relative",
-                "margin-right": "inherit"
+                "margin-right": "inherit",
+                "top": "auto"
             });
         }
     });
