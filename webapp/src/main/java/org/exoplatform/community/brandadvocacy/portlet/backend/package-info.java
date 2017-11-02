@@ -12,7 +12,7 @@
   }
 )
 @Scripts({
-  @Script(id="jquery",value = "js/jquery-1.7.1.min.js", location = AssetLocation.SERVER),
+  @Script(id="jquery",value = "js/jquery-3.2.1.min.js", location = AssetLocation.SERVER),
   @Script(value = "js/brad-backend.js",depends = "jquery", location = AssetLocation.SERVER),
   @Script(value = "js/iphone-style-checkboxes.js", location = AssetLocation.SERVER, depends = "jquery")
 })

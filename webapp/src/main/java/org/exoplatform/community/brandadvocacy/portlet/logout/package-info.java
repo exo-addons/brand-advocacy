@@ -10,7 +10,7 @@
         }
 )
 @Scripts({
-        @Script(id="jquery",value = "js/jquery-1.7.1.min.js", location = AssetLocation.SERVER),
+        @Script(id="jquery",value = "js/jquery-3.2.1.min.js", location = AssetLocation.SERVER),
         @Script(value = "js/slider/jquery.easing.1.3.js",depends = "jquery", location = AssetLocation.SERVER),
         @Script(value = "js/slider/jquery.animate-enhanced.min.js",depends = "jquery", location = AssetLocation.SERVER),
         @Script(value = "js/slider/jquery.superslides.js",depends = "jquery", location = AssetLocation.SERVER),

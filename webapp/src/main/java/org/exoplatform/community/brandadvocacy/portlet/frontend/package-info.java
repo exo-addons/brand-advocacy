@@ -10,7 +10,7 @@
         }
 )
 @Scripts({
-        @Script(id="jquery",value = "js/jquery-1.7.1.min.js", location = AssetLocation.SERVER),
+        @Script(id="jquery",value = "js/jquery-3.2.1.min.js", location = AssetLocation.SERVER),
         @Script(value = "js/brad-frontend.js",depends = "jquery", location = AssetLocation.SERVER),
 })
 @Stylesheets(@Stylesheet(value = "skin/css/brandadvocacy.css", location = AssetLocation.SERVER))
