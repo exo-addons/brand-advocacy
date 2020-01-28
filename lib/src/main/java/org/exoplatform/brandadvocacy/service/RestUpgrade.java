@@ -1,29 +1,23 @@
 package org.exoplatform.brandadvocacy.service;
 
-import org.exoplatform.brandadvocacy.model.MissionParticipant;
-import org.exoplatform.brandadvocacy.model.Program;
-import org.exoplatform.commons.utils.CommonsUtils;
-import org.exoplatform.services.jcr.core.nodetype.ExtendedNodeTypeManager;
-import org.exoplatform.services.jcr.core.nodetype.NodeDefinitionValue;
-import org.exoplatform.services.jcr.core.nodetype.NodeTypeValue;
-import org.exoplatform.services.jcr.core.nodetype.PropertyDefinitionValue;
-import org.exoplatform.services.log.ExoLogger;
-import org.exoplatform.services.log.Log;
-import org.exoplatform.services.rest.impl.RuntimeDelegateImpl;
-import org.exoplatform.services.rest.resource.ResourceContainer;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.annotation.security.RolesAllowed;
 import javax.jcr.PropertyType;
 import javax.jcr.version.OnParentVersionAction;
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.core.CacheControl;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
+import javax.ws.rs.*;
+import javax.ws.rs.core.*;
 import javax.ws.rs.ext.RuntimeDelegate;
-import java.util.ArrayList;
-import java.util.List;
+
+import org.exoplatform.brandadvocacy.model.MissionParticipant;
+import org.exoplatform.brandadvocacy.model.Program;
+import org.exoplatform.services.jcr.core.nodetype.*;
+import org.exoplatform.services.jcr.ext.app.SessionProviderService;
+import org.exoplatform.services.log.ExoLogger;
+import org.exoplatform.services.log.Log;
+import org.exoplatform.services.rest.impl.RuntimeDelegateImpl;
+import org.exoplatform.services.rest.resource.ResourceContainer;
 
 /**
  * Created by exoplatform on 23/12/14.
@@ -55,7 +49,7 @@ public class RestUpgrade implements ResourceContainer {
     String result = "upgrade node type successfully";
     try {
       log.info("==== start upgrade brand adv node type "+nodeTypeName);
-      ExtendedNodeTypeManager nodeTypeManager =   CommonsUtils.getRepository().getNodeTypeManager();
+      ExtendedNodeTypeManager nodeTypeManager =   SessionProviderService.getRepository().getNodeTypeManager();
       NodeTypeValue nodeTypeValue = nodeTypeManager.getNodeTypeValue(nodeTypeName);
       List<NodeDefinitionValue> childValues = nodeTypeValue.getDeclaredChildNodeDefinitionValues();
       if (childValues.size() == 0){
@@ -91,7 +85,7 @@ public class RestUpgrade implements ResourceContainer {
     String result = "upgrade node type successfully";
     log.info("==== start upgrade brand adv node type "+nodeTypeName);
     try {
-      ExtendedNodeTypeManager nodeTypeManager =   CommonsUtils.getRepository().getNodeTypeManager();
+      ExtendedNodeTypeManager nodeTypeManager =   SessionProviderService.getRepository().getNodeTypeManager();
       NodeTypeValue nodeTypeValue = nodeTypeManager.getNodeTypeValue(nodeTypeName);
       List<PropertyDefinitionValue> propValues = nodeTypeValue.getDeclaredPropertyDefinitionValues();
       for (PropertyDefinitionValue propValue : propValues) {

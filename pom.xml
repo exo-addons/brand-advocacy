@@ -5,7 +5,7 @@
   <parent>
     <artifactId>addons-parent-pom</artifactId>
     <groupId>org.exoplatform.addons</groupId>
-    <version>7</version>
+    <version>11</version>
     <relativePath />
   </parent>
   <groupId>org.exoplatform.addons.brand-advocacy</groupId>
@@ -27,14 +27,13 @@
     <url>https://github.com/exo-addons/brand-advocacy.git</url>
   </scm>
   <properties>
-    <org.exoplatform.platform.version>5.1.x-SNAPSHOT</org.exoplatform.platform.version>
-    <juzu.version>1.1.0</juzu.version>
+    <org.exoplatform.social.version>6.0.x-lightweight-SNAPSHOT</org.exoplatform.social.version>
+    <org.exoplatform.jcr.version>6.0.x-lightweight-SNAPSHOT</org.exoplatform.jcr.version>
     <!-- Dependency versions -->
     <junit.version>4.8.2</junit.version>
 
     <!-- Test settings -->
     <juzu.test.compiler>javac</juzu.test.compiler>
-
   </properties>
 
   <!--distributionManagement>
@@ -51,9 +50,16 @@
   <dependencyManagement>
     <dependencies>
       <dependency>
-        <groupId>org.exoplatform.platform</groupId>
-        <artifactId>platform</artifactId>
-        <version>${org.exoplatform.platform.version}</version>
+        <groupId>org.exoplatform.social</groupId>
+        <artifactId>social</artifactId>
+        <version>${org.exoplatform.social.version}</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
+      <dependency>
+        <groupId>org.exoplatform.jcr</groupId>
+        <artifactId>jcr-parent</artifactId>
+        <version>${org.exoplatform.jcr.version}</version>
         <type>pom</type>
         <scope>import</scope>
       </dependency>
@@ -72,35 +78,6 @@
         <artifactId>brand-advocacy-extension</artifactId>
         <version>${project.version}</version>
       </dependency>
-
     </dependencies>
   </dependencyManagement>
-  <profiles>
-    <profile>
-      <id>project-repositories</id>
-      <activation>
-        <property>
-          <name>!skip-project-repositories</name>
-        </property>
-      </activation>
-      <repositories>
-        <repository>
-          <snapshots>
-            <enabled>true</enabled>
-          </snapshots>
-          <id>repository.exoplatform.org</id>
-          <url>https://repository.exoplatform.org/public</url>
-        </repository>
-      </repositories>
-      <pluginRepositories>
-        <pluginRepository>
-          <snapshots>
-            <enabled>true</enabled>
-          </snapshots>
-          <id>repository.exoplatform.org</id>
-          <url>https://repository.exoplatform.org/public</url>
-        </pluginRepository>
-      </pluginRepositories>
-    </profile>
-  </profiles>
 </project>
